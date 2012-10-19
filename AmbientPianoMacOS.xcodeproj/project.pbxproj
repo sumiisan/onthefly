@@ -1,0 +1,302 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		168CEBB3163186B400B721E2 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 168CEBB2163186B400B721E2 /* Cocoa.framework */; };
+		168CEBBD163186B400B721E2 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 168CEBBB163186B400B721E2 /* InfoPlist.strings */; };
+		168CEBC0163186B400B721E2 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 168CEBBF163186B400B721E2 /* main.m */; };
+		168CEBC3163186B400B721E2 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 168CEBC1163186B400B721E2 /* Credits.rtf */; };
+		168CEBC6163186B400B721E2 /* AmbientPianoMacOSAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 168CEBC5163186B400B721E2 /* AmbientPianoMacOSAppDelegate.m */; };
+		168CEBC9163186B400B721E2 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 168CEBC7163186B400B721E2 /* MainMenu.xib */; };
+		168CEBCC163186B400B721E2 /* AmbientPianoMacOS.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 168CEBCA163186B400B721E2 /* AmbientPianoMacOS.xcdatamodeld */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		168CEBAE163186B400B721E2 /* AmbientPianoMacOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AmbientPianoMacOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		168CEBB2163186B400B721E2 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		168CEBB5163186B400B721E2 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		168CEBB6163186B400B721E2 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		168CEBB7163186B400B721E2 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		168CEBBA163186B400B721E2 /* AmbientPianoMacOS-Info.plist */ = {isa = PBXFileReference; path = "AmbientPianoMacOS-Info.plist"; sourceTree = "<group>"; };
+		168CEBBC163186B400B721E2 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		168CEBBE163186B400B721E2 /* AmbientPianoMacOS-Prefix.pch */ = {isa = PBXFileReference; path = "AmbientPianoMacOS-Prefix.pch"; sourceTree = "<group>"; };
+		168CEBBF163186B400B721E2 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		168CEBC2163186B400B721E2 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
+		168CEBC4163186B400B721E2 /* AmbientPianoMacOSAppDelegate.h */ = {isa = PBXFileReference; path = AmbientPianoMacOSAppDelegate.h; sourceTree = "<group>"; };
+		168CEBC5163186B400B721E2 /* AmbientPianoMacOSAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AmbientPianoMacOSAppDelegate.m; sourceTree = "<group>"; };
+		168CEBC8163186B400B721E2 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		168CEBCB163186B400B721E2 /* AmbientPianoMacOS.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = AmbientPianoMacOS.xcdatamodel; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		168CEBAB163186B400B721E2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				168CEBB3163186B400B721E2 /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		168CEBA3163186B300B721E2 = {
+			isa = PBXGroup;
+			children = (
+				168CEBB8163186B400B721E2 /* AmbientPianoMacOS */,
+				168CEBB1163186B400B721E2 /* Frameworks */,
+				168CEBAF163186B400B721E2 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		168CEBAF163186B400B721E2 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				168CEBAE163186B400B721E2 /* AmbientPianoMacOS.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		168CEBB1163186B400B721E2 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				168CEBB2163186B400B721E2 /* Cocoa.framework */,
+				168CEBB4163186B400B721E2 /* Other Frameworks */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		168CEBB4163186B400B721E2 /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				168CEBB5163186B400B721E2 /* AppKit.framework */,
+				168CEBB6163186B400B721E2 /* CoreData.framework */,
+				168CEBB7163186B400B721E2 /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		168CEBB8163186B400B721E2 /* AmbientPianoMacOS */ = {
+			isa = PBXGroup;
+			children = (
+				168CEBC4163186B400B721E2 /* AmbientPianoMacOSAppDelegate.h */,
+				168CEBC5163186B400B721E2 /* AmbientPianoMacOSAppDelegate.m */,
+				168CEBC7163186B400B721E2 /* MainMenu.xib */,
+				168CEBCA163186B400B721E2 /* AmbientPianoMacOS.xcdatamodeld */,
+				168CEBB9163186B400B721E2 /* Supporting Files */,
+			);
+			path = AmbientPianoMacOS;
+			sourceTree = "<group>";
+		};
+		168CEBB9163186B400B721E2 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				168CEBBA163186B400B721E2 /* AmbientPianoMacOS-Info.plist */,
+				168CEBBB163186B400B721E2 /* InfoPlist.strings */,
+				168CEBBE163186B400B721E2 /* AmbientPianoMacOS-Prefix.pch */,
+				168CEBBF163186B400B721E2 /* main.m */,
+				168CEBC1163186B400B721E2 /* Credits.rtf */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		168CEBAD163186B400B721E2 /* AmbientPianoMacOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 168CEBCF163186B400B721E2 /* Build configuration list for PBXNativeTarget "AmbientPianoMacOS" */;
+			buildPhases = (
+				168CEBAA163186B400B721E2 /* Sources */,
+				168CEBAB163186B400B721E2 /* Frameworks */,
+				168CEBAC163186B400B721E2 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = AmbientPianoMacOS;
+			productName = AmbientPianoMacOS;
+			productReference = 168CEBAE163186B400B721E2 /* AmbientPianoMacOS.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		168CEBA5163186B300B721E2 /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = 168CEBA8163186B300B721E2 /* Build configuration list for PBXProject "AmbientPianoMacOS" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 168CEBA3163186B300B721E2;
+			productRefGroup = 168CEBAF163186B400B721E2 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				168CEBAD163186B400B721E2 /* AmbientPianoMacOS */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		168CEBAC163186B400B721E2 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				168CEBBD163186B400B721E2 /* InfoPlist.strings in Resources */,
+				168CEBC3163186B400B721E2 /* Credits.rtf in Resources */,
+				168CEBC9163186B400B721E2 /* MainMenu.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		168CEBAA163186B400B721E2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				168CEBC0163186B400B721E2 /* main.m in Sources */,
+				168CEBC6163186B400B721E2 /* AmbientPianoMacOSAppDelegate.m in Sources */,
+				168CEBCC163186B400B721E2 /* AmbientPianoMacOS.xcdatamodeld in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		168CEBBB163186B400B721E2 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				168CEBBC163186B400B721E2 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		168CEBC1163186B400B721E2 /* Credits.rtf */ = {
+			isa = PBXVariantGroup;
+			children = (
+				168CEBC2163186B400B721E2 /* en */,
+			);
+			name = Credits.rtf;
+			sourceTree = "<group>";
+		};
+		168CEBC7163186B400B721E2 /* MainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				168CEBC8163186B400B721E2 /* en */,
+			);
+			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		168CEBCD163186B400B721E2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		168CEBCE163186B400B721E2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		168CEBD0163186B400B721E2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "AmbientPianoMacOS/AmbientPianoMacOS-Prefix.pch";
+				INFOPLIST_FILE = "AmbientPianoMacOS/AmbientPianoMacOS-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		168CEBD1163186B400B721E2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "AmbientPianoMacOS/AmbientPianoMacOS-Prefix.pch";
+				INFOPLIST_FILE = "AmbientPianoMacOS/AmbientPianoMacOS-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		168CEBA8163186B300B721E2 /* Build configuration list for PBXProject "AmbientPianoMacOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				168CEBCD163186B400B721E2 /* Debug */,
+				168CEBCE163186B400B721E2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		168CEBCF163186B400B721E2 /* Build configuration list for PBXNativeTarget "AmbientPianoMacOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				168CEBD0163186B400B721E2 /* Debug */,
+				168CEBD1163186B400B721E2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		168CEBCA163186B400B721E2 /* AmbientPianoMacOS.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				168CEBCB163186B400B721E2 /* AmbientPianoMacOS.xcdatamodel */,
+			);
+			currentVersion = 168CEBCB163186B400B721E2 /* AmbientPianoMacOS.xcdatamodel */;
+			path = AmbientPianoMacOS.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
+	};
+	rootObject = 168CEBA5163186B300B721E2 /* Project object */;
+}
