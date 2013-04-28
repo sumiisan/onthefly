@@ -7,48 +7,689 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		160CF19E165789D200C6BFE7 /* defaultSong in Resources */ = {isa = PBXBuildFile; fileRef = 160CF19D165789D200C6BFE7 /* defaultSong */; };
+		160CF1A216578AB800C6BFE7 /* default.vms in Resources */ = {isa = PBXBuildFile; fileRef = 160CF1A116578AB800C6BFE7 /* default.vms */; };
+		1613E77216C4F19F00680B88 /* VMFunction.m in Sources */ = {isa = PBXBuildFile; fileRef = 1613E77116C4F19F00680B88 /* VMFunction.m */; };
+		1613E77316C4F19F00680B88 /* VMFunction.m in Sources */ = {isa = PBXBuildFile; fileRef = 1613E77116C4F19F00680B88 /* VMFunction.m */; };
+		1613E77416C4F19F00680B88 /* VMFunction.m in Sources */ = {isa = PBXBuildFile; fileRef = 1613E77116C4F19F00680B88 /* VMFunction.m */; };
+		1613E77516C4F19F00680B88 /* VMFunction.m in Sources */ = {isa = PBXBuildFile; fileRef = 1613E77116C4F19F00680B88 /* VMFunction.m */; };
+		161C9A9E16A585F2001E7B46 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 168CEBC7163186B400B721E2 /* MainMenu.xib */; };
+		1624A6FC1642B76B004AA351 /* vsDocIcon.icns in Resources */ = {isa = PBXBuildFile; fileRef = 1624A6FB1642B76B004AA351 /* vsDocIcon.icns */; };
+		1624A6FD1642B76B004AA351 /* vsDocIcon.icns in Resources */ = {isa = PBXBuildFile; fileRef = 1624A6FB1642B76B004AA351 /* vsDocIcon.icns */; };
+		1624A6FF1642B7D0004AA351 /* vsPlayer.icns in Resources */ = {isa = PBXBuildFile; fileRef = 1624A6FE1642B7D0004AA351 /* vsPlayer.icns */; };
+		1624A7001642B7D0004AA351 /* vsPlayer.icns in Resources */ = {isa = PBXBuildFile; fileRef = 1624A6FE1642B7D0004AA351 /* vsPlayer.icns */; };
+		1624A7141644D8AC004AA351 /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1624A7131644D8AC004AA351 /* libicucore.dylib */; };
+		1624A7151644D8B2004AA351 /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1624A7131644D8AC004AA351 /* libicucore.dylib */; };
+		162F7B1A16A0341900420443 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 168CEBB2163186B400B721E2 /* Cocoa.framework */; };
+		162F7B2016A0341C00420443 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 162F7B1E16A0341C00420443 /* InfoPlist.strings */; };
+		162F7B2616A0341C00420443 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 162F7B2416A0341C00420443 /* Credits.rtf */; };
+		162F7B3816A0341D00420443 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 168CEBB2163186B400B721E2 /* Cocoa.framework */; };
+		162F7B4016A0341E00420443 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 162F7B3E16A0341E00420443 /* InfoPlist.strings */; };
+		162F7B4316A0341E00420443 /* TraumBaumTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 162F7B4216A0341E00420443 /* TraumBaumTests.m */; };
+		162F7B4D16A112D300420443 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 168CEBBF163186B400B721E2 /* main.m */; };
+		162F7B4E16A1130300420443 /* VariableMediaPlayerAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 168CEBC5163186B400B721E2 /* VariableMediaPlayerAppDelegate.m */; };
+		162F7B5016A1132700420443 /* vmp.sdef in Resources */ = {isa = PBXBuildFile; fileRef = 1695BE841634D5A3009103F4 /* vmp.sdef */; };
+		162F7B5516A1135600420443 /* AmbientPianoMacOS.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 168CEBCA163186B400B721E2 /* AmbientPianoMacOS.xcdatamodeld */; };
+		162F7B6616A1151B00420443 /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1624A7131644D8AC004AA351 /* libicucore.dylib */; };
+		162F7B6816A1163500420443 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 162F7B6416A114B800420443 /* AudioToolbox.framework */; };
+		162F7B6916A1167D00420443 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 168CEBD41631871400B721E2 /* CoreAudio.framework */; };
+		162F7B6B16A1171300420443 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 162F7B6A16A1171200420443 /* SenTestingKit.framework */; };
+		16347C1016C286C9002BE1FE /* VMPGraph.m in Sources */ = {isa = PBXBuildFile; fileRef = 16347C0F16C286C9002BE1FE /* VMPGraph.m */; };
+		16347C1116C286C9002BE1FE /* VMPGraph.m in Sources */ = {isa = PBXBuildFile; fileRef = 16347C0F16C286C9002BE1FE /* VMPGraph.m */; };
+		16347C1216C286C9002BE1FE /* VMPGraph.m in Sources */ = {isa = PBXBuildFile; fileRef = 16347C0F16C286C9002BE1FE /* VMPGraph.m */; };
+		16347C1316C286C9002BE1FE /* VMPGraph.m in Sources */ = {isa = PBXBuildFile; fileRef = 16347C0F16C286C9002BE1FE /* VMPGraph.m */; };
+		1636DF8916A11C5300100130 /* vsDocIcon.icns in Resources */ = {isa = PBXBuildFile; fileRef = 1624A6FB1642B76B004AA351 /* vsDocIcon.icns */; };
+		1636DF8A16A11C5500100130 /* vsPlayer.icns in Resources */ = {isa = PBXBuildFile; fileRef = 1624A6FE1642B7D0004AA351 /* vsPlayer.icns */; };
+		1636DF8C16A11C7A00100130 /* defaultSong in Resources */ = {isa = PBXBuildFile; fileRef = 1636DF8B16A11C7A00100130 /* defaultSong */; };
+		1636DF8D16A11C7A00100130 /* defaultSong in Resources */ = {isa = PBXBuildFile; fileRef = 1636DF8B16A11C7A00100130 /* defaultSong */; };
+		1677773E16C0D600007206CF /* ApplescriptReceiver.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677773816C0D600007206CF /* ApplescriptReceiver.m */; };
+		1677773F16C0D600007206CF /* ApplescriptReceiver.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677773816C0D600007206CF /* ApplescriptReceiver.m */; };
+		1677774016C0D600007206CF /* ApplescriptReceiver.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677773816C0D600007206CF /* ApplescriptReceiver.m */; };
+		1677774116C0D600007206CF /* ApplescriptReceiver.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677773816C0D600007206CF /* ApplescriptReceiver.m */; };
+		1677774216C0D600007206CF /* boxmuller.c in Sources */ = {isa = PBXBuildFile; fileRef = 1677773916C0D600007206CF /* boxmuller.c */; };
+		1677774316C0D600007206CF /* boxmuller.c in Sources */ = {isa = PBXBuildFile; fileRef = 1677773916C0D600007206CF /* boxmuller.c */; };
+		1677774416C0D600007206CF /* boxmuller.c in Sources */ = {isa = PBXBuildFile; fileRef = 1677773916C0D600007206CF /* boxmuller.c */; };
+		1677774516C0D600007206CF /* boxmuller.c in Sources */ = {isa = PBXBuildFile; fileRef = 1677773916C0D600007206CF /* boxmuller.c */; };
+		1677774616C0D600007206CF /* VMException.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677773C16C0D600007206CF /* VMException.m */; };
+		1677774716C0D600007206CF /* VMException.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677773C16C0D600007206CF /* VMException.m */; };
+		1677774816C0D600007206CF /* VMException.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677773C16C0D600007206CF /* VMException.m */; };
+		1677774916C0D600007206CF /* VMException.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677773C16C0D600007206CF /* VMException.m */; };
+		1677778D16C0D639007206CF /* License.html in Resources */ = {isa = PBXBuildFile; fileRef = 1677775316C0D639007206CF /* License.html */; };
+		1677778E16C0D639007206CF /* License.html in Resources */ = {isa = PBXBuildFile; fileRef = 1677775316C0D639007206CF /* License.html */; };
+		1677778F16C0D639007206CF /* License.html in Resources */ = {isa = PBXBuildFile; fileRef = 1677775316C0D639007206CF /* License.html */; };
+		1677779016C0D639007206CF /* License.html in Resources */ = {isa = PBXBuildFile; fileRef = 1677775316C0D639007206CF /* License.html */; };
+		1677779116C0D639007206CF /* License.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 1677775416C0D639007206CF /* License.rtf */; };
+		1677779216C0D639007206CF /* License.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 1677775416C0D639007206CF /* License.rtf */; };
+		1677779316C0D639007206CF /* License.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 1677775416C0D639007206CF /* License.rtf */; };
+		1677779416C0D639007206CF /* License.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 1677775416C0D639007206CF /* License.rtf */; };
+		1677779516C0D639007206CF /* RegexKitLite.html in Resources */ = {isa = PBXBuildFile; fileRef = 1677775616C0D639007206CF /* RegexKitLite.html */; };
+		1677779616C0D639007206CF /* RegexKitLite.html in Resources */ = {isa = PBXBuildFile; fileRef = 1677775616C0D639007206CF /* RegexKitLite.html */; };
+		1677779716C0D639007206CF /* RegexKitLite.html in Resources */ = {isa = PBXBuildFile; fileRef = 1677775616C0D639007206CF /* RegexKitLite.html */; };
+		1677779816C0D639007206CF /* RegexKitLite.html in Resources */ = {isa = PBXBuildFile; fileRef = 1677775616C0D639007206CF /* RegexKitLite.html */; };
+		1677779916C0D639007206CF /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677775716C0D639007206CF /* RegexKitLite.m */; };
+		1677779A16C0D639007206CF /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677775716C0D639007206CF /* RegexKitLite.m */; };
+		1677779B16C0D639007206CF /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677775716C0D639007206CF /* RegexKitLite.m */; };
+		1677779C16C0D639007206CF /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677775716C0D639007206CF /* RegexKitLite.m */; };
+		167777A116C0D639007206CF /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 1677775A16C0D639007206CF /* Config.xcconfig */; };
+		167777A216C0D639007206CF /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 1677775A16C0D639007206CF /* Config.xcconfig */; };
+		167777A316C0D639007206CF /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 1677775A16C0D639007206CF /* Config.xcconfig */; };
+		167777A416C0D639007206CF /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 1677775A16C0D639007206CF /* Config.xcconfig */; };
+		167777A516C0D639007206CF /* README.markdown in Resources */ = {isa = PBXBuildFile; fileRef = 1677775B16C0D639007206CF /* README.markdown */; };
+		167777A616C0D639007206CF /* README.markdown in Resources */ = {isa = PBXBuildFile; fileRef = 1677775B16C0D639007206CF /* README.markdown */; };
+		167777A716C0D639007206CF /* README.markdown in Resources */ = {isa = PBXBuildFile; fileRef = 1677775B16C0D639007206CF /* README.markdown */; };
+		167777A816C0D639007206CF /* README.markdown in Resources */ = {isa = PBXBuildFile; fileRef = 1677775B16C0D639007206CF /* README.markdown */; };
+		167777A916C0D639007206CF /* CDataScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677775E16C0D639007206CF /* CDataScanner.m */; };
+		167777AA16C0D639007206CF /* CDataScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677775E16C0D639007206CF /* CDataScanner.m */; };
+		167777AB16C0D639007206CF /* CDataScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677775E16C0D639007206CF /* CDataScanner.m */; };
+		167777AC16C0D639007206CF /* CDataScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677775E16C0D639007206CF /* CDataScanner.m */; };
+		167777AD16C0D639007206CF /* CFilteringJSONSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677776116C0D639007206CF /* CFilteringJSONSerializer.m */; };
+		167777AE16C0D639007206CF /* CFilteringJSONSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677776116C0D639007206CF /* CFilteringJSONSerializer.m */; };
+		167777AF16C0D639007206CF /* CFilteringJSONSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677776116C0D639007206CF /* CFilteringJSONSerializer.m */; };
+		167777B016C0D639007206CF /* CFilteringJSONSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677776116C0D639007206CF /* CFilteringJSONSerializer.m */; };
+		167777B116C0D639007206CF /* CJSONDeserializer_BlocksExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677776316C0D639007206CF /* CJSONDeserializer_BlocksExtensions.m */; };
+		167777B216C0D639007206CF /* CJSONDeserializer_BlocksExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677776316C0D639007206CF /* CJSONDeserializer_BlocksExtensions.m */; };
+		167777B316C0D639007206CF /* CJSONDeserializer_BlocksExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677776316C0D639007206CF /* CJSONDeserializer_BlocksExtensions.m */; };
+		167777B416C0D639007206CF /* CJSONDeserializer_BlocksExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677776316C0D639007206CF /* CJSONDeserializer_BlocksExtensions.m */; };
+		167777B516C0D639007206CF /* CJSONSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677776516C0D639007206CF /* CJSONSerialization.m */; };
+		167777B616C0D639007206CF /* CJSONSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677776516C0D639007206CF /* CJSONSerialization.m */; };
+		167777B716C0D639007206CF /* CJSONSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677776516C0D639007206CF /* CJSONSerialization.m */; };
+		167777B816C0D639007206CF /* CJSONSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677776516C0D639007206CF /* CJSONSerialization.m */; };
+		167777B916C0D639007206CF /* CJSONSerializedData.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677776716C0D639007206CF /* CJSONSerializedData.m */; };
+		167777BA16C0D639007206CF /* CJSONSerializedData.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677776716C0D639007206CF /* CJSONSerializedData.m */; };
+		167777BB16C0D639007206CF /* CJSONSerializedData.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677776716C0D639007206CF /* CJSONSerializedData.m */; };
+		167777BC16C0D639007206CF /* CJSONSerializedData.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677776716C0D639007206CF /* CJSONSerializedData.m */; };
+		167777BD16C0D639007206CF /* CDataScanner_Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677776A16C0D639007206CF /* CDataScanner_Extensions.m */; };
+		167777BE16C0D639007206CF /* CDataScanner_Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677776A16C0D639007206CF /* CDataScanner_Extensions.m */; };
+		167777BF16C0D639007206CF /* CDataScanner_Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677776A16C0D639007206CF /* CDataScanner_Extensions.m */; };
+		167777C016C0D639007206CF /* CDataScanner_Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677776A16C0D639007206CF /* CDataScanner_Extensions.m */; };
+		167777C116C0D639007206CF /* NSDictionary_JSONExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677776C16C0D639007206CF /* NSDictionary_JSONExtensions.m */; };
+		167777C216C0D639007206CF /* NSDictionary_JSONExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677776C16C0D639007206CF /* NSDictionary_JSONExtensions.m */; };
+		167777C316C0D639007206CF /* NSDictionary_JSONExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677776C16C0D639007206CF /* NSDictionary_JSONExtensions.m */; };
+		167777C416C0D639007206CF /* NSDictionary_JSONExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677776C16C0D639007206CF /* NSDictionary_JSONExtensions.m */; };
+		167777C516C0D639007206CF /* CJSONDeserializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677776F16C0D639007206CF /* CJSONDeserializer.m */; };
+		167777C616C0D639007206CF /* CJSONDeserializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677776F16C0D639007206CF /* CJSONDeserializer.m */; };
+		167777C716C0D639007206CF /* CJSONDeserializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677776F16C0D639007206CF /* CJSONDeserializer.m */; };
+		167777C816C0D639007206CF /* CJSONDeserializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677776F16C0D639007206CF /* CJSONDeserializer.m */; };
+		167777C916C0D639007206CF /* CJSONScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677777116C0D639007206CF /* CJSONScanner.m */; };
+		167777CA16C0D639007206CF /* CJSONScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677777116C0D639007206CF /* CJSONScanner.m */; };
+		167777CB16C0D639007206CF /* CJSONScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677777116C0D639007206CF /* CJSONScanner.m */; };
+		167777CC16C0D639007206CF /* CJSONScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677777116C0D639007206CF /* CJSONScanner.m */; };
+		167777CD16C0D639007206CF /* CJSONSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677777316C0D639007206CF /* CJSONSerializer.m */; };
+		167777CE16C0D639007206CF /* CJSONSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677777316C0D639007206CF /* CJSONSerializer.m */; };
+		167777CF16C0D639007206CF /* CJSONSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677777316C0D639007206CF /* CJSONSerializer.m */; };
+		167777D016C0D639007206CF /* CJSONSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677777316C0D639007206CF /* CJSONSerializer.m */; };
+		167777DE16C0D651007206CF /* VariableSong.m in Sources */ = {isa = PBXBuildFile; fileRef = 167777D316C0D651007206CF /* VariableSong.m */; };
+		167777DF16C0D651007206CF /* VariableSong.m in Sources */ = {isa = PBXBuildFile; fileRef = 167777D316C0D651007206CF /* VariableSong.m */; };
+		167777E016C0D651007206CF /* VariableSong.m in Sources */ = {isa = PBXBuildFile; fileRef = 167777D316C0D651007206CF /* VariableSong.m */; };
+		167777E116C0D651007206CF /* VariableSong.m in Sources */ = {isa = PBXBuildFile; fileRef = 167777D316C0D651007206CF /* VariableSong.m */; };
+		167777E216C0D651007206CF /* VMDataTypes.m in Sources */ = {isa = PBXBuildFile; fileRef = 167777D516C0D651007206CF /* VMDataTypes.m */; };
+		167777E316C0D651007206CF /* VMDataTypes.m in Sources */ = {isa = PBXBuildFile; fileRef = 167777D516C0D651007206CF /* VMDataTypes.m */; };
+		167777E416C0D651007206CF /* VMDataTypes.m in Sources */ = {isa = PBXBuildFile; fileRef = 167777D516C0D651007206CF /* VMDataTypes.m */; };
+		167777E516C0D651007206CF /* VMDataTypes.m in Sources */ = {isa = PBXBuildFile; fileRef = 167777D516C0D651007206CF /* VMDataTypes.m */; };
+		167777E616C0D651007206CF /* VMPreprocessor.m in Sources */ = {isa = PBXBuildFile; fileRef = 167777D716C0D651007206CF /* VMPreprocessor.m */; };
+		167777E716C0D651007206CF /* VMPreprocessor.m in Sources */ = {isa = PBXBuildFile; fileRef = 167777D716C0D651007206CF /* VMPreprocessor.m */; };
+		167777E816C0D651007206CF /* VMPreprocessor.m in Sources */ = {isa = PBXBuildFile; fileRef = 167777D716C0D651007206CF /* VMPreprocessor.m */; };
+		167777E916C0D651007206CF /* VMPreprocessor.m in Sources */ = {isa = PBXBuildFile; fileRef = 167777D716C0D651007206CF /* VMPreprocessor.m */; };
+		167777EA16C0D651007206CF /* VMPrimitives.m in Sources */ = {isa = PBXBuildFile; fileRef = 167777D916C0D651007206CF /* VMPrimitives.m */; };
+		167777EB16C0D651007206CF /* VMPrimitives.m in Sources */ = {isa = PBXBuildFile; fileRef = 167777D916C0D651007206CF /* VMPrimitives.m */; };
+		167777EC16C0D651007206CF /* VMPrimitives.m in Sources */ = {isa = PBXBuildFile; fileRef = 167777D916C0D651007206CF /* VMPrimitives.m */; };
+		167777ED16C0D651007206CF /* VMPrimitives.m in Sources */ = {isa = PBXBuildFile; fileRef = 167777D916C0D651007206CF /* VMPrimitives.m */; };
+		167777EE16C0D651007206CF /* VMScoreEvaluator.m in Sources */ = {isa = PBXBuildFile; fileRef = 167777DB16C0D651007206CF /* VMScoreEvaluator.m */; };
+		167777EF16C0D651007206CF /* VMScoreEvaluator.m in Sources */ = {isa = PBXBuildFile; fileRef = 167777DB16C0D651007206CF /* VMScoreEvaluator.m */; };
+		167777F016C0D651007206CF /* VMScoreEvaluator.m in Sources */ = {isa = PBXBuildFile; fileRef = 167777DB16C0D651007206CF /* VMScoreEvaluator.m */; };
+		167777F116C0D651007206CF /* VMScoreEvaluator.m in Sources */ = {isa = PBXBuildFile; fileRef = 167777DB16C0D651007206CF /* VMScoreEvaluator.m */; };
+		167777F216C0D651007206CF /* VMSong.m in Sources */ = {isa = PBXBuildFile; fileRef = 167777DD16C0D651007206CF /* VMSong.m */; };
+		167777F316C0D651007206CF /* VMSong.m in Sources */ = {isa = PBXBuildFile; fileRef = 167777DD16C0D651007206CF /* VMSong.m */; };
+		167777F416C0D651007206CF /* VMSong.m in Sources */ = {isa = PBXBuildFile; fileRef = 167777DD16C0D651007206CF /* VMSong.m */; };
+		167777F516C0D651007206CF /* VMSong.m in Sources */ = {isa = PBXBuildFile; fileRef = 167777DD16C0D651007206CF /* VMSong.m */; };
+		167777FD16C0D661007206CF /* AudioPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 167777F816C0D661007206CF /* AudioPlayer.m */; };
+		167777FE16C0D661007206CF /* AudioPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 167777F816C0D661007206CF /* AudioPlayer.m */; };
+		167777FF16C0D661007206CF /* AudioPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 167777F816C0D661007206CF /* AudioPlayer.m */; };
+		1677780016C0D661007206CF /* AudioPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 167777F816C0D661007206CF /* AudioPlayer.m */; };
+		1677780116C0D661007206CF /* PlayerBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 167777FA16C0D661007206CF /* PlayerBase.m */; };
+		1677780216C0D661007206CF /* PlayerBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 167777FA16C0D661007206CF /* PlayerBase.m */; };
+		1677780316C0D661007206CF /* PlayerBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 167777FA16C0D661007206CF /* PlayerBase.m */; };
+		1677780416C0D661007206CF /* PlayerBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 167777FA16C0D661007206CF /* PlayerBase.m */; };
+		1677780516C0D661007206CF /* VMPSongPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 167777FC16C0D661007206CF /* VMPSongPlayer.m */; };
+		1677780616C0D661007206CF /* VMPSongPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 167777FC16C0D661007206CF /* VMPSongPlayer.m */; };
+		1677780716C0D661007206CF /* VMPSongPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 167777FC16C0D661007206CF /* VMPSongPlayer.m */; };
+		1677780816C0D661007206CF /* VMPSongPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 167777FC16C0D661007206CF /* VMPSongPlayer.m */; };
+		1677781616C0D6A0007206CF /* DebugView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677780B16C0D6A0007206CF /* DebugView.m */; };
+		1677781716C0D6A0007206CF /* DebugView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677780B16C0D6A0007206CF /* DebugView.m */; };
+		1677781816C0D6A0007206CF /* DebugView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677780B16C0D6A0007206CF /* DebugView.m */; };
+		1677781916C0D6A0007206CF /* DebugView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677780B16C0D6A0007206CF /* DebugView.m */; };
+		1677781A16C0D6A0007206CF /* VMPObjectBrowserView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677780D16C0D6A0007206CF /* VMPObjectBrowserView.m */; };
+		1677781B16C0D6A0007206CF /* VMPObjectBrowserView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677780D16C0D6A0007206CF /* VMPObjectBrowserView.m */; };
+		1677781C16C0D6A0007206CF /* VMPObjectBrowserView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677780D16C0D6A0007206CF /* VMPObjectBrowserView.m */; };
+		1677781D16C0D6A0007206CF /* VMPObjectBrowserView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677780D16C0D6A0007206CF /* VMPObjectBrowserView.m */; };
+		1677781E16C0D6A0007206CF /* PartCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677780F16C0D6A0007206CF /* PartCell.m */; };
+		1677781F16C0D6A0007206CF /* PartCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677780F16C0D6A0007206CF /* PartCell.m */; };
+		1677782016C0D6A0007206CF /* PartCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677780F16C0D6A0007206CF /* PartCell.m */; };
+		1677782116C0D6A0007206CF /* PartCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677780F16C0D6A0007206CF /* PartCell.m */; };
+		1677782216C0D6A0007206CF /* SequenceView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677781116C0D6A0007206CF /* SequenceView.m */; };
+		1677782316C0D6A0007206CF /* SequenceView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677781116C0D6A0007206CF /* SequenceView.m */; };
+		1677782416C0D6A0007206CF /* SequenceView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677781116C0D6A0007206CF /* SequenceView.m */; };
+		1677782516C0D6A0007206CF /* SequenceView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677781116C0D6A0007206CF /* SequenceView.m */; };
+		1677782616C0D6A0007206CF /* TrackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677781316C0D6A0007206CF /* TrackView.m */; };
+		1677782716C0D6A0007206CF /* TrackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677781316C0D6A0007206CF /* TrackView.m */; };
+		1677782816C0D6A0007206CF /* TrackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677781316C0D6A0007206CF /* TrackView.m */; };
+		1677782916C0D6A0007206CF /* TrackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677781316C0D6A0007206CF /* TrackView.m */; };
+		1677782A16C0D6A0007206CF /* VMPCanvas.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677781516C0D6A0007206CF /* VMPCanvas.m */; };
+		1677782B16C0D6A0007206CF /* VMPCanvas.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677781516C0D6A0007206CF /* VMPCanvas.m */; };
+		1677782C16C0D6A0007206CF /* VMPCanvas.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677781516C0D6A0007206CF /* VMPCanvas.m */; };
+		1677782D16C0D6A0007206CF /* VMPCanvas.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677781516C0D6A0007206CF /* VMPCanvas.m */; };
+		1677782F16C0D6F3007206CF /* VMTextPreprocessor.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677782E16C0D6F3007206CF /* VMTextPreprocessor.m */; };
+		1677783016C0D6F3007206CF /* VMTextPreprocessor.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677782E16C0D6F3007206CF /* VMTextPreprocessor.m */; };
+		1677783116C0D6F3007206CF /* VMTextPreprocessor.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677782E16C0D6F3007206CF /* VMTextPreprocessor.m */; };
+		1677783216C0D6F3007206CF /* VMTextPreprocessor.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677782E16C0D6F3007206CF /* VMTextPreprocessor.m */; };
+		1677783616C0F6E3007206CF /* VMPJSONDeserializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677783516C0F6E3007206CF /* VMPJSONDeserializer.m */; };
+		1677783716C0F6E3007206CF /* VMPJSONDeserializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677783516C0F6E3007206CF /* VMPJSONDeserializer.m */; };
+		1677783816C0F6E3007206CF /* VMPJSONDeserializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677783516C0F6E3007206CF /* VMPJSONDeserializer.m */; };
+		1677783916C0F6E3007206CF /* VMPJSONDeserializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677783516C0F6E3007206CF /* VMPJSONDeserializer.m */; };
+		1677783C16C0F790007206CF /* VMPJSONScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677783B16C0F790007206CF /* VMPJSONScanner.m */; };
+		1677783D16C0F790007206CF /* VMPJSONScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677783B16C0F790007206CF /* VMPJSONScanner.m */; };
+		1677783E16C0F790007206CF /* VMPJSONScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677783B16C0F790007206CF /* VMPJSONScanner.m */; };
+		1677783F16C0F791007206CF /* VMPJSONScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677783B16C0F790007206CF /* VMPJSONScanner.m */; };
 		168CEBB3163186B400B721E2 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 168CEBB2163186B400B721E2 /* Cocoa.framework */; };
 		168CEBBD163186B400B721E2 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 168CEBBB163186B400B721E2 /* InfoPlist.strings */; };
 		168CEBC0163186B400B721E2 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 168CEBBF163186B400B721E2 /* main.m */; };
 		168CEBC3163186B400B721E2 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 168CEBC1163186B400B721E2 /* Credits.rtf */; };
-		168CEBC6163186B400B721E2 /* AmbientPianoMacOSAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 168CEBC5163186B400B721E2 /* AmbientPianoMacOSAppDelegate.m */; };
+		168CEBC6163186B400B721E2 /* VariableMediaPlayerAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 168CEBC5163186B400B721E2 /* VariableMediaPlayerAppDelegate.m */; };
 		168CEBC9163186B400B721E2 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 168CEBC7163186B400B721E2 /* MainMenu.xib */; };
 		168CEBCC163186B400B721E2 /* AmbientPianoMacOS.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 168CEBCA163186B400B721E2 /* AmbientPianoMacOS.xcdatamodeld */; };
+		168CEBD51631871400B721E2 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 168CEBD41631871400B721E2 /* CoreAudio.framework */; };
+		1695BE631633EE61009103F4 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 168CEBBF163186B400B721E2 /* main.m */; };
+		1695BE641633EE61009103F4 /* VariableMediaPlayerAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 168CEBC5163186B400B721E2 /* VariableMediaPlayerAppDelegate.m */; };
+		1695BE651633EE61009103F4 /* AmbientPianoMacOS.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 168CEBCA163186B400B721E2 /* AmbientPianoMacOS.xcdatamodeld */; };
+		1695BE6B1633EE61009103F4 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 168CEBB2163186B400B721E2 /* Cocoa.framework */; };
+		1695BE6D1633EE61009103F4 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 168CEBD41631871400B721E2 /* CoreAudio.framework */; };
+		1695BE6F1633EE61009103F4 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 168CEBBB163186B400B721E2 /* InfoPlist.strings */; };
+		1695BE701633EE61009103F4 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 168CEBC1163186B400B721E2 /* Credits.rtf */; };
+		1695BE711633EE61009103F4 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 168CEBC7163186B400B721E2 /* MainMenu.xib */; };
+		1695BE851634D5A3009103F4 /* vmp.sdef in Resources */ = {isa = PBXBuildFile; fileRef = 1695BE841634D5A3009103F4 /* vmp.sdef */; };
+		1695BE8A163529FA009103F4 /* vmp.sdef in Resources */ = {isa = PBXBuildFile; fileRef = 1695BE841634D5A3009103F4 /* vmp.sdef */; };
+		16DC63E416B78D8D00E579AE /* play.png in Resources */ = {isa = PBXBuildFile; fileRef = 16DC63E016B78D8D00E579AE /* play.png */; };
+		16DC63E516B78D8D00E579AE /* play.png in Resources */ = {isa = PBXBuildFile; fileRef = 16DC63E016B78D8D00E579AE /* play.png */; };
+		16DC63E616B78D8D00E579AE /* play.png in Resources */ = {isa = PBXBuildFile; fileRef = 16DC63E016B78D8D00E579AE /* play.png */; };
+		16DC63EC16B78E2B00E579AE /* stop.png in Resources */ = {isa = PBXBuildFile; fileRef = 16DC63EB16B78E2A00E579AE /* stop.png */; };
+		16DC63ED16B78E2B00E579AE /* stop.png in Resources */ = {isa = PBXBuildFile; fileRef = 16DC63EB16B78E2A00E579AE /* stop.png */; };
+		16DC63EE16B78E2B00E579AE /* stop.png in Resources */ = {isa = PBXBuildFile; fileRef = 16DC63EB16B78E2A00E579AE /* stop.png */; };
+		16F75C9B16B9A689005D462F /* default.vms in Resources */ = {isa = PBXBuildFile; fileRef = 16F75C9A16B9A689005D462F /* default.vms */; };
+		16F75C9C16B9A689005D462F /* default.vms in Resources */ = {isa = PBXBuildFile; fileRef = 16F75C9A16B9A689005D462F /* default.vms */; };
+		16F75C9D16B9A689005D462F /* default.vms in Resources */ = {isa = PBXBuildFile; fileRef = 16F75C9A16B9A689005D462F /* default.vms */; };
+		16F75C9E16B9A689005D462F /* default.vms in Resources */ = {isa = PBXBuildFile; fileRef = 16F75C9A16B9A689005D462F /* default.vms */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXBuildRule section */
+		1677772716C0C777007206CF /* PBXBuildRule */ = {
+			isa = PBXBuildRule;
+			compilerSpec = com.apple.compilers.proxy.script;
+			filePatterns = "*.m4";
+			fileType = pattern.proxy;
+			isEditable = 1;
+			outputFiles = (
+				"$(DERIVED_FILES_DIR)/$(INPUT_FILE_BASE)",
+			);
+			script = "m4 $INPUT_FILE_PATH >$DERIVED_FILES_DIR/$INPUT_FILE_BASE";
+		};
+		1677772816C0C963007206CF /* PBXBuildRule */ = {
+			isa = PBXBuildRule;
+			compilerSpec = com.apple.compilers.proxy.script;
+			filePatterns = "*.m4";
+			fileType = pattern.proxy;
+			isEditable = 1;
+			outputFiles = (
+				"$(DERIVED_FILES_DIR)/$(INPUT_FILE_BASE)",
+			);
+			script = "m4 $INPUT_FILE_PATH >$DERIVED_FILES_DIR/$INPUT_FILE_BASE";
+		};
+		1677772916C0C96E007206CF /* PBXBuildRule */ = {
+			isa = PBXBuildRule;
+			compilerSpec = com.apple.compilers.proxy.script;
+			filePatterns = "*.m4";
+			fileType = pattern.proxy;
+			isEditable = 1;
+			outputFiles = (
+				"$(DERIVED_FILES_DIR)/$(INPUT_FILE_BASE)",
+			);
+			script = "m4 $INPUT_FILE_PATH >$DERIVED_FILES_DIR/$INPUT_FILE_BASE";
+		};
+		1677772A16C0C986007206CF /* PBXBuildRule */ = {
+			isa = PBXBuildRule;
+			compilerSpec = com.apple.compilers.proxy.script;
+			filePatterns = "*.m4";
+			fileType = pattern.proxy;
+			isEditable = 1;
+			outputFiles = (
+				"$(DERIVED_FILES_DIR)/$(INPUT_FILE_BASE)",
+			);
+			script = "m4 $INPUT_FILE_PATH >$DERIVED_FILES_DIR/$INPUT_FILE_BASE";
+		};
+/* End PBXBuildRule section */
+
+/* Begin PBXContainerItemProxy section */
+		162F7B3916A0341D00420443 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 168CEBA5163186B300B721E2 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 162F7B1716A0341900420443;
+			remoteInfo = TraumBaum;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
-		168CEBAE163186B400B721E2 /* AmbientPianoMacOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AmbientPianoMacOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		160CF19D165789D200C6BFE7 /* defaultSong */ = {isa = PBXFileReference; lastKnownFileType = folder; name = defaultSong; path = ../../../JACKSON/Kashiwanoha/Kashiwa1/Bounces/NonLinear/defaultSong; sourceTree = "<group>"; };
+		160CF1A116578AB800C6BFE7 /* default.vms */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = default.vms; path = ../../../JACKSON/Kashiwanoha/Kashiwa1/Bounces/NonLinear/defaultSong/default.vms; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.javascript; };
+		1613E76E16C4EFDA00680B88 /* VMDataTypesMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = VMDataTypesMacros.h; path = DataStructures/VMDataTypesMacros.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		1613E77116C4F19F00680B88 /* VMFunction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VMFunction.m; sourceTree = "<group>"; };
+		1624A6FB1642B76B004AA351 /* vsDocIcon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = vsDocIcon.icns; path = ../vsDocIcon.icns; sourceTree = "<group>"; };
+		1624A6FE1642B7D0004AA351 /* vsPlayer.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = vsPlayer.icns; path = ../vsPlayer.icns; sourceTree = "<group>"; };
+		1624A7131644D8AC004AA351 /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = usr/lib/libicucore.dylib; sourceTree = SDKROOT; };
+		162F7B1816A0341900420443 /* TraumBaum.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TraumBaum.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		162F7B1D16A0341C00420443 /* TraumBaum-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "TraumBaum-Info.plist"; sourceTree = "<group>"; };
+		162F7B1F16A0341C00420443 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		162F7B2116A0341C00420443 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		162F7B2316A0341C00420443 /* TraumBaum-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TraumBaum-Prefix.pch"; sourceTree = "<group>"; };
+		162F7B2516A0341C00420443 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
+		162F7B3516A0341D00420443 /* TraumBaumTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TraumBaumTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
+		162F7B3D16A0341E00420443 /* TraumBaumTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "TraumBaumTests-Info.plist"; sourceTree = "<group>"; };
+		162F7B3F16A0341E00420443 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		162F7B4116A0341E00420443 /* TraumBaumTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TraumBaumTests.h; sourceTree = "<group>"; };
+		162F7B4216A0341E00420443 /* TraumBaumTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TraumBaumTests.m; sourceTree = "<group>"; };
+		162F7B6416A114B800420443 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		162F7B6A16A1171200420443 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
+		16347C0E16C286C9002BE1FE /* VMPGraph.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = VMPGraph.h; path = Views/VMPGraph.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		16347C0F16C286C9002BE1FE /* VMPGraph.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = VMPGraph.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		16347C1516C33509002BE1FE /* VariableMediaPlayerAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = VariableMediaPlayerAppDelegate.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		1636DF8B16A11C7A00100130 /* defaultSong */ = {isa = PBXFileReference; lastKnownFileType = folder; name = defaultSong; path = ../../../Work/2010/traumbaum/defaultSong; sourceTree = "<group>"; };
+		1677773516C0D5DE007206CF /* MultiPlatform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MultiPlatform.h; sourceTree = "<group>"; };
+		1677773716C0D600007206CF /* ApplescriptReceiver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ApplescriptReceiver.h; path = Misc/ApplescriptReceiver.h; sourceTree = "<group>"; };
+		1677773816C0D600007206CF /* ApplescriptReceiver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplescriptReceiver.m; sourceTree = "<group>"; };
+		1677773916C0D600007206CF /* boxmuller.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = boxmuller.c; sourceTree = "<group>"; };
+		1677773A16C0D600007206CF /* boxmuller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = boxmuller.h; path = Misc/boxmuller.h; sourceTree = "<group>"; };
+		1677773B16C0D600007206CF /* VMException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = VMException.h; path = Misc/VMException.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		1677773C16C0D600007206CF /* VMException.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = VMException.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		1677775316C0D639007206CF /* License.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = License.html; sourceTree = "<group>"; };
+		1677775416C0D639007206CF /* License.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = License.rtf; sourceTree = "<group>"; };
+		1677775516C0D639007206CF /* RegexKitLite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RegexKitLite.h; sourceTree = "<group>"; };
+		1677775616C0D639007206CF /* RegexKitLite.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = RegexKitLite.html; sourceTree = "<group>"; };
+		1677775716C0D639007206CF /* RegexKitLite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RegexKitLite.m; sourceTree = "<group>"; };
+		1677775A16C0D639007206CF /* Config.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
+		1677775B16C0D639007206CF /* README.markdown */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.markdown; sourceTree = "<group>"; };
+		1677775D16C0D639007206CF /* CDataScanner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDataScanner.h; sourceTree = "<group>"; };
+		1677775E16C0D639007206CF /* CDataScanner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CDataScanner.m; sourceTree = "<group>"; };
+		1677776016C0D639007206CF /* CFilteringJSONSerializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CFilteringJSONSerializer.h; sourceTree = "<group>"; };
+		1677776116C0D639007206CF /* CFilteringJSONSerializer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CFilteringJSONSerializer.m; sourceTree = "<group>"; };
+		1677776216C0D639007206CF /* CJSONDeserializer_BlocksExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CJSONDeserializer_BlocksExtensions.h; sourceTree = "<group>"; };
+		1677776316C0D639007206CF /* CJSONDeserializer_BlocksExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CJSONDeserializer_BlocksExtensions.m; sourceTree = "<group>"; };
+		1677776416C0D639007206CF /* CJSONSerialization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CJSONSerialization.h; sourceTree = "<group>"; };
+		1677776516C0D639007206CF /* CJSONSerialization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CJSONSerialization.m; sourceTree = "<group>"; };
+		1677776616C0D639007206CF /* CJSONSerializedData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CJSONSerializedData.h; sourceTree = "<group>"; };
+		1677776716C0D639007206CF /* CJSONSerializedData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CJSONSerializedData.m; sourceTree = "<group>"; };
+		1677776916C0D639007206CF /* CDataScanner_Extensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDataScanner_Extensions.h; sourceTree = "<group>"; };
+		1677776A16C0D639007206CF /* CDataScanner_Extensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CDataScanner_Extensions.m; sourceTree = "<group>"; };
+		1677776B16C0D639007206CF /* NSDictionary_JSONExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSDictionary_JSONExtensions.h; sourceTree = "<group>"; };
+		1677776C16C0D639007206CF /* NSDictionary_JSONExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSDictionary_JSONExtensions.m; sourceTree = "<group>"; };
+		1677776E16C0D639007206CF /* CJSONDeserializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CJSONDeserializer.h; sourceTree = "<group>"; };
+		1677776F16C0D639007206CF /* CJSONDeserializer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CJSONDeserializer.m; sourceTree = "<group>"; };
+		1677777016C0D639007206CF /* CJSONScanner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CJSONScanner.h; sourceTree = "<group>"; };
+		1677777116C0D639007206CF /* CJSONScanner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CJSONScanner.m; sourceTree = "<group>"; };
+		1677777216C0D639007206CF /* CJSONSerializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CJSONSerializer.h; sourceTree = "<group>"; };
+		1677777316C0D639007206CF /* CJSONSerializer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CJSONSerializer.m; sourceTree = "<group>"; };
+		1677777416C0D639007206CF /* JSONRepresentation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSONRepresentation.h; sourceTree = "<group>"; };
+		167777D216C0D651007206CF /* VariableSong.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VariableSong.h; path = DataStructures/VariableSong.h; sourceTree = "<group>"; };
+		167777D316C0D651007206CF /* VariableSong.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VariableSong.m; sourceTree = "<group>"; };
+		167777D416C0D651007206CF /* VMDataTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VMDataTypes.h; path = DataStructures/VMDataTypes.h; sourceTree = "<group>"; };
+		167777D516C0D651007206CF /* VMDataTypes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VMDataTypes.m; sourceTree = "<group>"; };
+		167777D616C0D651007206CF /* VMPreprocessor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VMPreprocessor.h; path = DataStructures/VMPreprocessor.h; sourceTree = "<group>"; };
+		167777D716C0D651007206CF /* VMPreprocessor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VMPreprocessor.m; sourceTree = "<group>"; };
+		167777D816C0D651007206CF /* VMPrimitives.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VMPrimitives.h; path = DataStructures/VMPrimitives.h; sourceTree = "<group>"; };
+		167777D916C0D651007206CF /* VMPrimitives.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VMPrimitives.m; sourceTree = "<group>"; };
+		167777DA16C0D651007206CF /* VMScoreEvaluator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = VMScoreEvaluator.h; path = DataStructures/VMScoreEvaluator.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		167777DB16C0D651007206CF /* VMScoreEvaluator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = VMScoreEvaluator.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		167777DC16C0D651007206CF /* VMSong.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VMSong.h; path = DataStructures/VMSong.h; sourceTree = "<group>"; };
+		167777DD16C0D651007206CF /* VMSong.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VMSong.m; sourceTree = "<group>"; };
+		167777F716C0D661007206CF /* AudioPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AudioPlayer.h; path = AudioPlayer/AudioPlayer.h; sourceTree = "<group>"; };
+		167777F816C0D661007206CF /* AudioPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioPlayer.m; sourceTree = "<group>"; };
+		167777F916C0D661007206CF /* PlayerBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PlayerBase.h; path = AudioPlayer/PlayerBase.h; sourceTree = "<group>"; };
+		167777FA16C0D661007206CF /* PlayerBase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlayerBase.m; sourceTree = "<group>"; };
+		167777FB16C0D661007206CF /* VMPSongPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VMPSongPlayer.h; path = AudioPlayer/VMPSongPlayer.h; sourceTree = "<group>"; };
+		167777FC16C0D661007206CF /* VMPSongPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VMPSongPlayer.m; sourceTree = "<group>"; };
+		1677780A16C0D6A0007206CF /* DebugView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DebugView.h; path = Views/DebugView.h; sourceTree = "<group>"; };
+		1677780B16C0D6A0007206CF /* DebugView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DebugView.m; sourceTree = "<group>"; };
+		1677780C16C0D6A0007206CF /* VMPObjectBrowserView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = VMPObjectBrowserView.h; path = Views/VMPObjectBrowserView.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		1677780D16C0D6A0007206CF /* VMPObjectBrowserView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = VMPObjectBrowserView.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		1677780E16C0D6A0007206CF /* PartCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PartCell.h; path = Views/PartCell.h; sourceTree = "<group>"; };
+		1677780F16C0D6A0007206CF /* PartCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PartCell.m; sourceTree = "<group>"; };
+		1677781016C0D6A0007206CF /* SequenceView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SequenceView.h; path = Views/SequenceView.h; sourceTree = "<group>"; };
+		1677781116C0D6A0007206CF /* SequenceView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SequenceView.m; sourceTree = "<group>"; };
+		1677781216C0D6A0007206CF /* TrackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TrackView.h; path = Views/TrackView.h; sourceTree = "<group>"; };
+		1677781316C0D6A0007206CF /* TrackView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TrackView.m; sourceTree = "<group>"; };
+		1677781416C0D6A0007206CF /* VMPCanvas.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VMPCanvas.h; path = Views/VMPCanvas.h; sourceTree = "<group>"; };
+		1677781516C0D6A0007206CF /* VMPCanvas.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VMPCanvas.m; sourceTree = "<group>"; };
+		1677782E16C0D6F3007206CF /* VMTextPreprocessor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VMTextPreprocessor.m; sourceTree = "<group>"; };
+		1677783316C0D701007206CF /* VMTextPreprocessor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VMTextPreprocessor.h; path = Misc/VMTextPreprocessor.h; sourceTree = "<group>"; };
+		1677783416C0F6E3007206CF /* VMPJSONDeserializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VMPJSONDeserializer.h; path = "AmbientPianoMacOS/Libs/TouchJSON-master/VMPJSONDeserializer.h"; sourceTree = SOURCE_ROOT; };
+		1677783516C0F6E3007206CF /* VMPJSONDeserializer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VMPJSONDeserializer.m; path = "AmbientPianoMacOS/Libs/TouchJSON-master/VMPJSONDeserializer.m"; sourceTree = SOURCE_ROOT; };
+		1677783A16C0F790007206CF /* VMPJSONScanner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VMPJSONScanner.h; path = "AmbientPianoMacOS/Libs/TouchJSON-master/VMPJSONScanner.h"; sourceTree = SOURCE_ROOT; };
+		1677783B16C0F790007206CF /* VMPJSONScanner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VMPJSONScanner.m; path = "AmbientPianoMacOS/Libs/TouchJSON-master/VMPJSONScanner.m"; sourceTree = SOURCE_ROOT; };
+		168CEBAE163186B400B721E2 /* NonlinearMusicPlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NonlinearMusicPlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		168CEBB2163186B400B721E2 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		168CEBB5163186B400B721E2 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		168CEBB6163186B400B721E2 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		168CEBB7163186B400B721E2 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		168CEBBA163186B400B721E2 /* AmbientPianoMacOS-Info.plist */ = {isa = PBXFileReference; path = "AmbientPianoMacOS-Info.plist"; sourceTree = "<group>"; };
+		168CEBBA163186B400B721E2 /* AmbientPianoMacOS-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "AmbientPianoMacOS-Info.plist"; path = "../AmbientPianoMacOS/AmbientPianoMacOS-Info.plist"; sourceTree = "<group>"; };
 		168CEBBC163186B400B721E2 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		168CEBBE163186B400B721E2 /* AmbientPianoMacOS-Prefix.pch */ = {isa = PBXFileReference; path = "AmbientPianoMacOS-Prefix.pch"; sourceTree = "<group>"; };
+		168CEBBE163186B400B721E2 /* AmbientPianoMacOS-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = "AmbientPianoMacOS-Prefix.pch"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		168CEBBF163186B400B721E2 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		168CEBC2163186B400B721E2 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
-		168CEBC4163186B400B721E2 /* AmbientPianoMacOSAppDelegate.h */ = {isa = PBXFileReference; path = AmbientPianoMacOSAppDelegate.h; sourceTree = "<group>"; };
-		168CEBC5163186B400B721E2 /* AmbientPianoMacOSAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AmbientPianoMacOSAppDelegate.m; sourceTree = "<group>"; };
+		168CEBC5163186B400B721E2 /* VariableMediaPlayerAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = VariableMediaPlayerAppDelegate.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		168CEBC8163186B400B721E2 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		168CEBCB163186B400B721E2 /* AmbientPianoMacOS.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = AmbientPianoMacOS.xcdatamodel; sourceTree = "<group>"; };
+		168CEBD41631871400B721E2 /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
+		1695BE761633EE61009103F4 /* KashiwanohaNMP.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KashiwanohaNMP.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1695BE841634D5A3009103F4 /* vmp.sdef */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = vmp.sdef; sourceTree = "<group>"; };
+		16DC63E016B78D8D00E579AE /* play.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = play.png; sourceTree = "<group>"; };
+		16DC63EB16B78E2A00E579AE /* stop.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = stop.png; sourceTree = "<group>"; };
+		16F75C9A16B9A689005D462F /* default.vms */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = default.vms; path = ../../../Work/2010/traumbaum/defaultSong/default.vms; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.javascript; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		162F7B1516A0341900420443 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				162F7B6816A1163500420443 /* AudioToolbox.framework in Frameworks */,
+				162F7B6616A1151B00420443 /* libicucore.dylib in Frameworks */,
+				162F7B1A16A0341900420443 /* Cocoa.framework in Frameworks */,
+				162F7B6916A1167D00420443 /* CoreAudio.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		162F7B3116A0341D00420443 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				162F7B6B16A1171300420443 /* SenTestingKit.framework in Frameworks */,
+				162F7B3816A0341D00420443 /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		168CEBAB163186B400B721E2 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1624A7151644D8B2004AA351 /* libicucore.dylib in Frameworks */,
 				168CEBB3163186B400B721E2 /* Cocoa.framework in Frameworks */,
+				168CEBD51631871400B721E2 /* CoreAudio.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1695BE6A1633EE61009103F4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1624A7141644D8AC004AA351 /* libicucore.dylib in Frameworks */,
+				1695BE6B1633EE61009103F4 /* Cocoa.framework in Frameworks */,
+				1695BE6D1633EE61009103F4 /* CoreAudio.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1624A63A16420B1F004AA351 /* Libs */ = {
+			isa = PBXGroup;
+			children = (
+				1677774A16C0D639007206CF /* RegexKitLite-4.0 */,
+				1677775816C0D639007206CF /* TouchJSON-master */,
+			);
+			name = Libs;
+			sourceTree = "<group>";
+		};
+		1624A63C16420B4A004AA351 /* OSXApp */ = {
+			isa = PBXGroup;
+			children = (
+				168CEBCA163186B400B721E2 /* AmbientPianoMacOS.xcdatamodeld */,
+				168CEBC1163186B400B721E2 /* Credits.rtf */,
+				16DC63E016B78D8D00E579AE /* play.png */,
+				16DC63EB16B78E2A00E579AE /* stop.png */,
+				1624A6FB1642B76B004AA351 /* vsDocIcon.icns */,
+				1624A6FE1642B7D0004AA351 /* vsPlayer.icns */,
+				1695BE841634D5A3009103F4 /* vmp.sdef */,
+				168CEBC7163186B400B721E2 /* MainMenu.xib */,
+				168CEBC5163186B400B721E2 /* VariableMediaPlayerAppDelegate.m */,
+				16347C1516C33509002BE1FE /* VariableMediaPlayerAppDelegate.h */,
+				168CEBBF163186B400B721E2 /* main.m */,
+			);
+			name = OSXApp;
+			sourceTree = "<group>";
+		};
+		162F7B1B16A0341900420443 /* TraumBaum_VMP */ = {
+			isa = PBXGroup;
+			children = (
+				1636DF8B16A11C7A00100130 /* defaultSong */,
+				16F75C9A16B9A689005D462F /* default.vms */,
+				162F7B1C16A0341C00420443 /* Supporting Files */,
+			);
+			name = TraumBaum_VMP;
+			path = TraumBaum;
+			sourceTree = "<group>";
+		};
+		162F7B1C16A0341C00420443 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				162F7B1E16A0341C00420443 /* InfoPlist.strings */,
+				168CEBBA163186B400B721E2 /* AmbientPianoMacOS-Info.plist */,
+				162F7B1D16A0341C00420443 /* TraumBaum-Info.plist */,
+				162F7B2116A0341C00420443 /* main.m */,
+				162F7B2316A0341C00420443 /* TraumBaum-Prefix.pch */,
+				162F7B2416A0341C00420443 /* Credits.rtf */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		162F7B3B16A0341D00420443 /* TraumBaumTests */ = {
+			isa = PBXGroup;
+			children = (
+				162F7B4116A0341E00420443 /* TraumBaumTests.h */,
+				162F7B4216A0341E00420443 /* TraumBaumTests.m */,
+				162F7B3C16A0341E00420443 /* Supporting Files */,
+			);
+			path = TraumBaumTests;
+			sourceTree = "<group>";
+		};
+		162F7B3C16A0341E00420443 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				162F7B3D16A0341E00420443 /* TraumBaumTests-Info.plist */,
+				162F7B3E16A0341E00420443 /* InfoPlist.strings */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		162F7B4A16A034DB00420443 /* Kashiwanoha_VMP */ = {
+			isa = PBXGroup;
+			children = (
+				160CF19D165789D200C6BFE7 /* defaultSong */,
+				160CF1A116578AB800C6BFE7 /* default.vms */,
+			);
+			name = Kashiwanoha_VMP;
+			sourceTree = "<group>";
+		};
+		1677773616C0D600007206CF /* Misc */ = {
+			isa = PBXGroup;
+			children = (
+				1677773916C0D600007206CF /* boxmuller.c */,
+				1677782E16C0D6F3007206CF /* VMTextPreprocessor.m */,
+				1677773816C0D600007206CF /* ApplescriptReceiver.m */,
+				1677773C16C0D600007206CF /* VMException.m */,
+			);
+			path = Misc;
+			sourceTree = "<group>";
+		};
+		1677774A16C0D639007206CF /* RegexKitLite-4.0 */ = {
+			isa = PBXGroup;
+			children = (
+				1677775316C0D639007206CF /* License.html */,
+				1677775416C0D639007206CF /* License.rtf */,
+				1677775516C0D639007206CF /* RegexKitLite.h */,
+				1677775616C0D639007206CF /* RegexKitLite.html */,
+				1677775716C0D639007206CF /* RegexKitLite.m */,
+			);
+			name = "RegexKitLite-4.0";
+			path = "Libs/RegexKitLite-4.0";
+			sourceTree = "<group>";
+		};
+		1677775816C0D639007206CF /* TouchJSON-master */ = {
+			isa = PBXGroup;
+			children = (
+				1677775A16C0D639007206CF /* Config.xcconfig */,
+				1677775B16C0D639007206CF /* README.markdown */,
+				1677775C16C0D639007206CF /* Source */,
+			);
+			name = "TouchJSON-master";
+			path = "Libs/TouchJSON-master";
+			sourceTree = "<group>";
+		};
+		1677775C16C0D639007206CF /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				1677775D16C0D639007206CF /* CDataScanner.h */,
+				1677775E16C0D639007206CF /* CDataScanner.m */,
+				1677775F16C0D639007206CF /* Experimental */,
+				1677776816C0D639007206CF /* Extensions */,
+				1677784016C0F79F007206CF /* JSON_VM */,
+				1677776D16C0D639007206CF /* JSON */,
+			);
+			path = Source;
+			sourceTree = "<group>";
+		};
+		1677775F16C0D639007206CF /* Experimental */ = {
+			isa = PBXGroup;
+			children = (
+				1677776016C0D639007206CF /* CFilteringJSONSerializer.h */,
+				1677776116C0D639007206CF /* CFilteringJSONSerializer.m */,
+				1677776216C0D639007206CF /* CJSONDeserializer_BlocksExtensions.h */,
+				1677776316C0D639007206CF /* CJSONDeserializer_BlocksExtensions.m */,
+				1677776416C0D639007206CF /* CJSONSerialization.h */,
+				1677776516C0D639007206CF /* CJSONSerialization.m */,
+				1677776616C0D639007206CF /* CJSONSerializedData.h */,
+				1677776716C0D639007206CF /* CJSONSerializedData.m */,
+			);
+			path = Experimental;
+			sourceTree = "<group>";
+		};
+		1677776816C0D639007206CF /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				1677776916C0D639007206CF /* CDataScanner_Extensions.h */,
+				1677776A16C0D639007206CF /* CDataScanner_Extensions.m */,
+				1677776B16C0D639007206CF /* NSDictionary_JSONExtensions.h */,
+				1677776C16C0D639007206CF /* NSDictionary_JSONExtensions.m */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		1677776D16C0D639007206CF /* JSON */ = {
+			isa = PBXGroup;
+			children = (
+				1677776E16C0D639007206CF /* CJSONDeserializer.h */,
+				1677776F16C0D639007206CF /* CJSONDeserializer.m */,
+				1677777016C0D639007206CF /* CJSONScanner.h */,
+				1677777116C0D639007206CF /* CJSONScanner.m */,
+				1677777216C0D639007206CF /* CJSONSerializer.h */,
+				1677777316C0D639007206CF /* CJSONSerializer.m */,
+				1677777416C0D639007206CF /* JSONRepresentation.h */,
+			);
+			path = JSON;
+			sourceTree = "<group>";
+		};
+		167777D116C0D651007206CF /* DataStructures */ = {
+			isa = PBXGroup;
+			children = (
+				167777D316C0D651007206CF /* VariableSong.m */,
+				1613E77116C4F19F00680B88 /* VMFunction.m */,
+				167777D516C0D651007206CF /* VMDataTypes.m */,
+				167777D716C0D651007206CF /* VMPreprocessor.m */,
+				167777D916C0D651007206CF /* VMPrimitives.m */,
+				167777DB16C0D651007206CF /* VMScoreEvaluator.m */,
+				167777DD16C0D651007206CF /* VMSong.m */,
+			);
+			path = DataStructures;
+			sourceTree = "<group>";
+		};
+		167777F616C0D661007206CF /* AudioPlayer */ = {
+			isa = PBXGroup;
+			children = (
+				167777F816C0D661007206CF /* AudioPlayer.m */,
+				167777FA16C0D661007206CF /* PlayerBase.m */,
+				167777FC16C0D661007206CF /* VMPSongPlayer.m */,
+			);
+			path = AudioPlayer;
+			sourceTree = "<group>";
+		};
+		1677780916C0D6A0007206CF /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				1677781516C0D6A0007206CF /* VMPCanvas.m */,
+				1677780B16C0D6A0007206CF /* DebugView.m */,
+				1677780D16C0D6A0007206CF /* VMPObjectBrowserView.m */,
+				1677780F16C0D6A0007206CF /* PartCell.m */,
+				16347C0F16C286C9002BE1FE /* VMPGraph.m */,
+				1677781116C0D6A0007206CF /* SequenceView.m */,
+				1677781316C0D6A0007206CF /* TrackView.m */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		1677784016C0F79F007206CF /* JSON_VM */ = {
+			isa = PBXGroup;
+			children = (
+				1677783416C0F6E3007206CF /* VMPJSONDeserializer.h */,
+				1677783516C0F6E3007206CF /* VMPJSONDeserializer.m */,
+				1677783A16C0F790007206CF /* VMPJSONScanner.h */,
+				1677783B16C0F790007206CF /* VMPJSONScanner.m */,
+			);
+			name = JSON_VM;
+			path = JSON;
+			sourceTree = "<group>";
+		};
+		1677784116C13607007206CF /* headers */ = {
+			isa = PBXGroup;
+			children = (
+				1613E76E16C4EFDA00680B88 /* VMDataTypesMacros.h */,
+				16347C0E16C286C9002BE1FE /* VMPGraph.h */,
+				1677783316C0D701007206CF /* VMTextPreprocessor.h */,
+				1677773716C0D600007206CF /* ApplescriptReceiver.h */,
+				1677773B16C0D600007206CF /* VMException.h */,
+				1677773A16C0D600007206CF /* boxmuller.h */,
+				1677780A16C0D6A0007206CF /* DebugView.h */,
+				1677780C16C0D6A0007206CF /* VMPObjectBrowserView.h */,
+				1677780E16C0D6A0007206CF /* PartCell.h */,
+				1677781016C0D6A0007206CF /* SequenceView.h */,
+				1677781216C0D6A0007206CF /* TrackView.h */,
+				1677781416C0D6A0007206CF /* VMPCanvas.h */,
+				167777F716C0D661007206CF /* AudioPlayer.h */,
+				167777F916C0D661007206CF /* PlayerBase.h */,
+				167777FB16C0D661007206CF /* VMPSongPlayer.h */,
+				167777D216C0D651007206CF /* VariableSong.h */,
+				167777D416C0D651007206CF /* VMDataTypes.h */,
+				167777D616C0D651007206CF /* VMPreprocessor.h */,
+				167777D816C0D651007206CF /* VMPrimitives.h */,
+				167777DA16C0D651007206CF /* VMScoreEvaluator.h */,
+				167777DC16C0D651007206CF /* VMSong.h */,
+			);
+			name = headers;
+			sourceTree = "<group>";
+		};
 		168CEBA3163186B300B721E2 = {
 			isa = PBXGroup;
 			children = (
-				168CEBB8163186B400B721E2 /* AmbientPianoMacOS */,
+				162F7B1B16A0341900420443 /* TraumBaum_VMP */,
+				162F7B4A16A034DB00420443 /* Kashiwanoha_VMP */,
+				168CEBB8163186B400B721E2 /* VMPlayer */,
+				162F7B3B16A0341D00420443 /* TraumBaumTests */,
 				168CEBB1163186B400B721E2 /* Frameworks */,
 				168CEBAF163186B400B721E2 /* Products */,
 			);
@@ -57,7 +698,10 @@
 		168CEBAF163186B400B721E2 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				168CEBAE163186B400B721E2 /* AmbientPianoMacOS.app */,
+				168CEBAE163186B400B721E2 /* NonlinearMusicPlayer.app */,
+				1695BE761633EE61009103F4 /* KashiwanohaNMP.app */,
+				162F7B1816A0341900420443 /* TraumBaum.app */,
+				162F7B3516A0341D00420443 /* TraumBaumTests.octest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -65,6 +709,10 @@
 		168CEBB1163186B400B721E2 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				162F7B6A16A1171200420443 /* SenTestingKit.framework */,
+				162F7B6416A114B800420443 /* AudioToolbox.framework */,
+				1624A7131644D8AC004AA351 /* libicucore.dylib */,
+				168CEBD41631871400B721E2 /* CoreAudio.framework */,
 				168CEBB2163186B400B721E2 /* Cocoa.framework */,
 				168CEBB4163186B400B721E2 /* Other Frameworks */,
 			);
@@ -81,26 +729,28 @@
 			name = "Other Frameworks";
 			sourceTree = "<group>";
 		};
-		168CEBB8163186B400B721E2 /* AmbientPianoMacOS */ = {
+		168CEBB8163186B400B721E2 /* VMPlayer */ = {
 			isa = PBXGroup;
 			children = (
-				168CEBC4163186B400B721E2 /* AmbientPianoMacOSAppDelegate.h */,
-				168CEBC5163186B400B721E2 /* AmbientPianoMacOSAppDelegate.m */,
-				168CEBC7163186B400B721E2 /* MainMenu.xib */,
-				168CEBCA163186B400B721E2 /* AmbientPianoMacOS.xcdatamodeld */,
+				1677784116C13607007206CF /* headers */,
+				1677773516C0D5DE007206CF /* MultiPlatform.h */,
+				1677773616C0D600007206CF /* Misc */,
+				1624A63C16420B4A004AA351 /* OSXApp */,
+				1624A63A16420B1F004AA351 /* Libs */,
+				167777D116C0D651007206CF /* DataStructures */,
+				167777F616C0D661007206CF /* AudioPlayer */,
+				1677780916C0D6A0007206CF /* Views */,
 				168CEBB9163186B400B721E2 /* Supporting Files */,
 			);
+			name = VMPlayer;
 			path = AmbientPianoMacOS;
 			sourceTree = "<group>";
 		};
 		168CEBB9163186B400B721E2 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				168CEBBA163186B400B721E2 /* AmbientPianoMacOS-Info.plist */,
 				168CEBBB163186B400B721E2 /* InfoPlist.strings */,
 				168CEBBE163186B400B721E2 /* AmbientPianoMacOS-Prefix.pch */,
-				168CEBBF163186B400B721E2 /* main.m */,
-				168CEBC1163186B400B721E2 /* Credits.rtf */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -108,21 +758,78 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		168CEBAD163186B400B721E2 /* AmbientPianoMacOS */ = {
+		162F7B1716A0341900420443 /* TraumBaum */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 168CEBCF163186B400B721E2 /* Build configuration list for PBXNativeTarget "AmbientPianoMacOS" */;
+			buildConfigurationList = 162F7B4416A0341E00420443 /* Build configuration list for PBXNativeTarget "TraumBaum" */;
+			buildPhases = (
+				162F7B1416A0341900420443 /* Sources */,
+				162F7B1516A0341900420443 /* Frameworks */,
+				162F7B1616A0341900420443 /* Resources */,
+			);
+			buildRules = (
+				1677772716C0C777007206CF /* PBXBuildRule */,
+			);
+			dependencies = (
+			);
+			name = TraumBaum;
+			productName = TraumBaum;
+			productReference = 162F7B1816A0341900420443 /* TraumBaum.app */;
+			productType = "com.apple.product-type.application";
+		};
+		162F7B3416A0341D00420443 /* TraumBaumTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 162F7B4716A0341E00420443 /* Build configuration list for PBXNativeTarget "TraumBaumTests" */;
+			buildPhases = (
+				162F7B3016A0341D00420443 /* Sources */,
+				162F7B3116A0341D00420443 /* Frameworks */,
+				162F7B3216A0341D00420443 /* Resources */,
+				162F7B3316A0341D00420443 /* ShellScript */,
+			);
+			buildRules = (
+				1677772A16C0C986007206CF /* PBXBuildRule */,
+			);
+			dependencies = (
+				162F7B3A16A0341D00420443 /* PBXTargetDependency */,
+			);
+			name = TraumBaumTests;
+			productName = TraumBaumTests;
+			productReference = 162F7B3516A0341D00420443 /* TraumBaumTests.octest */;
+			productType = "com.apple.product-type.bundle";
+		};
+		168CEBAD163186B400B721E2 /* NonlinearMusicPlayer */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 168CEBCF163186B400B721E2 /* Build configuration list for PBXNativeTarget "NonlinearMusicPlayer" */;
 			buildPhases = (
 				168CEBAA163186B400B721E2 /* Sources */,
 				168CEBAB163186B400B721E2 /* Frameworks */,
 				168CEBAC163186B400B721E2 /* Resources */,
 			);
 			buildRules = (
+				1677772916C0C96E007206CF /* PBXBuildRule */,
 			);
 			dependencies = (
 			);
-			name = AmbientPianoMacOS;
+			name = NonlinearMusicPlayer;
 			productName = AmbientPianoMacOS;
-			productReference = 168CEBAE163186B400B721E2 /* AmbientPianoMacOS.app */;
+			productReference = 168CEBAE163186B400B721E2 /* NonlinearMusicPlayer.app */;
+			productType = "com.apple.product-type.application";
+		};
+		1695BE611633EE61009103F4 /* KashiwanohaNMP */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1695BE731633EE61009103F4 /* Build configuration list for PBXNativeTarget "KashiwanohaNMP" */;
+			buildPhases = (
+				1695BE621633EE61009103F4 /* Sources */,
+				1695BE6A1633EE61009103F4 /* Frameworks */,
+				1695BE6E1633EE61009103F4 /* Resources */,
+			);
+			buildRules = (
+				1677772816C0C963007206CF /* PBXBuildRule */,
+			);
+			dependencies = (
+			);
+			name = KashiwanohaNMP;
+			productName = AmbientPianoMacOS;
+			productReference = 1695BE761633EE61009103F4 /* KashiwanohaNMP.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -130,6 +837,9 @@
 /* Begin PBXProject section */
 		168CEBA5163186B300B721E2 /* Project object */ = {
 			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0420;
+			};
 			buildConfigurationList = 168CEBA8163186B300B721E2 /* Build configuration list for PBXProject "AmbientPianoMacOS" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
@@ -142,12 +852,52 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				168CEBAD163186B400B721E2 /* AmbientPianoMacOS */,
+				168CEBAD163186B400B721E2 /* NonlinearMusicPlayer */,
+				1695BE611633EE61009103F4 /* KashiwanohaNMP */,
+				162F7B1716A0341900420443 /* TraumBaum */,
+				162F7B3416A0341D00420443 /* TraumBaumTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		162F7B1616A0341900420443 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				162F7B2016A0341C00420443 /* InfoPlist.strings in Resources */,
+				162F7B2616A0341C00420443 /* Credits.rtf in Resources */,
+				162F7B5016A1132700420443 /* vmp.sdef in Resources */,
+				1636DF8916A11C5300100130 /* vsDocIcon.icns in Resources */,
+				1636DF8A16A11C5500100130 /* vsPlayer.icns in Resources */,
+				161C9A9E16A585F2001E7B46 /* MainMenu.xib in Resources */,
+				1636DF8C16A11C7A00100130 /* defaultSong in Resources */,
+				16DC63E616B78D8D00E579AE /* play.png in Resources */,
+				16DC63EE16B78E2B00E579AE /* stop.png in Resources */,
+				16F75C9D16B9A689005D462F /* default.vms in Resources */,
+				1677778F16C0D639007206CF /* License.html in Resources */,
+				1677779316C0D639007206CF /* License.rtf in Resources */,
+				1677779716C0D639007206CF /* RegexKitLite.html in Resources */,
+				167777A316C0D639007206CF /* Config.xcconfig in Resources */,
+				167777A716C0D639007206CF /* README.markdown in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		162F7B3216A0341D00420443 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				162F7B4016A0341E00420443 /* InfoPlist.strings in Resources */,
+				1636DF8D16A11C7A00100130 /* defaultSong in Resources */,
+				16F75C9E16B9A689005D462F /* default.vms in Resources */,
+				1677779016C0D639007206CF /* License.html in Resources */,
+				1677779416C0D639007206CF /* License.rtf in Resources */,
+				1677779816C0D639007206CF /* RegexKitLite.html in Resources */,
+				167777A416C0D639007206CF /* Config.xcconfig in Resources */,
+				167777A816C0D639007206CF /* README.markdown in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		168CEBAC163186B400B721E2 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -155,25 +905,271 @@
 				168CEBBD163186B400B721E2 /* InfoPlist.strings in Resources */,
 				168CEBC3163186B400B721E2 /* Credits.rtf in Resources */,
 				168CEBC9163186B400B721E2 /* MainMenu.xib in Resources */,
+				1695BE851634D5A3009103F4 /* vmp.sdef in Resources */,
+				1624A6FC1642B76B004AA351 /* vsDocIcon.icns in Resources */,
+				1624A6FF1642B7D0004AA351 /* vsPlayer.icns in Resources */,
+				160CF1A216578AB800C6BFE7 /* default.vms in Resources */,
+				16DC63E416B78D8D00E579AE /* play.png in Resources */,
+				16DC63EC16B78E2B00E579AE /* stop.png in Resources */,
+				16F75C9B16B9A689005D462F /* default.vms in Resources */,
+				1677778D16C0D639007206CF /* License.html in Resources */,
+				1677779116C0D639007206CF /* License.rtf in Resources */,
+				1677779516C0D639007206CF /* RegexKitLite.html in Resources */,
+				167777A116C0D639007206CF /* Config.xcconfig in Resources */,
+				167777A516C0D639007206CF /* README.markdown in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1695BE6E1633EE61009103F4 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1695BE8A163529FA009103F4 /* vmp.sdef in Resources */,
+				1695BE6F1633EE61009103F4 /* InfoPlist.strings in Resources */,
+				160CF19E165789D200C6BFE7 /* defaultSong in Resources */,
+				1695BE701633EE61009103F4 /* Credits.rtf in Resources */,
+				1695BE711633EE61009103F4 /* MainMenu.xib in Resources */,
+				1624A6FD1642B76B004AA351 /* vsDocIcon.icns in Resources */,
+				1624A7001642B7D0004AA351 /* vsPlayer.icns in Resources */,
+				16DC63E516B78D8D00E579AE /* play.png in Resources */,
+				16DC63ED16B78E2B00E579AE /* stop.png in Resources */,
+				16F75C9C16B9A689005D462F /* default.vms in Resources */,
+				1677778E16C0D639007206CF /* License.html in Resources */,
+				1677779216C0D639007206CF /* License.rtf in Resources */,
+				1677779616C0D639007206CF /* RegexKitLite.html in Resources */,
+				167777A216C0D639007206CF /* Config.xcconfig in Resources */,
+				167777A616C0D639007206CF /* README.markdown in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		162F7B3316A0341D00420443 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Run the unit tests in this test bundle.\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
+		162F7B1416A0341900420443 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				162F7B4E16A1130300420443 /* VariableMediaPlayerAppDelegate.m in Sources */,
+				162F7B5516A1135600420443 /* AmbientPianoMacOS.xcdatamodeld in Sources */,
+				162F7B4D16A112D300420443 /* main.m in Sources */,
+				1677774016C0D600007206CF /* ApplescriptReceiver.m in Sources */,
+				1677774416C0D600007206CF /* boxmuller.c in Sources */,
+				1677774816C0D600007206CF /* VMException.m in Sources */,
+				1677779B16C0D639007206CF /* RegexKitLite.m in Sources */,
+				167777AB16C0D639007206CF /* CDataScanner.m in Sources */,
+				167777AF16C0D639007206CF /* CFilteringJSONSerializer.m in Sources */,
+				167777B316C0D639007206CF /* CJSONDeserializer_BlocksExtensions.m in Sources */,
+				167777B716C0D639007206CF /* CJSONSerialization.m in Sources */,
+				167777BB16C0D639007206CF /* CJSONSerializedData.m in Sources */,
+				167777BF16C0D639007206CF /* CDataScanner_Extensions.m in Sources */,
+				167777C316C0D639007206CF /* NSDictionary_JSONExtensions.m in Sources */,
+				167777C716C0D639007206CF /* CJSONDeserializer.m in Sources */,
+				167777CB16C0D639007206CF /* CJSONScanner.m in Sources */,
+				167777CF16C0D639007206CF /* CJSONSerializer.m in Sources */,
+				167777E016C0D651007206CF /* VariableSong.m in Sources */,
+				167777E416C0D651007206CF /* VMDataTypes.m in Sources */,
+				167777E816C0D651007206CF /* VMPreprocessor.m in Sources */,
+				167777EC16C0D651007206CF /* VMPrimitives.m in Sources */,
+				167777F016C0D651007206CF /* VMScoreEvaluator.m in Sources */,
+				167777F416C0D651007206CF /* VMSong.m in Sources */,
+				167777FF16C0D661007206CF /* AudioPlayer.m in Sources */,
+				1677780316C0D661007206CF /* PlayerBase.m in Sources */,
+				1677780716C0D661007206CF /* VMPSongPlayer.m in Sources */,
+				1677781816C0D6A0007206CF /* DebugView.m in Sources */,
+				1677781C16C0D6A0007206CF /* VMPObjectBrowserView.m in Sources */,
+				1677782016C0D6A0007206CF /* PartCell.m in Sources */,
+				1677782416C0D6A0007206CF /* SequenceView.m in Sources */,
+				1677782816C0D6A0007206CF /* TrackView.m in Sources */,
+				1677782C16C0D6A0007206CF /* VMPCanvas.m in Sources */,
+				1677783116C0D6F3007206CF /* VMTextPreprocessor.m in Sources */,
+				1677783816C0F6E3007206CF /* VMPJSONDeserializer.m in Sources */,
+				1677783E16C0F790007206CF /* VMPJSONScanner.m in Sources */,
+				16347C1216C286C9002BE1FE /* VMPGraph.m in Sources */,
+				1613E77416C4F19F00680B88 /* VMFunction.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		162F7B3016A0341D00420443 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				162F7B4316A0341E00420443 /* TraumBaumTests.m in Sources */,
+				1677774116C0D600007206CF /* ApplescriptReceiver.m in Sources */,
+				1677774516C0D600007206CF /* boxmuller.c in Sources */,
+				1677774916C0D600007206CF /* VMException.m in Sources */,
+				1677779C16C0D639007206CF /* RegexKitLite.m in Sources */,
+				167777AC16C0D639007206CF /* CDataScanner.m in Sources */,
+				167777B016C0D639007206CF /* CFilteringJSONSerializer.m in Sources */,
+				167777B416C0D639007206CF /* CJSONDeserializer_BlocksExtensions.m in Sources */,
+				167777B816C0D639007206CF /* CJSONSerialization.m in Sources */,
+				167777BC16C0D639007206CF /* CJSONSerializedData.m in Sources */,
+				167777C016C0D639007206CF /* CDataScanner_Extensions.m in Sources */,
+				167777C416C0D639007206CF /* NSDictionary_JSONExtensions.m in Sources */,
+				167777C816C0D639007206CF /* CJSONDeserializer.m in Sources */,
+				167777CC16C0D639007206CF /* CJSONScanner.m in Sources */,
+				167777D016C0D639007206CF /* CJSONSerializer.m in Sources */,
+				167777E116C0D651007206CF /* VariableSong.m in Sources */,
+				167777E516C0D651007206CF /* VMDataTypes.m in Sources */,
+				167777E916C0D651007206CF /* VMPreprocessor.m in Sources */,
+				167777ED16C0D651007206CF /* VMPrimitives.m in Sources */,
+				167777F116C0D651007206CF /* VMScoreEvaluator.m in Sources */,
+				167777F516C0D651007206CF /* VMSong.m in Sources */,
+				1677780016C0D661007206CF /* AudioPlayer.m in Sources */,
+				1677780416C0D661007206CF /* PlayerBase.m in Sources */,
+				1677780816C0D661007206CF /* VMPSongPlayer.m in Sources */,
+				1677781916C0D6A0007206CF /* DebugView.m in Sources */,
+				1677781D16C0D6A0007206CF /* VMPObjectBrowserView.m in Sources */,
+				1677782116C0D6A0007206CF /* PartCell.m in Sources */,
+				1677782516C0D6A0007206CF /* SequenceView.m in Sources */,
+				1677782916C0D6A0007206CF /* TrackView.m in Sources */,
+				1677782D16C0D6A0007206CF /* VMPCanvas.m in Sources */,
+				1677783216C0D6F3007206CF /* VMTextPreprocessor.m in Sources */,
+				1677783916C0F6E3007206CF /* VMPJSONDeserializer.m in Sources */,
+				1677783F16C0F791007206CF /* VMPJSONScanner.m in Sources */,
+				16347C1316C286C9002BE1FE /* VMPGraph.m in Sources */,
+				1613E77516C4F19F00680B88 /* VMFunction.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		168CEBAA163186B400B721E2 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				168CEBC0163186B400B721E2 /* main.m in Sources */,
-				168CEBC6163186B400B721E2 /* AmbientPianoMacOSAppDelegate.m in Sources */,
 				168CEBCC163186B400B721E2 /* AmbientPianoMacOS.xcdatamodeld in Sources */,
+				168CEBC6163186B400B721E2 /* VariableMediaPlayerAppDelegate.m in Sources */,
+				168CEBC0163186B400B721E2 /* main.m in Sources */,
+				1677773E16C0D600007206CF /* ApplescriptReceiver.m in Sources */,
+				1677774216C0D600007206CF /* boxmuller.c in Sources */,
+				1677774616C0D600007206CF /* VMException.m in Sources */,
+				1677779916C0D639007206CF /* RegexKitLite.m in Sources */,
+				167777A916C0D639007206CF /* CDataScanner.m in Sources */,
+				167777AD16C0D639007206CF /* CFilteringJSONSerializer.m in Sources */,
+				167777B116C0D639007206CF /* CJSONDeserializer_BlocksExtensions.m in Sources */,
+				167777B516C0D639007206CF /* CJSONSerialization.m in Sources */,
+				167777B916C0D639007206CF /* CJSONSerializedData.m in Sources */,
+				167777BD16C0D639007206CF /* CDataScanner_Extensions.m in Sources */,
+				167777C116C0D639007206CF /* NSDictionary_JSONExtensions.m in Sources */,
+				167777C516C0D639007206CF /* CJSONDeserializer.m in Sources */,
+				167777C916C0D639007206CF /* CJSONScanner.m in Sources */,
+				167777CD16C0D639007206CF /* CJSONSerializer.m in Sources */,
+				167777DE16C0D651007206CF /* VariableSong.m in Sources */,
+				167777E216C0D651007206CF /* VMDataTypes.m in Sources */,
+				167777E616C0D651007206CF /* VMPreprocessor.m in Sources */,
+				167777EA16C0D651007206CF /* VMPrimitives.m in Sources */,
+				167777EE16C0D651007206CF /* VMScoreEvaluator.m in Sources */,
+				167777F216C0D651007206CF /* VMSong.m in Sources */,
+				167777FD16C0D661007206CF /* AudioPlayer.m in Sources */,
+				1677780116C0D661007206CF /* PlayerBase.m in Sources */,
+				1677780516C0D661007206CF /* VMPSongPlayer.m in Sources */,
+				1677781616C0D6A0007206CF /* DebugView.m in Sources */,
+				1677781A16C0D6A0007206CF /* VMPObjectBrowserView.m in Sources */,
+				1677781E16C0D6A0007206CF /* PartCell.m in Sources */,
+				1677782216C0D6A0007206CF /* SequenceView.m in Sources */,
+				1677782616C0D6A0007206CF /* TrackView.m in Sources */,
+				1677782A16C0D6A0007206CF /* VMPCanvas.m in Sources */,
+				1677782F16C0D6F3007206CF /* VMTextPreprocessor.m in Sources */,
+				1677783616C0F6E3007206CF /* VMPJSONDeserializer.m in Sources */,
+				1677783C16C0F790007206CF /* VMPJSONScanner.m in Sources */,
+				16347C1016C286C9002BE1FE /* VMPGraph.m in Sources */,
+				1613E77216C4F19F00680B88 /* VMFunction.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1695BE621633EE61009103F4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1695BE651633EE61009103F4 /* AmbientPianoMacOS.xcdatamodeld in Sources */,
+				1695BE641633EE61009103F4 /* VariableMediaPlayerAppDelegate.m in Sources */,
+				1695BE631633EE61009103F4 /* main.m in Sources */,
+				1677773F16C0D600007206CF /* ApplescriptReceiver.m in Sources */,
+				1677774316C0D600007206CF /* boxmuller.c in Sources */,
+				1677774716C0D600007206CF /* VMException.m in Sources */,
+				1677779A16C0D639007206CF /* RegexKitLite.m in Sources */,
+				167777AA16C0D639007206CF /* CDataScanner.m in Sources */,
+				167777AE16C0D639007206CF /* CFilteringJSONSerializer.m in Sources */,
+				167777B216C0D639007206CF /* CJSONDeserializer_BlocksExtensions.m in Sources */,
+				167777B616C0D639007206CF /* CJSONSerialization.m in Sources */,
+				167777BA16C0D639007206CF /* CJSONSerializedData.m in Sources */,
+				167777BE16C0D639007206CF /* CDataScanner_Extensions.m in Sources */,
+				167777C216C0D639007206CF /* NSDictionary_JSONExtensions.m in Sources */,
+				167777C616C0D639007206CF /* CJSONDeserializer.m in Sources */,
+				167777CA16C0D639007206CF /* CJSONScanner.m in Sources */,
+				167777CE16C0D639007206CF /* CJSONSerializer.m in Sources */,
+				167777DF16C0D651007206CF /* VariableSong.m in Sources */,
+				167777E316C0D651007206CF /* VMDataTypes.m in Sources */,
+				167777E716C0D651007206CF /* VMPreprocessor.m in Sources */,
+				167777EB16C0D651007206CF /* VMPrimitives.m in Sources */,
+				167777EF16C0D651007206CF /* VMScoreEvaluator.m in Sources */,
+				167777F316C0D651007206CF /* VMSong.m in Sources */,
+				167777FE16C0D661007206CF /* AudioPlayer.m in Sources */,
+				1677780216C0D661007206CF /* PlayerBase.m in Sources */,
+				1677780616C0D661007206CF /* VMPSongPlayer.m in Sources */,
+				1677781716C0D6A0007206CF /* DebugView.m in Sources */,
+				1677781B16C0D6A0007206CF /* VMPObjectBrowserView.m in Sources */,
+				1677781F16C0D6A0007206CF /* PartCell.m in Sources */,
+				1677782316C0D6A0007206CF /* SequenceView.m in Sources */,
+				1677782716C0D6A0007206CF /* TrackView.m in Sources */,
+				1677782B16C0D6A0007206CF /* VMPCanvas.m in Sources */,
+				1677783016C0D6F3007206CF /* VMTextPreprocessor.m in Sources */,
+				1677783716C0F6E3007206CF /* VMPJSONDeserializer.m in Sources */,
+				1677783D16C0F790007206CF /* VMPJSONScanner.m in Sources */,
+				16347C1116C286C9002BE1FE /* VMPGraph.m in Sources */,
+				1613E77316C4F19F00680B88 /* VMFunction.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		162F7B3A16A0341D00420443 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 162F7B1716A0341900420443 /* TraumBaum */;
+			targetProxy = 162F7B3916A0341D00420443 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin PBXVariantGroup section */
+		162F7B1E16A0341C00420443 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				162F7B1F16A0341C00420443 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		162F7B2416A0341C00420443 /* Credits.rtf */ = {
+			isa = PBXVariantGroup;
+			children = (
+				162F7B2516A0341C00420443 /* en */,
+			);
+			name = Credits.rtf;
+			sourceTree = "<group>";
+		};
+		162F7B3E16A0341E00420443 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				162F7B3F16A0341E00420443 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
 		168CEBBB163186B400B721E2 /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -201,35 +1197,124 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		162F7B4516A0341E00420443 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = /Developer/SDKs/MacOSX10.6.sdk/System/Library/Frameworks;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "TraumBaum/TraumBaum-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				INFOPLIST_FILE = "TraumBaum/TraumBaum-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		162F7B4616A0341E00420443 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				FRAMEWORK_SEARCH_PATHS = /Developer/SDKs/MacOSX10.6.sdk/System/Library/Frameworks;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "TraumBaum/TraumBaum-Prefix.pch";
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				INFOPLIST_FILE = "TraumBaum/TraumBaum-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		162F7B4816A0341E00420443 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/TraumBaum.app/Contents/MacOS/TraumBaum";
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = "$(DEVELOPER_LIBRARY_DIR)/Frameworks";
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "TraumBaum/TraumBaum-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				INFOPLIST_FILE = "TraumBaumTests/TraumBaumTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Debug;
+		};
+		162F7B4916A0341E00420443 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/TraumBaum.app/Contents/MacOS/TraumBaum";
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				FRAMEWORK_SEARCH_PATHS = "$(DEVELOPER_LIBRARY_DIR)/Frameworks";
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "TraumBaum/TraumBaum-Prefix.pch";
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				INFOPLIST_FILE = "TraumBaumTests/TraumBaumTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Release;
+		};
 		168CEBCD163186B400B721E2 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
+				GCC_WARN_SHADOW = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "Variable Media Player OSX";
 				SDKROOT = macosx;
+				WARNING_CFLAGS = "";
 			};
 			name = Debug;
 		};
 		168CEBCE163186B400B721E2 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
+				GCC_WARN_SHADOW = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				PRODUCT_NAME = "Variable Media Player OSX";
 				SDKROOT = macosx;
+				WARNING_CFLAGS = "";
 			};
 			name = Release;
 		};
@@ -238,6 +1323,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = /Developer/SDKs/MacOSX10.6.sdk/System/Library/Frameworks;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -254,6 +1340,7 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				FRAMEWORK_SEARCH_PATHS = /Developer/SDKs/MacOSX10.6.sdk/System/Library/Frameworks;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "AmbientPianoMacOS/AmbientPianoMacOS-Prefix.pch";
@@ -263,9 +1350,61 @@
 			};
 			name = Release;
 		};
+		1695BE741633EE61009103F4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = /Developer/SDKs/MacOSX10.6.sdk/System/Library/Frameworks;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "AmbientPianoMacOS/AmbientPianoMacOS-Prefix.pch";
+				GCC_WARN_SHADOW = YES;
+				INFOPLIST_FILE = "AmbientPianoMacOS/AmbientPianoMacOS-Info.plist";
+				PRODUCT_NAME = KashiwanohaNMP;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		1695BE751633EE61009103F4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				FRAMEWORK_SEARCH_PATHS = /Developer/SDKs/MacOSX10.6.sdk/System/Library/Frameworks;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "AmbientPianoMacOS/AmbientPianoMacOS-Prefix.pch";
+				GCC_WARN_SHADOW = YES;
+				INFOPLIST_FILE = "AmbientPianoMacOS/AmbientPianoMacOS-Info.plist";
+				PRODUCT_NAME = KashiwanohaNMP;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		162F7B4416A0341E00420443 /* Build configuration list for PBXNativeTarget "TraumBaum" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				162F7B4516A0341E00420443 /* Debug */,
+				162F7B4616A0341E00420443 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		162F7B4716A0341E00420443 /* Build configuration list for PBXNativeTarget "TraumBaumTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				162F7B4816A0341E00420443 /* Debug */,
+				162F7B4916A0341E00420443 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		168CEBA8163186B300B721E2 /* Build configuration list for PBXProject "AmbientPianoMacOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -275,13 +1414,23 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		168CEBCF163186B400B721E2 /* Build configuration list for PBXNativeTarget "AmbientPianoMacOS" */ = {
+		168CEBCF163186B400B721E2 /* Build configuration list for PBXNativeTarget "NonlinearMusicPlayer" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				168CEBD0163186B400B721E2 /* Debug */,
 				168CEBD1163186B400B721E2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1695BE731633EE61009103F4 /* Build configuration list for PBXNativeTarget "KashiwanohaNMP" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1695BE741633EE61009103F4 /* Debug */,
+				1695BE751633EE61009103F4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 

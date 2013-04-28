@@ -1,65 +1,251 @@
 //
-//  AmbientPianoMacOSAppDelegate.m
-//  AmbientPianoMacOS
+//  VariableMediaPlayerAppDelegate.m
+//  VariableMusicPlayer
 //
 //  Created by cboy on 12/10/19.
-//  Copyright 2012 __MyCompanyName__. All rights reserved.
+//  Copyright 2012 sumiisan@gmail.com. All rights reserved.
 //
 
-#import "AmbientPianoMacOSAppDelegate.h"
+#import "VMPlayerOSXDelegate.h"
+#import "VMPAudioPlayer.h"
+#import "VMPAnalyzer.h"
 
-@implementation AmbientPianoMacOSAppDelegate
+VMPlayerOSXDelegate *variableMediaPlayer_singleton__ = nil;
 
-@synthesize window;
+@implementation VMPlayerOSXDelegate
 
-- (void)applicationDidFinishLaunching:(NSNotification *)aNotification
-{
-    // Insert code here to initialize your application
+/*
+ app launch sequence:
+ 
+ init(delegate)
+ awakeFromNib
+ applicationWillFinishLaunching
+ applicationWillUpdate
+ applicationDidUpdate
+ applicationDidFinishLaunching
+ applicationWillBecomeActive
+ applicationDidBecomeActive
+ applicationWillUpdate
+ applicationDidUpdate
+ */
+
++ (VMPlayerOSXDelegate*)singleton {
+	return variableMediaPlayer_singleton__;
 }
 
+- (id)init {
+	self = [super init];
+	if(! self )return nil;
+    
+    variableMediaPlayer_singleton__ = self;
+	
+	//  open document
+    NSError 	*outError = [[NSError alloc] init];
+    NSString 	*applicationPath = [[NSBundle mainBundle] resourcePath];
+    NSURL 		*songURL = [[NSURL alloc] initFileURLWithPath:[NSString stringWithFormat:@"%@/%@/%@",
+															   applicationPath,kDefaultVMDirectory,kDefaultVMSFileName] 
+											  isDirectory:NO];
+    variableSong = [[VariableSong alloc] initWithContentsOfURL:songURL 
+														ofType:@"vms" 
+														 error:&outError];
+    [songURL release];
+    [outError release];
+        
+    DEFAULTSONGPLAYER.song = variableSong.song;
+	
+
+	return self;
+}
+
+- (void)mainRunLoop {
+	_playStopButton.state = DEFAULTSONGPLAYER.isRunning ? 1 : 0;
+	VMTime t = DEFAULTSONGPLAYER.currentTime;
+	_timeIndicator.stringValue = [NSString stringWithFormat:@"%02d:%02d'%02d\"%1d",
+								 (int)(t/3600),((int)t/60)%60,(int)t%60,((int)(t*10))%10 ];
+	t = DEFAULTSONGPLAYER.nextCueTime;
+	_nextCueTimeIndicator.stringValue = [NSString stringWithFormat:@"%02d:%02d'%02d\"%1d",
+								 (int)(t/3600),((int)t/60)%60,(int)t%60,((int)(t*10))%10 ];
+	
+	[self performSelector:@selector(mainRunLoop) withObject:nil afterDelay:0.1];
+}
+
+- (void)awakeFromNib {
+	//  below is only necessary if you want to have a debug view
+	DEFAULTSONGPLAYER.trackView 	= _trackView;
+//  DEFAULTSONGPLAYER.sequenceView = sequenceView;
+	
+	//	pass songData to browserView if you have some.
+#if VMP_DESKTOP
+	_objectBrowserView.songData = variableSong.song.songData;
+	
+#endif
+	
+	//	init popup
+	//	NSMenu *menu = [
+	
+}
+
+
+#pragma mark -
+#pragma mark application delegates
+
+//
+//  app delegate
+//
+
+- (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
+    // Startup!
+	[DEFAULTSONGPLAYER warmUp];
+	_objectBrowserView.graphDelegate = _objectGraphView;
+	_objectBrowserView.infoDelegate  = _objectInfoView;
+	[DEFAULTSONG showReport:YES];	//	debug report ON
+	[self performSelector:@selector(mainRunLoop) withObject:nil afterDelay:0.5];
+}
+
+- (void)applicationWillFinishLaunching:(NSNotification *)notification {
+	
+}
+
+- (BOOL) applicationShouldTerminateAfterLastWindowClosed: (NSApplication *) theApplication {
+    return NO;
+}
+
+#pragma mark window delegates
+- (void)windowDidResize:(NSNotification *)notification {
+	[self.trackView reLayout];
+}
+
+
+#pragma mark -
+#pragma mark events from user interface
+
+
+//
+//  menu item
+//
+- (IBAction)playStart:(id)sender {
+	[DEFAULTSONGPLAYER stop];
+    [DEFAULTSONGPLAYER start];
+	[self.logView locateLogWithIndex:-1 ofSource:@"player"];
+}
+
+- (IBAction)playStop:(id)sender {
+    [DEFAULTSONGPLAYER stop];
+}
+
+- (IBAction)fadeoutAndStop:(id)sender {
+    [DEFAULTSONGPLAYER fadeoutAndStop:kDefaultFadeoutTime];
+}
+
+- (IBAction)reset:(id)sender {
+    [DEFAULTSONGPLAYER reset];
+}
+
+- (IBAction)showObjectBrowser:(id)sender {
+	[_objectBrowserWindow makeKeyAndOrderFront:self];
+}
+
+- (IBAction)showTransport:(id)sender {
+	[_transportPanel makeKeyAndOrderFront:self];
+}
+
+- (IBAction)showStatistics:(id)sender {
+	[DEFAULTANALYZER.reportWindow makeKeyAndOrderFront:self];
+}
+
+- (IBAction)toggleLogPanel:(id)sender {
+	if( [_logPanel isKeyWindow ] )
+		[_logPanel close];
+	else
+		[_logPanel makeKeyAndOrderFront:self];
+}
+
+- (IBAction)toggleTrackPanel:(id)sender {
+	if ( [_trackPanel isKeyWindow ] )
+		[_trackPanel close];
+	else
+		[_trackPanel makeKeyAndOrderFront:self];
+}
+
+//	unused
+- (IBAction)routeStatics:(id)sender {
+	DEFAULTANALYZER.delegate = self;
+	[DEFAULTSONGPLAYER fadeoutAndStop:5.];
+    [DEFAULTANALYZER routeStatistic:/*[objectBrowserView currentObject]*/[DEFAULTSONG data:DEFAULTSONG.defaultCueId] numberOfIterations:20 until:nil];
+}
+
+//	unused
+- (void)analysisFinished:(VMHash *)report {
+	//	nothing to do here
+}
+
+//
+//	playback control
+//
+
+- (IBAction)playButtonClicked:(id)sender {
+	switch ( DEFAULTSONGPLAYER.isRunning ) {
+	case YES:
+		[DEFAULTSONGPLAYER fadeoutAndStop:0.2];
+		break;
+	case NO:
+		[DEFAULTSONGPLAYER start];
+			[self.logView locateLogWithIndex:-1 ofSource:@"player"];
+		break;
+	}
+}
+
+
+#pragma mark -
+#pragma mark core data stuff (unused)
+
+//
+//  core data stuff -- unused 
+//
+
 /**
-    Returns the directory the application uses to store the Core Data store file. This code uses a directory named "AmbientPianoMacOS" in the user's Library directory.
+ Returns the directory the application uses to store the Core Data store file. This code uses a directory named "VariableMediaPlayer" in the user's Library directory.
  */
 - (NSURL *)applicationFilesDirectory {
-
+	
     NSFileManager *fileManager = [NSFileManager defaultManager];
     NSURL *libraryURL = [[fileManager URLsForDirectory:NSLibraryDirectory inDomains:NSUserDomainMask] lastObject];
-    return [libraryURL URLByAppendingPathComponent:@"AmbientPianoMacOS"];
+    return [libraryURL URLByAppendingPathComponent:@"VariableMediaPlayer"];
 }
 
 /**
-    Creates if necessary and returns the managed object model for the application.
+ Creates if necessary and returns the managed object model for the application.
  */
 - (NSManagedObjectModel *)managedObjectModel {
     if (__managedObjectModel) {
         return __managedObjectModel;
     }
 	
-    NSURL *modelURL = [[NSBundle mainBundle] URLForResource:@"AmbientPianoMacOS" withExtension:@"momd"];
+    NSURL *modelURL = [[NSBundle mainBundle] URLForResource:@"VariableMediaPlayer" withExtension:@"momd"];
     __managedObjectModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];    
     return __managedObjectModel;
 }
 
 /**
-    Returns the persistent store coordinator for the application. This implementation creates and return a coordinator, having added the store for the application to it. (The directory for the store is created, if necessary.)
+ Returns the persistent store coordinator for the application. This implementation creates and return a coordinator, having added the store for the application to it. (The directory for the store is created, if necessary.)
  */
 - (NSPersistentStoreCoordinator *) persistentStoreCoordinator {
     if (__persistentStoreCoordinator) {
         return __persistentStoreCoordinator;
     }
-
+	
     NSManagedObjectModel *mom = [self managedObjectModel];
     if (!mom) {
         NSLog(@"%@:%@ No model to generate a store from", [self class], NSStringFromSelector(_cmd));
         return nil;
     }
-
+	
     NSFileManager *fileManager = [NSFileManager defaultManager];
     NSURL *applicationFilesDirectory = [self applicationFilesDirectory];
     NSError *error = nil;
     
     NSDictionary *properties = [applicationFilesDirectory resourceValuesForKeys:[NSArray arrayWithObject:NSURLIsDirectoryKey] error:&error];
-        
+	
     if (!properties) {
         BOOL ok = NO;
         if ([error code] == NSFileReadNoSuchFileError) {
@@ -84,26 +270,26 @@
         }
     }
     
-    NSURL *url = [applicationFilesDirectory URLByAppendingPathComponent:@"AmbientPianoMacOS.storedata"];
+    NSURL *url = [applicationFilesDirectory URLByAppendingPathComponent:@"VariableMediaPlayer.storedata"];
     __persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:mom];
     if (![__persistentStoreCoordinator addPersistentStoreWithType:NSXMLStoreType configuration:nil URL:url options:nil error:&error]) {
         [[NSApplication sharedApplication] presentError:error];
         [__persistentStoreCoordinator release], __persistentStoreCoordinator = nil;
         return nil;
     }
-
+	
     return __persistentStoreCoordinator;
 }
 
 /**
-    Returns the managed object context for the application (which is already
-    bound to the persistent store coordinator for the application.) 
+ Returns the managed object context for the application (which is already
+ bound to the persistent store coordinator for the application.) 
  */
 - (NSManagedObjectContext *) managedObjectContext {
     if (__managedObjectContext) {
         return __managedObjectContext;
     }
-
+	
     NSPersistentStoreCoordinator *coordinator = [self persistentStoreCoordinator];
     if (!coordinator) {
         NSMutableDictionary *dict = [NSMutableDictionary dictionary];
@@ -115,16 +301,19 @@
     }
     __managedObjectContext = [[NSManagedObjectContext alloc] init];
     [__managedObjectContext setPersistentStoreCoordinator:coordinator];
-
+	
     return __managedObjectContext;
 }
 
 /**
-    Returns the NSUndoManager for the application. In this case, the manager returned is that of the managed object context for the application.
+ Returns the NSUndoManager for the application. In this case, the manager returned is that of the managed object context for the application.
  */
 - (NSUndoManager *)windowWillReturnUndoManager:(NSWindow *)window {
     return [[self managedObjectContext] undoManager];
 }
+
+#pragma mark -
+#pragma mark save
 
 /**
     Performs the save action for the application, which is to send the save: message to the application's managed object context. Any encountered errors are presented to the user.
@@ -140,6 +329,7 @@
         [[NSApplication sharedApplication] presentError:error];
     }
 }
+
 
 - (NSApplicationTerminateReply)applicationShouldTerminate:(NSApplication *)sender {
 
@@ -191,6 +381,7 @@
 
 - (void)dealloc
 {
+	[DEFAULTSONGPLAYER coolDown];
     [__managedObjectContext release];
     [__persistentStoreCoordinator release];
     [__managedObjectModel release];

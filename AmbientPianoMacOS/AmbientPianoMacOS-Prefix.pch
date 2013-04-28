@@ -1,5 +1,5 @@
 //
-// Prefix header for all source files of the 'AmbientPianoMacOS' target in the 'AmbientPianoMacOS' project
+// Prefix header for all source files of the 'AmbientPianoMacOS' target in the 'VariableMediaPlayer' project
 //
 
 #ifdef __OBJC__

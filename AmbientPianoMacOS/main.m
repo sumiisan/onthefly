@@ -1,9 +1,9 @@
 //
 //  main.m
-//  AmbientPianoMacOS
+//  VariableMusicPlayer
 //
 //  Created by cboy on 12/10/19.
-//  Copyright 2012 __MyCompanyName__. All rights reserved.
+//  Copyright 2012 sumiisan@gmail.com. All rights reserved.
 //
 
 #import <Cocoa/Cocoa.h>
