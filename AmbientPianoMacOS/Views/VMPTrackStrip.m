@@ -6,58 +6,62 @@
 //  Copyright 2012 sumiisan@gmail.com. All rights reserved.
 //
 
-#import "VMPTrackStrip.h"
 #import "MultiPlatform.h"
+#import "VMPTrackStrip.h"
+#import "VMPGraph.h"
+#import "VMPNotification.h"
 
 @implementation VMPTrackStrip
 
-- (id)init
-{
-    self = [super init];
-    if (self) {
-        infoString = nil;
-        // Initialization code here.
-    }
-    
+//	designated initializer
+- (id)initWithFrame:(VMPRect)frameRect {
+    self = [super initWithFrame:frameRect];
+	self.frame = frameRect;
+	self.caption = [NSTextField labelWithText:@"" frame:VMPMakeRect(2, 2, 240, 14)];
+	self.caption.font = [VMPFont systemFontOfSize:11];
+	[self addSubview:self.caption];
+	
+#if VMP_DESKTOP
+	VMPButton *button = [[VMPButton alloc] initWithFrame:CGRectZeroOrigin(frameRect)];
+	button.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
+	button.transparent = YES;
+	button.target = self;
+	button.doubleAction = @selector(doubleClickOnTrackStrip:);
+	[self addSubview:button];
+#endif
+	
     return self;
 }
 
-- (void)dealloc
-{
-    [super dealloc];
+- (void)dealloc {
+	self.audioCueId = nil;
+	self.caption = nil;
+   [super dealloc];
 }
 
-
-#if ! TARGET_OS_IPHONE
-- (BOOL)isFlipped {     //  matches NSView's coordinates to UIView
-    return YES;
+- (void)setInfoString:(NSString *)infoString {
+	self.caption.stringValue = infoString;
 }
-#endif
 
-
-- (void)drawRect:(VMPRect)rect {
+- (void)drawRect:(VMPRect)dirtyRect {
 	[self setCanvas];
-    CGFloat bar_left = 20;
-    CGFloat y = 20;
-    CGFloat bar_height = self.frame.size.height - y;
-	CGFloat w = self.frame.size.width - bar_left;
+	CGFloat ox = 2;
+	CGFloat oy = 1;
+    CGFloat bar_left = 20 + ox;
+    CGFloat y = 17 + oy;
+    CGFloat bar_height = self.frame.size.height - y -4;
+	CGFloat w = self.frame.size.width - bar_left - 4;
     
 #ifdef VMP_MOBILE
     [self setColor_r:0.1f g:0.1f b:0.1f];
-    [self fillRect_x:0 y:0 w:self.frame.size.width h:self.frame.size.height];
+	NSRectFill(dirtyRect);
+#else
+    [self setColor_r:0.9f g:0.9f b:0.9f];
+	NSRectFill(dirtyRect);
 #endif
     
     [self setColor_r:0.8f g:0.7f b:0.5f];
-        
-#if TARGET_OS_IPHONE
-	[infoString
-     drawAtPoint:CGPointMake( 0, 3 ) 
-     withFont:[VMPFont systemFontOfSize:14]];
-#elif TARGET_OS_MAC
-    [infoString
-     drawAtPoint:NSPointFromCGPoint( CGPointMake( 0, 3 ) ) 
-     withAttributes:NULL ];
-#endif
+
     float buffered_x = loading * w;
     
     if( duration > 0 ) {
@@ -65,47 +69,59 @@
         [self setColor_r:0.6f g:0.65f b:0.75f];
         [self fillRect_x:bar_left + buffered_x 
                        y:y 
-                       w:w-buffered_x 
+                       w:w-buffered_x+1
                        h:bar_height];
         
         //  buffered
         [self setColor_r:0.4f g:0.5f b:0.4f];
         [self fillRect_x:bar_left 
                        y:y 
-                       w:buffered_x 
+                       w:buffered_x+1
                        h:bar_height];
         
         //  playing
+		int pw = playing * w;
         if( playing > 0 ) {
             [self setColor_r:0.6f g:0.7f b:0.5f];
+			if ( pw > w ) pw = w;
         } else {
             [self setColor_r:0.7f g:0.7f b:0.4f];
+			if ( pw < -20 ) pw = -20;
         }
         [self fillRect_x:bar_left 
-                       y:y w:playing * w 
+                       y:y
+					   w:pw
                        h:bar_height];
         
-        //  next queue 
+        //  next queue
+		CGFloat x = (int)(duration * w + bar_left)+0.5;
         [self setColor_r:0.3f g:0.1f b:0.1f];
         [self setLineWidth:2.];
-        [self drawLine_x0:duration * w +bar_left 
+        [self drawLine_x0:x
                        y0:y
-                       x1:duration * w +bar_left 
+                       x1:x
                        y1:y+bar_height];
         
         //  offset
-        [self drawLine_x0:offset * w +bar_left 
+		x = (int)(offset*w+bar_left)+0.5;
+        [self drawLine_x0:x
                        y0:y
-                       x1:offset * w +bar_left 
+                       x1:x
                        y1:y+bar_height];
 
-        [self setColor_r:0.0f g:0.0f b:0.0f];
+        [self setColor_r:0.4f g:0.4f b:0.4f];
         [self setLineWidth:1.];
-        [self drawRect_x:0 y:20 w:self.frame.size.width h:bar_height];
-        
-
+        [self drawRect_x:((int)ox)+0.5 y:((int)oy)+16.5
+					   w:(int)self.frame.size.width-5 h:((int)(oy+bar_height))];
     }
 	
+}
+
+- (void)doubleClickOnTrackStrip:(NSEvent*)event {
+	if (self.audioCueId)
+		[VMPNotificationCenter postNotificationName:VMPNotificationCueDoubleClicked
+											 object:self
+										   userInfo:@{@"id":self.audioCueId}];
 }
 
 @end

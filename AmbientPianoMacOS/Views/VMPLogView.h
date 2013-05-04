@@ -23,6 +23,7 @@
 @property (nonatomic, assign) IBOutlet	NSTextField			*timeStampField;
 @property (nonatomic, assign) IBOutlet	NSButton			*discosureButton;
 @property (nonatomic, retain)			NSColor				*backgroundColor;
+@property (nonatomic, assign)			BOOL				fired;
 
 @end
 
@@ -34,6 +35,12 @@
  *
  *---------------------------------------------------------------------------------*/
 
+typedef enum {
+	VMPLogViewSource_Player,
+	VMPLogViewSource_Statistics,
+	VMPLogViewSource_System
+} VMPLogViewSourceType;
+
 @interface VMPLogView : NSView <NSTableViewDataSource, NSTableViewDelegate>
 
 
@@ -42,11 +49,14 @@
 @property (nonatomic, assign)	IBOutlet	NSTableView			*logTableView;
 @property (nonatomic, assign)	IBOutlet	NSScrollView		*logScrollView;
 
+@property (nonatomic, assign)				VMPLogViewSourceType	currentSource;
+
 @property (nonatomic, retain)				VMLog				*log;
 @property (nonatomic, retain)				VMLog				*filteredLog;
 
-- (void)noteNewLogAdded;
-- (void)locateLogWithIndex:(VMInt)index ofSource:(VMString*)source;
+//- (void)noteNewLogAdded;
+- (void)locateLogWithIndex:(VMInt)index ofSource:(VMPLogViewSourceType)source;
+//- (void)locateLogWithIndex:(VMInt)index ofSource:(VMString*)source;
 
 - (IBAction)sourceChoosen:(id)sender;
 - (IBAction)clickOnRow:(id)sender;

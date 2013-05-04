@@ -11,6 +11,10 @@
 #import "VMPGraph.h"
 #import "VMPMacros.h"
 #import "VMPAnalyzer.h"
+#import "VMPSongPlayer.h"
+#import "VMPreprocessor.h"
+
+#import "VMPNotification.h"
 
 static const VMFloat kDefaultLogItemViewHeight = 14.0;
 
@@ -28,7 +32,7 @@ static const VMFloat kDefaultLogItemViewHeight = 14.0;
 - (id)initWithCoder:(NSCoder *)aDecoder {
 	self = [super initWithCoder:aDecoder];
 	if (self) {
-		self.backgroundColor = [NSColor controlBackgroundColor];
+		self.backgroundColor = [NSColor colorWithCalibratedRed:.9 green:.9 blue:.9 alpha:1.];
 	}
 	return self;
 }
@@ -39,7 +43,13 @@ static const VMFloat kDefaultLogItemViewHeight = 14.0;
 }
 
 - (void)drawRect:(NSRect)dirtyRect {
-	[self.backgroundColor setFill];
+//	self.textField.backgroundColor = self.backgroundColor;
+//	self.timeStampField.backgroundColor = self.backgroundColor;
+	if ( ! self.fired ) {
+		[[self.backgroundColor colorModifiedByHueOffset:0. saturationFactor:0.8 brightnessFactor:1.2] setFill];
+	} else {
+		[self.backgroundColor setFill];
+	}
 	NSRectFillUsingOperation(dirtyRect, NSCompositeSourceOver);
 }
 
@@ -58,6 +68,12 @@ static const VMFloat kDefaultLogItemViewHeight = 14.0;
 @implementation VMPLogView
 
 - (void)initInternal {
+	if (kUseNotification) {
+		[VMPNotificationCenter addObserver:self
+								  selector:@selector(songPlayerListener:)
+									  name:nil
+									object:DEFAULTSONGPLAYER];
+	}
 }
 
 - (id)init {
@@ -81,19 +97,34 @@ static const VMFloat kDefaultLogItemViewHeight = 14.0;
 - (void)dealloc {
 	self.log = nil;
 	self.filteredLog = nil;
+	if (kUseNotification) [VMPNotificationCenter removeObserver:self];
 	[super dealloc];
 }
-/*
-- (void)drawRect:(NSRect)dirtyRect {
-    // Drawing code here.
+
+- (void)awakeFromNib {
+	//	don't place anything in here because it get's called from tableview datasource method.
 }
-*/
+
+- (void)viewDidMoveToSuperview {
+	self.logTableView.doubleAction = @selector(doubleClickOnRow:);
+	[self sourceChoosen:self];
+	[self sourceChoosen:self];
+}
+
 
 #pragma mark -
 #pragma mark accessor
 
 - (VMHistoryLog*)itemAtRow:(NSInteger)row {
 	return [self.filteredLog item:row];
+}
+
+- (VMPLogViewSourceType)currentSource {
+	return (int)self.sourceChooser.selectedSegment;
+}
+
+- (void)setCurrentSource:(VMPLogViewSourceType)currentSource {
+	self.sourceChooser.selectedSegment = (NSInteger)currentSource;
 }
 
 
@@ -105,26 +136,11 @@ static const VMFloat kDefaultLogItemViewHeight = 14.0;
  action
  
  ----------------------------------------------------------------------------------*/
-/*
-- (void)setPlayerLogMode {
-	self.log = DEFAULTSONG.log;
-	[self makeFilteredLog];
-	[((NSSegmentedControl*)self.sourceChooser) setSelectedSegment:0];
-	self.logScrollView.verticalScroller.floatValue = 1.;
-	
-}
-*/
 
-- (void)locateLogWithIndex:(VMInt)index ofSource:(VMString*)source {
-	if ( [source isEqualToString:@"player"] ) {
-		self.log = DEFAULTSONG.log;
-		[((NSSegmentedControl*)self.sourceChooser) setSelectedSegment:0];
-	}
 
-	if ( [source isEqualToString:@"statistics"] ) {
-		self.log = DEFAULTANALYZER.log;
-		[((NSSegmentedControl*)self.sourceChooser) setSelectedSegment:1];
-	}
+- (void)locateLogWithIndex:(VMInt)index ofSource:(VMPLogViewSourceType)source {
+	self.currentSource = source;
+	[self sourceChoosen:self];
 	[self makeFilteredLog];
 	
 	VMInt row = 0;
@@ -141,45 +157,107 @@ static const VMFloat kDefaultLogItemViewHeight = 14.0;
 }
 
 
-- (void)noteNewLogAdded {
+/*---------------------------------------------------------------------------------
+ 
+ songPlayerListener: receive notifications from VMPSongPlayer
+ 
+ ----------------------------------------------------------------------------------*/
+
+- (void)songPlayerListener:(NSNotification*)notification {
+	if ( self.currentSource != VMPLogViewSource_Player ) return;
+	if ( [notification.name isEqualToString:@"AudioCueQueued"] ) {
+		
+		//
+		// new audioCue was queued: update player log.
+		//
+		VMFloat scrollerPosition = self.logScrollView.verticalScroller.floatValue;
+		
+		[self makeFilteredLog];
+		[self.logTableView noteNumberOfRowsChanged];
+		
+		if ( scrollerPosition == 1. ) {
+			[self.logScrollView.contentView scrollToPoint:
+			 NSMakePoint(0., self.logTableView.frame.size.height - self.logScrollView.contentSize.height)];
+			[self.logScrollView reflectScrolledClipView:self.logScrollView.contentView];
+		}
+	}
 	
-	VMFloat scrollerPosition = self.logScrollView.verticalScroller.floatValue;
+	if ( [notification.name isEqualToString:@"AudioCueFired"]) {
+		
+		VMAudioCue *ac = [notification.userInfo objectForKey:@"audioCue"];
+//		NSRange range = [self.logTableView rowsInRect:self.logTableView.visibleRect];
+		
+		VMInt seekCount = 100;
+		for ( VMInt row = self.logTableView.numberOfRows -1; row > 0; --row ) {
+			VMHistoryLog *hl = [self itemAtRow:row];
+			if ( hl.data == ac ) {
+				[self fireAllAudioCuesBelowIndex:hl.index];
+				break;
+			}
+			if (! --seekCount ) break;
+		}
+		
+		[self.logTableView reloadData];
+	}
+}
+
+- (void)fireAllAudioCuesBelowIndex:(VMInt)index {
+	VMTime now = [NSDate timeIntervalSinceReferenceDate];
+
+	VMInt i = _log.count -1;
+	for ( ; i; --i ) {
+		VMHistoryLog *hl = [_log item:i];
+		if ( hl.index <= index ) break;
+	}
 	
-	[self makeFilteredLog];
-	[self.logTableView noteNumberOfRowsChanged];
-	
-	if ( scrollerPosition == 1. ) {
-		[self.logScrollView.contentView scrollToPoint:
-		 NSMakePoint(0., self.logTableView.frame.size.height - self.logScrollView.contentSize.height)];
-		[self.logScrollView reflectScrolledClipView:self.logScrollView.contentView];
+	for ( ; i; --i) {
+		VMHistoryLog *hl = [_log item:i];
+		if ( hl.playbackTimestamp ) break;
+		hl.playbackTimestamp = now;
 	}
 }
 
 
 - (IBAction)sourceChoosen:(id)sender {
-	NSSegmentedControl *sc = sender;
-	switch (sc.selectedSegment) {
-		case 0:
+	switch ( self.currentSource ) {
+		case VMPLogViewSource_Player:
 			//	song log
 			self.log = DEFAULTSONG.log;
 			[self makeFilteredLog];
 			break;
 			
-		case 1:
+		case VMPLogViewSource_Statistics:
 			//	stats
 			self.log = DEFAULTANALYZER.log;
 			[self makeFilteredLog];
 			break;
+			
+		case VMPLogViewSource_System:
+			//	implement later
+			self.log = DEFAULTPREPROCESSOR.log;
+			self.filteredLog = [[self.log copy] autorelease];
+			[self.logTableView reloadData];
+			break;
 	}
-	
+
+}
+
+- (void)postNotification:(VMString*)notificationName {
+	VMHistoryLog *hl = [self itemAtRow:self.logTableView.selectedRow];
+	if ( hl.type != vmObjectType_notVMObject ) {
+		VMData *data = [self itemAtRow:self.logTableView.selectedRow].data;
+		[VMPNotificationCenter postNotificationName:notificationName
+											 object:self
+										   userInfo:@{@"id":data.id}];
+	}	
 }
 
 - (IBAction)clickOnRow:(id)sender {
-	
-	NSTableView *tv = sender;
-	
-	NSLog(@"row %ld clicked",tv.selectedRow);
-	
+	[self postNotification:VMPNotificationCueSelected];
+}
+
+- (IBAction)doubleClickOnRow:(id)sender {
+	[self postNotification:VMPNotificationCueDoubleClicked];
 }
 
 - (void)makeFilteredLog {
@@ -189,8 +267,7 @@ static const VMFloat kDefaultLogItemViewHeight = 14.0;
 	if( [fs isSelectedForSegment:0] ) [typeArray push:VMIntObj(vmObjectType_selector) ];
 	if( [fs isSelectedForSegment:1] ) [typeArray push:VMIntObj(vmObjectType_sequence) ];
 	if( [fs isSelectedForSegment:2] ) [typeArray push:VMIntObj(vmObjectType_audioCue) ];
-//	if( [fs isSelectedForSegment:3] ) [typeArray push:VMIntObj(vmObjectType_selector) ];
-	if( [fs isSelectedForSegment:4] ) [typeArray push:VMIntObj(vmObjectType_notVMObject)];
+	if( [fs isSelectedForSegment:3] ) [typeArray push:VMIntObj(vmObjectType_notVMObject)];
 	
 	self.filteredLog = ARInstance(VMLog);
 	for ( VMHistoryLog *hl in self.log ) {
@@ -226,6 +303,7 @@ static const VMFloat kDefaultLogItemViewHeight = 14.0;
 
 
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView {
+	NSLog(@"nlumberOfRowsInTableView %ld",self.filteredLog.count);
 	return self.filteredLog.count +1;
 }
 
@@ -268,7 +346,7 @@ static const VMFloat kDefaultLogItemViewHeight = 14.0;
 		logView.discosureButton.state = hl.isExpanded ? NSOnState : NSOffState;
 		logView.backgroundColor = [NSColor backgroundColorForDataType:type];
 		logView.discosureButton.hidden = (hl.subInfo == nil);
-	
+		logView.fired = ( hl.playbackTimestamp != 0 && hl.playbackTimestamp < [NSDate timeIntervalSinceReferenceDate] );
 		
 		if ( hl.isExpanded )  {
 			//	logview is expanded:
@@ -330,6 +408,22 @@ static const VMFloat kDefaultLogItemViewHeight = 14.0;
 						}
 					}
 					
+				}
+					
+				case vmObjectType_notVMObject: {
+					if ( hl.subInfo ) {
+						VMString *message = [hl.subInfo item:@"message"];
+						expansionView.frame = NSMakeRect(0, 0, width, hl.expandedHeight);
+						if ( message ) {
+							NSTextField *tf = [[NSTextField alloc] initWithFrame:expansionView.frame];
+							tf.stringValue = message;
+							tf.bordered = tf.editable = NO;
+							tf.font = [NSFont systemFontOfSize:10];
+							[expansionView addSubview:tf];
+							[tf release];
+						}
+					}
+					logView.fired = YES;
 				}
 			}
 			

@@ -12,6 +12,8 @@
 #import "VMPlayerOSXDelegate.h"
 #import "VMPSongPlayer.h"
 #include "KeyCodes.h"
+#import "VMPNotification.h"
+
 
 
 /*---------------------------------------------------------------------------------
@@ -59,6 +61,11 @@
 
 @implementation VMPStatisticsView
 
+- (void)awakeFromNib {
+	self.reportView.doubleAction = @selector(doubleClickOnRow:);
+}
+
+
 - (void)setInfoText:(VMString*)infoText {
 	((NSTextField*)[self viewWithTag:140]).stringValue = infoText;
 }
@@ -81,6 +88,17 @@
 	[DEFAULTANALYZER selectRow:[tableView selectedRow]];
 }
 
+
+- (IBAction)doubleClickOnRow:(id)sender {
+	NSTableView *tableView = sender;
+	VMPReportRecord *rec = [DEFAULTANALYZER recordForRow:tableView.selectedRow];
+	[VMPNotificationCenter postNotificationName:VMPNotificationCueDoubleClicked
+										 object:self
+									   userInfo:@{@"id":rec.ident} ];
+//	[[VMPlayerOSXDelegate singleton].objectBrowserView findObjectById:rec.ident];
+}
+
+
 - (void)updateButtonStates {
 	[((NSButton*)[self viewWithTag: 100]) setEnabled:( DEFAULTANALYZER.historyPosition < DEFAULTANALYZER.history.count -1 )];
 	[((NSButton*)[self viewWithTag:-100]) setEnabled:( DEFAULTANALYZER.historyPosition > 0 )];
@@ -98,6 +116,29 @@
 
 #pragma mark -
 #pragma mark Analyzer
+
+@interface VMPAnalyzer()
+/*---------------------------------------------------------------------------------
+ 
+ analyzer intern
+ 
+ ----------------------------------------------------------------------------------*/
+
+@property (retain)						VMHash						*countForCueId;
+@property (retain)						VMHash						*routesForId;
+@property (retain)						VMHash						*countForPart;
+@property (retain)						VMHash						*sojournDataForPart;
+@property (retain)						VMHash						*histograms;
+@property (retain)						VMArray						*unresolveables;
+@property (retain)						VMHash						*report;
+
+
+@property (readonly, getter=isBusy)		BOOL						busy;
+@property (retain)						VMCue						*entryPoint;
+@property (retain)						VMId						*currentPartId;
+
+
+@end
 
 static NSColor *oliveColor, *teaColor, *mandarineColor;
 
@@ -708,6 +749,8 @@ static const int	kLengthOfPartTraceRoute					= 10000;	//	gives up after 10000 ti
 	[self.recordDetailPopover showRelativeToRect:rect
 										  ofView:self.statisticsView.reportView
 								   preferredEdge:NSMaxXEdge];
+	
+	[VMPNotificationCenter postNotificationName:VMPNotificationCueSelected object:self userInfo:@{@"id":record.ident}];
 }
 
 

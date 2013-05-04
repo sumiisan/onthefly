@@ -93,7 +93,7 @@
 			if ( lastHl.type == vmObjectType_selector && lastHl.subInfo ) {
 				[lastHl.subInfo setItem:d.id for:@"vmlog_selected"];
 			}
-			
+			/*
 			if ( d.type == vmObjectType_audioCue && lastHl.type == vmObjectType_sequence ) {
 				VMSequence *sq = lastHl.data;
 				if ( [sq.cues position:d.id] >= 0 ) {
@@ -108,7 +108,7 @@
 					continue;
 				}
 			}
-			
+			*/
 		} else {
 			VMHash *h = (VMHash*)data;
 			type = [h item:@"vmlog_type"];
@@ -139,8 +139,8 @@
 		[hash setItem:VMIntObj([[NSDate date] timestamp]) for:@"vmlog_timestamp"];
 		return;
 	}
-	VMHistoryLog *historyLog = ClassCastIfMatch(item, VMHistoryLog);
 	
+	VMHistoryLog *historyLog = ClassCastIfMatch(item, VMHistoryLog);
 	if ( !historyLog ) {
 		//	wrap item with history log
 		historyLog = [VMHistoryLog historyWithAction:nil data:item subInfo:nil];
@@ -155,6 +155,42 @@
 	}
 	
 	return;
+}
+
+/*
+ code taken from 
+ https://developer.apple.com/library/mac/#documentation/Cocoa/Conceptual/TextLayout/Tasks/StringHeight.html#//apple_ref/doc/uid/20001809-CJBGBIBB
+ */
+
+- (CGFloat)heightForStringDrawing:(NSString*)myString font:(NSFont*)myFont width:(float)myWidth {
+	NSTextStorage *textStorage = [[[NSTextStorage alloc] initWithString:myString] autorelease];
+	NSTextContainer *textContainer = [[[NSTextContainer alloc] initWithContainerSize: NSMakeSize(myWidth, FLT_MAX)] autorelease];
+	NSLayoutManager *layoutManager = [[[NSLayoutManager alloc] init] autorelease];
+	[layoutManager addTextContainer:textContainer];
+	[textStorage addLayoutManager:layoutManager];
+	[textStorage addAttribute:NSFontAttributeName value:myFont range:NSMakeRange(0, [textStorage length])];
+	[textContainer setLineFragmentPadding:0.0];
+	[layoutManager glyphRangeForTextContainer:textContainer];
+	return [layoutManager usedRectForTextContainer:textContainer].size.height;
+}
+
+
+- (void)addTextLog:(VMString*)action message:(VMString*)message {
+	VMHistoryLog *hl = [VMHistoryLog historyWithAction:action
+												  data:message
+											   subInfo:[VMHash hashWithObjectsAndKeys:message,@"message",nil]
+						];
+	hl.expandedHeight = [self heightForStringDrawing:message font:[NSFont systemFontOfSize:10] width:250] +1;
+	[self log:hl];
+}
+
+
+- (void)logWarning:(NSString *)messageFormat withData:(NSString *)data {
+	[self addTextLog:@"warning" message:[NSString stringWithFormat: @"Warning: %@:%@", messageFormat, data]];
+}
+
+- (void)logError:(NSString*)messageFormat withData:(NSString*)data {
+	[self addTextLog:@"error" message:[NSString stringWithFormat: @"Error: %@:%@", messageFormat, data]];
 }
 
 - (VMInt)indexOfItem:(VMInt)index {

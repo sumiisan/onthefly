@@ -26,12 +26,13 @@
 							VMIntObj( NSCenterTextAlignment ) ];
 		
 		for( int i = 0; i < 4; ++i ) {
-			t = [[NSTextField alloc] initWithFrame:CGRectMake( i * interval +1, 0, textFieldWidth, 12)];
+			t = [[NSTextField alloc] initWithFrame:CGRectMake( i * interval +1, 1, textFieldWidth, 12)];
 			t.tag = 'txf0' + i;
 			t.editable = NO;
-			t.drawsBackground = ( i == 3 );
+			t.drawsBackground = NO;//( i == 3 );
 			t.bordered = NO;	
 			t.font = [NSFont systemFontOfSize:9];
+			t.textColor = [NSColor colorWithCalibratedWhite:0.1 alpha:1.];
 			t.alignment = [[align objectAtIndex:i] intValue];
 			
 			
@@ -43,6 +44,7 @@
 		b.target = self;
 		b.action = @selector(changeHistogramType:);
 		b.transparent = YES;
+		
 		[self addSubview:b];
 		
 		
@@ -77,9 +79,10 @@
 		[_title release];
 		_title = [title retain];
 	}
+	if ( ! title ) title = @"";
 	NSTextField *titleField = [self viewWithTag:'txf3'];
 	VMArray *histTypeString = [VMArray arrayWithArray:@[@" (linear)",@" (log e)",@" (log 10)",@" (sqrt)"]];
-	titleField.frame = CGRectMake(2, self.frame.size.height - 12, self.frame.size.width - 4, 12);
+	titleField.frame = CGRectMake(2, self.frame.size.height - 13, self.frame.size.width - 4, 12);
 	titleField.stringValue = [title stringByAppendingString:[ histTypeString item: self.histogramType]];
 	titleField.backgroundColor = [NSColor colorWithCalibratedRed:.9 green:.9 blue:.9 alpha:.5];
 }
@@ -92,9 +95,8 @@
 
 - (void)drawRect:(NSRect)dirtyRect {
 	const VMFloat e3m1	= pow( M_E, 3 ) -1;
-	
 	//
-	//	set up transformer for histogram types
+	//	setup transformer for histogram types
 	//
 	VMFloat(^transform)(VMFloat value);
 	switch ( self.histogramType ) {
@@ -113,13 +115,14 @@
 	}
 
 	
-//	if ( self.isHidden ) return;
-	CGFloat textHeight	= 12;
-	CGFloat graphLeft	= dirtyRect.origin.x + 2;
-	CGFloat graphBase	= textHeight + 2 + dirtyRect.origin.y;
+	CGFloat titleTextHeight	= 12;
+	CGFloat valueTextHeight = 9;
+	CGFloat margin			= 2;
+	CGFloat graphLeft		= margin;
 	
-	CGFloat	graphWidth	= dirtyRect.size.width - 4;
-	CGFloat graphHeight = dirtyRect.size.height - textHeight;
+	CGFloat	graphWidth		= self.frame.size.width - margin*2;
+	CGFloat graphHeight		= self.frame.size.height - titleTextHeight - valueTextHeight;
+	CGFloat graphBase		= valueTextHeight + graphHeight;
 	
 	[self setCanvas];
 	
@@ -129,23 +132,19 @@
 	//
 	[self setLineWidth:1.];
 	[self setColor_r:.9 g:.9 b:.9];
-	[self fillRect_x:dirtyRect.origin.x y:dirtyRect.origin.y
-				   w:dirtyRect.size.width h:dirtyRect.size.height];
-	[self setColor_r:.1 g:.1 b:.1];
-	[self drawRect_x:dirtyRect.origin.x y:dirtyRect.origin.y + textHeight
-				   w:dirtyRect.size.width h:graphHeight];
-
+	NSRectFill(dirtyRect);
+	
 	//
 	//	sd
 	//
-	VMFloat height      = graphHeight - 4 - textHeight;
+	VMFloat height      = graphHeight - 4;
 	VMFloat valPerPix   = graphWidth / ( range.maximum - range.minimum );
 	
 	[self setColor_r:1. g:1. b:.8];
 	[self fillRect_x:valPerPix * ( mean - sd - range.minimum) + graphLeft
 				   y:graphBase
 				   w:valPerPix * ( sd * 2 )
-				   h:height ];
+				   h:-height ];
 
 	//
 	//	mean line
@@ -154,18 +153,18 @@
 	[self setColor_r:1. g:.3 b:.3];
 	CGFloat meanx = valPerPix * ( mean - range.minimum ) + graphLeft;
 	[self drawLine_x0:meanx y0:graphBase
-				   x1:meanx y1:dirtyRect.size.height];
+				   x1:meanx y1:1];
 
 	//
 	//	guide lines
 	//
 	[self setLineWidth:0.1];
 	[self setColor_r:.3 g:.3 b:.6];
-	CGFloat center = (int)(dirtyRect.size.width * 0.5 + graphLeft) + 0.5;
+	CGFloat center = (int)(self.frame.size.width * 0.5 + graphLeft) + 0.5;
 	[self drawLine_x0:center y0:graphBase
-				   x1:center y1:dirtyRect.size.height];
+				   x1:center y1:self.frame.size.height];
 	for ( VMFloat i = 0.0; i <= 1; i += 0.25 ) {
-		VMFloat y = (int)(transform(i) * height + graphBase) + 0.5;
+		VMFloat y = graphBase - (int)(transform(i) * height) + 0.5;
 		[self drawLine_x0:graphLeft y0:y x1:graphLeft+graphWidth y1:y];
 	}
 	
@@ -175,8 +174,8 @@
 	//
 	VMInt	bins		= _data.count;
 	CGFloat binWidth	= graphWidth / bins;
-	VMFloat margin		= ( binWidth > 2. ? 1 : 0 );
-	VMFloat barWidth	= binWidth - margin;
+	VMFloat binMargin	= ( binWidth > 2. ? 1 : 0 );
+	VMFloat barWidth	= binWidth - binMargin;
 	VMFloat ht			= self.histogramType * 0.05;
 	for ( int i = 0; i < bins; ++i ) {
 		VMFloat v = [_data itemAsFloat:i];
@@ -185,12 +184,18 @@
 		[self setColor_r:0.4 + ht * 1.67
 					   g:0.6 - ht - v * 0.5
 					   b:1.0 - ht ];
-		[self fillRect_x:i * binWidth + dirtyRect.origin.x + 2
+		[self fillRect_x:i * binWidth + 2
 					   y:graphBase
 					   w:barWidth
-					   h:h
+					   h:-h
 		 ];
 	}
+	
+	//	frame
+	[self setColor_r:.4 g:.4 b:.6];
+	[self setLineWidth:1.];
+	[self drawRect_x:0.5 y:0.5 w:self.frame.size.width-1 h:graphBase-1];
+
 }
 
 @end

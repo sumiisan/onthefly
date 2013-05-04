@@ -10,9 +10,9 @@
 #import "VMPSongPlayer.h"
 #import "VMPTrackView.h"
 #import "SequenceView.h"
-#import "VariableSong.h"
 #import "VMPObjectBrowserView.h"
-#import "VMPGraph.h"
+#import "VMPObjectGraphView.h"
+#import "VMPVariablesPanelController.h"
 #import "VMPLogView.h"
 
 #define kDefaultVMSFileName @"default.vms"
@@ -22,10 +22,7 @@
     NSPersistentStoreCoordinator *__persistentStoreCoordinator;
     NSManagedObjectModel *__managedObjectModel;
     NSManagedObjectContext *__managedObjectContext;
-    
-    VariableSong   		*variableSong;
 }
-
 
 /*---------------------------------------------------------------------------------
  *
@@ -59,12 +56,14 @@
 @property (assign) IBOutlet VMPTrackView       		*trackView;
 
 //	songplayer sequence view
-@property (assign) IBOutlet SequenceView   			*sequenceView;			//	pending
+//@property (assign) IBOutlet SequenceView   			*sequenceView;			//	pending
 
-//	log view
+//	log panel
 @property (assign) IBOutlet NSPanel					*logPanel;
 @property (assign) IBOutlet VMPLogView				*logView;
 
+//	variables panel
+@property (nonatomic, retain) VMPVariablesPanelController	*variablesPanelController;
 
 /*---------------------------------------------------------------------------------
  
@@ -74,6 +73,15 @@
 @property (nonatomic, retain, readonly) NSPersistentStoreCoordinator *persistentStoreCoordinator;
 @property (nonatomic, retain, readonly) NSManagedObjectModel *managedObjectModel;
 @property (nonatomic, retain, readonly) NSManagedObjectContext *managedObjectContext;
+
+/*---------------------------------------------------------------------------------
+ 
+ methods
+ 
+ ----------------------------------------------------------------------------------*/
+
++ (VMPlayerOSXDelegate*)singleton;
+- (NSError*)openVMSDocumentFromURL:(NSURL *)documentURL;
 
 /*---------------------------------------------------------------------------------
  
@@ -89,8 +97,5 @@
 - (IBAction)playButtonClicked:(id)sender;
 - (IBAction)routeStatics:(id)sender;
 
-//  NSApplication delegate
-- (BOOL) applicationShouldTerminateAfterLastWindowClosed: (NSApplication *) theApplication;
-+ (VMPlayerOSXDelegate*)singleton;
 
 @end

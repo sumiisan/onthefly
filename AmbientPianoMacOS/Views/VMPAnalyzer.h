@@ -91,6 +91,7 @@ typedef enum {
 - (BOOL)routeStatistic:(VMData*)entryPoint numberOfIterations:(const long)numberOfIterations until:(VMString*)exitCondition;
 - (void)addUnresolveable:(VMId*)dataId;
 - (void)selectRow:(NSInteger)row;
+- (VMPReportRecord *)recordForRow:(NSInteger)row;
 - (void)moveHistory:(VMInt)vector;
 - (IBAction)moveHistoryFromMenu:(id)sender;
 - (IBAction)performStatistics:(id)sender;
@@ -98,27 +99,9 @@ typedef enum {
 
 @property (nonatomic,retain)	VMArray		*history;
 @property (nonatomic,assign)	VMInt		historyPosition;
+@property (assign)				id			<VMPAnalyzerDelegate>	delegate;
+@property (retain)				VMLog		*log;
 
-/*---------------------------------------------------------------------------------
- 
- analyzer intern
- 
- ----------------------------------------------------------------------------------*/
-
-@property (retain)						VMHash						*countForCueId;
-@property (retain)						VMHash						*routesForId;
-@property (retain)						VMHash						*countForPart;
-@property (retain)						VMHash						*sojournDataForPart;
-@property (retain)						VMHash						*histograms;
-@property (retain)						VMArray						*unresolveables;
-@property (retain)						VMHash						*report;
-
-@property (retain)						VMLog						*log;
-
-@property (readonly, getter=isBusy)		BOOL						busy;
-@property (retain)						VMCue						*entryPoint;
-@property (retain)						VMId						*currentPartId;
-@property (assign)						id <VMPAnalyzerDelegate>	delegate;
 
 /*---------------------------------------------------------------------------------
  

@@ -81,8 +81,6 @@ static VMArray *indicatorForCategory = nil;
 		if ( ! indicatorForCategory ) {
 			indicatorForCategory = [[VMArray arrayWithObjects:@"⇉⦿",@"→⦿",@"⦿→",@"⦿⇉"] retain];
 		}
-		self.histogramView.title = @"sojourn";
-		self.histogramView.hidden = YES;
 	}
 
 	return self;
@@ -103,6 +101,9 @@ static VMArray *indicatorForCategory = nil;
 	for( VMInt i = 0; i < 4; ++i ) {
 		[self.filterChooser setLabel:[indicatorForCategory item:i] forSegment:i];
 	}
+	self.histogramView.title = @"sojourn";
+	self.histogramView.hidden = YES;
+
 }
 
 - (VMInt)pushRoutes:(VMHash*)data
@@ -198,7 +199,7 @@ static VMArray *indicatorForCategory = nil;
 			maxIndex = [h itemAsInt:@"position"];
 		}
 	}
-	[[VMPlayerOSXDelegate singleton].logView locateLogWithIndex:maxIndex ofSource:@"statistics"];
+	[[VMPlayerOSXDelegate singleton].logView locateLogWithIndex:maxIndex ofSource:VMPLogViewSource_Statistics];
 }
 
 - (void)filterSelected:(id)sender {
@@ -251,7 +252,7 @@ static VMArray *indicatorForCategory = nil;
 		
 		[self.histogramView setData:lengthArray numberOfBins:0];
 		self.histogramView.hidden = NO;
-		self.detailScrollView.frame = NSMakeRect(0, 100, 250, 380);
+		self.detailScrollView.frame = NSMakeRect(0, 120, 250, 360);
 		[self.contentViewController.view addSubview:self.histogramView];
 	} else {
 		self.histogramView.hidden = YES;
@@ -329,7 +330,6 @@ static VMArray *indicatorForCategory = nil;
 				[tbv deselectAll:self];
 		}
 	}
-	
 }
 
 

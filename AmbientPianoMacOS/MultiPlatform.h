@@ -27,6 +27,8 @@ static const int kNumberOfQueueBuffers = 3;			//  this is for CoreAudio's AudioQ
 static const int kNumberOfAudioPlayers = 10;		//  number of sound players
 static const int kWaveFormCacheFrames = 0;			//	do not cache waveform
 
+static const BOOL kUseNotification = NO;
+
 #define Is4InchIPhone ( [[UIScreen mainScreen] bounds].size.height == 568 )
 
 
@@ -68,6 +70,7 @@ static const int kWaveFormCacheFrames = 0x1000;		//	4k
 //
 #define kEstimatedMemorySize ( kAudioPlayer_BufferSize * kNumberOfQueueBuffers * kNumberOfAudioPlayers )
 
+static const BOOL kUseNotification = YES;
 
 
 //  aliases

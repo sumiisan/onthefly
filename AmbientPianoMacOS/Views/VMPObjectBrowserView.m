@@ -13,6 +13,8 @@
 #import "VMPAnalyzer.h"
 #import "VMPGraph.h"
 #import "KeyCodes.h"
+#import "VMPNotification.h"
+
 
 #define FormString NSString stringWithFormat:
 
@@ -129,12 +131,22 @@ static VMPObjectCell		*typeColumnCell = nil;
 		typeColumnCell.drawsBackground		= YES;
 		typeColumnCell.lineBreakMode		= NSLineBreakByClipping;
 		genericCell.font = [NSFont systemFontOfSize:11];
+		
+		[VMPNotificationCenter addObserver:self
+								  selector:@selector(doubleClickOnCue:)
+									  name:VMPNotificationCueDoubleClicked
+									object:nil];
     }
 	
     return self;
 }
 
+- (void)awakeFromNib {
+	self.objectTreeView.doubleAction = @selector(doubleClickOnRow:);
+}
+
 - (void)dealloc {
+	[VMPNotificationCenter removeObserver:self];
 	self.objectRoot = nil;
     self.lastSelectedId = nil;
 	self.dataIdList = nil;
@@ -160,6 +172,19 @@ static VMPObjectCell		*typeColumnCell = nil;
 	}
 	[arr push:( data ? data : @"?" )];
 }
+
+- (void)addChildNodesToNode:(NSTreeNode *)node children:(VMArray*)children {
+//	[node.mutableChildNodes removeAllObjects];
+	
+    for( id child in children ) {
+		VMData *childObj = nil;
+		if( ClassMatch(child, VMId) ) childObj = [_songData item:child];
+        [node.mutableChildNodes addObject:
+		 [NSTreeNode treeNodeWithRepresentedObject:
+		  childObj ? childObj : child ]];
+	}
+}
+
 
 - (void)setSongData:(VMHash *)inSongData {
 	_songData = inSongData;	//	assign
@@ -209,10 +234,7 @@ static VMPObjectCell		*typeColumnCell = nil;
 			VMArray *dataArray = [partHash item:sectionId];
 			if ( dataArray.count > 1 ) {
 				NSTreeNode *tracks = [NSTreeNode treeNodeWithRepresentedObject:sectionId];
-				for ( id dataId in dataArray ) {
-					VMData *data = [_songData item:dataId];
-					[tracks.mutableChildNodes addObject:[NSTreeNode treeNodeWithRepresentedObject:( data ? data : dataId )	]];
-				}
+				[self addChildNodesToNode:tracks children:dataArray];
 				[sections.mutableChildNodes addObject:tracks];
 			} else {
 				VMData *data = [_songData item:[dataArray item:0]];
@@ -313,8 +335,8 @@ static VMPObjectCell		*typeColumnCell = nil;
 #pragma mark search: treenode
 - (id)seekId:(VMId*)inId inNode:(NSTreeNode*)inNode matchedExact:(BOOL*)outMatchedExact {
 	if ( inId.length == 0 ) return nil;
-	
-	id result = nil;
+		
+	NSTreeNode *result = nil;
 	*outMatchedExact = NO;
 	VMString *compareString = [inId stringByAppendingString:@"*"];
 	VMArray *nodes = [VMArray arrayWithArray:inNode.childNodes];
@@ -331,6 +353,34 @@ static VMPObjectCell		*typeColumnCell = nil;
 			}
 		}
 	}
+	NSLog(@"seeking %@ in %@ match:%@ %@",inId,inNode.representedObject,result.representedObject,*outMatchedExact?@"exact":@"");
+	return result;
+}
+
+
+- (id)reverseSeekId:(VMId*)inId inNode:(NSTreeNode*)inNode matchedExact:(BOOL*)outMatchedExact {
+	VMInt len = inId.length;
+	if ( len == 0 ) return nil;
+	
+	NSTreeNode *result = nil;
+	*outMatchedExact = NO;
+	VMArray *nodes = [VMArray arrayWithArray:inNode.childNodes];
+	
+	for ( id d in nodes ) {
+		NSTreeNode *tn = ClassCastIfMatch( d, NSTreeNode );
+		if ( tn ) {
+			VMId *ident = (ClassMatch( tn.representedObject, VMId) ? tn.representedObject : ((VMData*)tn.representedObject).id );
+			
+			if ( ident.length > len ) continue;
+			VMString *compareString = [inId substringToIndex:ident.length];
+			if ( [ident isCaseInsensitiveLike:compareString] ) {
+				result = tn;
+				*outMatchedExact = [ident isEqualToString:inId];
+				break;
+			}
+		}
+	}
+	NSLog(@"reverse seeking %@ in %@ match:%@ %@",inId,inNode.representedObject,result.representedObject,*outMatchedExact?@"exact":@"");
 	return result;
 }
 
@@ -345,18 +395,32 @@ static VMPObjectCell		*typeColumnCell = nil;
 					 byExtendingSelection:NO];
 	[self.objectTreeView scrollRowToVisible:row];
 	[self.objectTreeView reloadItem:item];
+
+	if( ClassMatch(item, NSTreeNode)) item = ((NSTreeNode*)item).representedObject;
+	VMData *d = ClassCastIfMatch( item, VMData );
+	if ( d ) {
+		self.lastSelectedId = d.id;
+		[self.graphDelegate drawGraphWith:d];
+		[self.infoDelegate drawInfoWith:d];
+	}
 }
 
 
-- (void)expandOrSelect:(id)item {
+- (BOOL)expand:(id)item {
 	if ( [self.objectTreeView isExpandable:item] ) {
 		if (! [self.objectTreeView isItemExpanded:item] ) {
 			[self.objectTreeView expandItem:item];
 			[self.objectTreeView reloadData];
 		}
-	} else {
-		[self selectItem:item];
+		return YES;
 	}
+	return NO;
+}
+
+
+- (void)expandOrSelect:(id)item {
+	if ( ![self expand:item] )
+		[self selectItem:item];
 }
 
 /*---------------------------------------------------------------------------------
@@ -368,13 +432,21 @@ static VMPObjectCell		*typeColumnCell = nil;
 - (IBAction)updateFilter:sender {
 	NSRange  selection = self.searchField.currentEditor.selectedRange;
 
-	NSString *searchString = selection.location == 0 ? [self.searchField stringValue] : [[self.searchField stringValue] substringToIndex:selection.location];
-	if ( [searchString isEqualToString:self.currentFilterString] || searchString.length == 0 ) {
-//		NSLog(@"update filter via NSSearchField - no change or string is empty: field:%@, current:%@", searchString, self.currentNonCompletedSearchString );
-		return;
-	}// else NSLog(@"update filter via NSSearchField");
+	NSString *searchString  = selection.location == 0
+							? [self.searchField stringValue]
+							: [[self.searchField stringValue] substringToIndex:selection.location];
 	
-	[self updateFilterWithString:searchString];
+	if ( ! [searchString isEqualToString:self.currentFilterString] && searchString.length > 0 )
+		[self updateFilterWithString:searchString];
+}
+
+- (void)doubleClickOnCue:(NSNotification*)notification {
+	[self findObjectById:[ notification.userInfo objectForKey:@"id"]];
+}
+
+- (void)findObjectById:(VMId*)dataId {	//	public
+	[self updateFilterWithString:dataId];
+	[self.window makeKeyAndOrderFront:self];
 }
 
 - (void)updateFilterWithString:(NSString*)searchString {
@@ -384,7 +456,7 @@ static VMPObjectCell		*typeColumnCell = nil;
 	NSCharacterSet *delimiterSet = [NSCharacterSet characterSetWithCharactersInString:@"_|;="];
 	VMArray *comp = [VMArray arrayWithArray: [searchString componentsSeparatedByCharactersInSet:delimiterSet ]];
 	
-	BOOL		part_matchedExact, section_matchedExact, leaf_matchedExact;
+	BOOL		part_matchedExact = NO, section_matchedExact = NO, whole_matchedExact = NO;
 	VMId		*partId, *sectionId;
 	NSTreeNode	*partNode = nil;
 	id			sectionNode = nil, leafData = nil;
@@ -407,24 +479,33 @@ static VMPObjectCell		*typeColumnCell = nil;
 	
 	sectionNode	= [self seekId:sectionId inNode:partNode matchedExact:&section_matchedExact];
 	if ( !sectionNode )
-		sectionNode = [self seekId:searchString inNode:partNode matchedExact:&section_matchedExact];
+		sectionNode = [self seekId:searchString inNode:partNode matchedExact:&whole_matchedExact];
+	if ( !sectionNode )
+		sectionNode = [self seekId:[partId stringByAppendingFormat:@"_%@", sectionId] inNode:partNode matchedExact:&section_matchedExact];
+	
+	
 	if ( !sectionNode ) return;
 
-	if ( comp.count == 0 ) [self selectItem:sectionNode];
+	if ( comp.count == 0 || whole_matchedExact ) [self selectItem:sectionNode];
 	
-	if ( section_matchedExact ) [self expandOrSelect:sectionNode];
+	if ( section_matchedExact || whole_matchedExact ) [self expandOrSelect:sectionNode];
 	
-	if ( ClassMatch(sectionNode, VMData) )
-		return;	//	do not seek inside VMData.	should not happen since we create NSTreeNodes on the fly
-	
+	if ( ClassMatch(sectionNode, VMData) ) {
+		assert(0);
+		return;	//	do not seek inside bare VMData.	should not happen since we create NSTreeNodes on the fly
+	}
 //
 	NSTreeNode *branchNode = sectionNode;
 	doForever {
-		leafData	= [self seekId:searchString inNode:branchNode matchedExact:&leaf_matchedExact];
+		leafData	= [self seekId:searchString inNode:branchNode matchedExact:&whole_matchedExact];
+		if ( ! leafData )
+			leafData = [self reverseSeekId:searchString inNode:branchNode matchedExact:&whole_matchedExact];
+
 		if ( !ClassMatch( leafData, NSTreeNode ) ) break;
-		
+		branchNode = leafData;
+		[self expand:branchNode];
+		if ( whole_matchedExact ) [self selectItem:leafData];
 	}
-	[self selectItem:leafData];
 }
 
 #pragma mark -
@@ -439,6 +520,16 @@ static VMPObjectCell		*typeColumnCell = nil;
  Subs
  */
 
+- (VMData*)dataOfRow:(VMInt)row {
+	id item = [self.objectTreeView itemAtRow:row];
+	
+	if ( ClassMatch(item, NSTreeNode) ) {
+		item = [((NSTreeNode*)item) representedObject];
+	}
+	VMData *d = ClassCastIfMatch(item, VMData);
+	if ( ClassMatch(item, VMId) ) d = [_songData item:item];
+	return d;
+}
 
 //	item can be NSTreeNode or VMData object.
 - (VMArray*)childrenOfItem:(id)item {
@@ -485,22 +576,17 @@ static VMPObjectCell		*typeColumnCell = nil;
 		case vmObjectType_audioInfo: {
 			MakeVarByCast(d, data, VMAudioInfo)
 			return [FormString 
-					@"fileId:\"%@\" (dur:%3.3f%@)%@%@%@",
+					@"fileId:\"%@\" (dur:%@%@)%@%@",
 					d.fileId,
-					d.duration,
-					(d.offset 
-					 ? [FormString @" ofs:%3.3f",
-						d.offset]
+					d.cuePoints.lengthDescriptor,
+					(d.cuePoints.locationDescriptor
+					 ? [FormString @" ofs:%@",
+						d.cuePoints.locationDescriptor]
 					 : @"" ),
-					((d.playbackRange.start != 0 || d.playbackRange.end != 0 ) 
-					 ?	[FormString @" playback:(%3.3f - %3.3f)",
-						 d.playbackRange.start,
-						 d.playbackRange.end]
-					 : @"" ),
-					((d.fadePoints.start != 0 || d.fadePoints.end != 0 ) 
-					 ?	[FormString @" fade:(%3.3f - %3.3f)",
-						 d.fadePoints.start,
-						 d.fadePoints.end]
+					((d.regionRange.location != 0 || d.regionRange.length != 0 )
+					 ?	[FormString @" playback:(%@ - %@)",
+						 d.regionRange.locationDescriptor,
+						 d.regionRange.lengthDescriptor]
 					 : @"" ),
 					(d.instructionList 
 					 ? [FormString @" inst:[%@]",
@@ -566,14 +652,6 @@ static VMPObjectCell		*typeColumnCell = nil;
 
 #pragma mark -
 #pragma mark outlineview datasorce and delegate
-- (void)addChildNodesToNode:(NSTreeNode *)node children:(VMArray*)children {
-	[node.mutableChildNodes removeAllObjects];
-	
-    for( id child in children ) 
-        [node.mutableChildNodes addObject:
-		 [NSTreeNode treeNodeWithRepresentedObject:
-		  ClassMatch(child, VMId) ? [_songData item:child] : child ]];
-}
 
 /* 
  Required methods
@@ -692,36 +770,42 @@ static VMPObjectCell		*typeColumnCell = nil;
 }
 
 #pragma mark -
-#pragma mark select
+#pragma mark click action
 
 
-- (IBAction)clickOnRow:(id)sender {
-	NSOutlineView *olv = sender;
-	id item = [olv itemAtRow:olv.clickedRow];
-	
-	if ( ClassMatch(item, NSTreeNode) ) {
-		item = [((NSTreeNode*)item) representedObject];
-	}
-	VMData *d = ClassCastIfMatch(item, VMData);
-	if ( ClassMatch(item, VMId) ) d = [_songData item:item];
+
+- (void)selectRow:(VMInt)row {
+	VMData *d = [self dataOfRow:row];
 	if (d) {
         self.lastSelectedId = d.id;
 		[self.graphDelegate drawGraphWith:d];
 		[self.infoDelegate drawInfoWith:d];
-//		if ( d.type == vmObjectType_sequence || d.type == vmObjectType_selector || d.type == vmObjectType_audioCue )
-//			[DEFAULTSONGPLAYER setCueId:d.id fadeOut:YES restartAfterFadeOut:YES];
+		[VMPNotificationCenter postNotificationName:VMPNotificationCueSelected object:self userInfo:@{@"id":d.id}];
 	} else {
-		VMString *partId = ClassCastIfMatch( item, VMString );
-		if ( partId )
-			self.lastSelectedId = partId;
+		id item = [self.objectTreeView itemAtRow:row];
+		if ( ClassMatch( item, VMString ) )
+			self.lastSelectedId = item;
 	}
 }
 
-//	VMPAnalyzer delegate
-- (void)analysisFinished:(VMHash*)report {
-	[self.graphDelegate drawReportGraph:report];
+
+- (IBAction)clickOnRow:(id)sender {
+	[self selectRow:self.objectTreeView.clickedRow];
 }
 
+- (IBAction)doubleClickOnRow:(id)sender {
+	VMInt row = self.objectTreeView.clickedRow;
+	VMData *d = [self dataOfRow:row];
+	if (d) {
+		if ( d.type == vmObjectType_chance) {
+			VMId *targetId = ((VMChance*)d).targetId;
+			[self.objectTreeView collapseItem:[self.objectTreeView itemAtRow:row]];
+			[self updateFilterWithString:targetId];
+		}
+	}
+}
+
+#pragma mark type select
 
 - (NSString*)outlineView:(NSOutlineView *)outlineView typeSelectStringForTableColumn:(NSTableColumn *)tableColumn item:(id)item {
 	if (ClassMatch(item, NSTreeNode) )
@@ -747,15 +831,18 @@ static VMPObjectCell		*typeColumnCell = nil;
 	
 	if ( [searchString hasPrefix:@" "]) return NO;
 	return YES;
-	
 }
 
-/*
-- (BOOL)outlineView:(NSOutlineView *)outlineView shouldSelectItem:(id)item {
+- (void)outlineViewSelectionDidChange:(NSNotification *)notification {
+	[self selectRow:self.objectTreeView.selectedRow];
+}	
+
+#pragma mark -
+#pragma mark VMPAnalyzer delegate
+//	VMPAnalyzer delegate
+- (void)analysisFinished:(VMHash*)report {
+	[self.graphDelegate drawReportGraph:report];
 }
-*/
-
-
 
 
 

@@ -13,10 +13,18 @@
 
 
 
+//--------------------- constants -----------------------------
+
+static const CGFloat	vmpCellWidth		= 100.;
+static const CGFloat	vmpCellMargin		= 10.;
+static const CGFloat	vmpShadowOffset 	= 2.;
+static const CGFloat	vmpShadowBlurRadius = 3.;
+
 
 //-------------------------	CGGeometry extension -------------------------
 #ifndef CGGEOMETRY_EXTENSION_
 #define CGGEOMETRY_EXTENSION_
+CGSize CGSizeAdd( CGSize size1, CGSize size2 );
 CGRect CGRectMakeFromOriginAndSize( CGPoint origin, CGSize size );
 CGRect CGRectZeroOrigin( CGRect rect );
 CGRect CGRectOffsetByPoint( CGRect rect, CGPoint offset );
@@ -68,27 +76,62 @@ enum {
 @end
 
 
+#pragma mark -
+#pragma mark VMPButton (double clickable)
 
+//--------------------- VMPButton (double clickable) -----------------------------
+@interface VMPButton : NSButton
+@property (nonatomic, assign) SEL doubleAction;
+@end
 
 
 #pragma mark -
-#pragma mark VMCueCellDelegate
-//------------------- protocol VMCueCellDelegate -----------------------
-@protocol VMCueCellDelegate <NSObject>
-- (void)cueCellClicked:(VMId*)cueId;
+#pragma mark VMPDataGraphObject
+@protocol VMPDataGraphObject <NSObject>
+@required
+- (void)setData:(id)data;
 @end
 
+
+@class VMPCueCell;
+
+#pragma mark -
+#pragma mark VMPCueCellDelegate
+//------------------- protocol VMPCueCellDelegate -----------------------
+@protocol VMPCueCellDelegate <NSObject>
+- (void)cueCellClicked:(VMPCueCell*)cueCell;
+@end
 
 
 
 #pragma mark -
 #pragma mark VMPGraph
+
+@protocol VMPGraphDelegate <NSObject>
+- (void)drawRect:(NSRect)dirtyRect ofView:(NSView*)view;
+@end
+
 //------------------------- VMGraph (base) -----------------------------
-@interface VMPGraph : NSView
+@interface VMPGraph : NSView {
+	__weak id <VMPGraphDelegate> _graphDelegate;
+}
+
+@property (nonatomic, assign)	BOOL					flippedYCoordinate;
+@property (nonatomic, assign)	NSInteger				tag;
+@property (nonatomic, retain)	NSColor					*backgroundColor;
+@property (nonatomic, retain)	VMPGraph				*topOverlay;
+@property (weak)				id <VMPGraphDelegate>	graphDelegate;
+
 - (void)redraw;
+- (void)addTopOverlay;
 - (void)removeAllSubviews;
 - (id)taggedWith:(NSInteger)aTag;
-@property (assign)			NSInteger			tag;
+
+- (CGFloat)x;
+- (CGFloat)y;
+- (CGFloat)width;
+- (CGFloat)height;
+
 @end
 
 
@@ -98,53 +141,22 @@ enum {
 #pragma mark -
 #pragma mark VMPCueCell
 //---------------------------- VMPCueCell -------------------------------
-@interface VMPCueCell : VMPGraph {
+@interface VMPCueCell : VMPGraph <VMPDataGraphObject> {
 @private
 	NSButton	*button_;
-	__weak id <VMCueCellDelegate> delegate_;
+	__weak id <VMPCueCellDelegate> delegate_;
 }
-@property (nonatomic,assign) CGRect					cellRect;
-@property (nonatomic,retain) VMCue 					*cue;
-@property (nonatomic,assign) VMFloat 				score;
-@property (nonatomic,retain) NSGradient				*backgroundGradient;
-@property (weak)			 id <VMCueCellDelegate>	delegate;
+@property (nonatomic,assign)					CGRect					cellRect;
+@property (nonatomic,retain)					VMCue 					*cue;
+@property (nonatomic,assign)					VMFloat 				score;
+@property (nonatomic,retain)					NSGradient				*backgroundGradient;
+@property (nonatomic,assign,getter=isSelected)	BOOL					selected;
+@property (nonatomic,weak)						id <VMPCueCellDelegate>	delegate;
+
+- (void)selectIfIdDoesMatch:(VMId*)cueId exclusive:(BOOL)exclusive;
+
 @end
 
-
-
-#pragma mark -
-#pragma mark VMPSelectorCell
-//------------------------- VMPSelectorCell -----------------------------
-@interface VMPSelectorCell : VMPCueCell
-@end
-
-
-#pragma mark -
-#pragma mark VMPSequenceCell
-//------------------------- VMPSequenceCell -----------------------------
-@interface VMPSequenceCell : VMPSelectorCell
-@end
-
-
-
-#pragma mark -
-#pragma mark VMPObjectGraphView
-//------------------------ VMPObjectGraphView ----------------------------
-@interface VMPObjectGraphView : VMPGraph <ObjectBrowserGraphDelegate>
-@property (nonatomic, assign) VMData *data;
-@end
-
-
-
-#pragma mark -
-#pragma mark VMPObjectGraphView
-//------------------------ VMPObjectInfoView ----------------------------
-@interface VMPObjectInfoView : VMPGraph <ObjectBrowserInfoDelegate>
-@property (nonatomic, assign) VMData *data;
-@property (assign) IBOutlet NSTextField *userGeneratedIdField;
-@property (assign) IBOutlet NSTextField *vmpModifierField;
-@property (assign) IBOutlet NSTextField *dataInfoField;
-@end
 
 
 

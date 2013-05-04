@@ -16,7 +16,11 @@
 	NSTimeInterval	playing;
     NSTimeInterval  duration;
     NSTimeInterval  offset;
-	NSString        *infoString;
 }
+
+@property (nonatomic, retain) NSTextField *caption;
+@property (nonatomic, retain) NSString *audioCueId;
+
+- (void)setInfoString:(NSString *)infoString;
 
 @end

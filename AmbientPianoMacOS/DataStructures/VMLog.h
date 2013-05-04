@@ -18,16 +18,18 @@
  *---------------------------------------------------------------------------------*/
 
 @interface VMHistoryLog : NSObject
-@property (nonatomic)			VMInt			index;
-@property (nonatomic, retain)	id				data;
-@property (nonatomic, readonly)	vmObjectType	type;
-//@property (nonatomic, readonly)	VMCue			*cue;
-@property (nonatomic, retain)	VMString		*action;
-@property (nonatomic, retain)	VMHash			*subInfo;
-@property (nonatomic)			VMTime			timestamp;
-@property (nonatomic)			VMTime			playbackTimestamp;
-@property (nonatomic, getter=isExpanded) BOOL	expanded;
-@property (nonatomic)			VMFloat			expandedHeight;			//	used by VMPLogView 0 = not expanded
+@property (nonatomic)									VMInt			index;
+@property (nonatomic, retain)							id				data;
+@property (nonatomic, readonly)							vmObjectType	type;
+@property (nonatomic, retain)							VMString		*action;
+@property (nonatomic, retain)							VMHash			*subInfo;
+@property (nonatomic)									VMTime			timestamp;
+@property (nonatomic)									VMTime			playbackTimestamp;
+
+//	VMPLogView vars & flags
+@property (nonatomic)									VMFloat			expandedHeight;
+@property (nonatomic, getter=isExpanded)				BOOL			expanded;
+@property (nonatomic, getter=isAutomaticallyExpanded)	BOOL			automaticallyExpanded;
 
 + (VMHistoryLog*)historyWithAction:(VMString*)action data:(id)data subInfo:(VMHash*)subInfo;
 
@@ -51,6 +53,8 @@
 - (VMInt)issueIndex;
 - (VMInt)nextIndex;
 - (void)log:(id)item;
+- (void)logWarning:(NSString *)messageFormat withData:(NSString *)data;
+- (void)logError:(NSString *)messageFormat withData:(NSString *)data;
 - (void)record:(VMArray*)arrayOfData;
 
 @end

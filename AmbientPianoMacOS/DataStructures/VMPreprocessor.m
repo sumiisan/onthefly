@@ -499,23 +499,23 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 
 #pragma mark -
 #pragma mark log and alerts
+/*
 - (void)addLog:(id)logPart {
 	IfClassMatch(logPart, VMArray) {
 		[self->log_ append:logPart];
 	} else {
-		if ( ! self->log_ ) self->log_ = ARInstance(VMArray);
+		if ( ! self->log_ ) self->log_ = ARInstance(VMLog);
 		if(logPart) [self->log_ push:logPart];
 	}
 }
+*/
 
 - (void)logWarning:(NSString *)messageFormat withData:(NSString *)data {
-	NSString* message = [NSString stringWithFormat: @"Warning: %@:%@", messageFormat, data];
-	[self addLog:message];
+	[self.log logWarning:messageFormat withData:data];
 }
 
 - (void)logError:(NSString*)messageFormat withData:(NSString*)data {
-	NSString* message = [NSString stringWithFormat: @"Error: %@:%@\n", messageFormat, data];
-	[self addLog:message];
+	[self.log logError:messageFormat withData:data];
 	++fatalErrors;
 }
 
@@ -1648,7 +1648,7 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 - (id)init {
 	debugCounter = 1000;
 	if((self=[super init])) {
-		self.log = ARInstance(VMArray);
+		self.log = ARInstance(VMLog);
 		[self initConversionTables];
 		
 		

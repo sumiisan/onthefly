@@ -50,6 +50,7 @@
 
 - (IBAction)clickOnRow:(id)sender;
 - (IBAction)updateFilter:(id)sender;
+- (void)findObjectById:(VMId*)dataId;
 
 @property (assign) IBOutlet 	VMPOutlineView		*objectTreeView;
 @property (assign) IBOutlet		NSSearchField		*searchField;

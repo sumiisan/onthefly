@@ -39,22 +39,34 @@ VMPlayerOSXDelegate *variableMediaPlayer_singleton__ = nil;
     
     variableMediaPlayer_singleton__ = self;
 	
-	//  open document
-    NSError 	*outError = [[NSError alloc] init];
-    NSString 	*applicationPath = [[NSBundle mainBundle] resourcePath];
-    NSURL 		*songURL = [[NSURL alloc] initFileURLWithPath:[NSString stringWithFormat:@"%@/%@/%@",
-															   applicationPath,kDefaultVMDirectory,kDefaultVMSFileName] 
-											  isDirectory:NO];
-    variableSong = [[VariableSong alloc] initWithContentsOfURL:songURL 
-														ofType:@"vms" 
-														 error:&outError];
-    [songURL release];
-    [outError release];
-        
-    DEFAULTSONGPLAYER.song = variableSong.song;
-	
+    NSURL *vmsURL =	[[[NSURL alloc] initFileURLWithPath:[NSString stringWithFormat:@"%@/%@/%@",
+														[[NSBundle mainBundle] resourcePath],
+														kDefaultVMDirectory,
+														kDefaultVMSFileName]
+										   isDirectory:NO] autorelease];
 
+    [self openVMSDocumentFromURL:vmsURL];
+    DEFAULTSONGPLAYER.song = DEFAULTSONG;
 	return self;
+}
+
+- (void)awakeFromNib {
+	DEFAULTSONGPLAYER.trackView = _trackView;
+	_objectBrowserView.songData = DEFAULTSONG.songData;
+	
+	[self showWindowByName:@"Variables"];	//	open it by default
+	//	init popup
+	//	NSMenu *menu = [
+	
+}
+
+- (void)dealloc {
+	[DEFAULTSONGPLAYER coolDown];
+	self.variablesPanelController = nil;
+    [__managedObjectContext release];
+    [__persistentStoreCoordinator release];
+    [__managedObjectModel release];
+    [super dealloc];
 }
 
 - (void)mainRunLoop {
@@ -67,22 +79,6 @@ VMPlayerOSXDelegate *variableMediaPlayer_singleton__ = nil;
 								 (int)(t/3600),((int)t/60)%60,(int)t%60,((int)(t*10))%10 ];
 	
 	[self performSelector:@selector(mainRunLoop) withObject:nil afterDelay:0.1];
-}
-
-- (void)awakeFromNib {
-	//  below is only necessary if you want to have a debug view
-	DEFAULTSONGPLAYER.trackView 	= _trackView;
-//  DEFAULTSONGPLAYER.sequenceView = sequenceView;
-	
-	//	pass songData to browserView if you have some.
-#if VMP_DESKTOP
-	_objectBrowserView.songData = variableSong.song.songData;
-	
-#endif
-	
-	//	init popup
-	//	NSMenu *menu = [
-	
 }
 
 
@@ -110,6 +106,57 @@ VMPlayerOSXDelegate *variableMediaPlayer_singleton__ = nil;
     return NO;
 }
 
+
+
+- (NSApplicationTerminateReply)applicationShouldTerminate:(NSApplication *)sender {
+	
+    // Save changes in the application's managed object context before the application terminates.
+	
+    if (!__managedObjectContext) {
+        return NSTerminateNow;
+    }
+	
+    if (![[self managedObjectContext] commitEditing]) {
+        NSLog(@"%@:%@ unable to commit editing to terminate", [self class], NSStringFromSelector(_cmd));
+        return NSTerminateCancel;
+    }
+	
+    if (![[self managedObjectContext] hasChanges]) {
+        return NSTerminateNow;
+    }
+	
+    NSError *error = nil;
+    if (![[self managedObjectContext] save:&error]) {
+		
+        // Customize this code block to include application-specific recovery steps.
+        BOOL result = [sender presentError:error];
+        if (result) {
+            return NSTerminateCancel;
+        }
+		
+        NSString *question = NSLocalizedString(@"Could not save changes while quitting. Quit anyway?", @"Quit without saves error question message");
+        NSString *info = NSLocalizedString(@"Quitting now will lose any changes you have made since the last successful save", @"Quit without saves error question info");
+        NSString *quitButton = NSLocalizedString(@"Quit anyway", @"Quit anyway button title");
+        NSString *cancelButton = NSLocalizedString(@"Cancel", @"Cancel button title");
+        NSAlert *alert = [[NSAlert alloc] init];
+        [alert setMessageText:question];
+        [alert setInformativeText:info];
+        [alert addButtonWithTitle:quitButton];
+        [alert addButtonWithTitle:cancelButton];
+		
+        NSInteger answer = [alert runModal];
+        [alert release];
+        alert = nil;
+        
+        if (answer == NSAlertAlternateReturn) {
+            return NSTerminateCancel;
+        }
+    }
+	
+    return NSTerminateNow;
+}
+
+
 #pragma mark window delegates
 - (void)windowDidResize:(NSNotification *)notification {
 	[self.trackView reLayout];
@@ -117,7 +164,7 @@ VMPlayerOSXDelegate *variableMediaPlayer_singleton__ = nil;
 
 
 #pragma mark -
-#pragma mark events from user interface
+#pragma mark action
 
 
 //
@@ -126,7 +173,7 @@ VMPlayerOSXDelegate *variableMediaPlayer_singleton__ = nil;
 - (IBAction)playStart:(id)sender {
 	[DEFAULTSONGPLAYER stop];
     [DEFAULTSONGPLAYER start];
-	[self.logView locateLogWithIndex:-1 ofSource:@"player"];
+	[self.logView locateLogWithIndex:-1 ofSource:VMPLogViewSource_Player];
 }
 
 - (IBAction)playStop:(id)sender {
@@ -141,31 +188,37 @@ VMPlayerOSXDelegate *variableMediaPlayer_singleton__ = nil;
     [DEFAULTSONGPLAYER reset];
 }
 
-- (IBAction)showObjectBrowser:(id)sender {
-	[_objectBrowserWindow makeKeyAndOrderFront:self];
+- (void)showWindowByName:(NSString*)name {
+	if ( [name isEqualToString:@"Transport"] ) {
+		[_transportPanel makeKeyAndOrderFront:self ];
+	}
+	if ( [name isEqualToString:@"Object Browser"] ) {
+		[_objectBrowserWindow makeKeyAndOrderFront:self ];
+	}
+	if ( [name isEqualToString:@"Statistics"] ) {
+		[DEFAULTANALYZER.reportWindow makeKeyAndOrderFront:self ];
+	}
+	if ( [name isEqualToString:@"Tracks"] ) {
+		[_trackPanel makeKeyAndOrderFront:self ];
+	}
+	if ( [name isEqualToString:@"Variables"] ) {
+		if ( ! self.variablesPanelController )
+			self.variablesPanelController = [[[VMPVariablesPanelController alloc]
+											  initWithWindowNibName:@"VMPVariablesPanel"] autorelease];
+		[self.variablesPanelController.window makeKeyAndOrderFront:self];
+	}
+	if ( [name isEqualToString:@"Log"] ) {
+		[_logPanel makeKeyAndOrderFront:self ];
+	}
 }
 
-- (IBAction)showTransport:(id)sender {
-	[_transportPanel makeKeyAndOrderFront:self];
+- (IBAction)showWindow:(id)sender {
+	if ( [sender isKindOfClass:[NSMenuItem class]] )
+		[self showWindowByName: ((NSMenuItem*)sender).title ];
+	if ( [sender isKindOfClass:[NSButton class]] )
+		[self showWindowByName: ((NSButton*)sender).title ];
 }
 
-- (IBAction)showStatistics:(id)sender {
-	[DEFAULTANALYZER.reportWindow makeKeyAndOrderFront:self];
-}
-
-- (IBAction)toggleLogPanel:(id)sender {
-	if( [_logPanel isKeyWindow ] )
-		[_logPanel close];
-	else
-		[_logPanel makeKeyAndOrderFront:self];
-}
-
-- (IBAction)toggleTrackPanel:(id)sender {
-	if ( [_trackPanel isKeyWindow ] )
-		[_trackPanel close];
-	else
-		[_trackPanel makeKeyAndOrderFront:self];
-}
 
 //	unused
 - (IBAction)routeStatics:(id)sender {
@@ -190,17 +243,46 @@ VMPlayerOSXDelegate *variableMediaPlayer_singleton__ = nil;
 		break;
 	case NO:
 		[DEFAULTSONGPLAYER start];
-			[self.logView locateLogWithIndex:-1 ofSource:@"player"];
+			[self.logView locateLogWithIndex:-1 ofSource:VMPLogViewSource_Player];
 		break;
 	}
 }
+
+#pragma mark -
+#pragma mark loading vms document
+
+- (NSError*)openVMSDocumentFromURL:(NSURL *)documentURL {
+	NSError	*err = nil;
+	[DEFAULTSONG readFromURL:documentURL error:&err];
+	return err;
+}
+
+#pragma mark -
+#pragma mark saving vms document (unimplemented)
+
+/**
+    Performs the save action for the application, which is to send the save: message to the application's managed object context. Any encountered errors are presented to the user.
+ */
+- (IBAction) saveAction:(id)sender {
+    NSError *error = nil;
+    
+    if (![[self managedObjectContext] commitEditing]) {
+        NSLog(@"%@:%@ unable to commit editing before saving", [self class], NSStringFromSelector(_cmd));
+    }
+
+    if (![[self managedObjectContext] save:&error]) {
+        [[NSApplication sharedApplication] presentError:error];
+    }
+}
+
+
 
 
 #pragma mark -
 #pragma mark core data stuff (unused)
 
 //
-//  core data stuff -- unused 
+//  core data stuff -- unused
 //
 
 /**
@@ -222,7 +304,7 @@ VMPlayerOSXDelegate *variableMediaPlayer_singleton__ = nil;
     }
 	
     NSURL *modelURL = [[NSBundle mainBundle] URLForResource:@"VariableMediaPlayer" withExtension:@"momd"];
-    __managedObjectModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];    
+    __managedObjectModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];
     return __managedObjectModel;
 }
 
@@ -259,7 +341,7 @@ VMPlayerOSXDelegate *variableMediaPlayer_singleton__ = nil;
     else {
         if ([[properties objectForKey:NSURLIsDirectoryKey] boolValue] != YES) {
             // Customize and localize this error.
-            NSString *failureDescription = [NSString stringWithFormat:@"Expected a folder to store application data, found a file (%@).", [applicationFilesDirectory path]]; 
+            NSString *failureDescription = [NSString stringWithFormat:@"Expected a folder to store application data, found a file (%@).", [applicationFilesDirectory path]];
             
             NSMutableDictionary *dict = [NSMutableDictionary dictionary];
             [dict setValue:failureDescription forKey:NSLocalizedDescriptionKey];
@@ -283,7 +365,7 @@ VMPlayerOSXDelegate *variableMediaPlayer_singleton__ = nil;
 
 /**
  Returns the managed object context for the application (which is already
- bound to the persistent store coordinator for the application.) 
+ bound to the persistent store coordinator for the application.)
  */
 - (NSManagedObjectContext *) managedObjectContext {
     if (__managedObjectContext) {
@@ -311,81 +393,4 @@ VMPlayerOSXDelegate *variableMediaPlayer_singleton__ = nil;
 - (NSUndoManager *)windowWillReturnUndoManager:(NSWindow *)window {
     return [[self managedObjectContext] undoManager];
 }
-
-#pragma mark -
-#pragma mark save
-
-/**
-    Performs the save action for the application, which is to send the save: message to the application's managed object context. Any encountered errors are presented to the user.
- */
-- (IBAction) saveAction:(id)sender {
-    NSError *error = nil;
-    
-    if (![[self managedObjectContext] commitEditing]) {
-        NSLog(@"%@:%@ unable to commit editing before saving", [self class], NSStringFromSelector(_cmd));
-    }
-
-    if (![[self managedObjectContext] save:&error]) {
-        [[NSApplication sharedApplication] presentError:error];
-    }
-}
-
-
-- (NSApplicationTerminateReply)applicationShouldTerminate:(NSApplication *)sender {
-
-    // Save changes in the application's managed object context before the application terminates.
-
-    if (!__managedObjectContext) {
-        return NSTerminateNow;
-    }
-
-    if (![[self managedObjectContext] commitEditing]) {
-        NSLog(@"%@:%@ unable to commit editing to terminate", [self class], NSStringFromSelector(_cmd));
-        return NSTerminateCancel;
-    }
-
-    if (![[self managedObjectContext] hasChanges]) {
-        return NSTerminateNow;
-    }
-
-    NSError *error = nil;
-    if (![[self managedObjectContext] save:&error]) {
-
-        // Customize this code block to include application-specific recovery steps.              
-        BOOL result = [sender presentError:error];
-        if (result) {
-            return NSTerminateCancel;
-        }
-
-        NSString *question = NSLocalizedString(@"Could not save changes while quitting. Quit anyway?", @"Quit without saves error question message");
-        NSString *info = NSLocalizedString(@"Quitting now will lose any changes you have made since the last successful save", @"Quit without saves error question info");
-        NSString *quitButton = NSLocalizedString(@"Quit anyway", @"Quit anyway button title");
-        NSString *cancelButton = NSLocalizedString(@"Cancel", @"Cancel button title");
-        NSAlert *alert = [[NSAlert alloc] init];
-        [alert setMessageText:question];
-        [alert setInformativeText:info];
-        [alert addButtonWithTitle:quitButton];
-        [alert addButtonWithTitle:cancelButton];
-
-        NSInteger answer = [alert runModal];
-        [alert release];
-        alert = nil;
-        
-        if (answer == NSAlertAlternateReturn) {
-            return NSTerminateCancel;
-        }
-    }
-
-    return NSTerminateNow;
-}
-
-- (void)dealloc
-{
-	[DEFAULTSONGPLAYER coolDown];
-    [__managedObjectContext release];
-    [__persistentStoreCoordinator release];
-    [__managedObjectModel release];
-    [super dealloc];
-}
-
 @end

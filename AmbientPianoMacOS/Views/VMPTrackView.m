@@ -14,13 +14,15 @@
 - (id)initWithFrame:(VMPRect)frame {
     if ((self = [super initWithFrame:frame])) {
         // Initialization code
+		CGFloat h = (int)( self.frame.size.height / kNumberOfAudioPlayers );
         for( int i = 0; i < kNumberOfAudioPlayers; ++i ) {
-            tracks[i] = [[[VMPTrackStrip alloc] init] retain];
+            tracks[i] = [[[VMPTrackStrip alloc] initWithFrame:
+						  VMPMakeRect(1, i * h + 1, self.frame.size.width-2, h-1)] retain];
             [self addSubview:tracks[i]];
 #ifdef VMP_OSX
-            [tracks[i] setAutoresizingMask:NSViewMinXMargin+NSViewMaxXMargin+NSViewWidthSizable];
+            [tracks[i] setAutoresizingMask:NSViewWidthSizable];
 #else
-            [tracks[i] setAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin|UIViewAutoresizingFlexibleWidth];
+            [tracks[i] setAutoresizingMask:UIViewAutoresizingFlexibleWidth];
 #endif
         }
    }
@@ -34,11 +36,10 @@
 #endif
 
 -(void)reLayout {
-    CGFloat h = self.frame.size.height / kNumberOfAudioPlayers;
+    CGFloat h = (int)( self.frame.size.height / kNumberOfAudioPlayers );
 	for( int i = 0; i < kNumberOfAudioPlayers; ++i ) {
-        
-        tracks[i]->infoString = @"";
-        [tracks[i] setFrame:VMPMakeRect(0, (int)(i*h), self.frame.size.width, (int)(h-5) )];
+		tracks[i].infoString = [NSString stringWithFormat:@"[%i]",i+1];
+        [tracks[i] setFrame:VMPMakeRect(1, i * h +1, self.frame.size.width-2, h -1 )];
     }
 }
 
@@ -73,24 +74,19 @@
 	tracks[idx]->loading    = [audioPlayer loadedRatio];
     tracks[idx]->duration   = audioPlayer.cueDuration / audioPlayer.fileDuration;
     tracks[idx]->offset     = ( audioPlayer.offset / audioPlayer.fileDuration );
-    [tracks[idx]->infoString release];
 	if( [audioPlayer cueId] && [audioPlayer isBusy] && ( [audioPlayer currentTime] > -10. ) ) {
-        tracks[idx]->infoString = [[NSString stringWithFormat:@"[%i]  %@ (%2.2f)", 
+		tracks[idx].audioCueId = audioPlayer.cueId;
+        tracks[idx].infoString = [NSString stringWithFormat:@"[%i]  %@ (%2.2f)",
                                     idx+1,
                                [audioPlayer cueId], 
-                               [audioPlayer currentTime]] retain];
+                               [audioPlayer currentTime]];
         [tracks[idx] VMPSetAlpha:([audioPlayer isPlaying] ? 1. : 0.7 )];
 	} else {
-		tracks[idx]->infoString = [[NSString stringWithFormat:@"[%i]",idx+1] retain];
+		tracks[idx].infoString = [NSString stringWithFormat:@"[%i]",idx+1];
         tracks[idx]->duration   = 0;
-        [tracks[idx] VMPSetAlpha:0.3];
+        [tracks[idx] VMPSetAlpha:0.7];
 	}
     VMPSetNeedsDisplay(tracks[idx]);
-}
-
-
-- (void)drawRect:(VMPRect)rect {
-    [super drawRect:rect];
 }
 
 
