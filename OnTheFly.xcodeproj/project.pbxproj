@@ -1,0 +1,1565 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		160E51941732783000C3D9BB /* VMPVariablesPanelController.m in Sources */ = {isa = PBXBuildFile; fileRef = 160E51911732783000C3D9BB /* VMPVariablesPanelController.m */; };
+		160E519A17338EA600C3D9BB /* VMPObjectGraphView.m in Sources */ = {isa = PBXBuildFile; fileRef = 160E519717338EA500C3D9BB /* VMPObjectGraphView.m */; };
+		160E51A41735390D00C3D9BB /* VMPSelectorEditorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 160E51A11735390C00C3D9BB /* VMPSelectorEditorViewController.m */; };
+		160ECFB0173B50730009D04B /* VMPreprocessor.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ECFAD173B50730009D04B /* VMPreprocessor.m */; };
+		160ECFB1173B50730009D04B /* VMPreprocessor.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ECFAD173B50730009D04B /* VMPreprocessor.m */; };
+		160ECFB2173B50730009D04B /* VMPreprocessor.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ECFAD173B50730009D04B /* VMPreprocessor.m */; };
+		160ECFB3173B50730009D04B /* VMScoreEvaluator.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ECFAF173B50730009D04B /* VMScoreEvaluator.m */; };
+		160ECFB4173B50730009D04B /* VMScoreEvaluator.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ECFAF173B50730009D04B /* VMScoreEvaluator.m */; };
+		160ECFB5173B50730009D04B /* VMScoreEvaluator.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ECFAF173B50730009D04B /* VMScoreEvaluator.m */; };
+		160ECFBD173B50B70009D04B /* boxmuller.c in Sources */ = {isa = PBXBuildFile; fileRef = 160ECFB7173B50B70009D04B /* boxmuller.c */; };
+		160ECFBE173B50B70009D04B /* VMException.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ECFBA173B50B70009D04B /* VMException.m */; };
+		160ECFBF173B50B70009D04B /* VMTextPreprocessor.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ECFBC173B50B70009D04B /* VMTextPreprocessor.m */; };
+		160ECFC6173B50EA0009D04B /* VMAudioObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ECFC1173B50EA0009D04B /* VMAudioObject.m */; };
+		160ECFC7173B50EA0009D04B /* VMAudioObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ECFC1173B50EA0009D04B /* VMAudioObject.m */; };
+		160ECFC9173B50EA0009D04B /* VMLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ECFC3173B50EA0009D04B /* VMLog.m */; };
+		160ECFCA173B50EA0009D04B /* VMLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ECFC3173B50EA0009D04B /* VMLog.m */; };
+		160ECFCB173B50EA0009D04B /* VMLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ECFC3173B50EA0009D04B /* VMLog.m */; };
+		160ECFCC173B50EA0009D04B /* VMPrimitives.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ECFC5173B50EA0009D04B /* VMPrimitives.m */; };
+		160ECFCD173B50EA0009D04B /* VMPrimitives.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ECFC5173B50EA0009D04B /* VMPrimitives.m */; };
+		160ECFCE173B50EA0009D04B /* VMPrimitives.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ECFC5173B50EA0009D04B /* VMPrimitives.m */; };
+		160ECFD6173B51160009D04B /* VMPAudioPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ECFD1173B51160009D04B /* VMPAudioPlayer.m */; };
+		160ECFD7173B51160009D04B /* VMPAudioPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ECFD1173B51160009D04B /* VMPAudioPlayer.m */; };
+		160ECFD8173B51160009D04B /* VMPAudioPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ECFD1173B51160009D04B /* VMPAudioPlayer.m */; };
+		160ECFD9173B51160009D04B /* VMPlayerBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ECFD3173B51160009D04B /* VMPlayerBase.m */; };
+		160ECFDA173B51160009D04B /* VMPlayerBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ECFD3173B51160009D04B /* VMPlayerBase.m */; };
+		160ECFDB173B51160009D04B /* VMPlayerBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ECFD3173B51160009D04B /* VMPlayerBase.m */; };
+		160ECFDC173B51160009D04B /* VMPSongPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ECFD5173B51160009D04B /* VMPSongPlayer.m */; };
+		160ECFDD173B51160009D04B /* VMPSongPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ECFD5173B51160009D04B /* VMPSongPlayer.m */; };
+		160ECFDE173B51160009D04B /* VMPSongPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ECFD5173B51160009D04B /* VMPSongPlayer.m */; };
+		160ECFE5173B51430009D04B /* VMDataTypes.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ECFE0173B51430009D04B /* VMDataTypes.m */; };
+		160ECFE6173B51430009D04B /* VMDataTypes.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ECFE0173B51430009D04B /* VMDataTypes.m */; };
+		160ECFE7173B51430009D04B /* VMDataTypes.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ECFE0173B51430009D04B /* VMDataTypes.m */; };
+		160ECFE8173B51430009D04B /* VMFunction.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ECFE2173B51430009D04B /* VMFunction.m */; };
+		160ECFE9173B51430009D04B /* VMFunction.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ECFE2173B51430009D04B /* VMFunction.m */; };
+		160ECFEA173B51430009D04B /* VMFunction.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ECFE2173B51430009D04B /* VMFunction.m */; };
+		160ECFEB173B51430009D04B /* VMSong.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ECFE4173B51430009D04B /* VMSong.m */; };
+		160ECFEC173B51430009D04B /* VMSong.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ECFE4173B51430009D04B /* VMSong.m */; };
+		160ECFED173B51430009D04B /* VMSong.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ECFE4173B51430009D04B /* VMSong.m */; };
+		160ED01D173B517A0009D04B /* compiledRegexCache.d in Sources */ = {isa = PBXBuildFile; fileRef = 160ECFF0173B517A0009D04B /* compiledRegexCache.d */; };
+		160ED01E173B517A0009D04B /* compiledRegexCache.d in Sources */ = {isa = PBXBuildFile; fileRef = 160ECFF0173B517A0009D04B /* compiledRegexCache.d */; };
+		160ED01F173B517A0009D04B /* compiledRegexCache.d in Sources */ = {isa = PBXBuildFile; fileRef = 160ECFF0173B517A0009D04B /* compiledRegexCache.d */; };
+		160ED02C173B517A0009D04B /* utf16ConversionCache.d in Sources */ = {isa = PBXBuildFile; fileRef = 160ECFF6173B517A0009D04B /* utf16ConversionCache.d */; };
+		160ED02D173B517A0009D04B /* utf16ConversionCache.d in Sources */ = {isa = PBXBuildFile; fileRef = 160ECFF6173B517A0009D04B /* utf16ConversionCache.d */; };
+		160ED02E173B517A0009D04B /* utf16ConversionCache.d in Sources */ = {isa = PBXBuildFile; fileRef = 160ECFF6173B517A0009D04B /* utf16ConversionCache.d */; };
+		160ED02F173B517A0009D04B /* License.html in Resources */ = {isa = PBXBuildFile; fileRef = 160ECFF7173B517A0009D04B /* License.html */; };
+		160ED030173B517A0009D04B /* License.html in Resources */ = {isa = PBXBuildFile; fileRef = 160ECFF7173B517A0009D04B /* License.html */; };
+		160ED031173B517A0009D04B /* License.html in Resources */ = {isa = PBXBuildFile; fileRef = 160ECFF7173B517A0009D04B /* License.html */; };
+		160ED032173B517A0009D04B /* License.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 160ECFF8173B517A0009D04B /* License.rtf */; };
+		160ED033173B517A0009D04B /* License.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 160ECFF8173B517A0009D04B /* License.rtf */; };
+		160ED034173B517A0009D04B /* License.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 160ECFF8173B517A0009D04B /* License.rtf */; };
+		160ED035173B517A0009D04B /* RegexKitLite.html in Resources */ = {isa = PBXBuildFile; fileRef = 160ECFFA173B517A0009D04B /* RegexKitLite.html */; };
+		160ED036173B517A0009D04B /* RegexKitLite.html in Resources */ = {isa = PBXBuildFile; fileRef = 160ECFFA173B517A0009D04B /* RegexKitLite.html */; };
+		160ED037173B517A0009D04B /* RegexKitLite.html in Resources */ = {isa = PBXBuildFile; fileRef = 160ECFFA173B517A0009D04B /* RegexKitLite.html */; };
+		160ED038173B517A0009D04B /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ECFFB173B517A0009D04B /* RegexKitLite.m */; };
+		160ED039173B517A0009D04B /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ECFFB173B517A0009D04B /* RegexKitLite.m */; };
+		160ED03A173B517A0009D04B /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ECFFB173B517A0009D04B /* RegexKitLite.m */; };
+		160ED03B173B517A0009D04B /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 160ECFFD173B517A0009D04B /* .gitignore */; };
+		160ED03C173B517A0009D04B /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 160ECFFD173B517A0009D04B /* .gitignore */; };
+		160ED03D173B517A0009D04B /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 160ECFFD173B517A0009D04B /* .gitignore */; };
+		160ED03E173B517A0009D04B /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 160ECFFE173B517A0009D04B /* Config.xcconfig */; };
+		160ED03F173B517A0009D04B /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 160ECFFE173B517A0009D04B /* Config.xcconfig */; };
+		160ED040173B517A0009D04B /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 160ECFFE173B517A0009D04B /* Config.xcconfig */; };
+		160ED041173B517A0009D04B /* README.markdown in Resources */ = {isa = PBXBuildFile; fileRef = 160ECFFF173B517A0009D04B /* README.markdown */; };
+		160ED042173B517A0009D04B /* README.markdown in Resources */ = {isa = PBXBuildFile; fileRef = 160ECFFF173B517A0009D04B /* README.markdown */; };
+		160ED043173B517A0009D04B /* README.markdown in Resources */ = {isa = PBXBuildFile; fileRef = 160ECFFF173B517A0009D04B /* README.markdown */; };
+		160ED044173B517A0009D04B /* CDataScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ED002173B517A0009D04B /* CDataScanner.m */; };
+		160ED045173B517A0009D04B /* CDataScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ED002173B517A0009D04B /* CDataScanner.m */; };
+		160ED046173B517A0009D04B /* CDataScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ED002173B517A0009D04B /* CDataScanner.m */; };
+		160ED047173B517A0009D04B /* CFilteringJSONSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ED005173B517A0009D04B /* CFilteringJSONSerializer.m */; };
+		160ED048173B517A0009D04B /* CFilteringJSONSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ED005173B517A0009D04B /* CFilteringJSONSerializer.m */; };
+		160ED049173B517A0009D04B /* CFilteringJSONSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ED005173B517A0009D04B /* CFilteringJSONSerializer.m */; };
+		160ED04A173B517A0009D04B /* CJSONDeserializer_BlocksExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ED007173B517A0009D04B /* CJSONDeserializer_BlocksExtensions.m */; };
+		160ED04B173B517A0009D04B /* CJSONDeserializer_BlocksExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ED007173B517A0009D04B /* CJSONDeserializer_BlocksExtensions.m */; };
+		160ED04C173B517A0009D04B /* CJSONDeserializer_BlocksExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ED007173B517A0009D04B /* CJSONDeserializer_BlocksExtensions.m */; };
+		160ED04D173B517A0009D04B /* CJSONSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ED009173B517A0009D04B /* CJSONSerialization.m */; };
+		160ED04E173B517A0009D04B /* CJSONSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ED009173B517A0009D04B /* CJSONSerialization.m */; };
+		160ED04F173B517A0009D04B /* CJSONSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ED009173B517A0009D04B /* CJSONSerialization.m */; };
+		160ED050173B517A0009D04B /* CJSONSerializedData.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ED00B173B517A0009D04B /* CJSONSerializedData.m */; };
+		160ED051173B517A0009D04B /* CJSONSerializedData.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ED00B173B517A0009D04B /* CJSONSerializedData.m */; };
+		160ED052173B517A0009D04B /* CJSONSerializedData.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ED00B173B517A0009D04B /* CJSONSerializedData.m */; };
+		160ED053173B517A0009D04B /* CDataScanner_Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ED00E173B517A0009D04B /* CDataScanner_Extensions.m */; };
+		160ED054173B517A0009D04B /* CDataScanner_Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ED00E173B517A0009D04B /* CDataScanner_Extensions.m */; };
+		160ED055173B517A0009D04B /* CDataScanner_Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ED00E173B517A0009D04B /* CDataScanner_Extensions.m */; };
+		160ED056173B517A0009D04B /* NSDictionary_JSONExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ED010173B517A0009D04B /* NSDictionary_JSONExtensions.m */; };
+		160ED057173B517A0009D04B /* NSDictionary_JSONExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ED010173B517A0009D04B /* NSDictionary_JSONExtensions.m */; };
+		160ED058173B517A0009D04B /* NSDictionary_JSONExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ED010173B517A0009D04B /* NSDictionary_JSONExtensions.m */; };
+		160ED059173B517A0009D04B /* CJSONDeserializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ED013173B517A0009D04B /* CJSONDeserializer.m */; };
+		160ED05A173B517A0009D04B /* CJSONDeserializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ED013173B517A0009D04B /* CJSONDeserializer.m */; };
+		160ED05B173B517A0009D04B /* CJSONDeserializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ED013173B517A0009D04B /* CJSONDeserializer.m */; };
+		160ED05C173B517A0009D04B /* CJSONScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ED015173B517A0009D04B /* CJSONScanner.m */; };
+		160ED05D173B517A0009D04B /* CJSONScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ED015173B517A0009D04B /* CJSONScanner.m */; };
+		160ED05E173B517A0009D04B /* CJSONScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ED015173B517A0009D04B /* CJSONScanner.m */; };
+		160ED05F173B517A0009D04B /* CJSONSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ED017173B517A0009D04B /* CJSONSerializer.m */; };
+		160ED060173B517A0009D04B /* CJSONSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ED017173B517A0009D04B /* CJSONSerializer.m */; };
+		160ED061173B517A0009D04B /* CJSONSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ED017173B517A0009D04B /* CJSONSerializer.m */; };
+		160ED062173B517A0009D04B /* VMPJSONDeserializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ED01A173B517A0009D04B /* VMPJSONDeserializer.m */; };
+		160ED063173B517A0009D04B /* VMPJSONDeserializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ED01A173B517A0009D04B /* VMPJSONDeserializer.m */; };
+		160ED064173B517A0009D04B /* VMPJSONDeserializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ED01A173B517A0009D04B /* VMPJSONDeserializer.m */; };
+		160ED065173B517A0009D04B /* VMPJSONScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ED01C173B517A0009D04B /* VMPJSONScanner.m */; };
+		160ED066173B517A0009D04B /* VMPJSONScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ED01C173B517A0009D04B /* VMPJSONScanner.m */; };
+		160ED067173B517A0009D04B /* VMPJSONScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ED01C173B517A0009D04B /* VMPJSONScanner.m */; };
+		160ED068173B52550009D04B /* VMException.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ECFBA173B50B70009D04B /* VMException.m */; };
+		160ED069173B52580009D04B /* VMException.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ECFBA173B50B70009D04B /* VMException.m */; };
+		160ED06A173B52670009D04B /* boxmuller.c in Sources */ = {isa = PBXBuildFile; fileRef = 160ECFB7173B50B70009D04B /* boxmuller.c */; };
+		160ED06B173B52680009D04B /* boxmuller.c in Sources */ = {isa = PBXBuildFile; fileRef = 160ECFB7173B50B70009D04B /* boxmuller.c */; };
+		160ED06C173B526B0009D04B /* VMTextPreprocessor.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ECFBC173B50B70009D04B /* VMTextPreprocessor.m */; };
+		160ED06D173B526C0009D04B /* VMTextPreprocessor.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ECFBC173B50B70009D04B /* VMTextPreprocessor.m */; };
+		161C9A9E16A585F2001E7B46 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 168CEBC7163186B400B721E2 /* MainMenu.xib */; };
+		162413361717B0DC00EF631A /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 162413351717B0DC00EF631A /* AVFoundation.framework */; };
+		162EFC41173026230000A4FB /* VMPSelectorEditorView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 162EFC3E173026230000A4FB /* VMPSelectorEditorView.xib */; };
+		162EFC451730CE3F0000A4FB /* VMPVariablesPanel.xib in Resources */ = {isa = PBXBuildFile; fileRef = 162EFC421730CE3F0000A4FB /* VMPVariablesPanel.xib */; };
+		162F7B1A16A0341900420443 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 168CEBB2163186B400B721E2 /* Cocoa.framework */; };
+		162F7B2016A0341C00420443 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 162F7B1E16A0341C00420443 /* InfoPlist.strings */; };
+		162F7B2616A0341C00420443 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 162F7B2416A0341C00420443 /* Credits.rtf */; };
+		162F7B3816A0341D00420443 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 168CEBB2163186B400B721E2 /* Cocoa.framework */; };
+		162F7B4016A0341E00420443 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 162F7B3E16A0341E00420443 /* InfoPlist.strings */; };
+		162F7B4316A0341E00420443 /* TraumBaumTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 162F7B4216A0341E00420443 /* TraumBaumTests.m */; };
+		162F7B4D16A112D300420443 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 168CEBBF163186B400B721E2 /* main.m */; };
+		162F7B4E16A1130300420443 /* VMPlayerOSXDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 168CEBC5163186B400B721E2 /* VMPlayerOSXDelegate.m */; };
+		162F7B5016A1132700420443 /* vmp.sdef in Resources */ = {isa = PBXBuildFile; fileRef = 1695BE841634D5A3009103F4 /* vmp.sdef */; };
+		162F7B5516A1135600420443 /* VMPEditor.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 168CEBCA163186B400B721E2 /* VMPEditor.xcdatamodeld */; };
+		162F7B6616A1151B00420443 /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1624A7131644D8AC004AA351 /* libicucore.dylib */; };
+		162F7B6916A1167D00420443 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 168CEBD41631871400B721E2 /* CoreAudio.framework */; };
+		162F7B6B16A1171300420443 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 162F7B6A16A1171200420443 /* SenTestingKit.framework */; };
+		16347C1216C286C9002BE1FE /* VMPGraph.m in Sources */ = {isa = PBXBuildFile; fileRef = 16347C0F16C286C9002BE1FE /* VMPGraph.m */; };
+		16347C1316C286C9002BE1FE /* VMPGraph.m in Sources */ = {isa = PBXBuildFile; fileRef = 16347C0F16C286C9002BE1FE /* VMPGraph.m */; };
+		1636DF8916A11C5300100130 /* vsDocIcon.icns in Resources */ = {isa = PBXBuildFile; fileRef = 1624A6FB1642B76B004AA351 /* vsDocIcon.icns */; };
+		1636DF8A16A11C5500100130 /* vsPlayer.icns in Resources */ = {isa = PBXBuildFile; fileRef = 1624A6FE1642B7D0004AA351 /* vsPlayer.icns */; };
+		165DAC23172D541D009708B3 /* VMPAudioInfoEditorView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 165DAC20172D541D009708B3 /* VMPAudioInfoEditorView.xib */; };
+		165DAC27172D545F009708B3 /* VMPTimeRangeEditorView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 165DAC24172D545F009708B3 /* VMPTimeRangeEditorView.xib */; };
+		165DAC2C172D54CE009708B3 /* VMPTimeRangeEditorView.m in Sources */ = {isa = PBXBuildFile; fileRef = 165DAC29172D54CE009708B3 /* VMPTimeRangeEditorView.m */; };
+		1677774016C0D600007206CF /* ApplescriptReceiver.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677773816C0D600007206CF /* ApplescriptReceiver.m */; };
+		1677774116C0D600007206CF /* ApplescriptReceiver.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677773816C0D600007206CF /* ApplescriptReceiver.m */; };
+		1677781816C0D6A0007206CF /* VMPTrackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677780B16C0D6A0007206CF /* VMPTrackView.m */; };
+		1677781916C0D6A0007206CF /* VMPTrackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677780B16C0D6A0007206CF /* VMPTrackView.m */; };
+		1677781C16C0D6A0007206CF /* VMPObjectBrowserView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677780D16C0D6A0007206CF /* VMPObjectBrowserView.m */; };
+		1677781D16C0D6A0007206CF /* VMPObjectBrowserView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677780D16C0D6A0007206CF /* VMPObjectBrowserView.m */; };
+		1677782816C0D6A0007206CF /* VMPTrackStrip.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677781316C0D6A0007206CF /* VMPTrackStrip.m */; };
+		1677782916C0D6A0007206CF /* VMPTrackStrip.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677781316C0D6A0007206CF /* VMPTrackStrip.m */; };
+		1677782C16C0D6A0007206CF /* VMPCanvas.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677781516C0D6A0007206CF /* VMPCanvas.m */; };
+		1677782D16C0D6A0007206CF /* VMPCanvas.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677781516C0D6A0007206CF /* VMPCanvas.m */; };
+		168A6350171902B700B08329 /* VMPScrollViewClipper.m in Sources */ = {isa = PBXBuildFile; fileRef = 168A634F171902B700B08329 /* VMPScrollViewClipper.m */; };
+		16933BFC170C32E2005381FC /* VMPInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 16933BFB170C32E2005381FC /* VMPInfoViewController.m */; };
+		16933C00170C389F005381FC /* VMPIHole.m in Sources */ = {isa = PBXBuildFile; fileRef = 16933BFE170C389F005381FC /* VMPIHole.m */; };
+		1693CBD717166596005846E6 /* iPhone-UI in Resources */ = {isa = PBXBuildFile; fileRef = 1693CBD617166596005846E6 /* iPhone-UI */; };
+		1693CBD9171665DA005846E6 /* appicon.png in Resources */ = {isa = PBXBuildFile; fileRef = 1693CBD8171665D9005846E6 /* appicon.png */; };
+		1693CBDB171665EA005846E6 /* appicon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1693CBDA171665EA005846E6 /* appicon@2x.png */; };
+		1696ADD6172E7344008362E5 /* VMPAudioInfoEditorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1696ADD3172E7344008362E5 /* VMPAudioInfoEditorViewController.m */; };
+		16A27F0016F9730F0081C1E8 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16A27EFF16F9730F0081C1E8 /* AudioToolbox.framework */; };
+		16A27F0216F9736F0081C1E8 /* defaultSong in Resources */ = {isa = PBXBuildFile; fileRef = 16A27F0116F9736F0081C1E8 /* defaultSong */; };
+		16A27F1316FBB1A70081C1E8 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 16A27F1116FBB1A70081C1E8 /* InfoPlist.strings */; };
+		16A27F1516FBB1A70081C1E8 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 16A27F1416FBB1A70081C1E8 /* main.m */; };
+		16A27F1916FBB1A70081C1E8 /* VMAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 16A27F1816FBB1A70081C1E8 /* VMAppDelegate.m */; };
+		16A27F1B16FBB1A70081C1E8 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 16A27F1A16FBB1A70081C1E8 /* Default.png */; };
+		16A27F1D16FBB1A70081C1E8 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 16A27F1C16FBB1A70081C1E8 /* Default@2x.png */; };
+		16A27F1F16FBB1A70081C1E8 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 16A27F1E16FBB1A70081C1E8 /* Default-568h@2x.png */; };
+		16A27F2216FBB1A70081C1E8 /* VMViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 16A27F2116FBB1A70081C1E8 /* VMViewController.m */; };
+		16A27F2516FBB1A70081C1E8 /* VMViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 16A27F2316FBB1A70081C1E8 /* VMViewController_iPhone.xib */; };
+		16A27F2816FBB1A70081C1E8 /* VMViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 16A27F2616FBB1A70081C1E8 /* VMViewController_iPad.xib */; };
+		16A27F2F16FBE1300081C1E8 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16A27F2E16FBE1300081C1E8 /* UIKit.framework */; };
+		16A27F4616FBE8030081C1E8 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16A27F4516FBE8030081C1E8 /* AudioToolbox.framework */; };
+		16A27F4716FC14460081C1E8 /* defaultSong in Resources */ = {isa = PBXBuildFile; fileRef = 16A27F0116F9736F0081C1E8 /* defaultSong */; };
+		16A27F4916FC16CF0081C1E8 /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1624A7131644D8AC004AA351 /* libicucore.dylib */; };
+		16A27F4A16FC1DF30081C1E8 /* VMPTrackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677780B16C0D6A0007206CF /* VMPTrackView.m */; };
+		16A27F4B16FC1DF30081C1E8 /* VMPTrackStrip.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677781316C0D6A0007206CF /* VMPTrackStrip.m */; };
+		16A27F4C16FC1F720081C1E8 /* VMPCanvas.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677781516C0D6A0007206CF /* VMPCanvas.m */; };
+		16A27F4E16FC1FC70081C1E8 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16A27F4D16FC1FC60081C1E8 /* CoreGraphics.framework */; };
+		16A27F5016FC2EC90081C1E8 /* default.vms in Resources */ = {isa = PBXBuildFile; fileRef = 16A27F4F16FC2EC90081C1E8 /* default.vms */; };
+		16A27F5116FC2EC90081C1E8 /* default.vms in Resources */ = {isa = PBXBuildFile; fileRef = 16A27F4F16FC2EC90081C1E8 /* default.vms */; };
+		16A27F5216FC2EC90081C1E8 /* default.vms in Resources */ = {isa = PBXBuildFile; fileRef = 16A27F4F16FC2EC90081C1E8 /* default.vms */; };
+		16A27F5F17006E720081C1E8 /* VMPProgressWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 16A27F5C17006E720081C1E8 /* VMPProgressWindowController.m */; };
+		16A27F6117006E720081C1E8 /* VMPProgressWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 16A27F5D17006E720081C1E8 /* VMPProgressWindow.xib */; };
+		16A27F6517008A550081C1E8 /* VMPRecordDetailPopover.m in Sources */ = {isa = PBXBuildFile; fileRef = 16A27F6317008A540081C1E8 /* VMPRecordDetailPopover.m */; };
+		16A27F711709AD770081C1E8 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16A27F701709AD760081C1E8 /* QuartzCore.framework */; };
+		16C7677116DC83DE003636C3 /* VMPAnalyzer.m in Sources */ = {isa = PBXBuildFile; fileRef = 16C7676E16DC83DE003636C3 /* VMPAnalyzer.m */; };
+		16C7677216DC83DE003636C3 /* VMPAnalyzer.m in Sources */ = {isa = PBXBuildFile; fileRef = 16C7676E16DC83DE003636C3 /* VMPAnalyzer.m */; };
+		16C90C7E1722774800F7E91F /* VMPHistogramView.m in Sources */ = {isa = PBXBuildFile; fileRef = 16C90C7B1722774800F7E91F /* VMPHistogramView.m */; };
+		16C90C7F1722774800F7E91F /* VMPHistogramView.m in Sources */ = {isa = PBXBuildFile; fileRef = 16C90C7B1722774800F7E91F /* VMPHistogramView.m */; };
+		16C90C8417241EF500F7E91F /* VMPLogView.m in Sources */ = {isa = PBXBuildFile; fileRef = 16C90C8117241EF500F7E91F /* VMPLogView.m */; };
+		16C90C8517241EF500F7E91F /* VMPLogView.m in Sources */ = {isa = PBXBuildFile; fileRef = 16C90C8117241EF500F7E91F /* VMPLogView.m */; };
+		16DC63E616B78D8D00E579AE /* play.png in Resources */ = {isa = PBXBuildFile; fileRef = 16DC63E016B78D8D00E579AE /* play.png */; };
+		16DC63EE16B78E2B00E579AE /* stop.png in Resources */ = {isa = PBXBuildFile; fileRef = 16DC63EB16B78E2A00E579AE /* stop.png */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXBuildRule section */
+		1677772716C0C777007206CF /* PBXBuildRule */ = {
+			isa = PBXBuildRule;
+			compilerSpec = com.apple.compilers.proxy.script;
+			filePatterns = "*.m4";
+			fileType = pattern.proxy;
+			isEditable = 1;
+			outputFiles = (
+				"$(DERIVED_FILES_DIR)/$(INPUT_FILE_BASE)",
+			);
+			script = "m4 $INPUT_FILE_PATH >$DERIVED_FILES_DIR/$INPUT_FILE_BASE";
+		};
+		1677772A16C0C986007206CF /* PBXBuildRule */ = {
+			isa = PBXBuildRule;
+			compilerSpec = com.apple.compilers.proxy.script;
+			filePatterns = "*.m4";
+			fileType = pattern.proxy;
+			isEditable = 1;
+			outputFiles = (
+				"$(DERIVED_FILES_DIR)/$(INPUT_FILE_BASE)",
+			);
+			script = "m4 $INPUT_FILE_PATH >$DERIVED_FILES_DIR/$INPUT_FILE_BASE";
+		};
+/* End PBXBuildRule section */
+
+/* Begin PBXContainerItemProxy section */
+		162F7B3916A0341D00420443 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 168CEBA5163186B300B721E2 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 162F7B1716A0341900420443;
+			remoteInfo = TraumBaum;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		160E51901732783000C3D9BB /* VMPVariablesPanelController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VMPVariablesPanelController.h; sourceTree = "<group>"; };
+		160E51911732783000C3D9BB /* VMPVariablesPanelController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VMPVariablesPanelController.m; sourceTree = "<group>"; };
+		160E5195173376FE00C3D9BB /* VMPNotification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VMPNotification.h; path = /Users/cboy/Dev/OnTheFly/Core/Misc/VMPNotification.h; sourceTree = "<absolute>"; };
+		160E519617338EA500C3D9BB /* VMPObjectGraphView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VMPObjectGraphView.h; sourceTree = "<group>"; };
+		160E519717338EA500C3D9BB /* VMPObjectGraphView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VMPObjectGraphView.m; sourceTree = "<group>"; };
+		160E51A01735390B00C3D9BB /* VMPSelectorEditorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VMPSelectorEditorViewController.h; sourceTree = "<group>"; };
+		160E51A11735390C00C3D9BB /* VMPSelectorEditorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VMPSelectorEditorViewController.m; sourceTree = "<group>"; };
+		160E51AB1738AF2800C3D9BB /* TraumBaum.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = TraumBaum.entitlements; path = TraumBaum/TraumBaum.entitlements; sourceTree = "<group>"; };
+		160ECFAC173B50730009D04B /* VMPreprocessor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VMPreprocessor.h; sourceTree = "<group>"; };
+		160ECFAD173B50730009D04B /* VMPreprocessor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VMPreprocessor.m; sourceTree = "<group>"; };
+		160ECFAE173B50730009D04B /* VMScoreEvaluator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VMScoreEvaluator.h; sourceTree = "<group>"; };
+		160ECFAF173B50730009D04B /* VMScoreEvaluator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VMScoreEvaluator.m; sourceTree = "<group>"; };
+		160ECFB6173B50910009D04B /* KeyCodes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = KeyCodes.h; path = Core/Misc/KeyCodes.h; sourceTree = SOURCE_ROOT; };
+		160ECFB7173B50B70009D04B /* boxmuller.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = boxmuller.c; path = Core/Misc/boxmuller.c; sourceTree = SOURCE_ROOT; };
+		160ECFB8173B50B70009D04B /* boxmuller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = boxmuller.h; path = Core/Misc/boxmuller.h; sourceTree = SOURCE_ROOT; };
+		160ECFB9173B50B70009D04B /* VMException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VMException.h; path = Core/Misc/VMException.h; sourceTree = SOURCE_ROOT; };
+		160ECFBA173B50B70009D04B /* VMException.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VMException.m; path = Core/Misc/VMException.m; sourceTree = SOURCE_ROOT; };
+		160ECFBB173B50B70009D04B /* VMTextPreprocessor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VMTextPreprocessor.h; path = Core/Misc/VMTextPreprocessor.h; sourceTree = SOURCE_ROOT; };
+		160ECFBC173B50B70009D04B /* VMTextPreprocessor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VMTextPreprocessor.m; path = Core/Misc/VMTextPreprocessor.m; sourceTree = SOURCE_ROOT; };
+		160ECFC0173B50EA0009D04B /* VMAudioObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VMAudioObject.h; path = Core/DataStructures/VMAudioObject.h; sourceTree = SOURCE_ROOT; };
+		160ECFC1173B50EA0009D04B /* VMAudioObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VMAudioObject.m; path = Core/DataStructures/VMAudioObject.m; sourceTree = SOURCE_ROOT; };
+		160ECFC2173B50EA0009D04B /* VMLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VMLog.h; path = Core/DataStructures/VMLog.h; sourceTree = SOURCE_ROOT; };
+		160ECFC3173B50EA0009D04B /* VMLog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VMLog.m; path = Core/DataStructures/VMLog.m; sourceTree = SOURCE_ROOT; };
+		160ECFC4173B50EA0009D04B /* VMPrimitives.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VMPrimitives.h; path = Core/DataStructures/VMPrimitives.h; sourceTree = SOURCE_ROOT; };
+		160ECFC5173B50EA0009D04B /* VMPrimitives.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VMPrimitives.m; path = Core/DataStructures/VMPrimitives.m; sourceTree = SOURCE_ROOT; };
+		160ECFD0173B51160009D04B /* VMPAudioPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VMPAudioPlayer.h; sourceTree = "<group>"; };
+		160ECFD1173B51160009D04B /* VMPAudioPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VMPAudioPlayer.m; sourceTree = "<group>"; };
+		160ECFD2173B51160009D04B /* VMPlayerBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VMPlayerBase.h; sourceTree = "<group>"; };
+		160ECFD3173B51160009D04B /* VMPlayerBase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VMPlayerBase.m; sourceTree = "<group>"; };
+		160ECFD4173B51160009D04B /* VMPSongPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VMPSongPlayer.h; sourceTree = "<group>"; };
+		160ECFD5173B51160009D04B /* VMPSongPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VMPSongPlayer.m; sourceTree = "<group>"; };
+		160ECFDF173B51430009D04B /* VMDataTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VMDataTypes.h; path = Core/DataStructures/VMDataTypes.h; sourceTree = SOURCE_ROOT; };
+		160ECFE0173B51430009D04B /* VMDataTypes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VMDataTypes.m; path = Core/DataStructures/VMDataTypes.m; sourceTree = SOURCE_ROOT; };
+		160ECFE1173B51430009D04B /* VMDataTypesMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VMDataTypesMacros.h; path = Core/DataStructures/VMDataTypesMacros.h; sourceTree = SOURCE_ROOT; };
+		160ECFE2173B51430009D04B /* VMFunction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VMFunction.m; path = Core/DataStructures/VMFunction.m; sourceTree = SOURCE_ROOT; };
+		160ECFE3173B51430009D04B /* VMSong.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VMSong.h; path = Core/DataStructures/VMSong.h; sourceTree = SOURCE_ROOT; };
+		160ECFE4173B51430009D04B /* VMSong.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VMSong.m; path = Core/DataStructures/VMSong.m; sourceTree = SOURCE_ROOT; };
+		160ECFF0173B517A0009D04B /* compiledRegexCache.d */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.dtrace; path = compiledRegexCache.d; sourceTree = "<group>"; };
+		160ECFF1173B517A0009D04B /* for_in.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = for_in.m; sourceTree = "<group>"; };
+		160ECFF2173B517A0009D04B /* link_example.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = link_example.m; sourceTree = "<group>"; };
+		160ECFF3173B517A0009D04B /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		160ECFF4173B517A0009D04B /* NSString-HexConversion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString-HexConversion.h"; sourceTree = "<group>"; };
+		160ECFF5173B517A0009D04B /* NSString-HexConversion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString-HexConversion.m"; sourceTree = "<group>"; };
+		160ECFF6173B517A0009D04B /* utf16ConversionCache.d */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.dtrace; path = utf16ConversionCache.d; sourceTree = "<group>"; };
+		160ECFF7173B517A0009D04B /* License.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = License.html; sourceTree = "<group>"; };
+		160ECFF8173B517A0009D04B /* License.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = License.rtf; sourceTree = "<group>"; };
+		160ECFF9173B517A0009D04B /* RegexKitLite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RegexKitLite.h; sourceTree = "<group>"; };
+		160ECFFA173B517A0009D04B /* RegexKitLite.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = RegexKitLite.html; sourceTree = "<group>"; };
+		160ECFFB173B517A0009D04B /* RegexKitLite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RegexKitLite.m; sourceTree = "<group>"; };
+		160ECFFD173B517A0009D04B /* .gitignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
+		160ECFFE173B517A0009D04B /* Config.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
+		160ECFFF173B517A0009D04B /* README.markdown */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.markdown; sourceTree = "<group>"; };
+		160ED001173B517A0009D04B /* CDataScanner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDataScanner.h; sourceTree = "<group>"; };
+		160ED002173B517A0009D04B /* CDataScanner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CDataScanner.m; sourceTree = "<group>"; };
+		160ED004173B517A0009D04B /* CFilteringJSONSerializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CFilteringJSONSerializer.h; sourceTree = "<group>"; };
+		160ED005173B517A0009D04B /* CFilteringJSONSerializer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CFilteringJSONSerializer.m; sourceTree = "<group>"; };
+		160ED006173B517A0009D04B /* CJSONDeserializer_BlocksExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CJSONDeserializer_BlocksExtensions.h; sourceTree = "<group>"; };
+		160ED007173B517A0009D04B /* CJSONDeserializer_BlocksExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CJSONDeserializer_BlocksExtensions.m; sourceTree = "<group>"; };
+		160ED008173B517A0009D04B /* CJSONSerialization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CJSONSerialization.h; sourceTree = "<group>"; };
+		160ED009173B517A0009D04B /* CJSONSerialization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CJSONSerialization.m; sourceTree = "<group>"; };
+		160ED00A173B517A0009D04B /* CJSONSerializedData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CJSONSerializedData.h; sourceTree = "<group>"; };
+		160ED00B173B517A0009D04B /* CJSONSerializedData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CJSONSerializedData.m; sourceTree = "<group>"; };
+		160ED00D173B517A0009D04B /* CDataScanner_Extensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDataScanner_Extensions.h; sourceTree = "<group>"; };
+		160ED00E173B517A0009D04B /* CDataScanner_Extensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CDataScanner_Extensions.m; sourceTree = "<group>"; };
+		160ED00F173B517A0009D04B /* NSDictionary_JSONExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSDictionary_JSONExtensions.h; sourceTree = "<group>"; };
+		160ED010173B517A0009D04B /* NSDictionary_JSONExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSDictionary_JSONExtensions.m; sourceTree = "<group>"; };
+		160ED012173B517A0009D04B /* CJSONDeserializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CJSONDeserializer.h; sourceTree = "<group>"; };
+		160ED013173B517A0009D04B /* CJSONDeserializer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CJSONDeserializer.m; sourceTree = "<group>"; };
+		160ED014173B517A0009D04B /* CJSONScanner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CJSONScanner.h; sourceTree = "<group>"; };
+		160ED015173B517A0009D04B /* CJSONScanner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CJSONScanner.m; sourceTree = "<group>"; };
+		160ED016173B517A0009D04B /* CJSONSerializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CJSONSerializer.h; sourceTree = "<group>"; };
+		160ED017173B517A0009D04B /* CJSONSerializer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CJSONSerializer.m; sourceTree = "<group>"; };
+		160ED018173B517A0009D04B /* JSONRepresentation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSONRepresentation.h; sourceTree = "<group>"; };
+		160ED019173B517A0009D04B /* VMPJSONDeserializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VMPJSONDeserializer.h; sourceTree = "<group>"; };
+		160ED01A173B517A0009D04B /* VMPJSONDeserializer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VMPJSONDeserializer.m; sourceTree = "<group>"; };
+		160ED01B173B517A0009D04B /* VMPJSONScanner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VMPJSONScanner.h; sourceTree = "<group>"; };
+		160ED01C173B517A0009D04B /* VMPJSONScanner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VMPJSONScanner.m; sourceTree = "<group>"; };
+		160ED06E173B5C720009D04B /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
+		162413351717B0DC00EF631A /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS6.1.sdk/System/Library/Frameworks/AVFoundation.framework; sourceTree = DEVELOPER_DIR; };
+		1624A6FB1642B76B004AA351 /* vsDocIcon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = vsDocIcon.icns; sourceTree = "<group>"; };
+		1624A6FE1642B7D0004AA351 /* vsPlayer.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = vsPlayer.icns; sourceTree = "<group>"; };
+		1624A7131644D8AC004AA351 /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = usr/lib/libicucore.dylib; sourceTree = SDKROOT; };
+		162EFC3E173026230000A4FB /* VMPSelectorEditorView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VMPSelectorEditorView.xib; sourceTree = "<group>"; };
+		162EFC421730CE3F0000A4FB /* VMPVariablesPanel.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VMPVariablesPanel.xib; sourceTree = "<group>"; };
+		162F7B1816A0341900420443 /* TraumBaum.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TraumBaum.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		162F7B1D16A0341C00420443 /* TraumBaum-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "TraumBaum-Info.plist"; sourceTree = "<group>"; };
+		162F7B1F16A0341C00420443 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		162F7B2116A0341C00420443 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		162F7B2316A0341C00420443 /* TraumBaum-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TraumBaum-Prefix.pch"; sourceTree = "<group>"; };
+		162F7B2516A0341C00420443 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
+		162F7B3516A0341D00420443 /* TraumBaumTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TraumBaumTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
+		162F7B3D16A0341E00420443 /* TraumBaumTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "TraumBaumTests-Info.plist"; sourceTree = "<group>"; };
+		162F7B3F16A0341E00420443 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		162F7B4116A0341E00420443 /* TraumBaumTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TraumBaumTests.h; sourceTree = "<group>"; };
+		162F7B4216A0341E00420443 /* TraumBaumTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TraumBaumTests.m; sourceTree = "<group>"; };
+		162F7B6A16A1171200420443 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
+		16347C0E16C286C9002BE1FE /* VMPGraph.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = VMPGraph.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		16347C0F16C286C9002BE1FE /* VMPGraph.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = VMPGraph.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		16347C1516C33509002BE1FE /* VMPlayerOSXDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = VMPlayerOSXDelegate.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		165DAC20172D541D009708B3 /* VMPAudioInfoEditorView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VMPAudioInfoEditorView.xib; sourceTree = "<group>"; };
+		165DAC24172D545F009708B3 /* VMPTimeRangeEditorView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VMPTimeRangeEditorView.xib; sourceTree = "<group>"; };
+		165DAC28172D54CE009708B3 /* VMPTimeRangeEditorView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VMPTimeRangeEditorView.h; sourceTree = "<group>"; };
+		165DAC29172D54CE009708B3 /* VMPTimeRangeEditorView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VMPTimeRangeEditorView.m; sourceTree = "<group>"; };
+		1677773516C0D5DE007206CF /* MultiPlatform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MultiPlatform.h; path = /Users/cboy/Dev/OnTheFly/Core/Misc/MultiPlatform.h; sourceTree = "<absolute>"; };
+		1677773716C0D600007206CF /* ApplescriptReceiver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplescriptReceiver.h; sourceTree = "<group>"; };
+		1677773816C0D600007206CF /* ApplescriptReceiver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplescriptReceiver.m; sourceTree = "<group>"; };
+		1677773D16C0D600007206CF /* VMPMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = VMPMacros.h; path = /Users/cboy/Dev/OnTheFly/Core/Misc/VMPMacros.h; sourceTree = "<absolute>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		1677780A16C0D6A0007206CF /* VMPTrackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VMPTrackView.h; sourceTree = "<group>"; };
+		1677780B16C0D6A0007206CF /* VMPTrackView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VMPTrackView.m; sourceTree = "<group>"; };
+		1677780C16C0D6A0007206CF /* VMPObjectBrowserView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = VMPObjectBrowserView.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		1677780D16C0D6A0007206CF /* VMPObjectBrowserView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = VMPObjectBrowserView.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		1677781216C0D6A0007206CF /* VMPTrackStrip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VMPTrackStrip.h; sourceTree = "<group>"; };
+		1677781316C0D6A0007206CF /* VMPTrackStrip.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VMPTrackStrip.m; sourceTree = "<group>"; };
+		1677781416C0D6A0007206CF /* VMPCanvas.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VMPCanvas.h; sourceTree = "<group>"; };
+		1677781516C0D6A0007206CF /* VMPCanvas.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VMPCanvas.m; sourceTree = "<group>"; };
+		168A634E171902B700B08329 /* VMPScrollViewClipper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VMPScrollViewClipper.h; path = TraumBaum/VMPScrollViewClipper.h; sourceTree = SOURCE_ROOT; };
+		168A634F171902B700B08329 /* VMPScrollViewClipper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VMPScrollViewClipper.m; path = TraumBaum/VMPScrollViewClipper.m; sourceTree = SOURCE_ROOT; };
+		168CEBB2163186B400B721E2 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		168CEBB5163186B400B721E2 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		168CEBB6163186B400B721E2 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		168CEBB7163186B400B721E2 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		168CEBBA163186B400B721E2 /* AmbientPianoMacOS-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "AmbientPianoMacOS-Info.plist"; path = "../AmbientPianoMacOS/AmbientPianoMacOS-Info.plist"; sourceTree = "<group>"; };
+		168CEBBC163186B400B721E2 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		168CEBBE163186B400B721E2 /* OnTheFly-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = "OnTheFly-Prefix.pch"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		168CEBBF163186B400B721E2 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		168CEBC5163186B400B721E2 /* VMPlayerOSXDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = VMPlayerOSXDelegate.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		168CEBC8163186B400B721E2 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		168CEBCB163186B400B721E2 /* VMPEditor.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = VMPEditor.xcdatamodel; sourceTree = "<group>"; };
+		168CEBD41631871400B721E2 /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
+		16933BFA170C32E2005381FC /* VMPInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VMPInfoViewController.h; path = TraumBaum/VMPInfoViewController.h; sourceTree = SOURCE_ROOT; };
+		16933BFB170C32E2005381FC /* VMPInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VMPInfoViewController.m; path = TraumBaum/VMPInfoViewController.m; sourceTree = SOURCE_ROOT; };
+		16933BFD170C389F005381FC /* VMPIHole.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VMPIHole.h; sourceTree = "<group>"; };
+		16933BFE170C389F005381FC /* VMPIHole.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VMPIHole.m; sourceTree = "<group>"; };
+		1693CBD617166596005846E6 /* iPhone-UI */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "iPhone-UI"; path = "TraumBaum/iPhone-UI"; sourceTree = SOURCE_ROOT; };
+		1693CBD8171665D9005846E6 /* appicon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = appicon.png; sourceTree = "<group>"; };
+		1693CBDA171665EA005846E6 /* appicon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "appicon@2x.png"; sourceTree = "<group>"; };
+		1695BE841634D5A3009103F4 /* vmp.sdef */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = vmp.sdef; sourceTree = "<group>"; };
+		1696ADD2172E7344008362E5 /* VMPAudioInfoEditorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VMPAudioInfoEditorViewController.h; sourceTree = "<group>"; };
+		1696ADD3172E7344008362E5 /* VMPAudioInfoEditorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VMPAudioInfoEditorViewController.m; sourceTree = "<group>"; };
+		16A27EFF16F9730F0081C1E8 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		16A27F0116F9736F0081C1E8 /* defaultSong */ = {isa = PBXFileReference; lastKnownFileType = folder; name = defaultSong; path = ../../defaultSong; sourceTree = "<group>"; };
+		16A27F0716FBB1A70081C1E8 /* Traumbaum_iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Traumbaum_iOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		16A27F1016FBB1A70081C1E8 /* Traumbaum-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Traumbaum-Info.plist"; sourceTree = "<group>"; };
+		16A27F1216FBB1A70081C1E8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		16A27F1416FBB1A70081C1E8 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		16A27F1616FBB1A70081C1E8 /* Traumbaum-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Traumbaum-Prefix.pch"; sourceTree = "<group>"; };
+		16A27F1716FBB1A70081C1E8 /* VMAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VMAppDelegate.h; sourceTree = "<group>"; };
+		16A27F1816FBB1A70081C1E8 /* VMAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VMAppDelegate.m; sourceTree = "<group>"; };
+		16A27F1A16FBB1A70081C1E8 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
+		16A27F1C16FBB1A70081C1E8 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
+		16A27F1E16FBB1A70081C1E8 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		16A27F2016FBB1A70081C1E8 /* VMViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VMViewController.h; sourceTree = "<group>"; };
+		16A27F2116FBB1A70081C1E8 /* VMViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VMViewController.m; sourceTree = "<group>"; };
+		16A27F2416FBB1A70081C1E8 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/VMViewController_iPhone.xib; sourceTree = "<group>"; };
+		16A27F2716FBB1A70081C1E8 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/VMViewController_iPad.xib; sourceTree = "<group>"; };
+		16A27F2E16FBE1300081C1E8 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS6.1.sdk/System/Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
+		16A27F4516FBE8030081C1E8 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS6.1.sdk/System/Library/Frameworks/AudioToolbox.framework; sourceTree = DEVELOPER_DIR; };
+		16A27F4D16FC1FC60081C1E8 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS6.1.sdk/System/Library/Frameworks/CoreGraphics.framework; sourceTree = DEVELOPER_DIR; };
+		16A27F4F16FC2EC90081C1E8 /* default.vms */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = default.vms; path = ../../defaultSong/default.vms; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.javascript; };
+		16A27F5B17006E710081C1E8 /* VMPProgressWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VMPProgressWindowController.h; sourceTree = "<group>"; };
+		16A27F5C17006E720081C1E8 /* VMPProgressWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VMPProgressWindowController.m; sourceTree = "<group>"; };
+		16A27F5D17006E720081C1E8 /* VMPProgressWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VMPProgressWindow.xib; sourceTree = "<group>"; };
+		16A27F6217008A540081C1E8 /* VMPRecordDetailPopover.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VMPRecordDetailPopover.h; sourceTree = "<group>"; };
+		16A27F6317008A540081C1E8 /* VMPRecordDetailPopover.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VMPRecordDetailPopover.m; sourceTree = "<group>"; };
+		16A27F6E1709AD680081C1E8 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/System/Library/Frameworks/QuartzCore.framework; sourceTree = DEVELOPER_DIR; };
+		16A27F701709AD760081C1E8 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS6.1.sdk/System/Library/Frameworks/QuartzCore.framework; sourceTree = DEVELOPER_DIR; };
+		16C7676D16DC83DE003636C3 /* VMPAnalyzer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = VMPAnalyzer.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		16C7676E16DC83DE003636C3 /* VMPAnalyzer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = VMPAnalyzer.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		16C90C7A1722774800F7E91F /* VMPHistogramView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VMPHistogramView.h; sourceTree = "<group>"; };
+		16C90C7B1722774800F7E91F /* VMPHistogramView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VMPHistogramView.m; sourceTree = "<group>"; };
+		16C90C8017241EF500F7E91F /* VMPLogView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VMPLogView.h; sourceTree = "<group>"; };
+		16C90C8117241EF500F7E91F /* VMPLogView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VMPLogView.m; sourceTree = "<group>"; };
+		16DC63E016B78D8D00E579AE /* play.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = play.png; sourceTree = "<group>"; };
+		16DC63EB16B78E2A00E579AE /* stop.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = stop.png; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		162F7B1516A0341900420443 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				16A27F0016F9730F0081C1E8 /* AudioToolbox.framework in Frameworks */,
+				162F7B6616A1151B00420443 /* libicucore.dylib in Frameworks */,
+				162F7B1A16A0341900420443 /* Cocoa.framework in Frameworks */,
+				162F7B6916A1167D00420443 /* CoreAudio.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		162F7B3116A0341D00420443 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				162F7B6B16A1171300420443 /* SenTestingKit.framework in Frameworks */,
+				162F7B3816A0341D00420443 /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		16A27F0416FBB1A70081C1E8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				162413361717B0DC00EF631A /* AVFoundation.framework in Frameworks */,
+				16A27F711709AD770081C1E8 /* QuartzCore.framework in Frameworks */,
+				16A27F4E16FC1FC70081C1E8 /* CoreGraphics.framework in Frameworks */,
+				16A27F4616FBE8030081C1E8 /* AudioToolbox.framework in Frameworks */,
+				16A27F2F16FBE1300081C1E8 /* UIKit.framework in Frameworks */,
+				16A27F4916FC16CF0081C1E8 /* libicucore.dylib in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		160ECFAB173B50730009D04B /* Processors */ = {
+			isa = PBXGroup;
+			children = (
+				160ECFAC173B50730009D04B /* VMPreprocessor.h */,
+				160ECFAD173B50730009D04B /* VMPreprocessor.m */,
+				160ECFAE173B50730009D04B /* VMScoreEvaluator.h */,
+				160ECFAF173B50730009D04B /* VMScoreEvaluator.m */,
+			);
+			name = Processors;
+			path = Core/Processors;
+			sourceTree = SOURCE_ROOT;
+		};
+		160ECFCF173B51160009D04B /* AudioPlayer */ = {
+			isa = PBXGroup;
+			children = (
+				160ECFD0173B51160009D04B /* VMPAudioPlayer.h */,
+				160ECFD1173B51160009D04B /* VMPAudioPlayer.m */,
+				160ECFD2173B51160009D04B /* VMPlayerBase.h */,
+				160ECFD3173B51160009D04B /* VMPlayerBase.m */,
+				160ECFD4173B51160009D04B /* VMPSongPlayer.h */,
+				160ECFD5173B51160009D04B /* VMPSongPlayer.m */,
+			);
+			name = AudioPlayer;
+			path = Core/AudioPlayer;
+			sourceTree = SOURCE_ROOT;
+		};
+		160ECFEE173B517A0009D04B /* RegexKitLite-4.0 */ = {
+			isa = PBXGroup;
+			children = (
+				160ECFEF173B517A0009D04B /* examples */,
+				160ECFF7173B517A0009D04B /* License.html */,
+				160ECFF8173B517A0009D04B /* License.rtf */,
+				160ECFF9173B517A0009D04B /* RegexKitLite.h */,
+				160ECFFA173B517A0009D04B /* RegexKitLite.html */,
+				160ECFFB173B517A0009D04B /* RegexKitLite.m */,
+			);
+			name = "RegexKitLite-4.0";
+			path = "Core/Libs/RegexKitLite-4.0";
+			sourceTree = SOURCE_ROOT;
+		};
+		160ECFEF173B517A0009D04B /* examples */ = {
+			isa = PBXGroup;
+			children = (
+				160ECFF0173B517A0009D04B /* compiledRegexCache.d */,
+				160ECFF1173B517A0009D04B /* for_in.m */,
+				160ECFF2173B517A0009D04B /* link_example.m */,
+				160ECFF3173B517A0009D04B /* main.m */,
+				160ECFF4173B517A0009D04B /* NSString-HexConversion.h */,
+				160ECFF5173B517A0009D04B /* NSString-HexConversion.m */,
+				160ECFF6173B517A0009D04B /* utf16ConversionCache.d */,
+			);
+			path = examples;
+			sourceTree = "<group>";
+		};
+		160ECFFC173B517A0009D04B /* TouchJSON-master */ = {
+			isa = PBXGroup;
+			children = (
+				160ECFFD173B517A0009D04B /* .gitignore */,
+				160ECFFE173B517A0009D04B /* Config.xcconfig */,
+				160ECFFF173B517A0009D04B /* README.markdown */,
+				160ED000173B517A0009D04B /* Source */,
+				160ED019173B517A0009D04B /* VMPJSONDeserializer.h */,
+				160ED01A173B517A0009D04B /* VMPJSONDeserializer.m */,
+				160ED01B173B517A0009D04B /* VMPJSONScanner.h */,
+				160ED01C173B517A0009D04B /* VMPJSONScanner.m */,
+			);
+			name = "TouchJSON-master";
+			path = "Core/Libs/TouchJSON-master";
+			sourceTree = SOURCE_ROOT;
+		};
+		160ED000173B517A0009D04B /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				160ED001173B517A0009D04B /* CDataScanner.h */,
+				160ED002173B517A0009D04B /* CDataScanner.m */,
+				160ED003173B517A0009D04B /* Experimental */,
+				160ED00C173B517A0009D04B /* Extensions */,
+				160ED011173B517A0009D04B /* JSON */,
+			);
+			path = Source;
+			sourceTree = "<group>";
+		};
+		160ED003173B517A0009D04B /* Experimental */ = {
+			isa = PBXGroup;
+			children = (
+				160ED004173B517A0009D04B /* CFilteringJSONSerializer.h */,
+				160ED005173B517A0009D04B /* CFilteringJSONSerializer.m */,
+				160ED006173B517A0009D04B /* CJSONDeserializer_BlocksExtensions.h */,
+				160ED007173B517A0009D04B /* CJSONDeserializer_BlocksExtensions.m */,
+				160ED008173B517A0009D04B /* CJSONSerialization.h */,
+				160ED009173B517A0009D04B /* CJSONSerialization.m */,
+				160ED00A173B517A0009D04B /* CJSONSerializedData.h */,
+				160ED00B173B517A0009D04B /* CJSONSerializedData.m */,
+			);
+			path = Experimental;
+			sourceTree = "<group>";
+		};
+		160ED00C173B517A0009D04B /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				160ED00D173B517A0009D04B /* CDataScanner_Extensions.h */,
+				160ED00E173B517A0009D04B /* CDataScanner_Extensions.m */,
+				160ED00F173B517A0009D04B /* NSDictionary_JSONExtensions.h */,
+				160ED010173B517A0009D04B /* NSDictionary_JSONExtensions.m */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		160ED011173B517A0009D04B /* JSON */ = {
+			isa = PBXGroup;
+			children = (
+				160ED012173B517A0009D04B /* CJSONDeserializer.h */,
+				160ED013173B517A0009D04B /* CJSONDeserializer.m */,
+				160ED014173B517A0009D04B /* CJSONScanner.h */,
+				160ED015173B517A0009D04B /* CJSONScanner.m */,
+				160ED016173B517A0009D04B /* CJSONSerializer.h */,
+				160ED017173B517A0009D04B /* CJSONSerializer.m */,
+				160ED018173B517A0009D04B /* JSONRepresentation.h */,
+			);
+			path = JSON;
+			sourceTree = "<group>";
+		};
+		1624A63A16420B1F004AA351 /* Libs */ = {
+			isa = PBXGroup;
+			children = (
+				160ECFEE173B517A0009D04B /* RegexKitLite-4.0 */,
+				160ECFFC173B517A0009D04B /* TouchJSON-master */,
+			);
+			name = Libs;
+			path = Core/Libs;
+			sourceTree = "<group>";
+		};
+		1624A63C16420B4A004AA351 /* OSX Player & Editor */ = {
+			isa = PBXGroup;
+			children = (
+				16347C1516C33509002BE1FE /* VMPlayerOSXDelegate.h */,
+				168CEBC5163186B400B721E2 /* VMPlayerOSXDelegate.m */,
+				1627E302173B357D002E512C /* Misc */,
+				1627E2FE173B2DE7002E512C /* Libs */,
+				1677780916C0D6A0007206CF /* Views and Controllers */,
+				16C8AE31173A0F39006D1956 /* Resources */,
+				168CEBCA163186B400B721E2 /* VMPEditor.xcdatamodeld */,
+				168CEBBF163186B400B721E2 /* main.m */,
+			);
+			name = "OSX Player & Editor";
+			path = OSX;
+			sourceTree = "<group>";
+		};
+		1627E2FE173B2DE7002E512C /* Libs */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Libs;
+			sourceTree = "<group>";
+		};
+		1627E2FF173B2E3D002E512C /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				160ECFC0173B50EA0009D04B /* VMAudioObject.h */,
+				160ECFC1173B50EA0009D04B /* VMAudioObject.m */,
+				160ECFC2173B50EA0009D04B /* VMLog.h */,
+				160ECFC3173B50EA0009D04B /* VMLog.m */,
+				160ECFC4173B50EA0009D04B /* VMPrimitives.h */,
+				160ECFC5173B50EA0009D04B /* VMPrimitives.m */,
+			);
+			name = Models;
+			path = Core/DataStructures;
+			sourceTree = "<group>";
+		};
+		1627E302173B357D002E512C /* Misc */ = {
+			isa = PBXGroup;
+			children = (
+				1677773716C0D600007206CF /* ApplescriptReceiver.h */,
+				1677773816C0D600007206CF /* ApplescriptReceiver.m */,
+			);
+			name = Misc;
+			sourceTree = "<group>";
+		};
+		162F7B1B16A0341900420443 /* TraumBaum_VMP */ = {
+			isa = PBXGroup;
+			children = (
+				16933BFD170C389F005381FC /* VMPIHole.h */,
+				16933BFE170C389F005381FC /* VMPIHole.m */,
+				16A27F4F16FC2EC90081C1E8 /* default.vms */,
+				16A27F0116F9736F0081C1E8 /* defaultSong */,
+				162F7B1C16A0341C00420443 /* Supporting Files */,
+			);
+			name = TraumBaum_VMP;
+			path = TraumBaum;
+			sourceTree = "<group>";
+		};
+		162F7B1C16A0341C00420443 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				162F7B1E16A0341C00420443 /* InfoPlist.strings */,
+				168CEBBA163186B400B721E2 /* AmbientPianoMacOS-Info.plist */,
+				162F7B1D16A0341C00420443 /* TraumBaum-Info.plist */,
+				162F7B2116A0341C00420443 /* main.m */,
+				162F7B2316A0341C00420443 /* TraumBaum-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		162F7B3B16A0341D00420443 /* TraumBaumTests */ = {
+			isa = PBXGroup;
+			children = (
+				162F7B4116A0341E00420443 /* TraumBaumTests.h */,
+				162F7B4216A0341E00420443 /* TraumBaumTests.m */,
+				162F7B3C16A0341E00420443 /* Supporting Files */,
+			);
+			path = TraumBaumTests;
+			sourceTree = "<group>";
+		};
+		162F7B3C16A0341E00420443 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				162F7B3D16A0341E00420443 /* TraumBaumTests-Info.plist */,
+				162F7B3E16A0341E00420443 /* InfoPlist.strings */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		1677773616C0D600007206CF /* Misc */ = {
+			isa = PBXGroup;
+			children = (
+				160ECFB7173B50B70009D04B /* boxmuller.c */,
+				160ECFB8173B50B70009D04B /* boxmuller.h */,
+				160ECFB9173B50B70009D04B /* VMException.h */,
+				160ECFBA173B50B70009D04B /* VMException.m */,
+				160ECFBB173B50B70009D04B /* VMTextPreprocessor.h */,
+				160ECFBC173B50B70009D04B /* VMTextPreprocessor.m */,
+			);
+			name = Misc;
+			path = Core/Misc;
+			sourceTree = "<group>";
+		};
+		167777D116C0D651007206CF /* Variable Media Models */ = {
+			isa = PBXGroup;
+			children = (
+				160ECFDF173B51430009D04B /* VMDataTypes.h */,
+				160ECFE0173B51430009D04B /* VMDataTypes.m */,
+				160ECFE1173B51430009D04B /* VMDataTypesMacros.h */,
+				160ECFE2173B51430009D04B /* VMFunction.m */,
+				160ECFE3173B51430009D04B /* VMSong.h */,
+				160ECFE4173B51430009D04B /* VMSong.m */,
+			);
+			name = "Variable Media Models";
+			path = Core/DataStructures;
+			sourceTree = "<group>";
+		};
+		167777F616C0D661007206CF /* MediaPlayer */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = MediaPlayer;
+			path = Core/AudioPlayer;
+			sourceTree = "<group>";
+		};
+		1677780916C0D6A0007206CF /* Views and Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				1696ADCE172E6818008362E5 /* Main UI */,
+				1696ADCD172E680D008362E5 /* Statistics */,
+				1696ADCC172E67FD008362E5 /* Editor */,
+			);
+			name = "Views and Controllers";
+			path = Views;
+			sourceTree = "<group>";
+		};
+		1677784116C13607007206CF /* headers */ = {
+			isa = PBXGroup;
+			children = (
+				160ECFB6173B50910009D04B /* KeyCodes.h */,
+				1677773516C0D5DE007206CF /* MultiPlatform.h */,
+				1677773D16C0D600007206CF /* VMPMacros.h */,
+				160E5195173376FE00C3D9BB /* VMPNotification.h */,
+			);
+			name = headers;
+			path = Core/Misc;
+			sourceTree = "<group>";
+		};
+		168CEBA3163186B300B721E2 = {
+			isa = PBXGroup;
+			children = (
+				160ED06E173B5C720009D04B /* .gitignore */,
+				160E51AB1738AF2800C3D9BB /* TraumBaum.entitlements */,
+				162413351717B0DC00EF631A /* AVFoundation.framework */,
+				1693CBDA171665EA005846E6 /* appicon@2x.png */,
+				1693CBD8171665D9005846E6 /* appicon.png */,
+				168CEBB8163186B400B721E2 /* Core */,
+				1624A63C16420B4A004AA351 /* OSX Player & Editor */,
+				1696ADD1172E69AB008362E5 /* Projects */,
+				162F7B3B16A0341D00420443 /* TraumBaumTests */,
+				168CEBB1163186B400B721E2 /* Frameworks */,
+				168CEBAF163186B400B721E2 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		168CEBAF163186B400B721E2 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				162F7B1816A0341900420443 /* TraumBaum.app */,
+				162F7B3516A0341D00420443 /* TraumBaumTests.octest */,
+				16A27F0716FBB1A70081C1E8 /* Traumbaum_iOS.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		168CEBB1163186B400B721E2 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				16A27F701709AD760081C1E8 /* QuartzCore.framework */,
+				16A27F6E1709AD680081C1E8 /* QuartzCore.framework */,
+				16A27F4D16FC1FC60081C1E8 /* CoreGraphics.framework */,
+				16A27F2E16FBE1300081C1E8 /* UIKit.framework */,
+				16A27F4516FBE8030081C1E8 /* AudioToolbox.framework */,
+				16A27EFF16F9730F0081C1E8 /* AudioToolbox.framework */,
+				162F7B6A16A1171200420443 /* SenTestingKit.framework */,
+				1624A7131644D8AC004AA351 /* libicucore.dylib */,
+				168CEBD41631871400B721E2 /* CoreAudio.framework */,
+				168CEBB2163186B400B721E2 /* Cocoa.framework */,
+				168CEBB4163186B400B721E2 /* Other Frameworks */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		168CEBB4163186B400B721E2 /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				168CEBB5163186B400B721E2 /* AppKit.framework */,
+				168CEBB6163186B400B721E2 /* CoreData.framework */,
+				168CEBB7163186B400B721E2 /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		168CEBB8163186B400B721E2 /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				160ECFCF173B51160009D04B /* AudioPlayer */,
+				1677784116C13607007206CF /* headers */,
+				160ECFAB173B50730009D04B /* Processors */,
+				1627E2FF173B2E3D002E512C /* Models */,
+				167777D116C0D651007206CF /* Variable Media Models */,
+				1677773616C0D600007206CF /* Misc */,
+				167777F616C0D661007206CF /* MediaPlayer */,
+				1624A63A16420B1F004AA351 /* Libs */,
+				168CEBB9163186B400B721E2 /* Supporting Files */,
+			);
+			name = Core;
+			path = AmbientPianoMacOS;
+			sourceTree = "<group>";
+		};
+		168CEBB9163186B400B721E2 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				168CEBBB163186B400B721E2 /* InfoPlist.strings */,
+				168CEBBE163186B400B721E2 /* OnTheFly-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			path = "OnTheFly Core";
+			sourceTree = "<group>";
+		};
+		1696ADCC172E67FD008362E5 /* Editor */ = {
+			isa = PBXGroup;
+			children = (
+				165DAC24172D545F009708B3 /* VMPTimeRangeEditorView.xib */,
+				165DAC28172D54CE009708B3 /* VMPTimeRangeEditorView.h */,
+				165DAC29172D54CE009708B3 /* VMPTimeRangeEditorView.m */,
+				165DAC20172D541D009708B3 /* VMPAudioInfoEditorView.xib */,
+				1696ADD2172E7344008362E5 /* VMPAudioInfoEditorViewController.h */,
+				1696ADD3172E7344008362E5 /* VMPAudioInfoEditorViewController.m */,
+				162EFC3E173026230000A4FB /* VMPSelectorEditorView.xib */,
+				160E51A01735390B00C3D9BB /* VMPSelectorEditorViewController.h */,
+				160E51A11735390C00C3D9BB /* VMPSelectorEditorViewController.m */,
+				160E519617338EA500C3D9BB /* VMPObjectGraphView.h */,
+				160E519717338EA500C3D9BB /* VMPObjectGraphView.m */,
+				1677780C16C0D6A0007206CF /* VMPObjectBrowserView.h */,
+				1677780D16C0D6A0007206CF /* VMPObjectBrowserView.m */,
+			);
+			name = Editor;
+			sourceTree = "<group>";
+		};
+		1696ADCD172E680D008362E5 /* Statistics */ = {
+			isa = PBXGroup;
+			children = (
+				16C7676D16DC83DE003636C3 /* VMPAnalyzer.h */,
+				16C7676E16DC83DE003636C3 /* VMPAnalyzer.m */,
+				16A27F6217008A540081C1E8 /* VMPRecordDetailPopover.h */,
+				16A27F6317008A540081C1E8 /* VMPRecordDetailPopover.m */,
+				16C90C7A1722774800F7E91F /* VMPHistogramView.h */,
+				16C90C7B1722774800F7E91F /* VMPHistogramView.m */,
+			);
+			name = Statistics;
+			sourceTree = "<group>";
+		};
+		1696ADCE172E6818008362E5 /* Main UI */ = {
+			isa = PBXGroup;
+			children = (
+				168CEBC7163186B400B721E2 /* MainMenu.xib */,
+				1677781416C0D6A0007206CF /* VMPCanvas.h */,
+				1677781516C0D6A0007206CF /* VMPCanvas.m */,
+				16347C0E16C286C9002BE1FE /* VMPGraph.h */,
+				16347C0F16C286C9002BE1FE /* VMPGraph.m */,
+				162EFC421730CE3F0000A4FB /* VMPVariablesPanel.xib */,
+				160E51901732783000C3D9BB /* VMPVariablesPanelController.h */,
+				160E51911732783000C3D9BB /* VMPVariablesPanelController.m */,
+				16A27F5D17006E720081C1E8 /* VMPProgressWindow.xib */,
+				16A27F5B17006E710081C1E8 /* VMPProgressWindowController.h */,
+				16A27F5C17006E720081C1E8 /* VMPProgressWindowController.m */,
+				1677781216C0D6A0007206CF /* VMPTrackStrip.h */,
+				1677781316C0D6A0007206CF /* VMPTrackStrip.m */,
+				1677780A16C0D6A0007206CF /* VMPTrackView.h */,
+				1677780B16C0D6A0007206CF /* VMPTrackView.m */,
+				16C90C8017241EF500F7E91F /* VMPLogView.h */,
+				16C90C8117241EF500F7E91F /* VMPLogView.m */,
+			);
+			name = "Main UI";
+			sourceTree = "<group>";
+		};
+		1696ADD1172E69AB008362E5 /* Projects */ = {
+			isa = PBXGroup;
+			children = (
+				16A27F0E16FBB1A70081C1E8 /* Traumbaum iOS */,
+				162F7B1B16A0341900420443 /* TraumBaum_VMP */,
+			);
+			name = Projects;
+			sourceTree = "<group>";
+		};
+		16A27F0E16FBB1A70081C1E8 /* Traumbaum iOS */ = {
+			isa = PBXGroup;
+			children = (
+				1693CBD617166596005846E6 /* iPhone-UI */,
+				16A27F1716FBB1A70081C1E8 /* VMAppDelegate.h */,
+				16A27F1816FBB1A70081C1E8 /* VMAppDelegate.m */,
+				16A27F2016FBB1A70081C1E8 /* VMViewController.h */,
+				16A27F2116FBB1A70081C1E8 /* VMViewController.m */,
+				16933BFA170C32E2005381FC /* VMPInfoViewController.h */,
+				16933BFB170C32E2005381FC /* VMPInfoViewController.m */,
+				16A27F2316FBB1A70081C1E8 /* VMViewController_iPhone.xib */,
+				16A27F2616FBB1A70081C1E8 /* VMViewController_iPad.xib */,
+				16A27F0F16FBB1A70081C1E8 /* Supporting Files */,
+				168A634E171902B700B08329 /* VMPScrollViewClipper.h */,
+				168A634F171902B700B08329 /* VMPScrollViewClipper.m */,
+			);
+			name = "Traumbaum iOS";
+			path = Traumbaum;
+			sourceTree = "<group>";
+		};
+		16A27F0F16FBB1A70081C1E8 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				16A27F1016FBB1A70081C1E8 /* Traumbaum-Info.plist */,
+				16A27F1116FBB1A70081C1E8 /* InfoPlist.strings */,
+				16A27F1416FBB1A70081C1E8 /* main.m */,
+				16A27F1616FBB1A70081C1E8 /* Traumbaum-Prefix.pch */,
+				16A27F1A16FBB1A70081C1E8 /* Default.png */,
+				16A27F1C16FBB1A70081C1E8 /* Default@2x.png */,
+				16A27F1E16FBB1A70081C1E8 /* Default-568h@2x.png */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		16C8AE31173A0F39006D1956 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				162F7B2416A0341C00420443 /* Credits.rtf */,
+				1695BE841634D5A3009103F4 /* vmp.sdef */,
+				16DC63E016B78D8D00E579AE /* play.png */,
+				16DC63EB16B78E2A00E579AE /* stop.png */,
+				1624A6FB1642B76B004AA351 /* vsDocIcon.icns */,
+				1624A6FE1642B7D0004AA351 /* vsPlayer.icns */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		162F7B1716A0341900420443 /* OnTheFly Editor OSX */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 162F7B4416A0341E00420443 /* Build configuration list for PBXNativeTarget "OnTheFly Editor OSX" */;
+			buildPhases = (
+				162F7B1416A0341900420443 /* Sources */,
+				162F7B1516A0341900420443 /* Frameworks */,
+				162F7B1616A0341900420443 /* Resources */,
+			);
+			buildRules = (
+				1677772716C0C777007206CF /* PBXBuildRule */,
+			);
+			dependencies = (
+			);
+			name = "OnTheFly Editor OSX";
+			productName = TraumBaum;
+			productReference = 162F7B1816A0341900420443 /* TraumBaum.app */;
+			productType = "com.apple.product-type.application";
+		};
+		162F7B3416A0341D00420443 /* OTF Tests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 162F7B4716A0341E00420443 /* Build configuration list for PBXNativeTarget "OTF Tests" */;
+			buildPhases = (
+				162F7B3016A0341D00420443 /* Sources */,
+				162F7B3116A0341D00420443 /* Frameworks */,
+				162F7B3216A0341D00420443 /* Resources */,
+				162F7B3316A0341D00420443 /* ShellScript */,
+			);
+			buildRules = (
+				1677772A16C0C986007206CF /* PBXBuildRule */,
+			);
+			dependencies = (
+				162F7B3A16A0341D00420443 /* PBXTargetDependency */,
+			);
+			name = "OTF Tests";
+			productName = TraumBaumTests;
+			productReference = 162F7B3516A0341D00420443 /* TraumBaumTests.octest */;
+			productType = "com.apple.product-type.bundle";
+		};
+		16A27F0616FBB1A70081C1E8 /* Traumbaum_iOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 16A27F2916FBB1A70081C1E8 /* Build configuration list for PBXNativeTarget "Traumbaum_iOS" */;
+			buildPhases = (
+				16A27F0316FBB1A70081C1E8 /* Sources */,
+				16A27F0416FBB1A70081C1E8 /* Frameworks */,
+				16A27F0516FBB1A70081C1E8 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Traumbaum_iOS;
+			productName = Traumbaum;
+			productReference = 16A27F0716FBB1A70081C1E8 /* Traumbaum_iOS.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		168CEBA5163186B300B721E2 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0460;
+			};
+			buildConfigurationList = 168CEBA8163186B300B721E2 /* Build configuration list for PBXProject "OnTheFly" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 168CEBA3163186B300B721E2;
+			productRefGroup = 168CEBAF163186B400B721E2 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				162F7B1716A0341900420443 /* OnTheFly Editor OSX */,
+				162F7B3416A0341D00420443 /* OTF Tests */,
+				16A27F0616FBB1A70081C1E8 /* Traumbaum_iOS */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		162F7B1616A0341900420443 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				16A27F0216F9736F0081C1E8 /* defaultSong in Resources */,
+				162F7B2016A0341C00420443 /* InfoPlist.strings in Resources */,
+				162F7B2616A0341C00420443 /* Credits.rtf in Resources */,
+				162F7B5016A1132700420443 /* vmp.sdef in Resources */,
+				1636DF8916A11C5300100130 /* vsDocIcon.icns in Resources */,
+				1636DF8A16A11C5500100130 /* vsPlayer.icns in Resources */,
+				161C9A9E16A585F2001E7B46 /* MainMenu.xib in Resources */,
+				16DC63E616B78D8D00E579AE /* play.png in Resources */,
+				16DC63EE16B78E2B00E579AE /* stop.png in Resources */,
+				16A27F5016FC2EC90081C1E8 /* default.vms in Resources */,
+				16A27F6117006E720081C1E8 /* VMPProgressWindow.xib in Resources */,
+				165DAC23172D541D009708B3 /* VMPAudioInfoEditorView.xib in Resources */,
+				165DAC27172D545F009708B3 /* VMPTimeRangeEditorView.xib in Resources */,
+				162EFC41173026230000A4FB /* VMPSelectorEditorView.xib in Resources */,
+				162EFC451730CE3F0000A4FB /* VMPVariablesPanel.xib in Resources */,
+				160ED02F173B517A0009D04B /* License.html in Resources */,
+				160ED032173B517A0009D04B /* License.rtf in Resources */,
+				160ED035173B517A0009D04B /* RegexKitLite.html in Resources */,
+				160ED03B173B517A0009D04B /* .gitignore in Resources */,
+				160ED03E173B517A0009D04B /* Config.xcconfig in Resources */,
+				160ED041173B517A0009D04B /* README.markdown in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		162F7B3216A0341D00420443 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				162F7B4016A0341E00420443 /* InfoPlist.strings in Resources */,
+				16A27F5116FC2EC90081C1E8 /* default.vms in Resources */,
+				160ED030173B517A0009D04B /* License.html in Resources */,
+				160ED033173B517A0009D04B /* License.rtf in Resources */,
+				160ED036173B517A0009D04B /* RegexKitLite.html in Resources */,
+				160ED03C173B517A0009D04B /* .gitignore in Resources */,
+				160ED03F173B517A0009D04B /* Config.xcconfig in Resources */,
+				160ED042173B517A0009D04B /* README.markdown in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		16A27F0516FBB1A70081C1E8 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				16A27F1316FBB1A70081C1E8 /* InfoPlist.strings in Resources */,
+				16A27F1B16FBB1A70081C1E8 /* Default.png in Resources */,
+				16A27F1D16FBB1A70081C1E8 /* Default@2x.png in Resources */,
+				16A27F1F16FBB1A70081C1E8 /* Default-568h@2x.png in Resources */,
+				16A27F2516FBB1A70081C1E8 /* VMViewController_iPhone.xib in Resources */,
+				16A27F2816FBB1A70081C1E8 /* VMViewController_iPad.xib in Resources */,
+				16A27F4716FC14460081C1E8 /* defaultSong in Resources */,
+				16A27F5216FC2EC90081C1E8 /* default.vms in Resources */,
+				1693CBD717166596005846E6 /* iPhone-UI in Resources */,
+				1693CBD9171665DA005846E6 /* appicon.png in Resources */,
+				1693CBDB171665EA005846E6 /* appicon@2x.png in Resources */,
+				160ED031173B517A0009D04B /* License.html in Resources */,
+				160ED034173B517A0009D04B /* License.rtf in Resources */,
+				160ED037173B517A0009D04B /* RegexKitLite.html in Resources */,
+				160ED03D173B517A0009D04B /* .gitignore in Resources */,
+				160ED040173B517A0009D04B /* Config.xcconfig in Resources */,
+				160ED043173B517A0009D04B /* README.markdown in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		162F7B3316A0341D00420443 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Run the unit tests in this test bundle.\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		162F7B1416A0341900420443 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				162F7B4E16A1130300420443 /* VMPlayerOSXDelegate.m in Sources */,
+				162F7B5516A1135600420443 /* VMPEditor.xcdatamodeld in Sources */,
+				162F7B4D16A112D300420443 /* main.m in Sources */,
+				1677774016C0D600007206CF /* ApplescriptReceiver.m in Sources */,
+				1677781816C0D6A0007206CF /* VMPTrackView.m in Sources */,
+				1677781C16C0D6A0007206CF /* VMPObjectBrowserView.m in Sources */,
+				1677782816C0D6A0007206CF /* VMPTrackStrip.m in Sources */,
+				1677782C16C0D6A0007206CF /* VMPCanvas.m in Sources */,
+				16347C1216C286C9002BE1FE /* VMPGraph.m in Sources */,
+				16C7677116DC83DE003636C3 /* VMPAnalyzer.m in Sources */,
+				16A27F5F17006E720081C1E8 /* VMPProgressWindowController.m in Sources */,
+				16A27F6517008A550081C1E8 /* VMPRecordDetailPopover.m in Sources */,
+				16C90C7E1722774800F7E91F /* VMPHistogramView.m in Sources */,
+				16C90C8417241EF500F7E91F /* VMPLogView.m in Sources */,
+				165DAC2C172D54CE009708B3 /* VMPTimeRangeEditorView.m in Sources */,
+				1696ADD6172E7344008362E5 /* VMPAudioInfoEditorViewController.m in Sources */,
+				160E51941732783000C3D9BB /* VMPVariablesPanelController.m in Sources */,
+				160E519A17338EA600C3D9BB /* VMPObjectGraphView.m in Sources */,
+				160E51A41735390D00C3D9BB /* VMPSelectorEditorViewController.m in Sources */,
+				160ECFB0173B50730009D04B /* VMPreprocessor.m in Sources */,
+				160ECFB3173B50730009D04B /* VMScoreEvaluator.m in Sources */,
+				160ECFC6173B50EA0009D04B /* VMAudioObject.m in Sources */,
+				160ECFC9173B50EA0009D04B /* VMLog.m in Sources */,
+				160ECFCC173B50EA0009D04B /* VMPrimitives.m in Sources */,
+				160ECFD6173B51160009D04B /* VMPAudioPlayer.m in Sources */,
+				160ECFD9173B51160009D04B /* VMPlayerBase.m in Sources */,
+				160ECFDC173B51160009D04B /* VMPSongPlayer.m in Sources */,
+				160ECFE5173B51430009D04B /* VMDataTypes.m in Sources */,
+				160ECFE8173B51430009D04B /* VMFunction.m in Sources */,
+				160ECFEB173B51430009D04B /* VMSong.m in Sources */,
+				160ED01D173B517A0009D04B /* compiledRegexCache.d in Sources */,
+				160ED02C173B517A0009D04B /* utf16ConversionCache.d in Sources */,
+				160ED038173B517A0009D04B /* RegexKitLite.m in Sources */,
+				160ED044173B517A0009D04B /* CDataScanner.m in Sources */,
+				160ED047173B517A0009D04B /* CFilteringJSONSerializer.m in Sources */,
+				160ED04A173B517A0009D04B /* CJSONDeserializer_BlocksExtensions.m in Sources */,
+				160ED04D173B517A0009D04B /* CJSONSerialization.m in Sources */,
+				160ED050173B517A0009D04B /* CJSONSerializedData.m in Sources */,
+				160ED053173B517A0009D04B /* CDataScanner_Extensions.m in Sources */,
+				160ED056173B517A0009D04B /* NSDictionary_JSONExtensions.m in Sources */,
+				160ED059173B517A0009D04B /* CJSONDeserializer.m in Sources */,
+				160ED05C173B517A0009D04B /* CJSONScanner.m in Sources */,
+				160ED05F173B517A0009D04B /* CJSONSerializer.m in Sources */,
+				160ED062173B517A0009D04B /* VMPJSONDeserializer.m in Sources */,
+				160ED065173B517A0009D04B /* VMPJSONScanner.m in Sources */,
+				160ED068173B52550009D04B /* VMException.m in Sources */,
+				160ED06A173B52670009D04B /* boxmuller.c in Sources */,
+				160ED06C173B526B0009D04B /* VMTextPreprocessor.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		162F7B3016A0341D00420443 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				162F7B4316A0341E00420443 /* TraumBaumTests.m in Sources */,
+				1677774116C0D600007206CF /* ApplescriptReceiver.m in Sources */,
+				1677781916C0D6A0007206CF /* VMPTrackView.m in Sources */,
+				1677781D16C0D6A0007206CF /* VMPObjectBrowserView.m in Sources */,
+				1677782916C0D6A0007206CF /* VMPTrackStrip.m in Sources */,
+				1677782D16C0D6A0007206CF /* VMPCanvas.m in Sources */,
+				16347C1316C286C9002BE1FE /* VMPGraph.m in Sources */,
+				16C7677216DC83DE003636C3 /* VMPAnalyzer.m in Sources */,
+				16C90C7F1722774800F7E91F /* VMPHistogramView.m in Sources */,
+				16C90C8517241EF500F7E91F /* VMPLogView.m in Sources */,
+				160ECFB1173B50730009D04B /* VMPreprocessor.m in Sources */,
+				160ECFB4173B50730009D04B /* VMScoreEvaluator.m in Sources */,
+				160ECFBD173B50B70009D04B /* boxmuller.c in Sources */,
+				160ECFBE173B50B70009D04B /* VMException.m in Sources */,
+				160ECFBF173B50B70009D04B /* VMTextPreprocessor.m in Sources */,
+				160ECFC7173B50EA0009D04B /* VMAudioObject.m in Sources */,
+				160ECFCA173B50EA0009D04B /* VMLog.m in Sources */,
+				160ECFCD173B50EA0009D04B /* VMPrimitives.m in Sources */,
+				160ECFD7173B51160009D04B /* VMPAudioPlayer.m in Sources */,
+				160ECFDA173B51160009D04B /* VMPlayerBase.m in Sources */,
+				160ECFDD173B51160009D04B /* VMPSongPlayer.m in Sources */,
+				160ECFE6173B51430009D04B /* VMDataTypes.m in Sources */,
+				160ECFE9173B51430009D04B /* VMFunction.m in Sources */,
+				160ECFEC173B51430009D04B /* VMSong.m in Sources */,
+				160ED01E173B517A0009D04B /* compiledRegexCache.d in Sources */,
+				160ED02D173B517A0009D04B /* utf16ConversionCache.d in Sources */,
+				160ED039173B517A0009D04B /* RegexKitLite.m in Sources */,
+				160ED045173B517A0009D04B /* CDataScanner.m in Sources */,
+				160ED048173B517A0009D04B /* CFilteringJSONSerializer.m in Sources */,
+				160ED04B173B517A0009D04B /* CJSONDeserializer_BlocksExtensions.m in Sources */,
+				160ED04E173B517A0009D04B /* CJSONSerialization.m in Sources */,
+				160ED051173B517A0009D04B /* CJSONSerializedData.m in Sources */,
+				160ED054173B517A0009D04B /* CDataScanner_Extensions.m in Sources */,
+				160ED057173B517A0009D04B /* NSDictionary_JSONExtensions.m in Sources */,
+				160ED05A173B517A0009D04B /* CJSONDeserializer.m in Sources */,
+				160ED05D173B517A0009D04B /* CJSONScanner.m in Sources */,
+				160ED060173B517A0009D04B /* CJSONSerializer.m in Sources */,
+				160ED063173B517A0009D04B /* VMPJSONDeserializer.m in Sources */,
+				160ED066173B517A0009D04B /* VMPJSONScanner.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		16A27F0316FBB1A70081C1E8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				16A27F1516FBB1A70081C1E8 /* main.m in Sources */,
+				16A27F1916FBB1A70081C1E8 /* VMAppDelegate.m in Sources */,
+				16A27F2216FBB1A70081C1E8 /* VMViewController.m in Sources */,
+				16A27F4A16FC1DF30081C1E8 /* VMPTrackView.m in Sources */,
+				16A27F4B16FC1DF30081C1E8 /* VMPTrackStrip.m in Sources */,
+				16A27F4C16FC1F720081C1E8 /* VMPCanvas.m in Sources */,
+				16933BFC170C32E2005381FC /* VMPInfoViewController.m in Sources */,
+				16933C00170C389F005381FC /* VMPIHole.m in Sources */,
+				168A6350171902B700B08329 /* VMPScrollViewClipper.m in Sources */,
+				160ECFB2173B50730009D04B /* VMPreprocessor.m in Sources */,
+				160ECFB5173B50730009D04B /* VMScoreEvaluator.m in Sources */,
+				160ECFCB173B50EA0009D04B /* VMLog.m in Sources */,
+				160ECFCE173B50EA0009D04B /* VMPrimitives.m in Sources */,
+				160ECFD8173B51160009D04B /* VMPAudioPlayer.m in Sources */,
+				160ECFDB173B51160009D04B /* VMPlayerBase.m in Sources */,
+				160ECFDE173B51160009D04B /* VMPSongPlayer.m in Sources */,
+				160ECFE7173B51430009D04B /* VMDataTypes.m in Sources */,
+				160ECFEA173B51430009D04B /* VMFunction.m in Sources */,
+				160ECFED173B51430009D04B /* VMSong.m in Sources */,
+				160ED01F173B517A0009D04B /* compiledRegexCache.d in Sources */,
+				160ED02E173B517A0009D04B /* utf16ConversionCache.d in Sources */,
+				160ED03A173B517A0009D04B /* RegexKitLite.m in Sources */,
+				160ED046173B517A0009D04B /* CDataScanner.m in Sources */,
+				160ED049173B517A0009D04B /* CFilteringJSONSerializer.m in Sources */,
+				160ED04C173B517A0009D04B /* CJSONDeserializer_BlocksExtensions.m in Sources */,
+				160ED04F173B517A0009D04B /* CJSONSerialization.m in Sources */,
+				160ED052173B517A0009D04B /* CJSONSerializedData.m in Sources */,
+				160ED055173B517A0009D04B /* CDataScanner_Extensions.m in Sources */,
+				160ED058173B517A0009D04B /* NSDictionary_JSONExtensions.m in Sources */,
+				160ED05B173B517A0009D04B /* CJSONDeserializer.m in Sources */,
+				160ED05E173B517A0009D04B /* CJSONScanner.m in Sources */,
+				160ED061173B517A0009D04B /* CJSONSerializer.m in Sources */,
+				160ED064173B517A0009D04B /* VMPJSONDeserializer.m in Sources */,
+				160ED067173B517A0009D04B /* VMPJSONScanner.m in Sources */,
+				160ED069173B52580009D04B /* VMException.m in Sources */,
+				160ED06B173B52680009D04B /* boxmuller.c in Sources */,
+				160ED06D173B526C0009D04B /* VMTextPreprocessor.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		162F7B3A16A0341D00420443 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 162F7B1716A0341900420443 /* OnTheFly Editor OSX */;
+			targetProxy = 162F7B3916A0341D00420443 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		162F7B1E16A0341C00420443 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				162F7B1F16A0341C00420443 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		162F7B2416A0341C00420443 /* Credits.rtf */ = {
+			isa = PBXVariantGroup;
+			children = (
+				162F7B2516A0341C00420443 /* en */,
+			);
+			name = Credits.rtf;
+			sourceTree = "<group>";
+		};
+		162F7B3E16A0341E00420443 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				162F7B3F16A0341E00420443 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		168CEBBB163186B400B721E2 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				168CEBBC163186B400B721E2 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		168CEBC7163186B400B721E2 /* MainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				168CEBC8163186B400B721E2 /* en */,
+			);
+			name = MainMenu.xib;
+			path = ../../Core;
+			sourceTree = "<group>";
+		};
+		16A27F1116FBB1A70081C1E8 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				16A27F1216FBB1A70081C1E8 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		16A27F2316FBB1A70081C1E8 /* VMViewController_iPhone.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				16A27F2416FBB1A70081C1E8 /* en */,
+			);
+			name = VMViewController_iPhone.xib;
+			sourceTree = "<group>";
+		};
+		16A27F2616FBB1A70081C1E8 /* VMViewController_iPad.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				16A27F2716FBB1A70081C1E8 /* en */,
+			);
+			name = VMViewController_iPad.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		162F7B4516A0341E00420443 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CODE_SIGN_IDENTITY = "";
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = "";
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "TraumBaum/TraumBaum-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				INFOPLIST_FILE = "OSX/OnTheFlyEditor-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		162F7B4616A0341E00420443 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CODE_SIGN_IDENTITY = "";
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				FRAMEWORK_SEARCH_PATHS = "";
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "TraumBaum/TraumBaum-Prefix.pch";
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				INFOPLIST_FILE = "OSX/OnTheFlyEditor-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		162F7B4816A0341E00420443 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/TraumBaum.app/Contents/MacOS/TraumBaum";
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = "$(DEVELOPER_LIBRARY_DIR)/Frameworks";
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "TraumBaum/TraumBaum-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				INFOPLIST_FILE = "TraumBaumTests/TraumBaumTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Debug;
+		};
+		162F7B4916A0341E00420443 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/TraumBaum.app/Contents/MacOS/TraumBaum";
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				FRAMEWORK_SEARCH_PATHS = "$(DEVELOPER_LIBRARY_DIR)/Frameworks";
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "TraumBaum/TraumBaum-Prefix.pch";
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				INFOPLIST_FILE = "TraumBaumTests/TraumBaumTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Release;
+		};
+		168CEBCD163186B400B721E2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				GCC_C_LANGUAGE_STANDARD = "compiler-default";
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
+				GCC_WARN_SHADOW = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "Variable Media Player OSX";
+				SDKROOT = "";
+				WARNING_CFLAGS = "";
+			};
+			name = Debug;
+		};
+		168CEBCE163186B400B721E2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				GCC_C_LANGUAGE_STANDARD = "compiler-default";
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
+				GCC_WARN_SHADOW = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				PRODUCT_NAME = "Variable Media Player OSX";
+				SDKROOT = "";
+				WARNING_CFLAGS = "";
+			};
+			name = Release;
+		};
+		16A27F2A16FBB1A70081C1E8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
+				CLANG_CXX_LIBRARY = "compiler-default";
+				CLANG_WARN_EMPTY_BODY = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SYSTEM_APPS_DIR)/Xcode.app/Contents/Developer/Library/Frameworks\"",
+				);
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Traumbaum/Traumbaum-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = $inherited;
+				INFOPLIST_FILE = "Traumbaum/Traumbaum-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 1;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		16A27F2B16FBB1A70081C1E8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
+				CLANG_CXX_LIBRARY = "compiler-default";
+				CLANG_WARN_EMPTY_BODY = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SYSTEM_APPS_DIR)/Xcode.app/Contents/Developer/Library/Frameworks\"",
+				);
+				GCC_OPTIMIZATION_LEVEL = s;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Traumbaum/Traumbaum-Prefix.pch";
+				INFOPLIST_FILE = "Traumbaum/Traumbaum-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 1;
+				VALIDATE_PRODUCT = YES;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		162F7B4416A0341E00420443 /* Build configuration list for PBXNativeTarget "OnTheFly Editor OSX" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				162F7B4516A0341E00420443 /* Debug */,
+				162F7B4616A0341E00420443 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		162F7B4716A0341E00420443 /* Build configuration list for PBXNativeTarget "OTF Tests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				162F7B4816A0341E00420443 /* Debug */,
+				162F7B4916A0341E00420443 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		168CEBA8163186B300B721E2 /* Build configuration list for PBXProject "OnTheFly" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				168CEBCD163186B400B721E2 /* Debug */,
+				168CEBCE163186B400B721E2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		16A27F2916FBB1A70081C1E8 /* Build configuration list for PBXNativeTarget "Traumbaum_iOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				16A27F2A16FBB1A70081C1E8 /* Debug */,
+				16A27F2B16FBB1A70081C1E8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		168CEBCA163186B400B721E2 /* VMPEditor.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				168CEBCB163186B400B721E2 /* VMPEditor.xcdatamodel */,
+			);
+			currentVersion = 168CEBCB163186B400B721E2 /* VMPEditor.xcdatamodel */;
+			path = VMPEditor.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
+	};
+	rootObject = 168CEBA5163186B300B721E2 /* Project object */;
+}

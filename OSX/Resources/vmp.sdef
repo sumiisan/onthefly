@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE dictionary SYSTEM "file://localhost/System/Library/DTDs/sdef.dtd">
+<dictionary title="VMPlayer sdef">
+	<suite name="VMPlayer" code="suNP" description="Variable Music Player">
+		<command name="StartVMP" code="suNPstrt" description="Start VMP.">
+			<cocoa name="StartVMP" class="ApplescriptReceiver"/>
+		</command>
+		<command name="StopVMP" code="suNPstop" description="Stop VMP.">
+			<cocoa name="StopVMP" class="ApplescriptReceiver"/>
+		</command>
+		<command name="FadeoutAndStopVMP" code="suNPfstp" description="Fade out and stop VMP.">
+			<cocoa name="FadeoutAndStopVMP" class="ApplescriptReceiver"/>
+            <parameter name="length" code="suFL" type="real" optional="yes" description="fade out length.">
+                <cocoa key="length"/>
+            </parameter>
+		</command>
+		<command name="SetParameter" code="suNPsprm" description="Set a parameter.">
+			<cocoa name="SetParameter" class="ApplescriptReceiver"/>
+            <parameter name="volume" code="suVL" type="real" optional="yes" description="global volume.">
+                <cocoa key="volume"/>
+            </parameter>
+		</command>
+		<command name="Hide" code="suNPhide" description="Hide window.">
+			<cocoa name="Hide" class="ApplescriptReceiver"/>
+		</command>
+		<command name="Unhide" code="suNPactv" description="Unhide window.">
+			<cocoa name="Unhide" class="ApplescriptReceiver"/>
+		</command>
+	</suite>
+</dictionary>
