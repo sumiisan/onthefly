@@ -1,6 +1,6 @@
 //
 //  VMPHistogramView.m
-//  GotchaP
+//  OnTheFly
 //
 //  Created by sumiisan on 2013/04/20.
 //
@@ -20,10 +20,10 @@
 		CGFloat textFieldWidth = 50;
 		CGFloat areaWidth = frame.size.width - textFieldWidth -2;
 		CGFloat interval = areaWidth / 2;
-		NSArray *align = @[	VMIntObj( NSLeftTextAlignment ),
-							VMIntObj( NSCenterTextAlignment ),
-							VMIntObj( NSRightTextAlignment ),
-							VMIntObj( NSCenterTextAlignment ) ];
+		NSArray *align = @[	@( NSLeftTextAlignment ),
+							@( NSCenterTextAlignment ),
+							@( NSRightTextAlignment ),
+							@( NSCenterTextAlignment ) ];
 		
 		for( int i = 0; i < 4; ++i ) {
 			t = [[NSTextField alloc] initWithFrame:CGRectMake( i * interval +1, 1, textFieldWidth, 12)];
@@ -46,8 +46,6 @@
 		b.transparent = YES;
 		
 		[self addSubview:b];
-		
-		
     }
     
     return self;

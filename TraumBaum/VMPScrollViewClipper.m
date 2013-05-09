@@ -1,6 +1,6 @@
 //
 //  VMPScrollViewClipper.m
-//  GotchaP
+//  OnTheFly
 //
 //  Created by sumiisan on 2013/04/13.
 //

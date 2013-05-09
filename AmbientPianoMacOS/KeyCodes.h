@@ -1,14 +1,14 @@
 //
 //  KeyCodes.h
-//  GotchaP
+//  OnTheFly
 //
 //  Created by sumiisan on 2013/04/20.
 //
 //	copied from old carbon's HIToolbox/Events.h
 //
 
-#ifndef GotchaP_KeyCodes_h
-#define GotchaP_KeyCodes_h
+#ifndef OnTheFly_KeyCodes_h
+#define OnTheFly_KeyCodes_h
 
 
 /*

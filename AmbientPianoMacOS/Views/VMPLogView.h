@@ -1,6 +1,6 @@
 //
 //  VMPLogView.h
-//  GotchaP
+//  OnTheFly
 //
 //  Created by sumiisan on 2013/04/21.
 //
@@ -35,11 +35,6 @@
  *
  *---------------------------------------------------------------------------------*/
 
-typedef enum {
-	VMPLogViewSource_Player,
-	VMPLogViewSource_Statistics,
-	VMPLogViewSource_System
-} VMPLogViewSourceType;
 
 @interface VMPLogView : NSView <NSTableViewDataSource, NSTableViewDelegate>
 
@@ -49,13 +44,13 @@ typedef enum {
 @property (nonatomic, assign)	IBOutlet	NSTableView			*logTableView;
 @property (nonatomic, assign)	IBOutlet	NSScrollView		*logScrollView;
 
-@property (nonatomic, assign)				VMPLogViewSourceType	currentSource;
+@property (nonatomic, assign)				VMLogOwnerType		currentSource;
 
 @property (nonatomic, retain)				VMLog				*log;
 @property (nonatomic, retain)				VMLog				*filteredLog;
 
 //- (void)noteNewLogAdded;
-- (void)locateLogWithIndex:(VMInt)index ofSource:(VMPLogViewSourceType)source;
+- (void)locateLogWithIndex:(VMInt)index ofSource:(VMLogOwnerType)source;
 //- (void)locateLogWithIndex:(VMInt)index ofSource:(VMString*)source;
 
 - (IBAction)sourceChoosen:(id)sender;

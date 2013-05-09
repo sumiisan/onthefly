@@ -1,6 +1,6 @@
 //
 //  ObjectBrowserView.h
-//  VariableMediaPlayer
+//  OnTheFly
 //
 //  Created by  on 13/01/28.
 //  Copyright (c) 2013 __MyCompanyName__. All rights reserved.

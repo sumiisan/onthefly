@@ -1,6 +1,6 @@
 //
 //  VMPVariablesPanelController.m
-//  GotchaP
+//  OnTheFly
 //
 //  Created by sumiisan on 2013/05/02.
 //
@@ -134,10 +134,10 @@
 	if (!tableColumn)return nil;
 	switch ( tableColumn.identifier.intValue ) {
 		case 0:
-			return [((VMHash*)[self.itemsInTable item:row]) item:@"name"];
+			return [[self.itemsInTable itemAsHash:row] item:@"name"];
 			break;
 		case 1:
-			return [((VMHash*)[self.itemsInTable item:row]) item:@"value"];
+			return [[self.itemsInTable itemAsHash:row] item:@"value"];
 			break;
 	}
 	return nil;

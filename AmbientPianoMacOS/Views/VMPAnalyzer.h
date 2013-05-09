@@ -1,6 +1,6 @@
 //
 //  VMPAnalyzer.h
-//  VariableMediaPlayerOSX
+//  OnTheFlyOSX
 //
 //  Created by  on 13/02/26.
 //  Copyright (c) 2013 __MyCompanyName__. All rights reserved.
@@ -80,7 +80,7 @@ typedef enum {
 	long		maxPartCount,maxCueCount;
 	VMInt		sojourn;
 	VMInt		startIndexOfSojourn;
-//	VMString	*currentPartId;
+	VMTime		totalDuration;
 	VMFloat		maxPartPercent,maxPartDuration;
 	VMFloat		maxCuePercent,maxCueDuration;
 	VMFloat		maxVariety;
@@ -89,7 +89,7 @@ typedef enum {
 + (VMPAnalyzer*)defaultAnalyzer;
 //- (void)showProgress:(double)current ofTotal:(double)total message:(VMString*)message;
 - (BOOL)routeStatistic:(VMData*)entryPoint numberOfIterations:(const long)numberOfIterations until:(VMString*)exitCondition;
-- (void)addUnresolveable:(VMId*)dataId;
+- (void)addUnresolveable:(id)dataId;
 - (void)selectRow:(NSInteger)row;
 - (VMPReportRecord *)recordForRow:(NSInteger)row;
 - (void)moveHistory:(VMInt)vector;

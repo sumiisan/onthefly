@@ -3,7 +3,7 @@
 //  VariableMusicPlayer
 //
 //  Created by  on 12/11/19.
-//  Copyright (c) 2012 sumiisan@gmail.com. All rights reserved.
+//  Copyright (c) 2012 sumiisan (aframasda.com). All rights reserved.
 //
 
 #import "VMPreprocessor.h"
@@ -12,6 +12,10 @@
 #import "VMScoreEvaluator.h"
 #import "VMException.h"
 #include "VMPMacros.h"
+
+#if VMP_DESKTOP
+#import "VMPlayerOSXDelegate.h"
+#endif
 
 #define VMPP VMPreprocessor
 
@@ -114,7 +118,7 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 @end
 
 @implementation VMPreprocessor
-@synthesize log=log_, song;
+@synthesize song=song_;
 
 #pragma mark -
 #pragma mark *** utilities and misc ***
@@ -156,21 +160,21 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
  */
 +(id)dataWithData:(id)data {
 	VMData *d = nil;
-	IfClassMatch(data, VMData) {
+	if ( ClassMatch(data, VMData)) {
 		//	make new VMData type object from VMData
 		VMData *proto = ClassCast(data, VMData);
 		
 		d = [VMPP dataWithType:proto.type];
 		[d setWithProto:proto];
 		
-	} else IfClassMatch(data, VMHash) {
+	} else if ( ClassMatch(data, VMHash)) {
 		//	make new VMData from dict
 		vmObjectType typ = [[self defaultPreprocessor]
 							guessType:ClassCast(data, VMHash)];
 		d = [VMPP dataWithType:typ];
 		[d setWithData:data];
 		
-	} else IfClassMatch(data, NSString) {
+	} else if ( ClassMatch(data, NSString)) {
 		//	assume data is id
 		vmObjectType typ = [[self defaultPreprocessor]
 							guessType:ClassCast(data, VMHash)];
@@ -232,7 +236,7 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 				VMData *d = [VMPP dataWithType:typ];
 				[d setWithProto:data];		//	copy original data (with wrong type) into d
 				[d setWithData:hash];		//	then override with new given hash.
-				[song.songData removeItem:dataId];
+				[song_.songData removeItem:dataId];
 				if( d.shouldRegister ) {
 					[self registerData:d];
 					data = [self rawData:dataId]; 
@@ -288,7 +292,7 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 		if ( ! selector.cues ) selector.cues = ARInstance(VMArray);
 		[selector.cues push:ch];
 	} else {
-		[DEFAULTPREPROCESSOR logWarning:@"Modifying score." withData:[ch description]];
+		[DEFAULTPREPROCESSOR logWarning:@"Preprocessor: modifying score." withData:[ch description]];
 		if( isnan( ch.primaryFactor ) ) 
 			ch.primaryFactor = score;
 		else
@@ -369,7 +373,7 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 			] retain];
 	}
 	
-	if ( Equal( [cueId substringToIndex:1], @"#" ) )	//	can not complete #
+	if ( Pittari( [cueId substringToIndex:1], @"#" ) )	//	can not complete #
 		[VMException raise:@"Can't purify abbreviated id." format:@"id: %@",cueId];
 	
 	NSScanner *sc = [NSScanner scannerWithString:cueId];
@@ -417,11 +421,11 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 #pragma mark database accessor
 
 - (id)data:(VMId*)dataId {
-	return [song data:dataId];	
+	return [song_ data:dataId];
 }
 
 - (id)rawData:(VMId*)dataId {
-	return [song.songData item:dataId];
+	return [song_.songData item:dataId];
 }
 
 - (void)setData:(id)data withId:(VMId*)dataId {
@@ -430,12 +434,12 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 		[VMException raise:@"Attempted to set data with un-purified id into songData." 
 					format:@"id: %@ (should be %@)", dataId, purifiedId ];
 	}
-	[song.songData setItem:data for:dataId];
+	[song_.songData setItem:data for:dataId];
 }
 
 - (void)renameData:(VMData*)data newId:(VMId*)newId {
 	VMId *oldId = [data.id copy];
-	[song.songData renameKey:oldId to:newId];
+	[song_.songData renameKey:oldId to:newId];
 	data.id = newId;
 	[oldId release];
 }
@@ -464,7 +468,7 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 }
 
 - (void)unRegister:(NSString *)dataId {
-	[song.songData removeItem:dataId];
+	[song_.songData removeItem:dataId];
 }
 
 - (void)registerAliasOfCue:(VMData*)d as:(VMId*)aliasId {
@@ -499,23 +503,13 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 
 #pragma mark -
 #pragma mark log and alerts
-/*
-- (void)addLog:(id)logPart {
-	IfClassMatch(logPart, VMArray) {
-		[self->log_ append:logPart];
-	} else {
-		if ( ! self->log_ ) self->log_ = ARInstance(VMLog);
-		if(logPart) [self->log_ push:logPart];
-	}
-}
-*/
 
 - (void)logWarning:(NSString *)messageFormat withData:(NSString *)data {
-	[self.log logWarning:messageFormat withData:data];
+	[APPDELEGATE.systemLog logWarning:messageFormat withData:data];
 }
 
 - (void)logError:(NSString*)messageFormat withData:(NSString*)data {
-	[self.log logError:messageFormat withData:data];
+	[APPDELEGATE.systemLog logError:messageFormat withData:data];
 	++fatalErrors;
 }
 
@@ -619,25 +613,7 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 #pragma mark -
 #pragma mark ---> preprocess entry <---
 
-- (void)preprocess:(NSString*)vmsText {
-	
-	
-	
-	/*	test code for score evaluator * /
-	 VMScoreEvaluator *se = [[[VMScoreEvaluator alloc] init] autorelease];
-	 
-	 NSLog(@"%@", [[se parseFunction:@"@F{abc}"] description] );
-	 NSLog(@"%@", [[se parseFunction:@"@FC"] description] );
-	 
-	 VMHash *vars = [VMHash hashWithObjectsAndKeys:VMFloatObj(3),@"C",VMFloatObj(0.5),@"tagA",nil];
-	 se.variables = vars;
-	 
-	 VMFloat result = [se evaluate:@"(1+(2*(3+1)))*2"];
-	 
-	 NSLog(@"result:%f",result);
-	 */
-	
-	
+- (void)preprocess:(NSString*)vmsText {	
 	//
 	//	(1.00)	format text-file and make json
 	//
@@ -651,7 +627,7 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 	//
 	//	(2.90)	scan song properties
 	//
-	[song setByHash:vmsHash];
+	[song_ setByHash:vmsHash];
 	
 	[self preprocessPhase3:dataArray];
 	
@@ -659,22 +635,12 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 	[self preprocessPhase4];
 	
 #ifdef DEBUG
-	//[self dataDump];
-	
-	if ([self.log count] > 0) {
-		NSLog(@"---------------- LOG ----------------");
-		for ( VMString *line in self.log ) {
-			NSLog( @"%@",line );
-		}
-		
+	//[self dataDump];	
+	if ([APPDELEGATE.systemLog count] > 0) {
 		if ( fatalErrors > 0 ) {
-			[VMException raise:@"VMPreprocoessor error:"
-						format:@"Error while preprocessing. see log out for details."];			
+			[VMException alert:@"Preprocoessor: error while preprocessing. see system log for details."];
 		}
-		NSLog(@"-------------------------------------");
-		
 	}
-	NSLog(@"\n\n\n\n\n");
 #endif
 }
 
@@ -774,7 +740,7 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 	
 	//	read type if specified
 	IfHashItemExist(type, 
-					IfClassMatch(HASHITEM, VMString) {
+					if ( ClassMatch(HASHITEM, VMString)) {
 						return AsVMInt([self->typeForTypeString item:HASHITEM]);
 					} else {
 						return AsVMInt(HASHITEM);
@@ -875,7 +841,7 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
     VMId *objId = HashItem(id);
 	
     if ( ! objId ) {			//	autogenerate id for unnamed objects
-		if ( Equal( HashItem(fileId), @"space" ) ) 
+		if ( Pittari( HashItem(fileId), @"space" ) ) 
 			objId = [NSString stringWithFormat:@"%@_%@%ld", parentId, @"SPC", 									(position+1)];
 		else
 			objId = [NSString stringWithFormat:@"%@_%@%ld", parentId, [shortTypeStringForType item:VMIntObj(type)], (position+1)];
@@ -970,12 +936,12 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 	
 	VMId *objId = HashItem(id);
 	
-/*	if ( Equal(objId, @"a_14_~F;sel") )
+/*	if ( Pittari(objId, @"a_14_~F;sel") )
 		NSLog(@"dd");
 */	
 	if (HashItem(cues)) {
 		if( type==vmObjectType_selector && HashItem(subseq) ) {//	if a selector has subseq data, distribute them into sub-cues
-			if( ! Equal( HashItem(subseq),@"*" )) CopyHashItem(subseq, hash, parentDataToCopy);
+			if( ! Pittari( HashItem(subseq),@"*" )) CopyHashItem(subseq, hash, parentDataToCopy);
 		}
 		SetHashItem(cues, 
 					[self flattenObjectsIn:ConvertToVMArray( HashItem(cues) ) 
@@ -1009,12 +975,12 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 	VMInt c = [ary count];
 	for ( int i = 0; i < c; ++i ) {
 		id oid = [ary item:i];
-		IfClassMatch(oid,VMId) {
+		if ( ClassMatch(oid,VMId)) {
 			VMId *cmp = [self completeId:oid withParentId:parentId];
 			if( cmp ) 
 				[ary setItem:cmp at:i];
 		}
-		IfClassMatch(oid, VMCue) {
+		if ( ClassMatch(oid, VMCue)) {
 			VMId *cmp = [self completeId:ClassCast(oid,VMCue).id withParentId:parentId];
 			if( cmp ) ClassCast(oid,VMCue).id = cmp;
 		}
@@ -1054,8 +1020,8 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 	for ( VMHash *hash in cueArray ) {
 		VMData *data = nil;
 		vmObjectType typ = vmObjectType_unknown;
-		if ( [ HashItem(id) isEqualToString:@"r_sel_A" ] )
-			NSLog(@"!!!");
+//		if ( [ HashItem(id) isEqualToString:@"r_sel_A" ] )
+//			NSLog(@"!!!");
 		
 		VMId *cloneTarget = HashItem(clone);
 		if ( cloneTarget ) {
@@ -1140,7 +1106,7 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 		//	(3.90)	register entrypoints
 		//
 		VMString *entryPoint = HashItem(entryPoint);
-		if( Equal(entryPoint,@"YES" )) {
+		if( Pittari(entryPoint,@"YES" )) {
 			VMCue *c = ClassCastIfMatch( data, VMCue );
 			if( c ) { 
 				[self registerEntryPoint:c];
@@ -1215,7 +1181,7 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 	
 	if ( HashItem(audioInfo)) {
 		id aiObj = HashItem(audioInfo);
-		IfClassMatch(aiObj, NSString) {
+		if ( ClassMatch(aiObj, NSString )) {
 			[hash renameKey:@"audioInfo" to:@"audioInfoId"];
 		} else {
 			hash = ReadAsVMHash( aiObj );
@@ -1232,7 +1198,7 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 		ai = ARInstance(VMAudioInfo);
 	else {
 		//	overwrite warning.		
-		[self logWarning:@"Overwriting audioInfoId: %@" withData:aiId];
+		[self logWarning:@"Preprocessor: Overwriting audioInfoId: %@" withData:aiId];
 	}
 	
 	[ai setWithData:hash];	//	overwrite.
@@ -1290,7 +1256,7 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 			}
 			ac.audioInfoId = aiId;	//	we use the same audioInfoId for all cues in sequence.	when overvrite, we must make a copy of them.
 			[self registerData:ac];
-			if ( Equal( (*data_p).id, cue.id ) ) data_p = &cue;	//	replace data with audioCue
+			if ( Pittari( (*data_p).id, cue.id ) ) data_p = &cue;	//	replace data with audioCue
 		}
 	}
 }
@@ -1352,8 +1318,8 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 														  tag:@"cue" 
 														 info:nil]];
 	
-	IfClassMatch( clonedCue, VMAudioCue ) 
-	[self cloneAudioInfo:clonedCue newId:newId];
+	if ( ClassMatch( clonedCue, VMAudioCue ))
+		[self cloneAudioInfo:clonedCue newId:newId];
 	
 	[self registerData:clonedCue];
 	return clonedCue;
@@ -1389,7 +1355,7 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 		[chance setWithData:ReadAsVMId(obj)];
 		
 		VMId *cueId 	= chance.targetId;		
-		if ( Equal(cueId, originalId) ) {
+		if ( Pittari(cueId, originalId) ) {
 			[sel.cues deleteItemWithValue:cueId];	//	remove from selector
 			cueId = wrappedId;						//	change original's id
 			needToAddMyself = NO;
@@ -1487,7 +1453,7 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 //
 - (void)convertCuesToChances:(VMSelector*) selector {
 	for ( id obj in selector.cues ) {
-		IfClassMatch(obj, VMChance) continue;
+		if ( ClassMatch(obj, VMChance)) continue;
 		VMId *cueId = ReadAsVMId(obj);
 		[VMPP createOrModifyChanceWithId:selector 
 								  target:cueId
@@ -1498,7 +1464,7 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 
 //	(3.90)	register entrypoints
 - (void)registerEntryPoint:(VMCue*)cue {
-	[song.entryPoints pushUnique:cue.id];
+	[song_.entryPoints pushUnique:cue.id];
 }
 
 
@@ -1509,9 +1475,9 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 
 - (void)preprocessPhase4 {
 	
-	VMArray *keys = [song.songData keys];
+	VMArray *keys = [song_.songData keys];
 	for ( VMId *did in keys ) {
-		if ( Equal( [did substringToIndex:4], @"VMP|" )) continue;	//	no VMData
+		if ( Pittari( [did substringToIndex:4], @"VMP|" )) continue;	//	no VMData
 		VMData *c = [self data:did];
 		
 		//	(4.30)	set audioInfoRef in audioCue-s
@@ -1648,7 +1614,6 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 - (id)init {
 	debugCounter = 1000;
 	if((self=[super init])) {
-		self.log = ARInstance(VMLog);
 		[self initConversionTables];
 		
 		
@@ -1668,7 +1633,6 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 }
 
 - (void)dealloc {
-	self.log = nil;
 	[self releaseConversionTables];
 	[self->vmReservedCharacterSet release];
 	[super dealloc];

@@ -1,6 +1,6 @@
 //
 //  VMPGraph.h
-//  VariableMediaPlayer
+//  OnTheFly
 //
 //  Created by  on 13/02/06.
 //  Copyright (c) 2013 __MyCompanyName__. All rights reserved.
@@ -84,6 +84,16 @@ enum {
 @property (nonatomic, assign) SEL doubleAction;
 @end
 
+//--------------------- VMPTextField -----------------------------
+#pragma mark -
+#pragma mark VMPTextField (editable on first click)
+@interface VMPTextField : NSTextField
+@end
+
+
+
+
+//--------------------- protocol graph-object -----------------------------
 
 #pragma mark -
 #pragma mark VMPDataGraphObject
@@ -119,6 +129,7 @@ enum {
 @property (nonatomic, assign)	BOOL					flippedYCoordinate;
 @property (nonatomic, assign)	NSInteger				tag;
 @property (nonatomic, retain)	NSColor					*backgroundColor;
+@property (nonatomic, retain)	NSColor					*foregroundColor;	//	unused, subclass may use it
 @property (nonatomic, retain)	VMPGraph				*topOverlay;
 @property (weak)				id <VMPGraphDelegate>	graphDelegate;
 
@@ -126,6 +137,8 @@ enum {
 - (void)addTopOverlay;
 - (void)removeAllSubviews;
 - (id)taggedWith:(NSInteger)aTag;
+- (id)clone;
+
 
 - (CGFloat)x;
 - (CGFloat)y;
@@ -134,6 +147,11 @@ enum {
 
 @end
 
+@interface VMPStraightLine : VMPGraph
+@property (nonatomic)			NSPoint					point1;
+@property (nonatomic)			NSPoint					point2;
+
+@end
 
 
 
@@ -143,18 +161,18 @@ enum {
 //---------------------------- VMPCueCell -------------------------------
 @interface VMPCueCell : VMPGraph <VMPDataGraphObject> {
 @private
-	NSButton	*button_;
+	VMPButton	*button_;
 	__weak id <VMPCueCellDelegate> delegate_;
 }
-@property (nonatomic,assign)					CGRect					cellRect;
+@property (nonatomic)							CGRect					cellRect;
 @property (nonatomic,retain)					VMCue 					*cue;
-@property (nonatomic,assign)					VMFloat 				score;
+@property (nonatomic)							VMFloat 				score;				//	not used internally
 @property (nonatomic,retain)					NSGradient				*backgroundGradient;
-@property (nonatomic,assign,getter=isSelected)	BOOL					selected;
+@property (nonatomic,getter = isSelected)		BOOL					selected;
 @property (nonatomic,weak)						id <VMPCueCellDelegate>	delegate;
 
 - (void)selectIfIdDoesMatch:(VMId*)cueId exclusive:(BOOL)exclusive;
-
++ (VMPCueCell*)cueCellWithCue:(VMCue*)cue frame:(NSRect)frame delegate:(id<VMPCueCellDelegate>)delegate;
 @end
 
 

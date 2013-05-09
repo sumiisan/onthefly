@@ -1,16 +1,17 @@
 //
-//  VariableMediaPlayerAppDelegate.m
+//  VMPlayerOSXDelegate.m
 //  VariableMusicPlayer
 //
 //  Created by cboy on 12/10/19.
-//  Copyright 2012 sumiisan@gmail.com. All rights reserved.
+//  Copyright 2012 sumiisan (aframasda.com). All rights reserved.
 //
 
 #import "VMPlayerOSXDelegate.h"
 #import "VMPAudioPlayer.h"
 #import "VMPAnalyzer.h"
+#import "VMPNotification.h"
 
-VMPlayerOSXDelegate *variableMediaPlayer_singleton__ = nil;
+VMPlayerOSXDelegate *OnTheFly_singleton__ = nil;
 
 @implementation VMPlayerOSXDelegate
 
@@ -30,39 +31,46 @@ VMPlayerOSXDelegate *variableMediaPlayer_singleton__ = nil;
  */
 
 + (VMPlayerOSXDelegate*)singleton {
-	return variableMediaPlayer_singleton__;
+	return OnTheFly_singleton__;
 }
 
 - (id)init {
 	self = [super init];
 	if(! self )return nil;
     
-    variableMediaPlayer_singleton__ = self;
+    OnTheFly_singleton__ = self;
+	self.systemLog	= [[[VMLog alloc] initWithOwner:VMLogOwner_System managedObjectContext:nil] autorelease];
+	self.userLog	= [[[VMLog alloc] initWithOwner:VMLogOwner_User managedObjectContext:[self managedObjectContext]] autorelease];
 	
-    NSURL *vmsURL =	[[[NSURL alloc] initFileURLWithPath:[NSString stringWithFormat:@"%@/%@/%@",
-														[[NSBundle mainBundle] resourcePath],
-														kDefaultVMDirectory,
-														kDefaultVMSFileName]
-										   isDirectory:NO] autorelease];
-
-    [self openVMSDocumentFromURL:vmsURL];
-    DEFAULTSONGPLAYER.song = DEFAULTSONG;
+	self.currentDocumentURL = [[[NSURL alloc] initFileURLWithPath:[NSString stringWithFormat:@"%@/%@/%@",
+																   [[NSBundle mainBundle] resourcePath],
+																   kDefaultVMDirectory,
+																   kDefaultVMSFileName]
+													  isDirectory:NO] autorelease];
+	[self revertDocumentToSaved:self];
 	return self;
 }
+
 
 - (void)awakeFromNib {
 	DEFAULTSONGPLAYER.trackView = _trackView;
 	_objectBrowserView.songData = DEFAULTSONG.songData;
-	
-	[self showWindowByName:@"Variables"];	//	open it by default
-	//	init popup
-	//	NSMenu *menu = [
-	
+	[self restoreWindows];
+}
+
+- (void)restoreWindows {
+	NSArray *openedWindows = [[NSUserDefaults standardUserDefaults] stringArrayForKey:@"openedWindows"];
+	for( NSString *windowName in openedWindows )
+		[self showWindowByName:windowName];
 }
 
 - (void)dealloc {
 	[DEFAULTSONGPLAYER coolDown];
 	self.variablesPanelController = nil;
+	self.systemLog = nil;
+	self.userLog = nil;
+	self.currentDocumentURL = nil;
+	self.lastSelectedDataId = nil;
     [__managedObjectContext release];
     [__persistentStoreCoordinator release];
     [__managedObjectModel release];
@@ -94,8 +102,14 @@ VMPlayerOSXDelegate *variableMediaPlayer_singleton__ = nil;
 	[DEFAULTSONGPLAYER warmUp];
 	_objectBrowserView.graphDelegate = _objectGraphView;
 	_objectBrowserView.infoDelegate  = _objectInfoView;
-	[DEFAULTSONG showReport:YES];	//	debug report ON
+	DEFAULTSONG.showReport.current = [NSNumber numberWithBool:YES];
 	[self performSelector:@selector(mainRunLoop) withObject:nil afterDelay:0.5];
+	
+	[VMPNotificationCenter postNotificationName:VMPNotificationLogAdded
+										 object:self
+									   userInfo:@{@"owner":@(VMLogOwner_System) }];
+	[VMPNotificationCenter addObserver:self selector:@selector(someWindowWillClose:) name:NSWindowWillCloseNotification object:nil];
+	[VMPNotificationCenter addObserver:self selector:@selector(dataSelected:) name:VMPNotificationCueSelected object:nil];
 }
 
 - (void)applicationWillFinishLaunching:(NSNotification *)notification {
@@ -105,6 +119,7 @@ VMPlayerOSXDelegate *variableMediaPlayer_singleton__ = nil;
 - (BOOL) applicationShouldTerminateAfterLastWindowClosed: (NSApplication *) theApplication {
     return NO;
 }
+
 
 
 
@@ -153,14 +168,21 @@ VMPlayerOSXDelegate *variableMediaPlayer_singleton__ = nil;
         }
     }
 	
+	[VMPNotificationCenter removeObserver:self];
+	
     return NSTerminateNow;
 }
 
 
-#pragma mark window delegates
+#pragma mark window delegates / notification
 - (void)windowDidResize:(NSNotification *)notification {
 	[self.trackView reLayout];
 }
+
+- (void)someWindowWillClose:(NSNotification*)notification {
+	
+}
+
 
 
 #pragma mark -
@@ -173,7 +195,7 @@ VMPlayerOSXDelegate *variableMediaPlayer_singleton__ = nil;
 - (IBAction)playStart:(id)sender {
 	[DEFAULTSONGPLAYER stop];
     [DEFAULTSONGPLAYER start];
-	[self.logView locateLogWithIndex:-1 ofSource:VMPLogViewSource_Player];
+	[self.logView locateLogWithIndex:-1 ofSource:VMLogOwner_Player];
 }
 
 - (IBAction)playStop:(id)sender {
@@ -210,6 +232,12 @@ VMPlayerOSXDelegate *variableMediaPlayer_singleton__ = nil;
 	if ( [name isEqualToString:@"Log"] ) {
 		[_logPanel makeKeyAndOrderFront:self ];
 	}
+	
+	VMArray *openedWindows = [VMArray arrayWithArray:
+							  [[NSUserDefaults standardUserDefaults] stringArrayForKey:@"openedWindows"]];
+	[openedWindows pushUnique:name];
+	[[NSUserDefaults standardUserDefaults] setObject:openedWindows.array forKey:@"openedWindows"];
+	
 }
 
 - (IBAction)showWindow:(id)sender {
@@ -220,6 +248,7 @@ VMPlayerOSXDelegate *variableMediaPlayer_singleton__ = nil;
 }
 
 
+
 //	unused
 - (IBAction)routeStatics:(id)sender {
 	DEFAULTANALYZER.delegate = self;
@@ -227,9 +256,31 @@ VMPlayerOSXDelegate *variableMediaPlayer_singleton__ = nil;
     [DEFAULTANALYZER routeStatistic:/*[objectBrowserView currentObject]*/[DEFAULTSONG data:DEFAULTSONG.defaultCueId] numberOfIterations:20 until:nil];
 }
 
+- (IBAction)revertDocumentToSaved:(id)sender {
+    [self openVMSDocumentFromURL:self.currentDocumentURL];
+    DEFAULTSONGPLAYER.song = DEFAULTSONG;
+	[self.objectBrowserView.objectTreeView reloadData];
+	[DEFAULTANALYZER.statisticsView.reportView reloadData];
+}
+
 //	unused
 - (void)analysisFinished:(VMHash *)report {
 	//	nothing to do here
+}
+
+//
+//	user log
+//
+- (IBAction)addUserLog:(id)sender {
+	[self.userLog addUserLogWithText:@"" dataId:self.lastSelectedDataId];
+	[VMPNotificationCenter postNotificationName:VMPNotificationLogAdded
+										 object:self
+									   userInfo:@{@"owner":@(VMLogOwner_User) }];
+}
+
+
+- (void)dataSelected:(NSNotification*)notification {
+	self.lastSelectedDataId = [notification.userInfo objectForKey:@"id"];
 }
 
 //
@@ -243,7 +294,7 @@ VMPlayerOSXDelegate *variableMediaPlayer_singleton__ = nil;
 		break;
 	case NO:
 		[DEFAULTSONGPLAYER start];
-			[self.logView locateLogWithIndex:-1 ofSource:VMPLogViewSource_Player];
+			[self.logView locateLogWithIndex:-1 ofSource:VMLogOwner_Player];
 		break;
 	}
 }
@@ -279,20 +330,22 @@ VMPlayerOSXDelegate *variableMediaPlayer_singleton__ = nil;
 
 
 #pragma mark -
-#pragma mark core data stuff (unused)
+#pragma mark core data stuff
 
-//
-//  core data stuff -- unused
-//
+/*---------------------------------------------------------------------------------
+ 
+ core data stuff
+ 
+ ----------------------------------------------------------------------------------*/
 
 /**
- Returns the directory the application uses to store the Core Data store file. This code uses a directory named "VariableMediaPlayer" in the user's Library directory.
+ Returns the directory the application uses to store the Core Data store file. This code uses a directory named "OnTheFly" in the user's Library directory.
  */
 - (NSURL *)applicationFilesDirectory {
 	
     NSFileManager *fileManager = [NSFileManager defaultManager];
     NSURL *libraryURL = [[fileManager URLsForDirectory:NSLibraryDirectory inDomains:NSUserDomainMask] lastObject];
-    return [libraryURL URLByAppendingPathComponent:@"VariableMediaPlayer"];
+    return [libraryURL URLByAppendingPathComponent:@"OnTheFly"];
 }
 
 /**
@@ -303,7 +356,7 @@ VMPlayerOSXDelegate *variableMediaPlayer_singleton__ = nil;
         return __managedObjectModel;
     }
 	
-    NSURL *modelURL = [[NSBundle mainBundle] URLForResource:@"VariableMediaPlayer" withExtension:@"momd"];
+    NSURL *modelURL = [[NSBundle mainBundle] URLForResource:@"VMPEditor" withExtension:@"momd"];
     __managedObjectModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];
     return __managedObjectModel;
 }
@@ -352,7 +405,7 @@ VMPlayerOSXDelegate *variableMediaPlayer_singleton__ = nil;
         }
     }
     
-    NSURL *url = [applicationFilesDirectory URLByAppendingPathComponent:@"VariableMediaPlayer.storedata"];
+    NSURL *url = [applicationFilesDirectory URLByAppendingPathComponent:@"OnTheFly.storedata"];
     __persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:mom];
     if (![__persistentStoreCoordinator addPersistentStoreWithType:NSXMLStoreType configuration:nil URL:url options:nil error:&error]) {
         [[NSApplication sharedApplication] presentError:error];
@@ -393,4 +446,13 @@ VMPlayerOSXDelegate *variableMediaPlayer_singleton__ = nil;
 - (NSUndoManager *)windowWillReturnUndoManager:(NSWindow *)window {
     return [[self managedObjectContext] undoManager];
 }
+
+
+- (NSEntityDescription*)entityDescriptionFor:(NSString*)entityName {
+	return [[[self managedObjectModel] entitiesByName] objectForKey:entityName];
+}
+
+
+
+
 @end

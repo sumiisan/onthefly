@@ -1,15 +1,14 @@
 //
-//  VariableMediaPlayerAppDelegate.h
+//  VMPlayerOSXDelegate.h
 //  VariableMusicPlayer
 //
 //  Created by cboy on 12/10/19.
-//  Copyright 2012 sumiisan@gmail.com. All rights reserved.
+//  Copyright 2012 sumiisan (aframasda.com). All rights reserved.
 //
 
 #import <Cocoa/Cocoa.h>
 #import "VMPSongPlayer.h"
 #import "VMPTrackView.h"
-#import "SequenceView.h"
 #import "VMPObjectBrowserView.h"
 #import "VMPObjectGraphView.h"
 #import "VMPVariablesPanelController.h"
@@ -23,6 +22,11 @@
     NSManagedObjectModel *__managedObjectModel;
     NSManagedObjectContext *__managedObjectContext;
 }
+
+@property (nonatomic, retain)	NSURL				*currentDocumentURL;
+@property (nonatomic, retain)	VMLog				*systemLog;
+@property (nonatomic, retain)	VMLog				*userLog;
+@property (nonatomic, retain)	VMId				*lastSelectedDataId;
 
 /*---------------------------------------------------------------------------------
  *
@@ -40,11 +44,6 @@
 @property (assign) IBOutlet NSWindow       			*transportWindow;			//	depreciated
 @property (assign) IBOutlet NSTextField				*nextCueTimeIndicator;		//	unused
 
-/*	unimplemented
-@property (assign) IBOutlet NSPopUpButton 			*entryPointSelector;
-@property (assign) IBOutlet NSMenu					*entryPointsMenu;
-*/
-
 //	object browser
 @property (assign) IBOutlet NSWindow       			*objectBrowserWindow;
 @property (assign) IBOutlet VMPObjectBrowserView	*objectBrowserView;
@@ -55,9 +54,6 @@
 @property (assign) IBOutlet NSPanel					*trackPanel;
 @property (assign) IBOutlet VMPTrackView       		*trackView;
 
-//	songplayer sequence view
-//@property (assign) IBOutlet SequenceView   			*sequenceView;			//	pending
-
 //	log panel
 @property (assign) IBOutlet NSPanel					*logPanel;
 @property (assign) IBOutlet VMPLogView				*logView;
@@ -67,12 +63,14 @@
 
 /*---------------------------------------------------------------------------------
  
- persistent data (unused)
+ persistent data
  
  ----------------------------------------------------------------------------------*/
 @property (nonatomic, retain, readonly) NSPersistentStoreCoordinator *persistentStoreCoordinator;
 @property (nonatomic, retain, readonly) NSManagedObjectModel *managedObjectModel;
 @property (nonatomic, retain, readonly) NSManagedObjectContext *managedObjectContext;
+
+- (NSEntityDescription*)entityDescriptionFor:(NSString*)entityName;
 
 /*---------------------------------------------------------------------------------
  
@@ -96,6 +94,7 @@
 - (IBAction)reset:(id)sender;
 - (IBAction)playButtonClicked:(id)sender;
 - (IBAction)routeStatics:(id)sender;
+- (IBAction)revertDocumentToSaved:(id)sender;
 
 
 @end

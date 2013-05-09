@@ -1,6 +1,6 @@
 //
 //  VMPObjectGraphView.h
-//  GotchaP
+//  OnTheFly
 //
 //  Created by sumiisan on 2013/05/03.
 //
@@ -12,7 +12,11 @@
 #pragma mark -
 #pragma mark VMPSelectorGraph
 //------------------------- VMPSelectorGraph -----------------------------
-@interface VMPSelectorGraph : VMPCueCell <VMPCueCellDelegate>
+@interface VMPSelectorGraph : VMPCueCell <VMPCueCellDelegate> {
+	VMPStraightLine		*line;
+	VMHash				*branchViewTemporary;
+}
+@property (nonatomic)			BOOL frameGraphMode;
 @end
 
 

@@ -1,6 +1,6 @@
 //
 //  VMPNotification.h
-//  GotchaP
+//  OnTheFly
 //
 //  Created by sumiisan on 2013/05/03.
 //
@@ -8,10 +8,13 @@
 #import "MultiPlatform.h"
 #import <Foundation/Foundation.h>
 
-#ifndef GotchaP_VMPNotification_h
-#define GotchaP_VMPNotification_h
+#ifndef OnTheFly_VMPNotification_h
+#define OnTheFly_VMPNotification_h
 
 #define VMPNotificationCenter [NSNotificationCenter defaultCenter]
+
+//	log was added
+static NSString *VMPNotificationLogAdded __unused				= @"LogAdded";
 
 //	song player / log
 

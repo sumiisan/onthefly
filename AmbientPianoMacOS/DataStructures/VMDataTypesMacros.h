@@ -1,13 +1,13 @@
 //
 //  VMDataTypesMacro.h
-//  VariableMediaPlayer
+//  OnTheFly
 //
 //  Created by  on 13/02/08.
 //  Copyright (c) 2013 __MyCompanyName__. All rights reserved.
 //
 
-#ifndef VariableMediaPlayer_VMDataTypesMacro_h
-#define VariableMediaPlayer_VMDataTypesMacro_h
+#ifndef OnTheFly_VMDataTypesMacro_h
+#define OnTheFly_VMDataTypesMacro_h
 
 #define PropertyDescriptionString(prop,format) \
 (self.prop ? [NSString stringWithFormat:format,self.prop] : @"" )
@@ -40,7 +40,7 @@ __code__ \
 
 #define VMOBLIGATORY_setWithData(__code__) \
 - (void)setWithData:(id)data {\
-IfClassMatch(data, [self class]) [self setWithProto:data]; \
+if ( ClassMatch(data, [self class])) [self setWithProto:data]; \
 else {\
 [super setWithData:data];\
 __code__\

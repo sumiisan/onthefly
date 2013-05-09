@@ -1,6 +1,6 @@
 //
 //  VMPGraph.m
-//  VariableMediaPlayer
+//  OnTheFly
 //
 //  Created by  on 13/02/06.
 //  Copyright (c) 2013 __MyCompanyName__. All rights reserved.
@@ -8,6 +8,7 @@
 
 #import "VMPGraph.h"
 #import "MultiPlatform.h"
+#import "VMPNotification.h"
 #import "VMPMacros.h"
 
 CGSize CGSizeAdd( CGSize size1, CGSize size2 ) {
@@ -55,7 +56,7 @@ rect.origin.x, rect.origin.y, rect.size.width, rect.size.height );
 
 
 #pragma mark -
-#pragma mark VMPButton
+#pragma mark VMPButton (double-clickable)
 
 /*---------------------------------------------------------------------------------
  *
@@ -95,6 +96,30 @@ rect.origin.x, rect.origin.y, rect.size.width, rect.size.height );
 @end
 
 
+/*---------------------------------------------------------------------------------
+ *
+ *
+ *	VMP TextField
+ *
+ *
+ *---------------------------------------------------------------------------------*/
+
+@implementation VMPTextField
+
+- (BOOL)needsPanelToBecomeKey {
+	return YES;
+}
+
+- (BOOL)becomeFirstResponder {
+    BOOL result = [super becomeFirstResponder];
+    if(result)
+        [self performSelector:@selector(selectText:) withObject:self afterDelay:0];
+    return result;
+}
+
+@end
+
+
 @implementation NSView (VMPExtension)
 
 @end
@@ -110,9 +135,9 @@ rect.origin.x, rect.origin.y, rect.size.width, rect.size.height );
 @implementation NSColor (VMPExtension)
 
 #define colorForType(type,r,g,b)\
-[NSColor colorWithCalibratedRed:r green:g blue:b alpha:1],	VMIntObj( vmObjectType_##type     ),\
+[NSColor colorWithCalibratedRed:r green:g blue:b alpha:1],	@( vmObjectType_##type     ),\
 [[NSColor colorWithCalibratedRed:r green:g blue:b alpha:1]\
-colorModifiedByHueOffset:0 saturationFactor:0.3 brightnessFactor:1.7],	VMIntObj( vmObjectType_##type * -1),
+colorModifiedByHueOffset:0 saturationFactor:0.3 brightnessFactor:1.7],	@( vmObjectType_##type * -1),
 
 #define clipRange0to1(x) ((x)>1?1:((x)<0?0:(x)))
 
@@ -153,15 +178,15 @@ static 	VMHash *bgColorForType__ = nil;
 							 colorForType( chance, 		0.5, 0.5, 0.0 )
 							 colorForType( reference,	0.4, 0.4, 0.4 )
 							 nil] retain];
-	[bgColorForType__ setItem:[NSColor colorWithCalibratedRed:0.9 green:0.9 blue:0.9 alpha:1.] for:VMIntObj(0)];
-	NSColor *c = (NSColor*)[bgColorForType__ item:VMIntObj(type)];
+	[bgColorForType__ setItem:[NSColor colorWithCalibratedRed:0.9 green:0.9 blue:0.9 alpha:1.] for:@(0)];
+	NSColor *c = (NSColor*)[bgColorForType__ item:@(type)];
 
 	return ( c ? c : [NSColor grayColor]);
 }
 
 + (NSColor*)backgroundColorForDataType:(vmObjectType)type {
 	if ( ! bgColorForType__ ) [NSColor colorForDataType:0];	//	dummy call
-	NSColor *c = (NSColor*)[bgColorForType__ item:VMIntObj(((int)type)*-1)];
+	NSColor *c = (NSColor*)[bgColorForType__ item:@(((int)type)*-1)];
 	return ( c ? c : [NSColor colorWithCalibratedWhite:.9 alpha:1.]);
 }
 
@@ -188,7 +213,7 @@ static 	VMHash *bgColorForType__ = nil;
 #pragma mark *** Graph Base ***
 #pragma mark -
 
-@implementation VMPGraph
+@implementation VMPGraph 
 
 - (id)init {
 	self = [super init];
@@ -206,17 +231,10 @@ static 	VMHash *bgColorForType__ = nil;
 	return self;
 }
 
-- (id)initWithCoder:(NSCoder *)aDecoder {
-	self = [super initWithCoder:aDecoder];
-#if VMP_DESKTOP
-	self.flippedYCoordinate = YES;
-#endif
-	return self;
-}
-
 - (void)dealloc {
 	self.topOverlay = nil;
 	self.backgroundColor = nil;
+	self.foregroundColor = nil;
 	[super dealloc];
 }
 
@@ -300,7 +318,118 @@ static 	VMHash *bgColorForType__ = nil;
 	return self.frame.size.height;
 }
 
+
+- (id)clone {
+	//
+	// we're not using <NSCopying> because NSView doesn't support it.
+	//
+	id g = [[[[self class]  alloc] initWithFrame:self.frame] autorelease];
+	//	autorelease because method name doesn't start with copy (or alloc)
+	((VMPGraph*)g).flippedYCoordinate = self.flippedYCoordinate;
+	((VMPGraph*)g).tag =self.tag;
+	((VMPGraph*)g).backgroundColor = self.backgroundColor;
+	((VMPGraph*)g).topOverlay = self.topOverlay;
+	((VMPGraph*)g).graphDelegate = self.graphDelegate;
+	return g;
+}
+
+/*
+- (id)initWithCoder:(NSCoder *)aDecoder {
+	self = [super initWithCoder:aDecoder];
+#if VMP_DESKTOP
+	self.flippedYCoordinate = YES;
+#endif
+	return self;
+}
+*/
+
+//	NSCoding
+
+- (id)initWithCoder:(NSCoder *)decoder {
+	if ((self = [super initWithCoder:decoder])) {
+		Deserialize(flippedYCoordinate, Bool )
+		Deserialize(tag, Integer);
+		Deserialize(backgroundColor, Object);
+		Deserialize(foregroundColor, Object);
+		Deserialize(topOverlay, Object);
+	}
+	return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)encoder {
+	[super encodeWithCoder:encoder];
+	Serialize(flippedYCoordinate, Bool )
+	Serialize(tag, Integer);
+	Serialize(backgroundColor, Object);
+	Serialize(foregroundColor, Object);
+	Serialize(topOverlay, Object);
+}
+
 @end
+
+/*---------------------------------------------------------------------------------
+ 
+ VMPStraightLine
+ 
+ ----------------------------------------------------------------------------------*/
+
+#pragma mark -
+#pragma mark VMPStraightLine
+
+
+@implementation VMPStraightLine
+
+- (void)setPoint1:(NSPoint)point1 {
+	_point1 = point1;
+	self.frame = NSMakeRect(SMIN( _point1.x, _point2.x ),
+							SMIN( _point1.y, _point2.y ),
+							SMAX( SMAX(_point1.x, _point2.x ), 1. ),
+							SMAX( SMAX(_point1.y, _point2.y ), 1. ));
+}
+
+- (void)setPoint2:(NSPoint)point2 {
+	_point2 = point2;
+	self.frame = NSMakeRect(SMIN( _point1.x, _point2.x ),
+							SMIN( _point1.y, _point2.y ),
+							SMAX( SMAX(_point1.x, _point2.x ), 1. ),
+							SMAX( SMAX(_point1.y, _point2.y ), 1. ));
+}
+
+- (void)drawRect:(NSRect)dirtyRect{
+	[self.foregroundColor setStroke];
+	CGPoint localP1 = CGPointMake( _point1.x - self.frame.origin.x, _point1.y - self.frame.origin.y );
+	CGPoint localP2 = CGPointMake( _point2.x - self.frame.origin.x, _point2.y - self.frame.origin.y );
+	
+	[NSBezierPath strokeLineFromPoint:localP1 toPoint:localP2];
+}
+
+- (id)clone {
+	id sl = [super clone];
+	((VMPStraightLine*)sl).point1 = self.point1;
+	((VMPStraightLine*)sl).point2 = self.point2;
+	return sl;
+}
+
+//	NSCoding
+
+- (id)initWithCoder:(NSCoder *)decoder {
+	if ((self = [super initWithCoder:decoder])) {
+		Deserialize(point1, Point)
+		Deserialize(point1, Point);
+	}
+	return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)encoder {
+	[super encodeWithCoder:encoder];
+	Serialize(point1, Point)
+	Serialize(point1, Point);
+}
+
+
+
+@end
+
 
 
 /*---------------------------------------------------------------------------------
@@ -314,6 +443,14 @@ static 	VMHash *bgColorForType__ = nil;
 #pragma mark -
 
 @implementation VMPCueCell
+
++ (VMPCueCell*)cueCellWithCue:(VMCue*)cue frame:(NSRect)frame delegate:(id<VMPCueCellDelegate>)delegate {
+	VMPCueCell *cc = [[[VMPCueCell alloc] initWithFrame:frame] autorelease];
+	cc.cue = cue;
+	cc.delegate = delegate;
+	return cc;
+}
+
 - (void)setDelegate:(id<VMPCueCellDelegate>)delegate {
 	delegate_ = delegate;
 }
@@ -348,9 +485,11 @@ static 	VMHash *bgColorForType__ = nil;
 
 #pragma mark private
 - (void)initCell {
-	button_ = [[NSButton alloc] init];
-	[button_ setTarget:self];
-	[button_ setAction:@selector(click:)];
+	[button_ release];
+	button_ = [[VMPButton alloc] initWithFrame:self.cellRect];
+	button_.target=self;
+	button_.action=@selector(click:);
+	button_.doubleAction=@selector(doubleClick:);
 	[button_ setTransparent:YES];
 	[self addSubview:button_];
 	
@@ -363,7 +502,16 @@ static 	VMHash *bgColorForType__ = nil;
 	self.selected = !self.selected;
 	if ( self.delegate )
 		[self.delegate cueCellClicked:self];
+	[VMPNotificationCenter postNotificationName:VMPNotificationCueSelected
+										 object:self
+									   userInfo:@{@"id":self.cue.id} ];
 	self.needsDisplay = YES;
+}
+
+- (void)doubleClick:(id)sender {
+	[VMPNotificationCenter postNotificationName:VMPNotificationCueDoubleClicked
+										 object:self
+									   userInfo:@{@"id":self.cue.id}];
 }
 
 - (void)selectIfIdDoesMatch:(VMId*)cueId exclusive:(BOOL)exclusive {
@@ -417,7 +565,6 @@ static 	VMHash *bgColorForType__ = nil;
 
 #pragma mark drawing
 - (void)drawRect:(NSRect)rect {
-	
 	if ( self.cellRect.size.width == 0 || self.cellRect.size.height == 0 ) return;
 	
 	BeginGC
@@ -432,21 +579,31 @@ static 	VMHash *bgColorForType__ = nil;
 		[self.backgroundGradient drawInBezierPath:cell angle:60];
 	} RestoreGC
 	
-	SaveGC {
-		
-		NSDictionary *attr = [NSDictionary dictionaryWithObjectsAndKeys:
-							  [NSColor blackColor], NSForegroundColorAttributeName,
-							  [NSFont systemFontOfSize:10], NSFontAttributeName,
-							  nil];
+	if ( self.cellRect.size.height > 10 && self.cue ) {
+		SaveGC {
+			NSMutableParagraphStyle *ps = ARInstance(NSMutableParagraphStyle);
+			ps.lineBreakMode = NSLineBreakByCharWrapping;
+			NSDictionary *attr = @{	NSForegroundColorAttributeName:[NSColor blackColor],
+									NSFontAttributeName:[NSFont systemFontOfSize:10],
+						   NSParagraphStyleAttributeName:ps};
+			
+			NSAttributedString *str = [[NSAttributedString alloc] initWithString:self.cue.id attributes:attr];
+			NSSize textFrameSize = NSMakeSize( self.cellRect.size.width - 12, CGFLOAT_MAX );
+			NSRect textFrameRect = [str boundingRectWithSize:textFrameSize options:NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading];
+			//NSLog(@"textFrameRectFor:%@ = %@", str.string, NSStringFromRect(textFrameRect));
+			CGFloat verticalOffset = ( self.cellRect.size.height - textFrameRect.size.height ) * 0.5;
+			if ( verticalOffset < 0 ) verticalOffset = 0;
 
-		[self.cue.id drawInRect:NSMakeRect(self.cellRect.origin.x +6.,
-									  self.cellRect.origin.x +2.,
-									  self.cellRect .size.width - 12.,
-									  self.cellRect .size.height - 4. )
-			withAttributes:attr];
-		
-		
-	} RestoreGC
+			[self.cue.id drawInRect:NSMakeRect(self.cellRect.origin.x + 6.,
+											   self.cellRect.origin.y + verticalOffset,
+											   self.cellRect.size.width  - 12.,
+											   self.cellRect.size.height - verticalOffset )
+					 withAttributes:attr];
+			
+			[str release];
+			
+		} RestoreGC
+	}
 }
 
 @end

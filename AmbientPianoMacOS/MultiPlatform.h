@@ -3,7 +3,7 @@
 //  VariableMusicPlayer
 //
 //  Created by cboy on 12/10/20.
-//  Copyright 2012 sumiisan@gmail.com All rights reserved.
+//  Copyright 2012 sumiisan (aframasda.com) All rights reserved.
 //
 
 #ifndef _multiplatformh_
@@ -72,6 +72,7 @@ static const int kWaveFormCacheFrames = 0x1000;		//	4k
 
 static const BOOL kUseNotification = YES;
 
+#define APPDELEGATE	[VMPlayerOSXDelegate singleton]
 
 //  aliases
 #define VMPDocument NSDocument
@@ -100,6 +101,7 @@ static const BOOL kUseNotification = YES;
 //
 //-------------------------------------------------------------
 static const Float32 kDefaultFadeoutTime = 5.;
+static NSString *kDefaultVMDirectory __unused = @"defaultSong";
 
 #endif //_multiplatformh_
 

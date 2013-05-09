@@ -1,6 +1,6 @@
 //
 //  VMPAudioEditorView.m
-//  GotchaP
+//  OnTheFly
 //
 //  Created by sumiisan on 2013/04/29.
 //
@@ -9,7 +9,9 @@
 #include <AudioToolbox/AudioToolbox.h>
 
 #import "VMPAudioInfoEditorViewController.h"
+#import "VMPlayerOSXDelegate.h"
 #import "VMPSongPlayer.h"
+#import "VMPNotification.h"
 
 @implementation VMPAudioInfoEditorViewController
 
@@ -90,11 +92,17 @@ static const CGFloat kWaveDisplayHorizontalMargin = 20;
 
 - (void)loadAudioObject:(VMString*)fileId {
 	NSString *path = [DEFAULTSONGPLAYER filePathForFileId:fileId];
-	self.audioObject = [[[VMAudioObject alloc] init] autorelease];
-	OSErr err = [self.audioObject load:path];
-	if (err)
-		NSLog(@"AudioObject load error:%d",err);
-	
+	if (path) {
+		self.audioObject = [[[VMAudioObject alloc] init] autorelease];
+		OSErr err = [self.audioObject load:path];
+		if (err)
+			NSLog(@"AudioObject load error:%d",err);
+	} else {
+		[APPDELEGATE.systemLog logError:@"Could not open audio file for %@." withData:fileId];
+		[VMPNotificationCenter postNotificationName:VMPNotificationLogAdded
+											 object:self
+										   userInfo:@{@"owner":@(VMLogOwner_System)}];
+	}
 }
 
 - (void)plotWaveAndRanges {

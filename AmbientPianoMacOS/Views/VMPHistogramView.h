@@ -1,6 +1,6 @@
 //
 //  VMPHistogramView.h
-//  GotchaP
+//  OnTheFly
 //
 //  Created by sumiisan on 2013/04/20.
 //

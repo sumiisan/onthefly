@@ -199,7 +199,7 @@ static VMArray *indicatorForCategory = nil;
 			maxIndex = [h itemAsInt:@"position"];
 		}
 	}
-	[[VMPlayerOSXDelegate singleton].logView locateLogWithIndex:maxIndex ofSource:VMPLogViewSource_Statistics];
+	[[VMPlayerOSXDelegate singleton].logView locateLogWithIndex:maxIndex ofSource:VMLogOwner_Statistics];
 }
 
 - (void)filterSelected:(id)sender {

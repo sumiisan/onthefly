@@ -1,6 +1,6 @@
 //
 //  VMPLogView.m
-//  GotchaP
+//  OnTheFly
 //
 //  Created by sumiisan on 2013/04/21.
 //
@@ -13,7 +13,7 @@
 #import "VMPAnalyzer.h"
 #import "VMPSongPlayer.h"
 #import "VMPreprocessor.h"
-
+#import "VMPlayerOSXDelegate.h"
 #import "VMPNotification.h"
 
 static const VMFloat kDefaultLogItemViewHeight = 14.0;
@@ -25,7 +25,8 @@ static const VMFloat kDefaultLogItemViewHeight = 14.0;
  ----------------------------------------------------------------------------------*/
 
 #pragma mark -
-#pragma mark Log Item View
+#pragma mark Log Item View (NSTableCellView subclass)
+#pragma mark -
 
 @implementation VMPLogItemView
 
@@ -41,6 +42,8 @@ static const VMFloat kDefaultLogItemViewHeight = 14.0;
 	self.backgroundColor = nil;
 	[super dealloc];
 }
+
+
 
 - (void)drawRect:(NSRect)dirtyRect {
 //	self.textField.backgroundColor = self.backgroundColor;
@@ -65,6 +68,7 @@ static const VMFloat kDefaultLogItemViewHeight = 14.0;
 
 #pragma mark -
 #pragma mark Log View Panel
+#pragma mark -
 @implementation VMPLogView
 
 - (void)initInternal {
@@ -73,6 +77,10 @@ static const VMFloat kDefaultLogItemViewHeight = 14.0;
 								  selector:@selector(songPlayerListener:)
 									  name:nil
 									object:DEFAULTSONGPLAYER];
+		[VMPNotificationCenter addObserver:self
+								  selector:@selector(logReceived:)
+									  name:VMPNotificationLogAdded
+									object:nil];
 	}
 }
 
@@ -119,17 +127,17 @@ static const VMFloat kDefaultLogItemViewHeight = 14.0;
 	return [self.filteredLog item:row];
 }
 
-- (VMPLogViewSourceType)currentSource {
+- (VMLogOwnerType)currentSource {
 	return (int)self.sourceChooser.selectedSegment;
 }
 
-- (void)setCurrentSource:(VMPLogViewSourceType)currentSource {
+- (void)setCurrentSource:(VMLogOwnerType)currentSource {
 	self.sourceChooser.selectedSegment = (NSInteger)currentSource;
 }
 
 
 #pragma mark -
-#pragma mark actions
+#pragma mark * actions *
 
 /*---------------------------------------------------------------------------------
  
@@ -137,9 +145,9 @@ static const VMFloat kDefaultLogItemViewHeight = 14.0;
  
  ----------------------------------------------------------------------------------*/
 
-
-- (void)locateLogWithIndex:(VMInt)index ofSource:(VMPLogViewSourceType)source {
-	self.currentSource = source;
+#pragma mark locate
+- (void)locateLogWithIndex:(VMInt)index ofSource:(VMLogOwnerType)owner {
+	self.currentSource = owner;
 	[self sourceChoosen:self];
 	[self makeFilteredLog];
 	
@@ -156,7 +164,7 @@ static const VMFloat kDefaultLogItemViewHeight = 14.0;
 	[self.logTableView scrollRowToVisible:row];
 }
 
-
+#pragma mark updating log
 /*---------------------------------------------------------------------------------
  
  songPlayerListener: receive notifications from VMPSongPlayer
@@ -164,7 +172,7 @@ static const VMFloat kDefaultLogItemViewHeight = 14.0;
  ----------------------------------------------------------------------------------*/
 
 - (void)songPlayerListener:(NSNotification*)notification {
-	if ( self.currentSource != VMPLogViewSource_Player ) return;
+	if ( self.currentSource != VMLogOwner_Player ) return;
 	if ( [notification.name isEqualToString:@"AudioCueQueued"] ) {
 		
 		//
@@ -190,7 +198,7 @@ static const VMFloat kDefaultLogItemViewHeight = 14.0;
 		VMInt seekCount = 100;
 		for ( VMInt row = self.logTableView.numberOfRows -1; row > 0; --row ) {
 			VMHistoryLog *hl = [self itemAtRow:row];
-			if ( hl.data == ac ) {
+			if ( hl.VMData == ac ) {
 				[self fireAllAudioCuesBelowIndex:hl.index];
 				break;
 			}
@@ -210,7 +218,7 @@ static const VMFloat kDefaultLogItemViewHeight = 14.0;
 		if ( hl.index <= index ) break;
 	}
 	
-	for ( ; i; --i) {
+	for ( ; i; --i ) {
 		VMHistoryLog *hl = [_log item:i];
 		if ( hl.playbackTimestamp ) break;
 		hl.playbackTimestamp = now;
@@ -218,68 +226,115 @@ static const VMFloat kDefaultLogItemViewHeight = 14.0;
 }
 
 
+- (void)logReceived:(NSNotification*)notification {
+	int owner = [[notification.userInfo objectForKey:@"owner"] intValue];
+	
+	[self.sourceChooser setSelected:YES forSegment:owner];
+	[self sourceChoosen:self];
+	[self.window makeKeyAndOrderFront:self];
+}
+
+
+#pragma mark change source
 - (IBAction)sourceChoosen:(id)sender {
 	switch ( self.currentSource ) {
-		case VMPLogViewSource_Player:
-			//	song log
+		case VMLogOwner_Player:
 			self.log = DEFAULTSONG.log;
 			[self makeFilteredLog];
 			break;
 			
-		case VMPLogViewSource_Statistics:
-			//	stats
+		case VMLogOwner_Statistics:
 			self.log = DEFAULTANALYZER.log;
 			[self makeFilteredLog];
 			break;
 			
-		case VMPLogViewSource_System:
-			//	implement later
-			self.log = DEFAULTPREPROCESSOR.log;
+		case VMLogOwner_System:
+			self.log = APPDELEGATE.systemLog;
 			self.filteredLog = [[self.log copy] autorelease];
 			[self.logTableView reloadData];
+			break;
+			
+		case VMLogOwner_User:
+			self.log = APPDELEGATE.userLog;
+			self.filteredLog = [[self.log copy] autorelease];
+			[self makeFilteredLog];
 			break;
 	}
 
 }
 
-- (void)postNotification:(VMString*)notificationName {
+#pragma mark click and double click
+
+- (VMHistoryLog*)postNotification:(VMString*)notificationName {
 	VMHistoryLog *hl = [self itemAtRow:self.logTableView.selectedRow];
 	if ( hl.type != vmObjectType_notVMObject ) {
-		VMData *data = [self itemAtRow:self.logTableView.selectedRow].data;
+		id data = [self itemAtRow:self.logTableView.selectedRow].data;
+		if ( ClassMatch(data, VMData) ) data = ((VMData*)data).id;
 		[VMPNotificationCenter postNotificationName:notificationName
 											 object:self
-										   userInfo:@{@"id":data.id}];
-	}	
+										   userInfo:@{@"id":data}];
+	}
+	return hl;
 }
 
 - (IBAction)clickOnRow:(id)sender {
 	[self postNotification:VMPNotificationCueSelected];
+//	[self.logTableView reloadData];
+	NSRange visibleRange = [self.logTableView rowsInRect:[self.logTableView visibleRect]];
+	[self.logTableView reloadDataForRowIndexes:[NSIndexSet indexSetWithIndexesInRange:visibleRange]
+	// indexSetWithIndex:self.logTableView.selectedRow]
+								 columnIndexes:[NSIndexSet indexSetWithIndex:0]];
 }
 
 - (IBAction)doubleClickOnRow:(id)sender {
 	[self postNotification:VMPNotificationCueDoubleClicked];
 }
 
-- (void)makeFilteredLog {
-	VMArray *typeArray = ARInstance(VMArray);
-	NSSegmentedControl *fs = self.filterSelector;
-	
-	if( [fs isSelectedForSegment:0] ) [typeArray push:VMIntObj(vmObjectType_selector) ];
-	if( [fs isSelectedForSegment:1] ) [typeArray push:VMIntObj(vmObjectType_sequence) ];
-	if( [fs isSelectedForSegment:2] ) [typeArray push:VMIntObj(vmObjectType_audioCue) ];
-	if( [fs isSelectedForSegment:3] ) [typeArray push:VMIntObj(vmObjectType_notVMObject)];
-	
-	self.filteredLog = ARInstance(VMLog);
-	for ( VMHistoryLog *hl in self.log ) {
-		if ( [typeArray position:VMIntObj( hl.type )] >= 0 ) [self.filteredLog push:hl];
-	}
-	[self.logTableView reloadData];
-}
-
+#pragma mark filtering
 - (IBAction)filterSelected:(id)sender {
 	[self makeFilteredLog];
 }
 
+
+- (void)makeFilteredLog {
+	VMArray *typeArray = ARInstance(VMArray);
+	NSSegmentedControl *fs = self.filterSelector;
+
+	
+	
+	if( ! self.log.usePersistentStore ) {
+		//
+		//	no persistent store context connected to model
+		//
+		if( [fs isSelectedForSegment:0] ) [typeArray push:@(vmObjectType_selector)];
+		if( [fs isSelectedForSegment:1] ) [typeArray push:@(vmObjectType_sequence)];
+		if( [fs isSelectedForSegment:2] ) [typeArray push:@(vmObjectType_audioCue)];
+		if( [fs isSelectedForSegment:3] ) [typeArray push:@(vmObjectType_notVMObject)];
+		
+		self.filteredLog = [[[VMLog alloc] initWithOwner:self.currentSource managedObjectContext:nil] autorelease];
+		for ( VMHistoryLog *hl in self.log )
+			if ( [typeArray position: @( hl.type ) ] >= 0 ) [self.filteredLog push:hl];
+		
+	} else {
+		//
+		//	use persistent store: fetch from db
+		//
+		if( [fs isSelectedForSegment:0] ) [typeArray push:[NSString stringWithFormat:@"type_obj = %d",vmObjectType_selector]];
+		if( [fs isSelectedForSegment:1] ) [typeArray push:[NSString stringWithFormat:@"type_obj = %d",vmObjectType_sequence]];
+		if( [fs isSelectedForSegment:2] ) [typeArray push:[NSString stringWithFormat:@"type_obj = %d",vmObjectType_audioCue]];
+		if( [fs isSelectedForSegment:3] ) [typeArray push:[NSString stringWithFormat:@"type_obj = %d",vmObjectType_notVMObject]];
+		
+		self.filteredLog = [[[VMLog alloc] initWithOwner:self.currentSource
+									managedObjectContext:[APPDELEGATE managedObjectContext]] autorelease];
+		if ( typeArray.count > 0 )
+			[self.filteredLog loadWithPredicateString:[NSString stringWithFormat:@"(%@)", [typeArray join:@" or "]]];
+		else
+			[self.filteredLog loadWithPredicateString:nil];
+	}
+	[self.logTableView reloadData];
+}
+
+#pragma mark expand / shrink
 - (IBAction)disclosureButtonClicked:(id)sender {
 	VMInt row = [self.logTableView rowForView:((NSButton*)sender).superview];
 	VMHistoryLog *hl = [self itemAtRow:row];
@@ -291,9 +346,33 @@ static const VMFloat kDefaultLogItemViewHeight = 14.0;
 	[self.logTableView reloadData];
 }
 
+#pragma mark clear log
+- (IBAction)clearLog:(id)sender {
+	[self.log clear];
+	[self makeFilteredLog];
+}
+
+#pragma mark text edit
+
+
+- (IBAction)textChanged:(id)sender {
+	NSTextField *tf = sender;
+	VMInt row = tf.tag;
+	
+	VMHistoryLog *hl = [self itemAtRow:row];
+	VMHash *subInfo = hl.subInfo;
+	[subInfo setItem:tf.stringValue for:@"message"];
+	hl.subInfo = subInfo;
+	
+	hl.expandedHeight = -1;
+	[self.filteredLog save];
+	
+	[self.logTableView reloadData];
+}
+
 
 #pragma mark -
-#pragma mark tableview
+#pragma mark tableview datasource and delegate
 
 /*---------------------------------------------------------------------------------
  
@@ -303,7 +382,6 @@ static const VMFloat kDefaultLogItemViewHeight = 14.0;
 
 
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView {
-	NSLog(@"nlumberOfRowsInTableView %ld",self.filteredLog.count);
 	return self.filteredLog.count +1;
 }
 
@@ -318,6 +396,7 @@ static const VMFloat kDefaultLogItemViewHeight = 14.0;
 	if ( ! tableColumn ) return nil;
 	VMPLogItemView *logView = [tableView makeViewWithIdentifier:@"logItemView" owner:self];
 	VMFloat width = tableColumn.width;
+	BOOL selected = row == tableView.selectedRow;
 
 	if ( logView ) {
 		
@@ -333,32 +412,50 @@ static const VMFloat kDefaultLogItemViewHeight = 14.0;
 		}
 		VMHistoryLog *hl = [self itemAtRow:row];
 		
+		
 		vmObjectType type = hl.type;
-		
 		NSString *action = hl.action;
-		if ( type != vmObjectType_notVMObject ) action = [action stringByAppendingFormat:@" %@",((VMData*)hl.data).id];
+		if ( ! action ) return nil;
 		
+		NSColor *bgColor = [NSColor grayColor];
+		if( type != vmObjectType_notVMObject ) {
+			action = [action stringByAppendingFormat:@"\t%@",hl.VMData.id];
+			bgColor = [NSColor backgroundColorForDataType:type];
+		} else {
+			if		( [action hasPrefix:@"War"] )
+				bgColor = [NSColor colorWithCalibratedRed:1. green:.8 blue:.4 alpha:1.];
+			else if ( [action hasPrefix:@"Err"] )
+				bgColor = [NSColor colorWithCalibratedRed:1. green:.5 blue:.5 alpha:1.];
+		}
+		logView.backgroundColor = selected ? [bgColor colorModifiedByHueOffset:0
+															  saturationFactor:1.1
+															  brightnessFactor:.5] : bgColor;
+
 		logView.textField.stringValue = action;
 		NSDate *date = [NSDate dateWithTimeIntervalSinceReferenceDate:hl.timestamp];
 		logView.timeStampField.stringValue = [NSDateFormatter localizedStringFromDate:date
 																			dateStyle:kCFDateFormatterNoStyle
 																			timeStyle:kCFDateFormatterMediumStyle];
 		logView.discosureButton.state = hl.isExpanded ? NSOnState : NSOffState;
-		logView.backgroundColor = [NSColor backgroundColorForDataType:type];
+		
+		
 		logView.discosureButton.hidden = (hl.subInfo == nil);
 		logView.fired = ( hl.playbackTimestamp != 0 && hl.playbackTimestamp < [NSDate timeIntervalSinceReferenceDate] );
 		
 		if ( hl.isExpanded )  {
 			//	logview is expanded:
-			VMPCanvas *expansionView = [[[VMPCanvas alloc] initWithFrame:NSMakeRect(0, 0, width, 30 )] autorelease];
+			VMPGraph *expansionView = [[[VMPGraph alloc]
+										 initWithFrame:NSMakeRect(0, 0, width, hl.expandedHeight )]
+										autorelease];
 			expansionView.backgroundColor = [NSColor whiteColor];
 			expansionView.tag = 'expv';
+			
 			[[logView viewWithTag:'expv'] removeFromSuperview];
 			[logView addSubview:expansionView];
 			switch ( (int)hl.type ) {
 				case vmObjectType_selector: {
 					
-					if ( hl.subInfo ) {
+					if ( [action isEqualToString:@"SEL"] ) {
 						VMHash *scoreForCues = hl.subInfo;
 						VMArray *keys = [scoreForCues sortedKeys];
 						VMFloat sum = [[scoreForCues values] sum];
@@ -367,7 +464,6 @@ static const VMFloat kDefaultLogItemViewHeight = 14.0;
 						VMId *selectedCue = [scoreForCues item:@"vmlog_selected"];
 						for( VMId *key in keys ) {
 							if ( [key isEqualToString:@"vmlog_selected"] ) continue;
-							BOOL selected = [key isEqualToString:selectedCue];
 							VMFloat score = [scoreForCues itemAsFloat:key];
 							VMFloat sw = score * pixPerScore;
 							NSTextField *tf = [[NSTextField alloc] initWithFrame:NSMakeRect(x, 0, sw -1, 29)];
@@ -377,7 +473,7 @@ static const VMFloat kDefaultLogItemViewHeight = 14.0;
 							tf.drawsBackground = YES;
 							tf.stringValue = key;
 							tf.editable = tf.bordered = NO;
-							tf.font = selected ? [NSFont boldSystemFontOfSize:9] : [NSFont systemFontOfSize:9];
+							tf.font = [key isEqualToString:selectedCue] ? [NSFont boldSystemFontOfSize:9] : [NSFont systemFontOfSize:9];
 							tf.toolTip = key;
 							[expansionView addSubview:tf];
 							[tf release];
@@ -386,19 +482,17 @@ static const VMFloat kDefaultLogItemViewHeight = 14.0;
 					break;
 				}
 					
-				case vmObjectType_sequence: {
-					
+				case vmObjectType_sequence: {					
 					if ( hl.subInfo ) {
 						VMArray *acList = [hl.subInfo item:@"audioCues"];
-						VMFloat xvHeight = acList.count * 15;
-						expansionView.frame = NSMakeRect(0, 0, width, xvHeight);
-						VMFloat y = xvHeight - 15;
+						VMFloat y = hl.expandedHeight - 15;
 						if ( acList ) {
 							for( VMAudioCue *ac in acList) {
 								NSTextField *tf = [[NSTextField alloc] initWithFrame:NSMakeRect(12, y, width-12, 14)];
 								tf.stringValue = [NSString stringWithFormat:@"AC %@", ac.id];
 								tf.backgroundColor = [NSColor backgroundColorForDataType:vmObjectType_audioCue];
 								tf.bordered = tf.editable = NO;
+								tf.tag = -1;
 								tf.font = [NSFont systemFontOfSize:10];
 								tf.drawsBackground = YES;
 								[expansionView addSubview:tf];
@@ -407,28 +501,35 @@ static const VMFloat kDefaultLogItemViewHeight = 14.0;
 							}
 						}
 					}
-					
+					break;
 				}
 					
 				case vmObjectType_notVMObject: {
-					if ( hl.subInfo ) {
-						VMString *message = [hl.subInfo item:@"message"];
-						expansionView.frame = NSMakeRect(0, 0, width, hl.expandedHeight);
-						if ( message ) {
-							NSTextField *tf = [[NSTextField alloc] initWithFrame:expansionView.frame];
-							tf.stringValue = message;
-							tf.bordered = tf.editable = NO;
-							tf.font = [NSFont systemFontOfSize:10];
-							[expansionView addSubview:tf];
-							[tf release];
-						}
-					}
 					logView.fired = YES;
+					break;
+				}
+			}	//	end switch(hl.type)
+			
+			if ( hl.subInfo ) {
+				VMString *message = [hl.subInfo item:@"message"];
+				if ( message ) {
+					VMPTextField *tf = [[VMPTextField alloc] initWithFrame:expansionView.frame];
+					tf.stringValue = message;
+					tf.bordered = NO;
+					tf.bezeled = tf.editable = ( self.log.owner == VMLogOwner_User );
+					tf.font = [NSFont systemFontOfSize:10];
+					tf.target = self;
+					tf.action = @selector(textChanged:);
+					tf.tag = row;
+					[expansionView addSubview:tf];
+					if ( selected )
+						[tf becomeFirstResponder];
+					[tf release];
 				}
 			}
 			
 			
-		} else {
+		} else { // hl is not expanded
 			//	not expanded
 			[[logView viewWithTag:'expv'] removeFromSuperview];
 		}
@@ -449,6 +550,7 @@ static const VMFloat kDefaultLogItemViewHeight = 14.0;
 	return hl.isExpanded ? hl.expandedHeight + kDefaultLogItemViewHeight : kDefaultLogItemViewHeight;
 }
 
+/*
 
 - (void)tableView:(NSTableView *)tableView didAddRowView:(NSTableRowView *)rowView forRow:(NSInteger)row {
 	
@@ -457,6 +559,6 @@ static const VMFloat kDefaultLogItemViewHeight = 14.0;
 - (void)tableView:(NSTableView *)tableView didRemoveRowView:(NSTableRowView *)rowView forRow:(NSInteger)row {
 	
 }
-
+*/
 
 @end

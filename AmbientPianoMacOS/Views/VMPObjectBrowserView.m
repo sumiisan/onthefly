@@ -1,6 +1,6 @@
 //
 //  ObjectBrowserView.m
-//  VariableMediaPlayer
+//  OnTheFly
 //
 //  Created by  on 13/01/28.
 //  Copyright (c) 2013 __MyCompanyName__. All rights reserved.
@@ -353,7 +353,7 @@ static VMPObjectCell		*typeColumnCell = nil;
 			}
 		}
 	}
-	NSLog(@"seeking %@ in %@ match:%@ %@",inId,inNode.representedObject,result.representedObject,*outMatchedExact?@"exact":@"");
+	//NSLog(@"seeking %@ in %@ match:%@ %@",inId,inNode.representedObject,result.representedObject,*outMatchedExact?@"exact":@"");
 	return result;
 }
 
@@ -380,7 +380,7 @@ static VMPObjectCell		*typeColumnCell = nil;
 			}
 		}
 	}
-	NSLog(@"reverse seeking %@ in %@ match:%@ %@",inId,inNode.representedObject,result.representedObject,*outMatchedExact?@"exact":@"");
+	//NSLog(@"reverse seeking %@ in %@ match:%@ %@",inId,inNode.representedObject,result.representedObject,*outMatchedExact?@"exact":@"");
 	return result;
 }
 
@@ -777,10 +777,12 @@ static VMPObjectCell		*typeColumnCell = nil;
 - (void)selectRow:(VMInt)row {
 	VMData *d = [self dataOfRow:row];
 	if (d) {
+		if ( [self.lastSelectedId isEqualToString:d.id] ) return;	//	don't select twice.
         self.lastSelectedId = d.id;
 		[self.graphDelegate drawGraphWith:d];
 		[self.infoDelegate drawInfoWith:d];
-		[VMPNotificationCenter postNotificationName:VMPNotificationCueSelected object:self userInfo:@{@"id":d.id}];
+		if( d.id )	//	chances may not have id
+			[VMPNotificationCenter postNotificationName:VMPNotificationCueSelected object:self userInfo:@{@"id":d.id}];
 	} else {
 		id item = [self.objectTreeView itemAtRow:row];
 		if ( ClassMatch( item, VMString ) )
@@ -791,6 +793,12 @@ static VMPObjectCell		*typeColumnCell = nil;
 
 - (IBAction)clickOnRow:(id)sender {
 	[self selectRow:self.objectTreeView.clickedRow];
+	VMData *d = [self dataOfRow:self.objectTreeView.clickedRow];
+
+	if (d)
+	[VMPNotificationCenter postNotificationName:VMPNotificationCueSelected
+										 object:self
+									   userInfo:@{@"id":d.id} ];
 }
 
 - (IBAction)doubleClickOnRow:(id)sender {

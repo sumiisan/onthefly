@@ -308,7 +308,7 @@ ProcessorDefinition(set) {
 	
 	VMArray *paramNames = [self.parameter keys];
 	for ( VMString *paramName in paramNames ) {
-		if ( Equal(paramName, self.functionName )) continue;
+		if ( Pittari(paramName, self.functionName )) continue;
 		VMString *val = [self valueForParameter:paramName];
 		VMFloat f = [DEFAULTEVALUATOR evaluate:val];
 		if ( ! isnan(f) ) 
@@ -330,11 +330,11 @@ VMOBLIGATORY_setWithProto(
 						  )
 VMOBLIGATORY_setWithData
 (	
- IfClassMatch(data, VMHash) {
+ if ( ClassMatch(data, VMHash)) {
 	 MakeHashFromData
 	 SetPropertyIfKeyExist( functionName, itemAsObject )
 	 SetPropertyIfKeyExist( parameter, itemAsObject )
- } else IfClassMatch(data, VMString) {
+ } else if ( ClassMatch(data, VMString)) {
 	 [self setByString:data];	 
  }
  

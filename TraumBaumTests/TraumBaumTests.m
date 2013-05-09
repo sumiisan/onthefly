@@ -3,7 +3,7 @@
 //  TraumBaumTests
 //
 //  Created by  on 13/01/11.
-//  Copyright (c) 2013 sumiisan@gmail.com. All rights reserved.
+//  Copyright (c) 2013 sumiisan (aframasda.com). All rights reserved.
 //
 
 #import "TraumBaumTests.h"
