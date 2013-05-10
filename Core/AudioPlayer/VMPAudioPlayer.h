@@ -39,11 +39,11 @@ typedef enum {
     
 //  props
 	NSTimeInterval					fileDuration;
-    NSTimeInterval                  cueDuration;    
+    NSTimeInterval                  fragDuration;    
 
 //  audio file    
 	NSString						*filePathToRead;
-	NSString						*cueId;
+	NSString						*fragId;
     
 //  Core Audio file info
 	AudioFileID						audioFile;
@@ -64,10 +64,10 @@ typedef enum {
 //	double							waveformSampleInterval;
 }
 
-@property (nonatomic,   retain)				NSString *cueId;
+@property (nonatomic,   retain)				NSString *fragId;
 @property (readonly)						int playerId;
 @property (readonly)						NSTimeInterval fileDuration;
-@property (nonatomic)						NSTimeInterval cueDuration;
+@property (nonatomic)						NSTimeInterval fragDuration;
 @property (nonatomic)						NSTimeInterval offset;		//	not used internally.
 
 - (id)initWithId:(int)identifier;

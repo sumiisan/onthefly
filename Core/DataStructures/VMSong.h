@@ -25,7 +25,7 @@
 @property (nonatomic, retain)	VMString *vsFilePath;
 @property (nonatomic, retain)	VMString *audioFileDirectory;
 @property (nonatomic, retain)	VMArray	 *entryPoints;
-@property (nonatomic, readonly)	VMString *defaultCueId;
+@property (nonatomic, readonly)	VMString *defaultFragmentId;
 
 //	runtime properties
 @property (VMNonatomic retain)	VMPlayer *player;
@@ -43,17 +43,17 @@
 + (VMSong*)defaultSong;
 - (void)setByHash:(VMHash*)hash;
 - (id)data:(VMId*)dataId;
-- (VMAudioCue*)nextAudioCue;
+- (VMAudioFragment*)nextAudioFragment;
 
 - (NSString*)callStackInfo;
 - (BOOL)isVerbose;
 
 - (void)reset;
 //	history
-- (void)record:(VMArray*)cueIds;
-- (VMInt)distanceToLastRecordOf:(VMId*)cueId;
+- (void)record:(VMArray*)fragIds;
+- (VMInt)distanceToLastRecordOf:(VMId*)fragId;
 
-- (void)setCueId:(VMId*)cueId;
+- (void)setFragmentId:(VMId*)fragId;
 - (VMPlayer*)playerFrom:(id)someObj;
 - (id)resolveDataWithId:(VMId*)dataId untilReachType:(int)mask;
 

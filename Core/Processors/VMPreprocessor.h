@@ -87,7 +87,7 @@
 + (NSString*)shortTypeStringForType:(vmObjectType)typ;
 + (NSString*)typeStringForType:(vmObjectType)typ;
 + (VMId*)idWithVMPModifier:(NSString*)dataId tag:(NSString*)tag info:(NSString*)info;
-- (VMId*)purifiedId:(VMId*)cueId;
+- (VMId*)purifiedId:(VMId*)fragId;
 
 @end
 

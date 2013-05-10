@@ -12,7 +12,7 @@
 #pragma mark -
 #pragma mark VMPSelectorGraph
 //------------------------- VMPSelectorGraph -----------------------------
-@interface VMPSelectorGraph : VMPCueCell <VMPCueCellDelegate> {
+@interface VMPSelectorGraph : VMPFragmentCell <VMPFragmentCellDelegate> {
 	VMPStraightLine		*line;
 	VMHash				*branchViewTemporary;
 }
@@ -23,7 +23,7 @@
 #pragma mark -
 #pragma mark VMPSequenceGraph
 //------------------------- VMPSequenceGraph -----------------------------
-@interface VMPSequenceGraph : VMPSelectorGraph <VMPCueCellDelegate>
+@interface VMPSequenceGraph : VMPSelectorGraph <VMPFragmentCellDelegate>
 @end
 
 
@@ -31,7 +31,7 @@
 #pragma mark -
 #pragma mark VMPObjectGraphView
 //------------------------ VMPObjectGraphView ----------------------------
-@interface VMPObjectGraphView : VMPGraph <ObjectBrowserGraphDelegate>
+@interface VMPObjectGraphView : VMPGraph <VMPObjectBrowserGraphDelegate>
 @property (nonatomic,retain) NSViewController	*editorViewController;
 @property (nonatomic, assign) VMData *data;
 @end
@@ -41,7 +41,7 @@
 #pragma mark -
 #pragma mark VMPObjectInfoView
 //------------------------ VMPObjectInfoView ----------------------------
-@interface VMPObjectInfoView : VMPGraph <ObjectBrowserInfoDelegate>
+@interface VMPObjectInfoView : VMPGraph <VMPObjectBrowserInfoDelegate>
 @property (nonatomic, assign) VMData *data;
 @property (assign) IBOutlet NSTextField *userGeneratedIdField;
 @property (assign) IBOutlet NSTextField *vmpModifierField;

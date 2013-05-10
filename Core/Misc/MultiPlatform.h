@@ -21,7 +21,7 @@
 #define VMP_IPHONE 1
 #define VMP_LOGGING 0
 static const float kTimerInterval = 0.01;			//  1/1000 sec interruption for audio
-static const int kDebugViewRedrawInterval = 10;		//  0.01 * 10   = 0.1sec
+static const int kTrackViewRedrawInterval = 10;		//  0.01 * 10   = 0.1sec
 static const int kAudioPlayer_BufferSize = 0x8000;	//  32k buffer
 static const int kNumberOfQueueBuffers = 3;			//  this is for CoreAudio's AudioQueueAllocateBuffer
 static const int kNumberOfAudioPlayers = 10;		//  number of sound players
@@ -60,7 +60,7 @@ static const BOOL kUseNotification = NO;
 #define VMP_OSX 1
 #define VMP_LOGGING 1
 static const float kTimerInterval = 0.005;			//  1/2000 sec interruption for audio
-static const int kDebugViewRedrawInterval = 6;		//  0.005 * 6   = 0.03sec
+static const int kTrackViewRedrawInterval = 6;		//  0.005 * 6   = 0.03sec
 static const int kAudioPlayer_BufferSize =  0x20000;//  128k buffer
 static const int kNumberOfQueueBuffers = 3;			//  this is for CoreAudio's AudioQueueAllocateBuffer
 static const int kNumberOfAudioPlayers = 10;         //  number of sound players

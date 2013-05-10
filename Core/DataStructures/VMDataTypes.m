@@ -306,14 +306,14 @@ VMOBLIGATORY_setWithProto()
 VMOBLIGATORY_setWithData()
 @end
 
-//------------------------ Cue (abstract) -----------------------
+//------------------------ Fragment (abstract) -----------------------
 /*
- everything cue-able
+ a fragment of media
  */
 #pragma mark -
-#pragma mark *** VMCue ***
+#pragma mark *** VMFragment ***
 
-@implementation VMCue
+@implementation VMFragment
 
 
 - (void)setId:(VMId *)inId { 	// override	
@@ -360,12 +360,12 @@ VMOBLIGATORY_setWithData()
 	return [[[self userGeneratedId] componentsSeparatedByString:@";"] objectAtIndex:0];
 }
 
-- (VMId*)cueId {
+- (VMId*)fragId {
 	return self.id;
 }
 
-- (void)setCueId:(VMId *)cueId {
-	self.id = cueId;
+- (void)setFragmentId:(VMId *)fragId {
+	self.id = fragId;
 }
 
 - (VMId*)partId {	/*public*/
@@ -446,7 +446,7 @@ VMOBLIGATORY_setWithData()
 #pragma mark obligatory
 VMObligatory_resolveUntilType()
 
-VMOBLIGATORY_init(vmObjectType_cue, NO,)
+VMOBLIGATORY_init(vmObjectType_fragment, NO,)
 VMOBLIGATORY_initWithProto
 VMOBLIGATORY_setWithProto()
 VMOBLIGATORY_setWithData(
@@ -473,15 +473,15 @@ VMOBLIGATORY_setWithData(
 @end
 
 
-//-------------------- MetaCue -----------------------------
+//-------------------- MetaFragment -----------------------------
 /*
  a cue with instruction
  */
 
 #pragma mark -
-#pragma mark *** VMMetaCue ***
+#pragma mark *** VMMetaFragment ***
 
-@implementation VMMetaCue
+@implementation VMMetaFragment
 @synthesize instructionList=instructionList_;		//	array of functions
 
 
@@ -514,7 +514,7 @@ VMOBLIGATORY_setWithData(
 
 - (BOOL)shouldSelectTemporary {
 	for( VMFunction *func in self.instructionList )
-		if ( [func doesChangeCueOrder] ) return NO;
+		if ( [func doesChangeFragmentsOrder] ) return NO;
 	return YES;
 }
 
@@ -537,7 +537,7 @@ VMOBLIGATORY_setWithData(
 #pragma mark obligatory
 VMObligatory_resolveUntilType()	//	unresolbeable for now. maybe possible after implementing some instructions.
 
-VMOBLIGATORY_init(vmObjectType_metaCue, YES,)
+VMOBLIGATORY_init(vmObjectType_metaFragment, YES,)
 VMOBLIGATORY_setWithProto(
   CopyPropertyIfExist(instructionList)
   )
@@ -728,6 +728,7 @@ VMOBLIGATORY_setWithData(
 )
 @end
 
+#if 0	//	TagList obsoleted. use VMTransformer
 //------------------------ TagList -----------------------------
 /*
  tags
@@ -746,29 +747,49 @@ VMOBLIGATORY_setWithData(
 /*not implemented yet*/
 )
 @end
+#endif
 
-//------------------------ ScoreModifier --------------------------
+//------------------------ Transformer --------------------------
 /*
- define the amount of a tag affects the score
+ evaluate expression and transform multiple factros into one output value
  */
 #pragma mark -
-#pragma mark *** VMScoreModifier ***
-@implementation VMScoreModifier
-@synthesize factor=factor_,tagName=tagName_;
+#pragma mark *** VMTransformer ***
+@implementation VMTransformer
+@synthesize scoreDescriptor=scoreDescriptor_;
 VMObligatory_resolveUntilType()
-VMOBLIGATORY_init(vmObjectType_scoreModifier, YES,)
+VMOBLIGATORY_init(vmObjectType_transformer, YES,)
 VMOBLIGATORY_initWithProto
 VMOBLIGATORY_setWithProto(
-  CopyPropertyIfExist(factor)
-  CopyPropertyIfExist(tagName)
+  CopyPropertyIfExist(scoreDescriptor)
 )
-VMOBLIGATORY_setWithData( 
-/*not implemented yet*/
+VMOBLIGATORY_setWithData(
+ if ( ClassMatch(data, VMHash)) {
+	 MakeHashFromData
+	 id sd = HashItem(score);
+	 if ( sd )
+		 self.scoreDescriptor = sd;
+ }
+ if ( ClassMatch(data, NSString)) {
+	 self.scoreDescriptor = data;
+ }
 )
 - (void)dealloc {
-	self.tagName = nil;
+	self.scoreDescriptor = nil;
 	[super dealloc];
 }
+
+- (VMFloat)currentValue {
+	return [DEFAULTEVALUATOR evaluate:self.scoreDescriptor];
+}
+
+VMObligatory_initWithCoder(
+ Deserialize(scoreDescriptor, Object)
+)
+
+VMObligatory_encodeWithCoder(
+ Serialize(scoreDescriptor, Object)
+)
 @end
 
 //------------------------ Stimulator --------------------------
@@ -778,50 +799,61 @@ VMOBLIGATORY_setWithData(
 #pragma mark -
 #pragma mark *** VMStimulator ***
 @implementation VMStimulator
-@synthesize source=source_,modifiers=modifiers_;
+@synthesize source=source_, key=key_;
 VMObligatory_resolveUntilType()
 VMOBLIGATORY_init(vmObjectType_stimulator, YES,)
 VMOBLIGATORY_initWithProto
 VMOBLIGATORY_setWithProto(
   CopyPropertyIfExist(source)
-  CopyPropertyIfExist(modifiers)
+  CopyPropertyIfExist(key)
 )
 VMOBLIGATORY_setWithData(
-/*not implemented yet*/
+	// not implemented yet
 )
 - (void)dealloc {
 	self.source = nil;
-	self.modifiers = nil;
 	[super dealloc];
 }
 
+- (VMFloat)currentValue {
+	// not implemented yet
+	return 0;
+}
+
+VMObligatory_initWithCoder(
+//do nothing because it's build-in object and should inited by the system
+)
+
+VMObligatory_encodeWithCoder(
+//do nothing because it's build-in object and cannot be exported
+)
+
 @end
 
-//------------------------ AudioCue -----------------------------
+//------------------------ AudioFragment -----------------------------
 /*
- cue with audio
+ fragment of audio
  */
 #pragma mark -
-#pragma mark *** VMAudioCue ***
+#pragma mark *** VMAudioFragment ***
 
-@implementation VMAudioCue
+@implementation VMAudioFragment
 @synthesize audioInfoId=audioInfoId_,audioInfoRef=audioInfoRef_;
 
 #pragma mark private utils
 
-#pragma meta cue
+#pragma meta frag
 - (void)interpreteInstructionsWithData:(VMData*)data action:(VMActionType)action {	//	override
 	for ( VMFunction *func in self.instructionList )
 		[func processWithData:data action:action];
 }
-
 
 #pragma mark obligatory
 VMObligatory_resolveUntilType(
 if(self.audioInfoRef) return [self.audioInfoRef resolveUntilType:mask];
 if(self.audioInfoId) return [[DEFAULTPREPROCESSOR rawData:self.audioInfoId] resolveUntilType:mask];
 )
-VMOBLIGATORY_init(vmObjectType_audioCue, YES,)
+VMOBLIGATORY_init(vmObjectType_audioFragment, YES,)
 VMOBLIGATORY_setWithProto(
 	CopyPropertyIfExist(audioInfoId);
 )
@@ -845,7 +877,7 @@ VMObligatory_encodeWithCoder
 //	NSCopying (override)
 - (id)copyWithZone:(NSZone *)zone {
 	id copy = [super copyWithZone:zone];
-	((VMAudioCue*)copy).audioInfoRef = self.audioInfoRef;		//	not copied by initWithProto method.
+	((VMAudioFragment*)copy).audioInfoRef = self.audioInfoRef;		//	not copied by initWithProto method.
 	return copy;
 }
 
@@ -863,7 +895,7 @@ VMObligatory_encodeWithCoder
 
 @end
 
-@implementation VMAudioCue(publicMethods)
+@implementation VMAudioFragment(publicMethods)
 #pragma mark accessor
 RedirectPropGetterToObject(VMId*,	fileId, 			self.audioInfoRef)
 RedirectPropGetterToObject(VMTime, 	duration, 			self.audioInfoRef)
@@ -883,7 +915,7 @@ RedirectPropSetterToObject(VMFloat,	setVolume, 	volume,  self.audioInfoRef)
 
 //------------------------ Chance -----------------------------
 /*
- a cue with probability
+ a fragment with probability
  */
 #pragma mark -
 #pragma mark *** VMChance ***
@@ -1009,19 +1041,19 @@ if ( ClassMatch(data, NSString)) {
 @end
 
 
-//------------------------ CueCollection -----------------------------
+//------------------------ Collection -----------------------------
 /*
- generic collection of cues
+ generic collection of fragments
  */
 #pragma mark -
-#pragma mark *** VMCueCollection ***
+#pragma mark *** VMCollection ***
 
-@implementation VMCueCollection
-@synthesize cues=cues_;
+@implementation VMCollection
+@synthesize fragments=frags_;
 
 #pragma mark accessor
 - (VMChance*)chanceWithId:(VMId*)dataId {
-	for( id ch in cues_ ) {
+	for( id ch in frags_ ) {
 		VMId *did = ReadAsVMId(ch);
 		if( Pittari( dataId, did ) ) return ch;
 	}
@@ -1029,53 +1061,53 @@ if ( ClassMatch(data, NSString)) {
 }
 
 - (VMChance*)chanceWithTargetId:(VMId*)targetId {
-	for( VMChance *c in cues_ ) 
+	for( VMChance *c in frags_ ) 
 		if( Pittari(targetId, c.targetId) ) return c;
 	return nil;
 }
 
-- (VMCue*)cueAtIndex:(VMInt)pos {
-	id c = [cues_ item:pos];
+- (VMFragment*)fragmentAtIndex:(VMInt)pos {
+	id c = [frags_ item:pos];
 	if ( ClassMatch(c, VMId)) c = [DEFAULTSONG data: c];
 	return c;
 }
 
 -  (VMInt)length {
-	return [cues_ count];
+	return [frags_ count];
 }
 
-- (VMArray*)cueIdList {
-	VMArray *cueIds = ARInstance(VMArray);
-	for( id c in cues_ ) 
-		[cueIds push:ReadAsVMId(c)];
-	return cueIds;
+- (VMArray*)fragmentIdList {
+	VMArray *fragIds = ARInstance(VMArray);
+	for( id c in frags_ ) 
+		[fragIds push:ReadAsVMId(c)];
+	return fragIds;
 }
 
 #pragma mark public methods
 
 /*
- adding cues included in data
- we allways *append* cues to make the song extensible.
+ adding frags included in data
+ we allways *append* frags to make the song extensible.
  */
-- (void)addCuesWithData:(id)data {	
-	if ( ClassMatch( data, VMCueCollection )) {
+- (void)addFragmentsWithData:(id)data {	
+	if ( ClassMatch( data, VMCollection )) {
 		[self setWithProto:data];
 		return;
 	} 
 	
 	if ( ClassMatch( data, VMHash )) {
 		MakeHashFromData
-		if( HashItem(cues) ) 
-			data = HashItem(cues);
+		if( HashItem(frag) ) 
+			data = HashItem(frag);
 		else
-		// if no cues exist:
-		//	there is no cue-collection data. maybe we can resolve it later.
+		// if no fragments exist:
+		//	there is no frag-collection data. maybe we can resolve it later.
 			return;
 	}
 	
 	VMArray *arr = ConvertToVMArray(data);
 	
-	if( ! self.cues ) self.cues = ARInstance(VMArray);
+	if( ! self.fragments ) self.fragments = ARInstance(VMArray);
 	
     for ( id obj in arr ) {
 		if( ClassMatch(obj, NSString)) {
@@ -1096,76 +1128,76 @@ if ( ClassMatch(data, NSString)) {
 				VMId *purified	= [DEFAULTPREPROCESSOR purifiedId:obj];
 				if (purified) obj = purified;
 
-				[self.cues push:obj];
+				[self.fragments push:obj];
 			}
 		} else if ( ClassMatch( obj, VMChance )) {
-			[self.cues push:obj];
+			[self.fragments push:obj];
 		} else {
-			[VMException raise:@"Could not set cues because some Objects was in data" format:@"%@", [arr description]];
+			[VMException raise:@"Could not set frags because some Objects was in data" format:@"%@", [arr description]];
 		}
     }
 }
 
-- (void)convertCueObjectsToReference {
+- (void)convertFragmentObjectsToReference {
 	VMInt c = self.length;
 	for( int i = 0; i < c; ++i ) {
-		id d = [cues_ item:i];
-		if ( ClassMatch( d, VMData )) [cues_ setItem:((VMData*)d).stringExpression at:i];
+		id d = [frags_ item:i];
+		if ( ClassMatch( d, VMData )) [frags_ setItem:((VMData*)d).stringExpression at:i];
 	}
 }
 
 #pragma mark obligatory
 VMObligatory_resolveUntilType(
 #ifdef DEBUG
-	[VMException raise:@"Unable to resolve cue." 
-				format:@"abstract type VMCueCollection cannot be resolved." ];
+	[VMException raise:@"Unable to resolve fragment." 
+				format:@"abstract type VMCollection cannot be resolved." ];
 #endif
-	return [[self.cues item:0] resolveUntilType:mask];
+	return [[self.fragments item:0] resolveUntilType:mask];
 )
 
-VMOBLIGATORY_init(vmObjectType_cueCollection, NO,)
+VMOBLIGATORY_init(vmObjectType_collection, NO,)
 VMOBLIGATORY_setWithProto(
-	if(HasMethod(proto, cues)) [self addCuesWithData:[proto cues]];
+	if(HasMethod(proto, fragments)) [self addFragmentsWithData:[proto fragments]];
 )
 
 - (void)setWithData:(id)data {
 	if ( ClassMatch(data, [self class])) [self setWithProto:data];
 	else {
 		[super setWithData:data];
-		[self addCuesWithData:data];
+		[self addFragmentsWithData:data];
 	}
 }
 
 VMObligatory_initWithCoder
 (
- Deserialize(cues, Object)
+ Deserialize(fragments, Object)
  )
 
 VMObligatory_encodeWithCoder
 (
- [self convertCueObjectsToReference];
- Serialize(cues, Object)
+ [self convertFragmentObjectsToReference];
+ Serialize(fragments, Object)
  )
 
 - (void)dealloc {
-	self.cues = nil;
+	self.fragments = nil;
 	[super dealloc];
 }
 
 - (NSString*)description {
-	VMArray *cueDescList = ARInstance(VMArray);
-	for ( id cue in self.cues ) {
-		if ( ClassMatch( cue, VMChance )) {
-			VMChance *ch = ClassCast( cue, VMChance );
-			[cueDescList push:[NSString stringWithFormat:@"%@(%@=%.2f)",ch.targetId,Default(ch.scoreDescriptor,@"?"),ch.cachedScore]]; 
+	VMArray *fragDescList = ARInstance(VMArray);
+	for ( id frag in self.fragments ) {
+		if ( ClassMatch( frag, VMChance )) {
+			VMChance *ch = ClassCast( frag, VMChance );
+			[fragDescList push:[NSString stringWithFormat:@"%@(%@=%.2f)",ch.targetId,Default(ch.scoreDescriptor,@"?"),ch.cachedScore]]; 
 		} else 
-			[cueDescList push:ReadAsVMId(cue) ];
+			[fragDescList push:ReadAsVMId(frag) ];
 	}
 	
 	return [NSString stringWithFormat:@"%@[%@](%ld)",
 			[super description],
-			[cueDescList join:@","],
-			self.cues ? [self.cues count] : 0
+			[fragDescList join:@","],
+			self.fragments ? [self.fragments count] : 0
 			];
 }
 
@@ -1174,7 +1206,7 @@ VMObligatory_encodeWithCoder
 
 //------------------------ Selector -----------------------------
 /*
- cue collection selector
+ fragments collection selector
  */
 #pragma mark -
 #pragma mark *** VMSelector ***
@@ -1182,7 +1214,7 @@ VMObligatory_encodeWithCoder
 @implementation VMSelector
 @synthesize liveData=liveData_;
 
-static VMHash *scoreForCue__ = nil;
+static VMHash *scoreForFragment__ = nil;
 
 #pragma meta cue
 - (void)interpreteInstructionsWithData:(VMData*)data action:(VMActionType)action {	//	override
@@ -1226,13 +1258,13 @@ static VMHash *scoreForCue__ = nil;
 #endif
 	VMInt c = self.length;
 	for ( int i = 0; i < c; ++i ) {
-		id d = [self.cues item:i];
+		id d = [self.fragments item:i];
 		if ( ClassMatch(d, VMString ))  {
 			[VMException raise:@"Type mismatch." format:@"Id found where chance expected. in %@",self.description];
 			//	should be chance
 /*			VMChance *ch = [[VMChance alloc] init];
 			[ch setByString:d];
-			[self.cues setItem:ch at:i];
+			[self.frags setItem:ch at:i];
 			d = ch;
 			[ch release];*/
 		}
@@ -1256,7 +1288,7 @@ static VMHash *scoreForCue__ = nil;
 
 #pragma mark public methods
 
-- (VMHash*)collectScoresOfCues:(VMFloat)parentScore frameOffset:(VMInt)counterOffset normalize:(BOOL)normalize {
+- (VMHash*)collectScoresOfFragments:(VMFloat)parentScore frameOffset:(VMInt)counterOffset normalize:(BOOL)normalize {
 	//	add an offset to counter if supplied and evaluate
 	if( counterOffset != 0 ) {
 		VMInt stack = [self counter];
@@ -1270,56 +1302,56 @@ static VMHash *scoreForCue__ = nil;
 	BOOL rootNode = ( parentScore == 0 );
 	if ( rootNode ) {
 		//	init if i'm root.
-		ReleaseAndNewInstance(scoreForCue__, VMHash);
+		ReleaseAndNewInstance(scoreForFragment__, VMHash);
 		parentScore = normalize ? 1 : sumOfInnerScores_cache_;
 	}
 	
 	VMFloat soi = [self sumOfInnerScores];
-	if ( soi == 0 ) return scoreForCue__;	//	sumOfInnerScores = 0;	no choice.
+	if ( soi == 0 ) return scoreForFragment__;	//	sumOfInnerScores = 0;	no choice.
 	double scoreFactor = parentScore / soi;
 	
-	for ( VMChance *chance in self.cues ) {
+	for ( VMChance *chance in self.fragments ) {
 		VMFloat score = chance.cachedScore * scoreFactor;
 		
 		if ( isnan(score) ) [VMException raise:@"Could not evaluate score." format:@"score of %@ in %@", chance.targetId, self.id];
 		if (score == 0 ) continue;
-		VMCue *cue = [DEFAULTSONG data:chance.targetId];
+		VMFragment *frag = [DEFAULTSONG data:chance.targetId];
 		
-		if( cue.type == vmObjectType_sequence ) {
-			//	if encoutered a seq, just choose the first cue in sequence.
-			cue = [ClassCast(cue, VMSequence) cueAtIndex:0];
+		if( frag.type == vmObjectType_sequence ) {
+			//	if encoutered a seq, just choose the first frag in sequence.
+			frag = [ClassCast(frag, VMSequence) fragmentAtIndex:0];
 		}
-		if( cue.type == vmObjectType_selector ) {
+		if( frag.type == vmObjectType_selector ) {
 			//	internal node: collect recursive
-			[ClassCast(cue, VMSelector) collectScoresOfCues:score
+			[ClassCast(frag, VMSelector) collectScoresOfFragments:score
 						frameOffset:counterOffset normalize:normalize];
 		} else {
 			//	leaf node: increment score
-			[scoreForCue__ add:score ontoItem:chance.targetId];
+			[scoreForFragment__ add:score ontoItem:chance.targetId];
 		}
 	}
 	
 	if ( rootNode ) {
 		//	clean up score
-		VMArray *keys = [scoreForCue__ keys];
+		VMArray *keys = [scoreForFragment__ keys];
 		for ( VMId *key in keys ) 
-			if ( [scoreForCue__ itemAsFloat:key] == 0 ) [scoreForCue__ removeItem:key];
+			if ( [scoreForFragment__ itemAsFloat:key] == 0 ) [scoreForFragment__ removeItem:key];
 	}
-	return scoreForCue__;
+	return scoreForFragment__;
 }
 
 
 - (VMChance*)chanceAtIndex:(VMInt)pos {
-	return ClassCast([super cueAtIndex:pos], VMChance);
+	return ClassCast([super fragmentAtIndex:pos], VMChance);
 }
 
--(VMCue*)cueAtIndex:(VMInt)pos {	/*override*/
-    return [[super cueAtIndex:pos] resolveUntilType:vmObjectCategory_cue];	//	because they are chances.
+-(VMFragment*)fragmentAtIndex:(VMInt)pos {	/*override*/
+    return [[super fragmentAtIndex:pos] resolveUntilType:vmObjectCategory_fragment];	//	because they are chances.
 }
 
 
 -(VMFloat)sumOfInnerScores {
-    if ( [self.cues count] > 0 ) {
+    if ( [self.fragments count] > 0 ) {
 		return sumOfInnerScores_cache_;
     } else {
         return 1.;
@@ -1327,51 +1359,51 @@ static VMHash *scoreForCue__ = nil;
 }
 
 //	NOTE:
-//	set scoreForCues = nil to use cached score of latest evaluation.
+//	set scoreForFragments = nil to use cached score of latest evaluation.
 //
 
 
-- (VMCue*)selectOneTemporaryUsingScores:(VMHash*)scoreForCues sumOfScores:(VMFloat)sum {
-	if( [self.cues count] <= 0 ) return nil;
+- (VMFragment*)selectOneTemporaryUsingScores:(VMHash*)scoreForFragments sumOfScores:(VMFloat)sum {
+	if( [self.fragments count] <= 0 ) return nil;
 	BOOL verbose = DEFAULTSONG.isVerbose;
 
-	VMCue *cue = nil;
+	VMFragment *frag = nil;
 	int retryLeft = 10;	
 
-	if ( ! scoreForCues ) {
+	if ( ! scoreForFragments ) {
 		[self prepareSelection];
 		if ( sum == 0 ) sum = sumOfInnerScores_cache_;
 	} else {
 		if ( sum == 0 ) { //	needs re-calculated
-			VMArray *ids = [scoreForCues keys];
-			for ( VMId* cueId in ids ) sum += [scoreForCues itemAsFloat:cueId];
+			VMArray *ids = [scoreForFragments keys];
+			for ( VMId* fragId in ids ) sum += [scoreForFragments itemAsFloat:fragId];
 		}
 	}
 	
-	while (  ( !cue ) && retryLeft-- ) {
+	while (  ( !frag ) && retryLeft-- ) {
 		double xi = VMRand1 * sum;
 		double s = 0;
 		
-		if ( scoreForCues ) {
+		if ( scoreForFragments ) {
 			//	use extern supplied data
-			VMArray *cueIds = [scoreForCues keys];
-			for ( VMId *cueId in cueIds ) {
-				s += [scoreForCues itemAsFloat:cueId];
+			VMArray *fragIds = [scoreForFragments keys];
+			for ( VMId *fragId in fragIds ) {
+				s += [scoreForFragments itemAsFloat:fragId];
 				if ( s > xi ) {
-					VMCue *c = [DEFAULTSONG data:cueId];
+					VMFragment *c = [DEFAULTSONG data:fragId];
 					//NSLog(@"- selected using ext data: %@", c.id);
-					cue = [DEFAULTEVALUATOR resolveDataWithTracking:c toType:vmObjectCategory_cue];
-					if( cue ) break;
-					else [DEFAULTANALYZER addUnresolveable:cueId];
+					frag = [DEFAULTEVALUATOR resolveDataWithTracking:c toType:vmObjectCategory_fragment];
+					if( frag ) break;
+					else [DEFAULTANALYZER addUnresolveable:fragId];
 				}
 			}
 		} else {
-			//	use default internal cues and cached score
+			//	use default internal frags and cached score
 			
-			for ( VMChance *c in self.cues ) {
+			for ( VMChance *c in self.fragments ) {
 				s += c.cachedScore;
 				if ( s > xi ) { 
-					//if (verbose) NSLog(@"    SEL %@ : -> selected: CHA targ:%@, resolve cue -->", self.id, c.targetId );
+					//if (verbose) NSLog(@"    SEL %@ : -> selected: CHA targ:%@, resolve frag -->", self.id, c.targetId );
 #if VMP_LOGGING
 					
 					//
@@ -1379,7 +1411,7 @@ static VMHash *scoreForCue__ = nil;
 					//
 					VMHash *scoreForLog = ARInstance(VMHash);
 					[scoreForLog setItem:@"scores" for:@"vmlog_type"];
-					for( VMChance *ch in self.cues ) {
+					for( VMChance *ch in self.fragments ) {
 						if( !ClassMatch(ch, VMChance)) continue;
 						[scoreForLog setItem:VMFloatObj(ch.cachedScore) for:ch.targetId];
 					}
@@ -1388,8 +1420,8 @@ static VMHash *scoreForCue__ = nil;
 					//
 #endif
 					selectedChance_ = c;
-					cue = [DEFAULTEVALUATOR resolveDataWithTracking:c toType:vmObjectCategory_cue];
-					if( cue ) break;
+					frag = [DEFAULTEVALUATOR resolveDataWithTracking:c toType:vmObjectCategory_fragment];
+					if( frag ) break;
 					else [DEFAULTANALYZER addUnresolveable:c.targetId];
 					if (verbose) NSLog(@"    SEL: unresolveable, retry. %@", c.targetId );
 				}
@@ -1397,17 +1429,17 @@ static VMHash *scoreForCue__ = nil;
 		}
 	}
 	
-	if (cue==nil) {
-		NSLog(@"empty cue");
-		//[self selectOneTemporaryUsingScores:scoreForCues sumOfScores:sum];
+	if (frag==nil) {
+		NSLog(@"empty frag");
+		//[self selectOneTemporaryUsingScores:scoreForFragments sumOfScores:sum];
 	}
 	
-	return cue;
+	return frag;
 }
 
 
 
-- (VMCue*)selectOne {
+- (VMFragment*)selectOne {
 	BOOL isTemporary = [self shouldSelectTemporary];
 	
 	if ( ! self.liveData ) {
@@ -1415,15 +1447,15 @@ static VMHash *scoreForCue__ = nil;
 		[self.liveData interpreteInstructionsWithAction:vmAction_prepare];
 	}
 	
-	VMCue *cue;
+	VMFragment *frag;
 	
 	if ( isTemporary ) {
-		cue = [self selectOneTemporaryUsingScores:nil sumOfScores:0];
+		frag = [self selectOneTemporaryUsingScores:nil sumOfScores:0];
 	} else {
-		cue = self.liveData.currentCue;
+		frag = self.liveData.currentFragment;
 		[self.liveData advance];
 		if( [self.liveData finished] ) {
-			self.liveData.cues = [[self.cues copy] autorelease];
+			self.liveData.fragments = [[self.fragments copy] autorelease];
 			[self.liveData interpreteInstructionsWithAction:vmAction_prepare];
 		}
 	}
@@ -1433,14 +1465,14 @@ static VMHash *scoreForCue__ = nil;
 	if ( self.liveData.history.count > ( kMaxSelectorHistoryNumber * 1.5 ) ) {
 		[self.liveData.history truncateLast:kMaxSelectorHistoryNumber];
 	}
-	return cue;
+	return frag;
 }
 
-- (VMArray*)cueIdList {	/*override*/
-	VMArray *cueIds = ARInstance(VMArray);
-	for( VMChance *ch in self.cues )
-		[cueIds push:ch.targetId];
-	return cueIds;
+- (VMArray*)fragmentIdList {	/*override*/
+	VMArray *fragIds = ARInstance(VMArray);
+	for( VMChance *ch in self.fragments )
+		[fragIds push:ch.targetId];
+	return fragIds;
 }
 
 #pragma mark obligatory
@@ -1459,7 +1491,7 @@ VMOBLIGATORY_setWithData()
 
 //------------------------ LayerList -----------------------------
 /*
- cue collection layer
+ fragments collection layer
  */
 #pragma mark -
 #pragma mark *** VMLayerList ***
@@ -1482,7 +1514,7 @@ VMOBLIGATORY_setWithData()
 
 //------------------------ Sequence -----------------------------
 /*
- cue collection sequence
+ fragments collection sequence
  */
 #pragma mark -
 #pragma mark *** VMSequence ***
@@ -1490,15 +1522,15 @@ VMOBLIGATORY_setWithData()
 @implementation VMSequence
 @synthesize subsequent=subsequent_;
 
-- (void)convertCueObjectsToReference {
-	[super convertCueObjectsToReference];
-	[self.subsequent convertCueObjectsToReference];
+- (void)convertFragmentObjectsToReference {
+	[super convertFragmentObjectsToReference];
+	[self.subsequent convertFragmentObjectsToReference];
 }
 
 #pragma mark private method
 
-- (VMCue*)cueAtIndex:(VMInt)pos {	//override VMSelector's method. if pos is at the maximal index, return next.
-	if( pos < self.length ) return [super cueAtIndex:pos];
+- (VMFragment*)fragmentAtIndex:(VMInt)pos {	//override VMSelector's method. if pos is at the maximal index, return next.
+	if( pos < self.length ) return [super fragmentAtIndex:pos];
 	if( pos == self.length ) return self.subsequent;
     return nil;
 }
@@ -1532,7 +1564,7 @@ VMObligatory_initWithCoder
 
 VMObligatory_encodeWithCoder
 (
- [self convertCueObjectsToReference];
+ [self convertFragmentObjectsToReference];
  Serialize(subsequent, Object)
 )
 
@@ -1557,38 +1589,38 @@ return [NSString stringWithFormat:@"%@\n   next:%@",
 #pragma mark *** VMLiveData ***
 
 @implementation VMLiveData
-@synthesize counter=counter_,cuePosition=cuePosition_,history=history_;
+@synthesize counter=counter_,fragPosition=fragPosition_,history=history_;
 
 #pragma mark accessor
 
-- (void)setCuePosition:(VMInt)cuePosition {
-	cuePosition_ = cuePosition;
-	if ( cuePosition > self.cues.count )
-		NSLog(@"cuePosition beyond cue array bound");
+- (void)setFragPosition:(VMInt)fragPosition {
+	fragPosition_ = fragPosition;
+	if ( fragPosition > self.fragments.count )
+		NSLog(@"fragPosition beyond frag array bound");
 }
 
-- (VMInt)cuePosition {
-	return cuePosition_;
+- (VMInt)fragPosition {
+	return fragPosition_;
 }
 
-- (VMCue*)currentCue {
-	return [self cueAtIndex:self.cuePosition];
+- (VMFragment*)currentFragment {
+	return [self fragmentAtIndex:self.fragPosition];
 }
 
-- (VMCue*)nextCue {
-	return [self cueAtIndex:self.cuePosition+1];
+- (VMFragment*)nextFragment {
+	return [self fragmentAtIndex:self.fragPosition+1];
 }
 
 - (void)advance {
-	++self.cuePosition;
+	++self.fragPosition;
 }
 
 - (BOOL)finished {
-   return self.cuePosition >= self.length;
+   return self.fragPosition >= self.length;
 }
 
 - (void)reset {
-	self.cuePosition = 0;
+	self.fragPosition = 0;
 	self.counter = 0;
 	self.history = nil;
 }
@@ -1596,7 +1628,7 @@ return [NSString stringWithFormat:@"%@\n   next:%@",
 #pragma mark instruction
 /**----------------------------- player design ------------------------------
  
- player has n(n>1) buckets(=cues), a reference to next player, play instructions and counter
+ player has n(n>1) buckets(=frags), a reference to next player, play instructions and counter
  
  say				subseq		instructions	counter
  [a][b][c]			[s]			<xxx>			0
@@ -1612,7 +1644,7 @@ return [NSString stringWithFormat:@"%@\n   next:%@",
  <reverse>					reverse order
  (common)
  <returnAfterOneBucket=NO>	this is NO by default. 		( this instruction was designed to make players sequence and selector compatible - pending )
- <shuffle=n%>				shuffles cues at given amont %
+ <shuffle=n%>				shuffles frags at given amont %
  
  a selector player is normally
  [a=1][b=3][c=2]	[self]		<shuffle=100%>
@@ -1624,19 +1656,19 @@ return [NSString stringWithFormat:@"%@\n   next:%@",
  *	selector (randomize) instruction options:
  <temporary>				do not cache buckets, choose each time.	(ignores other instructions)
  <flattenScore>				treat every score as 1
- <doNotRepeatWithin=n>		prevent repeat of same cueId (with last played cueId) if possible
+ <doNotRepeatWithin=n>		prevent repeat of same fragId (with last played fragId) if possible
  (common)
  <returnAfterOneBucket=YES>	this is YES by default.		( this instruction was designed to make players sequence and selector compatible - pending )
- <shuffle=n%>				shuffles cues at given amount %
+ <shuffle=n%>				shuffles frags at given amount %
  
  the counter counts the number of playback times of this player. 
- some cues only appear after a certian count of playback. (evolving)
+ some frags only appear after a certian count of playback. (evolving)
  this can be defined as stimulation input = playerId-counter
  
  */
 
 - (void)interpreteInstructionsWithData:(VMData *)data action:(VMActionType)action {
-	self.cuePosition = 0;	//	reset
+	self.fragPosition = 0;	//	reset
 	for ( VMFunction *func in self.instructionList )
 		[func processWithData:data action:action];
 }
@@ -1644,12 +1676,12 @@ return [NSString stringWithFormat:@"%@\n   next:%@",
 #pragma mark obligatory
 VMObligatory_resolveUntilType
 (
- return [[self currentCue] resolveUntilType:mask];
+ return [[self currentFragment] resolveUntilType:mask];
  )
 VMOBLIGATORY_init(vmObjectType_player, NO,)
 
 VMOBLIGATORY_setWithProto(
- CopyPropertyIfExist( cuePosition )
+ CopyPropertyIfExist( fragPosition )
  CopyPropertyIfExist( counter )
  CopyPropertyIfExist( history )
  self.type = vmObjectType_liveData;
@@ -1658,7 +1690,7 @@ VMOBLIGATORY_setWithProto(
 VMOBLIGATORY_setWithData(
  if ( ClassMatch(data, VMHash)) {
 	 MakeHashFromData
-	 SetPropertyIfKeyExist( cuePosition, itemAsInt )
+	 SetPropertyIfKeyExist( fragPosition, itemAsInt )
 	 SetPropertyIfKeyExist( counter, itemAsInt )
 	 SetPropertyIfKeyExist( history, itemAsObject )
  }
@@ -1666,14 +1698,14 @@ VMOBLIGATORY_setWithData(
 
 VMObligatory_initWithCoder
 (
- Deserialize(cuePosition, Int64)
+ Deserialize(fragPosition, Int64)
  Deserialize(counter, Int64)
  Deserialize(history, Object)
  )
 
 VMObligatory_encodeWithCoder
 (
- Serialize(cuePosition, Int64)
+ Serialize(fragPosition, Int64)
  Serialize(counter, Int64)
  Serialize(history, Object)
  )
@@ -1686,7 +1718,7 @@ VMObligatory_encodeWithCoder
 - (NSString*)description {
 	return [NSString stringWithFormat:@"%@ pos:%ld count:%ld history:%@",
 			[super description],
-			self.cuePosition,
+			self.fragPosition,
 			self.counter,
 			self.history.description
 			];
@@ -1710,48 +1742,48 @@ VMObligatory_encodeWithCoder
 
 #pragma mark private method
 
--(VMCue*)cueAtIndex:(VMInt)pos {	//override VMSequence's method. if pos is at the maximal index and there is no parent, return next.
+-(VMFragment*)fragmentAtIndex:(VMInt)pos {	//override VMSequence's method. if pos is at the maximal index and there is no parent, return next.
 	if( pos < self.length ) 
-		return [super cueAtIndex:pos];
+		return [super fragmentAtIndex:pos];
 	else if( pos == self.length ) 
 		return self.nextPlayer;
     return nil;
 }
 
 #pragma mark public method
-- (VMCue*)currentCue {	//	override
-	VMCue *c = [self cueAtIndex:self.cuePosition];
+- (VMFragment*)currentFragment {	//	override
+	VMFragment *c = [self fragmentAtIndex:self.fragPosition];
 	if ( Pittari( c.id, self.staticDataId )) {
 		[VMException raise:@"Possibility of circular reference." 
-					format:@"current cue %ld in %@", self.cuePosition, self.description ];
+					format:@"current frag %ld in %@", self.fragPosition, self.description ];
 		//	possibility of circular reference.
 	}
 	return c;
 }
 
 /*
-- (VMCue*)resolveAudioCueOrPlayer {
-	id cue = self.currentCue;
+- (VMFragment*)resolveAudioFragmentOrPlayer {
+	id frag = self.currentFragment;
 	if (! [self finished] ) {
 		//	is current member in sequence a sequenceObj? try to resolve
-		id seq = [cue resolveUntilType:vmObjectType_sequence];
+		id seq = [frag resolveUntilType:vmObjectType_sequence];
 		if ( ! seq ) {
-			//	no: no sequence. try resolve an audioCue
-			cue = [cue resolveUntilType:vmObjectType_audioCue];
-			return cue;
+			//	no: no sequence. try resolve an audioFragment
+			frag = [frag resolveUntilType:vmObjectType_audioFragment];
+			return frag;
 		}
 	}
 	//	return new sequencePlayer
-	return [cue resolveUntilType:vmObjectType_player];
+	return [frag resolveUntilType:vmObjectType_player];
 }*/
 
 - (BOOL)finished {
-	return self.cuePosition >= self.length;
+	return self.fragPosition >= self.length;
 }
 
 #pragma mark obligatory
 VMObligatory_resolveUntilType(
-	return [[self currentCue] resolveUntilType:mask];
+	return [[self currentFragment] resolveUntilType:mask];
 )
 VMOBLIGATORY_init(vmObjectType_player, NO,)
 
@@ -1771,8 +1803,8 @@ VMOBLIGATORY_setWithProto(
 //
 //	if ( HasMethod(proto, subsequent) ) self.nextPlayer 
 //		= [[((VMSequence*)proto) subsequent] resolveUntilType:vmObjectType_player];
-	if ( HasMethod(proto, subsequent)) self.nextPlayer = (VMCue*) ((VMSequence*)proto).subsequent;
-	if (!ClassMatch(proto, VMPlayer)) self.staticDataId = ((VMCue*)proto).id;
+	if ( HasMethod(proto, subsequent)) self.nextPlayer = (VMFragment*) ((VMSequence*)proto).subsequent;
+	if (!ClassMatch(proto, VMPlayer)) self.staticDataId = ((VMFragment*)proto).id;
 	self.type = vmObjectType_player;
 }
 
@@ -1792,7 +1824,7 @@ VMObligatory_initWithCoder
 
 VMObligatory_encodeWithCoder
 (
- [self convertCueObjectsToReference];
+ [self convertFragmentObjectsToReference];
  Serialize(staticDataId, Object)
  Serialize(nextPlayer, Object)
 )
@@ -1806,8 +1838,8 @@ VMObligatory_encodeWithCoder
 - (NSString*)description {
 	return [NSString stringWithFormat:@"%@ current:%@ next:%@",
 			[super description],
-			self.currentCue.cueId,
-			Default( self.nextPlayer.cueId, @"?" )
+			self.currentFragment.fragId,
+			Default( self.nextPlayer.fragId, @"?" )
 			];
 }
 

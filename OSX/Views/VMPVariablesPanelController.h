@@ -22,7 +22,7 @@
 
 
 @property (nonatomic, retain)			VMArray				*itemsInTable;
-@property (nonatomic, retain)			VMId				*selectedCueId;
+@property (nonatomic, retain)			VMId				*selectedFragmentId;
 
 - (IBAction)typeSelected:(id)sender;
 - (IBAction)expressionEntered:(id)sender;

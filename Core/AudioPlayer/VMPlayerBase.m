@@ -11,14 +11,6 @@
 #import "VMPSongPlayer.h"
 
 @implementation VMPlayerBase
-/*
-- (void)watchCurrentTimeForDebug {
-	VMTime ct = [[NSDate date] timeIntervalSince1970]-timerOffset;
-	if ( timePaused ) ct = timePaused;
-	
-	if ( [self class] == [VMPSongPlayer class] && ( ct < 0 || ct > 99999 ))
-		NSLog(@"debug1");
-}*/
 
 - (id)init {
     self = [super init];
@@ -34,31 +26,26 @@
 
 - (void)initTime {
 	self.currentTime = RESET_TIME;
-//	[self watchCurrentTimeForDebug];
 	timePaused = 0;
 }
 
 - (void)pause {
 	timePaused = self.currentTime;
-//	[self watchCurrentTimeForDebug];
 }
 
 - (void)resume {
 	self.currentTime = timePaused;
 	timePaused = 0;
 	[self restartTimer];
-//	[self watchCurrentTimeForDebug];
 }
 
 -(NSTimeInterval)currentTime {
 	if ( timePaused ) return timePaused;
-//	[self watchCurrentTimeForDebug];
    return [[NSDate date] timeIntervalSince1970]-timerOffset;
 }
 
 -(void)setCurrentTime:(NSTimeInterval)t {
     timerOffset = [[NSDate date] timeIntervalSince1970]-t;
-//	[self watchCurrentTimeForDebug];
 }
 
 - (void)restartTimer {

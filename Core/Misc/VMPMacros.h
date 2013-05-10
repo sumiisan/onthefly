@@ -57,7 +57,7 @@
 //	primitive
 #define Default(expr,default) ((expr)?(expr):(default))
 
-//	the 'pittari-ping-pong' (perfect-fit) function. (macro name invented by my daughter)
+//	the 'pittari-ping-pong' (perfect-fit) macro. (macro name invented by my daughter)
 #define Pittari(dynObj,statObj) ((ClassMatch((statObj),VMString))?[((NSString*)(statObj)) isEqualToString:((NSString*)(dynObj))]\
 								:(ClassMatch((statObj),NSNumber)?[((NSNumber*)(statObj)) isEqualToNumber:((NSNumber*)(dynObj))]\
 								:(((id)dynObj)==((id)statObj))))

@@ -15,7 +15,7 @@
 + (void)raise:(NSString *)name format:(NSString *)format, ... {
 	va_list args;
 	va_start(args, format);
-	NSString *message = [[NSString alloc] initWithFormat:format arguments:args];
+	NSString *message = [[[NSString alloc] initWithFormat:format arguments:args] autorelease];
 	va_end(args);
 #if VMP_OSX
 	NSAlert *al = [NSAlert alertWithMessageText:name 
@@ -37,7 +37,6 @@
 	[super raise:name format:format arguments:args];
 	va_end(args);
 #endif
-	[message release];
 	
 #if VMP_OSX
 	[NSApp terminate:self];

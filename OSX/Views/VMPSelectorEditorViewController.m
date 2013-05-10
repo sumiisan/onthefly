@@ -43,7 +43,7 @@ static VMPSelectorEditorTab defaultTab__ = VMPSelectorEditor_BranchTab;
 	
 }
 
-- (IBAction)clickOnCueCell:(id)sender {
+- (IBAction)clickOnFragmentCell:(id)sender {
 	
 }
 

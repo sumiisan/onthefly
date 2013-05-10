@@ -22,11 +22,11 @@
 #pragma mark -
 #pragma mark VMPQueue
 
-//	VMPQueuedCue
-@implementation VMPQueuedCue
+//	VMPqueuedFragment
+@implementation VMPQueuedFragment
 - (NSString*)description {
 	return [NSString stringWithFormat:@"QC<%@> %.2f-%.2f (%@)", 
-			audioQue ? audioQue.id : @"no que",
+			audioFragment ? audioFragment.id : @"no que",
 			cueTime - cuePoints.start,
 			cueTime - cuePoints.start + cuePoints.end,
 			player ? player.description : @"no player"
@@ -36,7 +36,7 @@
 
 
 @interface VMPSongPlayer(private)
--(void)setCue;
+-(void)setFragment;
 @end
 
 
@@ -129,56 +129,43 @@ static VMPSongPlayer 	*songPlayer_singleton__ = nil;
 #pragma mark -
 #pragma mark queue related
 
-- (VMPQueuedCue*)queue:(VMAudioCue*)audioQue at:(VMTime)cueTime {
-	if ( ! audioQue ) {
-		[VMException raise:@"Attempted to queue an empty cue." format:@"at %f", cueTime ];
+- (VMPQueuedFragment*)queue:(VMAudioFragment*)audioFragment at:(VMTime)cueTime {
+	if ( ! audioFragment ) {
+		[VMException raise:@"Attempted to queue an empty frag." format:@"at %f", cueTime ];
 	}
 	
-	if ( Pittari( audioQue.fileId, @"*" ) ) return nil;	//	ignore empty file.
+	if ( Pittari( audioFragment.fileId, @"*" ) ) return nil;	//	ignore empty file.
 	
-	VMPQueuedCue *c = ARInstance(VMPQueuedCue);
+	VMPQueuedFragment *c = ARInstance(VMPQueuedFragment);
 	c->cueTime 	= cueTime;
-	c->audioQue = audioQue;
+	c->audioFragment = audioFragment;
 	
 	//	copy modulated duration and offset.
-	c->cuePoints.start = audioQue.modulatedOffset;
-	c->cuePoints.end = audioQue.modulatedDuration;
+	c->cuePoints.start = audioFragment.modulatedOffset;
+	c->cuePoints.end = audioFragment.modulatedDuration;
 	
-	[cueQueue push:c];
+	[fragQueue push:c];
 	return c;
 }
 
-- (void)flushFiredCues {
-	VMInt c = [cueQueue count];
+- (void)flushFiredFragments {
+	VMInt c = [fragQueue count];
 	for ( int i = 0; i < c; ++i ) {
-		VMPQueuedCue *cue = [cueQueue item:i];
-		if ( cue->player && cue->player.didPlay ) {
-			[cueQueue deleteItem:i];
+		VMPQueuedFragment *frag = [fragQueue item:i];
+		if ( frag->player && frag->player.didPlay ) {
+			[fragQueue deleteItem:i];
 			--i;
 			--c;
 		}
 	}	
 }
 
-- (void)flushUnfiredCues {
-	VMInt c = [cueQueue count];
+- (void)flushUnfiredFragments {
+	VMInt c = [fragQueue count];
 	for ( int i = 0; i < c; ++i ) {
-		VMPQueuedCue *cue = [cueQueue item:i];
-		if ( (!cue->player) || ( !cue->player.didPlay) ) {
-			[cueQueue deleteItem:i];
-			--i;
-			--c;
-		}
-	}	
-}
-
-
-- (void)flushFinishedCues {
-	VMInt c = [cueQueue count];
-	for ( int i = 0; i < c; ++i ) {
-		VMPQueuedCue *cue = [cueQueue item:i];
-		if ( !cue || ( cue->player && (!cue->player.isBusy) ) ) {
-			[cueQueue deleteItem:i];
+		VMPQueuedFragment *frag = [fragQueue item:i];
+		if ( (!frag->player) || ( !frag->player.didPlay) ) {
+			[fragQueue deleteItem:i];
 			--i;
 			--c;
 		}
@@ -186,17 +173,30 @@ static VMPSongPlayer 	*songPlayer_singleton__ = nil;
 }
 
 
-- (VMInt)numberOfUnfiredCues {
-	[self flushFinishedCues];
-	return cueQueue.count;
+- (void)flushFinishedFragments {
+	VMInt c = [fragQueue count];
+	for ( int i = 0; i < c; ++i ) {
+		VMPQueuedFragment *frag = [fragQueue item:i];
+		if ( !frag || ( frag->player && (!frag->player.isBusy) ) ) {
+			[fragQueue deleteItem:i];
+			--i;
+			--c;
+		}
+	}	
+}
+
+
+- (VMInt)numberOfUnfiredFragments {
+	[self flushFinishedFragments];
+	return fragQueue.count;
 }
 
 - (void)disposeCueHavingPlayer:(VMPAudioPlayer*)player {
-	VMInt c = [cueQueue count];
+	VMInt c = [fragQueue count];
 	for ( int i = 0; i < c; ++i ) {
-		VMPQueuedCue *cue = [cueQueue item:i];
-		if ( cue->player == player ) {
-			[cueQueue deleteItem:i];
+		VMPQueuedFragment *frag = [fragQueue item:i];
+		if ( frag->player == player ) {
+			[fragQueue deleteItem:i];
 			--i;
 			--c;
 		}
@@ -205,16 +205,16 @@ static VMPSongPlayer 	*songPlayer_singleton__ = nil;
 
 - (VMTime)startTimeOfFirstCue {
 	VMTime t = INFINITE_TIME;
-	for ( VMPQueuedCue *cue in cueQueue ) 
-		if ( cue->cueTime < t ) t = cue->cueTime - cue->cuePoints.start;
+	for ( VMPQueuedFragment *frag in fragQueue ) 
+		if ( frag->cueTime < t ) t = frag->cueTime - frag->cuePoints.start;
 	
 	return t;
 }
 
-- (VMTime)endTimeOfLastCue {
+- (VMTime)endTimeOfLastFragment {
 	VMTime t = RESET_TIME;
-	for ( VMPQueuedCue *cue in cueQueue ) {
-		VMTime endTime = cue->cueTime + LengthOfVMTimeRange(cue->cuePoints);
+	for ( VMPQueuedFragment *frag in fragQueue ) {
+		VMTime endTime = frag->cueTime + LengthOfVMTimeRange(frag->cuePoints);
 		if ( endTime > t ) t = endTime;
 	}
 	return t;
@@ -235,10 +235,10 @@ static VMPSongPlayer 	*songPlayer_singleton__ = nil;
 		[ap stop];
 }
 
-- (void)adjustCurrentTimeToQueuedCue {
-    VMTime startTimeOfFirstCue = [self startTimeOfFirstCue];
-	if ( startTimeOfFirstCue != INFINITE_TIME )
-		self.currentTime = startTimeOfFirstCue - secondsPreroll;
+- (void)adjustCurrentTimeToQueuedFragment {
+    VMTime startTimeOfFirstFragment = [self startTimeOfFirstCue];
+	if ( startTimeOfFirstFragment != INFINITE_TIME )
+		self.currentTime = startTimeOfFirstFragment - secondsPreroll;
 }
 
 - (void)resetNextCueTime {
@@ -285,11 +285,11 @@ static VMPSongPlayer 	*songPlayer_singleton__ = nil;
 //
 //  prepare audioPlayer
 //
--(void)setCueIntoAudioPlayer:(VMPQueuedCue*)cue {
+-(void)setFragmentIntoAudioPlayer:(VMPQueuedFragment*)frag {
 	VMPAudioPlayer *player = [self seekFreePlayer];
 	if ( ! player ) {
 		NSLog( @"No Free player!" );
-		[self performSelector:@selector(setCueIntoAudioPlayer:) withObject:cue afterDelay:1.];
+		[self performSelector:@selector(setFragmentIntoAudioPlayer:) withObject:frag afterDelay:1.];
 		return;
 	}
 	[self disposeCueHavingPlayer:player];
@@ -298,13 +298,13 @@ static VMPSongPlayer 	*songPlayer_singleton__ = nil;
 	NSString *fileId 	= nil;
 	float timeOffset = 0;
 	
-	if ( cue ) {
-		cue->player = player;
-		player.cueId		= cue->audioQue.cueId;
-		player.offset 		= cue->cuePoints.start;
-		player.cueDuration	= cue->cuePoints.end;
-		fileId				= cue->audioQue.fileId;
-		timeOffset			= self.currentTime - cue->cueTime - cue->cuePoints.start;
+	if ( frag ) {
+		frag->player = player;
+		player.fragId		= frag->audioFragment.fragId;
+		player.offset 		= frag->cuePoints.start;
+		player.fragDuration	= frag->cuePoints.end;
+		fileId				= frag->audioFragment.fileId;
+		timeOffset			= self.currentTime - frag->cueTime - frag->cuePoints.start;
 	}
 	
 	[player preloadAudio:[self filePathForFileId:fileId] atTime:timeOffset];
@@ -336,56 +336,56 @@ static VMPSongPlayer 	*songPlayer_singleton__ = nil;
 }
 
 //
-//	fire cues when the time has come
+//	fire frags when the time has come
 //
-- (void)fireCue:(VMPQueuedCue*)queuedCue {	
-	VMPAudioPlayer *player = queuedCue->player;
+- (void)fireCue:(VMPQueuedFragment*)queuedFragment {	
+	VMPAudioPlayer *player = queuedFragment->player;
 	assert(player);
 	
-	if ( self.currentTime > queuedCue->cueTime + LengthOfVMTimeRange( queuedCue->cuePoints ) ) {
+	if ( self.currentTime > queuedFragment->cueTime + LengthOfVMTimeRange( queuedFragment->cuePoints ) ) {
 		//	much too late
 		[player stop];
 		return;
 	}
 	
-	[queuedCue->audioQue interpreteInstructionsWithData:queuedCue->audioQue action:vmAction_play];
+	[queuedFragment->audioFragment interpreteInstructionsWithData:queuedFragment->audioFragment action:vmAction_play];
 	
 	[player setVolume:[self currentVolume]];
 	[player play];
 	
 	if(kUseNotification)
-		[VMPNotificationCenter postNotificationName:VMPNotificationAudioCueFired
+		[VMPNotificationCenter postNotificationName:VMPNotificationAudioFragmentFired
 											 object:self
-										   userInfo:@{ @"audioCue":queuedCue->audioQue } ];
-//	NSLog(@"fired:%@\n%@",queuedCue->audioQue.id,self.description);	
+										   userInfo:@{ @"audioFragment":queuedFragment->audioFragment } ];
+//	NSLog(@"fired:%@\n%@",queuedFragment->audioFragment.id,self.description);	
 }
 
 /*---------------------------------------------------------------------------------
  
- fill queue with audio cues
+ fill queue with audio frags
  
  ----------------------------------------------------------------------------------*/
 
 - (BOOL)fillQueueAt:(VMTime)time {
-	VMAudioCue *nextAudioCue = [song_ nextAudioCue];
+	VMAudioFragment *nextAudioFragment = [song_ nextAudioFragment];
 	
-	if ( nextAudioCue && (! Pittari( nextAudioCue.fileId, @"*" ))) {
+	if ( nextAudioFragment && (! Pittari( nextAudioFragment.fileId, @"*" ))) {
 		if ( time < self.currentTime ) time = self.currentTime + secondsPreroll;
-		VMPQueuedCue *qc = [self queue:nextAudioCue at:time];
+		VMPQueuedFragment *qc = [self queue:nextAudioFragment at:time];
 		self.nextCueTime = time + ( qc ? LengthOfVMTimeRange( qc->cuePoints) : 0 );
 #ifdef DEBUG
 		[self watchNextCueTimeForDebug];
 #endif
 
 		if ( kUseNotification )
-			[VMPNotificationCenter postNotificationName:VMPNotificationAudioCueQueued
+			[VMPNotificationCenter postNotificationName:VMPNotificationAudioFragmentQueued
 												 object:self
-											   userInfo:@{@"audioCue":nextAudioCue} ];
+											   userInfo:@{@"audioFragment":nextAudioFragment} ];
 
-		[self flushFinishedCues];
+		[self flushFinishedFragments];
 	}
 	
-	return ( nextAudioCue != nil );
+	return ( nextAudioFragment != nil );
 }
 
 
@@ -399,46 +399,46 @@ static VMPSongPlayer 	*songPlayer_singleton__ = nil;
 	if ( self.isPaused ) return;
 	++frameCounter;
 	
-	VMTime 			endTimeOfLastCue 	= RESET_TIME;
+	VMTime 			endTimeOfLastFragment 	= RESET_TIME;
 #if 0 //VMP_DESKTOP
 	VMPlayer 		*currentPlayer 		= [song.player retain];
 #endif
-	//VMPQueuedCue	*newlyFiredCue		= nil;
-	VMPQueuedCue	*nextUpcomingCue	= nil;
+	//VMPqueuedFragment	*newlyFiredFragment		= nil;
+	VMPQueuedFragment	*nextUpcomingFragment	= nil;
 		
-	for ( VMInt i = 0; i < cueQueue.count; ++i ) {
-		VMPQueuedCue *cue = [cueQueue item:i];
-		VMTime actualCueTime = cue->cueTime - cue->cuePoints.start;
+	for ( VMInt i = 0; i < fragQueue.count; ++i ) {
+		VMPQueuedFragment *frag = [fragQueue item:i];
+		VMTime actualCueTime = frag->cueTime - frag->cuePoints.start;
 		
-		if ( actualCueTime < ( self.currentTime + secondsPreparePlayer ) && ( ! cue->player ) ) {
+		if ( actualCueTime < ( self.currentTime + secondsPreparePlayer ) && ( ! frag->player ) ) {
 			//	prepare player		
-			[self setCueIntoAudioPlayer:cue];
+			[self setFragmentIntoAudioPlayer:frag];
 		}
 		
 		if ( actualCueTime <= self.currentTime ) {
 			//	fire !
-			if ( ( cue->player ) && ( ! cue->player.didPlay ) ) {
-				[self fireCue:cue];
-			//	newlyFiredCue = cue;
+			if ( ( frag->player ) && ( ! frag->player.didPlay ) ) {
+				[self fireCue:frag];
+			//	newlyFiredFragment = frag;
 			}
 		} else {
-			if ( ! nextUpcomingCue || cue->cueTime <= nextUpcomingCue->cueTime )
-				nextUpcomingCue = cue;
+			if ( ! nextUpcomingFragment || frag->cueTime <= nextUpcomingFragment->cueTime )
+				nextUpcomingFragment = frag;
 		}
 		
-		VMTime endTime = actualCueTime + cue->cuePoints.end;
-		if ( endTime > endTimeOfLastCue ) {
-		//	NSLog(@"endTimeOfLastCue:%@ %f", cue->audioQue.id, endTime );	
-			endTimeOfLastCue = endTime;
+		VMTime endTime = actualCueTime + frag->cuePoints.end;
+		if ( endTime > endTimeOfLastFragment ) {
+		//	NSLog(@"endTimeOfLastFragment:%@ %f", frag->audioFragment.id, endTime );	
+			endTimeOfLastFragment = endTime;
 		}
 	}
 	
 	int numberOfPlayersRunnning = 0;
-	if ( endTimeOfLastCue < self.currentTime ) endTimeOfLastCue = self.currentTime + secondsPreroll;
+	if ( endTimeOfLastFragment < self.currentTime ) endTimeOfLastFragment = self.currentTime + secondsPreroll;
 
 	//	fill cueue
-	if ( endTimeOfLastCue < ( [self currentTime] + secondsLookAhead ) ) {
-		[self fillQueueAt:endTimeOfLastCue ];
+	if ( endTimeOfLastFragment < ( [self currentTime] + secondsLookAhead ) ) {
+		[self fillQueueAt:endTimeOfLastFragment ];
 	}
 	
 	//	manage fade out / count running players.
@@ -453,12 +453,12 @@ static VMPSongPlayer 	*songPlayer_singleton__ = nil;
     }
 	
 	//	stop if no active player or queue
-	if (( numberOfPlayersRunnning == 0 && cueQueue.count == 0 ) || volume == 0 ) {
+	if (( numberOfPlayersRunnning == 0 && fragQueue.count == 0 ) || volume == 0 ) {
 		[self stop];
 	}
 	
     //  track view update
-	if( trackView_ && ( frameCounter % kDebugViewRedrawInterval ) == 1 ) {
+	if( trackView_ && ( frameCounter % kTrackViewRedrawInterval ) == 1 ) {
 		int i=0;
 		for ( VMPAudioPlayer *ap in audioPlayerList )
 			[trackView_ redraw:i++ player:ap];
@@ -468,10 +468,10 @@ static VMPSongPlayer 	*songPlayer_singleton__ = nil;
 
 #if 0 //VMP_DESKTOP
 	//	sequence view update
-	if ( newlyFiredCue && nextUpcomingCue ) {
+	if ( newlyFiredFragment && nextUpcomingFragment ) {
 		[sequenceView_ setCurrentPart:currentPlayer
-						 currentCueId:newlyFiredCue->audioQue.id
-							nextCueId:nextUpcomingCue->audioQue.id 
+						 currentFragmentId:newlyFiredFragment->audioFragment.id
+							nextFragmentId:nextUpcomingFragment->audioFragment.id 
 							  advance:YES];
 	}
 	[currentPlayer release];
@@ -493,39 +493,39 @@ static VMPSongPlayer 	*songPlayer_singleton__ = nil;
 }
 */
 -(void)start {
-	[self startWithCueId:song_.defaultCueId];
+	[self startWithFragmentId:song_.defaultFragmentId];
 }
 
-- (void)startWithCueId:(VMId*)cueId {
+- (void)startWithFragmentId:(VMId*)fragId {
 //	[self setFadeFrom:0 to:1 length:0.01 setDimmed:NO];
 	fadeStartPoint = 0;
 
 	if ( ! self.isWarmedUp ) [self warmUp];
 	
-	if ( cueId ) {
-		[self setCueId:cueId fadeOut:NO restartAfterFadeOut:YES];
-		NSLog(@"--- song player set cue id %@ ---\n", cueId );
-	} else if ( cueQueue.count == 0 ) {
+	if ( fragId ) {
+		[self setFragmentId:fragId fadeOut:NO restartAfterFadeOut:YES];
+		NSLog(@"--- song player set frag id %@ ---\n", fragId );
+	} else if ( fragQueue.count == 0 ) {
 		//	try to resume from current song
 		if ( ! [self fillQueueAt:-9999 ] ) {
-			//	failed: set default cue.
-			[self setCueId:song_.defaultCueId fadeOut:NO restartAfterFadeOut:NO];
-			NSLog(@"--- song player set default cue id ---\n" );
+			//	failed: set default frag.
+			[self setFragmentId:song_.defaultFragmentId fadeOut:NO restartAfterFadeOut:NO];
+			NSLog(@"--- song player set default frag id ---\n" );
 		} else {
 			NSLog(@"--- song player restored queues---%@\n---------\n",self.description);
 		}
 	}
 	
-	[self flushFiredCues];
+	[self flushFiredFragments];
 	[self resume];
 	NSLog(@"SongPlayer resumed");
-	[self adjustCurrentTimeToQueuedCue];
+	[self adjustCurrentTimeToQueuedFragment];
 }
 
 -(void)stop {
     fadeStartPoint = 0;
-	//cueQueue clear];
-	[self flushFiredCues];
+	//fragQueue clear];
+	[self flushFiredFragments];
 	[self pause];
     [self stopAllPlayers];
 }
@@ -534,7 +534,7 @@ static VMPSongPlayer 	*songPlayer_singleton__ = nil;
 	[self stopAllPlayers];
 	[DEFAULTSONG reset];
 	[DEFAULTEVALUATOR reset];
-    [self setCueId:song_.defaultCueId fadeOut:NO restartAfterFadeOut:YES];
+    [self setFragmentId:song_.defaultFragmentId fadeOut:NO restartAfterFadeOut:YES];
 }
 
 -(void)fadeoutAndStop:(VMTime)duration {
@@ -543,55 +543,55 @@ static VMPSongPlayer 	*songPlayer_singleton__ = nil;
 
 
 #pragma mark -
-#pragma mark cue/part set
+#pragma mark frag/part set
 
 
-- (VMAudioCue *)queueCueId:(VMId*)cueId {
+- (VMAudioFragment *)queueFragmentId:(VMId*)fragId {
 	
-	[song_ setCueId:cueId];
-	VMAudioCue *nextAudioCue = [song_ nextAudioCue];
+	[song_ setFragmentId:fragId];
+	VMAudioFragment *nextAudioFragment = [song_ nextAudioFragment];
 	
-	if ( nextAudioCue ) {
-		VMPQueuedCue *qc = [self queue:nextAudioCue at:self.nextCueTime];
+	if ( nextAudioFragment ) {
+		VMPQueuedFragment *qc = [self queue:nextAudioFragment at:self.nextCueTime];
 		if (qc) {
-			[self setCueIntoAudioPlayer:qc];
+			[self setFragmentIntoAudioPlayer:qc];
 			self.nextCueTime += LengthOfVMTimeRange( qc->cuePoints );
 #ifdef DEBUG
 			[self watchNextCueTimeForDebug];
 #endif
 		}
 		else
-		{	//	no cue queued ( maybe an empty file or so.. )
-			self.nextCueTime += ( nextAudioCue.modulatedDuration - nextAudioCue.modulatedOffset );
+		{	//	no frag queued ( maybe an empty file or so.. )
+			self.nextCueTime += ( nextAudioFragment.modulatedDuration - nextAudioFragment.modulatedOffset );
 #ifdef DEBUG
 			[self watchNextCueTimeForDebug];
 #endif
 		}
-		if ( startPlayAfterSetCue && self.isPaused ) {
+		if ( startPlayAfterSetFragment && self.isPaused ) {
 			[self setFadeFrom:0. to:1. length:0. setDimmed:NO];
 			[self resume];
 		}
-		startPlayAfterSetCue = NO;
+		startPlayAfterSetFragment = NO;
 	}
-	return nextAudioCue;
+	return nextAudioFragment;
 }
 
 //
-//  stop player and set cueId
+//  stop player and set fragId
 //
-- (void)stopAndSetCueId:(VMId*)cueId {
+- (void)stopAndSetFragmentId:(VMId*)fragId {
 	[self stop];
 	[self resetNextCueTime];
-	[self queueCueId:cueId];// at:self.currentTime + secondsPreroll];
+	[self queueFragmentId:fragId];// at:self.currentTime + secondsPreroll];
 }
 
 //
-//	set next cueId while playing.
+//	set next fragment's id while playing.
 //
-- (void)setNextCueId:(VMId*)cueId {
-	[self flushUnfiredCues];
+- (void)setNextFragmentId:(VMId*)fragId {
+	[self flushUnfiredFragments];
 		
-	VMTime etolc = [self endTimeOfLastCue];
+	VMTime etolc = [self endTimeOfLastFragment];
 	if ( etolc != RESET_TIME ) {
 		nextCueTime = ( etolc > self.currentTime ? etolc : self.currentTime + secondsPreroll );
 #ifdef DEBUG
@@ -601,15 +601,7 @@ static VMPSongPlayer 	*songPlayer_singleton__ = nil;
 	else 
 		[self resetNextCueTime];
 	
-	[self flushFinishedCues];
-    
-#if 0 //VMP_DESKTOP
-	VMAudioCue *nextAudioCue = [self queueCueId:cueId];// at:nextCueTime];
-    [sequenceView_ setCurrentPart:nil
-					 currentCueId:nil
-						nextCueId:nextAudioCue.cueId 
-						  advance:NO];
-#endif
+	[self flushFinishedFragments];
 }
 
 
@@ -617,13 +609,13 @@ static VMPSongPlayer 	*songPlayer_singleton__ = nil;
 //
 //	jump to certain position of song:
 //
-- (void)setCueId:(VMId*)cueId fadeOut:(BOOL)fadeFlag restartAfterFadeOut:(BOOL)inStartPlayAfterSetCue {
-	startPlayAfterSetCue = inStartPlayAfterSetCue;
+- (void)setFragmentId:(VMId*)fragId fadeOut:(BOOL)fadeFlag restartAfterFadeOut:(BOOL)inStartPlayAfterSetFragment {
+	startPlayAfterSetFragment = inStartPlayAfterSetFragment;
     if( fadeFlag && ( ! self.isPaused ) ) {        
         [self fadeoutAndStop:secondsAutoFadeOut];
-        [self performSelector:@selector(setNextCueId:) withObject:cueId afterDelay:secondsAutoFadeOut+0.5];
+        [self performSelector:@selector(setNextFragmentId:) withObject:fragId afterDelay:secondsAutoFadeOut+0.5];
     } else {
-        [self stopAndSetCueId:cueId];
+        [self stopAndSetFragmentId:fragId];
     }
 }
 
@@ -651,10 +643,10 @@ static VMPSongPlayer 	*songPlayer_singleton__ = nil;
     //  dummy cue to warm up audio engine
     //
 	DEFAULTEVALUATOR.testMode = YES;
-	VMPQueuedCue *cue = [self queue:[song_ resolveDataWithId:song_.defaultCueId
-											 untilReachType:vmObjectType_audioCue]
+	VMPQueuedFragment *frag = [self queue:[song_ resolveDataWithId:song_.defaultFragmentId
+											 untilReachType:vmObjectType_audioFragment]
 								 at:0];	
-    [self setCueIntoAudioPlayer:cue];
+    [self setFragmentIntoAudioPlayer:frag];
 	VMPAudioPlayer *firstAP = [self audioPlayer:0];
 	[firstAP setVolume:0.0];
 	NSLog(@"warming up...");
@@ -690,7 +682,7 @@ static VMPSongPlayer 	*songPlayer_singleton__ = nil;
     self = [super init];
 	if( self ) {
 		engineIsWarm_	= NO;
-		cueQueue 		= NewInstance(VMArray);
+		fragQueue 		= NewInstance(VMArray);
 		dimmed_			= NO;
 		globalVolume	= 1.;
 		fadeStartPoint  = 0;
@@ -703,7 +695,7 @@ static VMPSongPlayer 	*songPlayer_singleton__ = nil;
 
 - (void)dealloc {
 	[audioPlayerList release];
-	[cueQueue release];
+	[fragQueue release];
 	self.song = nil;
 	[super dealloc];
 }
@@ -719,7 +711,7 @@ static VMPSongPlayer 	*songPlayer_singleton__ = nil;
 #pragma mark description
 - (NSString*)description {
 	VMArray *queueDesc = ARInstance(VMArray);
-	for( VMPQueuedCue *c in cueQueue ) 
+	for( VMPQueuedFragment *c in fragQueue ) 
 		[queueDesc push:[c description]];
 	
 	return [NSString stringWithFormat:@"\n\nSP time:%.2f\n -%@\n\n", 

@@ -22,7 +22,7 @@
 
 
 @implementation VMSong
-@synthesize songName, audioFileExtension, vsFilePath, audioFileDirectory, defaultCueId;
+@synthesize songName, audioFileExtension, vsFilePath, audioFileDirectory, defaultFragmentId;
 @synthesize songData=songData_, entryPoints=entryPoints_, history=history_;
 @synthesize player;
 @synthesize showReport=showReport_;
@@ -40,17 +40,17 @@ BOOL verbose = NO;
  
  ----------------------------------------------------------------------------------*/
 
-- (void)record:(VMArray*)cueIds {
-	[self.history push:cueIds];
+- (void)record:(VMArray*)fragIds {
+	[self.history push:fragIds];
 	if( self.history.count > 2000 ) [self.history truncateFirst:1500];
 }
 
-- (VMInt)distanceToLastRecordOf:(VMId*)cueId {
+- (VMInt)distanceToLastRecordOf:(VMId*)fragId {
 	VMInt c = self.history.count;
 	VMInt p = c;
 	for ( int i = 0; i < c; ++i ) {
 		VMArray *arr = [self.history item: --p ];
-		if ( [arr position:cueId] >= 0 ) return i;
+		if ( [arr position:fragId] >= 0 ) return i;
 	}
 	return 1e30f;	//	don't use INFINITY
 }
@@ -78,13 +78,13 @@ BOOL verbose = NO;
 
 /*---------------------------------------------------------------------------------
  
- set the song position to given cue.
+ set the song position to given frag.
  
  ----------------------------------------------------------------------------------*/
 
-- (void)setCueId:(VMId*)cueId {
+- (void)setFragmentId:(VMId*)fragId {
 	self.player = nil;		//	disable returning to parent player.
-	self.player = [self playerFrom:cueId];
+	self.player = [self playerFrom:fragId];
 }
 
 /*---------------------------------------------------------------------------------
@@ -106,7 +106,7 @@ BOOL verbose = NO;
 }
 
 #pragma mark -
-#pragma mark private internal methods to resolving cues
+#pragma mark private internal methods to resolving frags
 
 //	private:
 - (BOOL)currentPlayerHasSubseq {
@@ -140,7 +140,7 @@ BOOL verbose = NO;
 
 
 #pragma mark -
-#pragma mark *** getting next sequence / resolve audio cues ***
+#pragma mark *** getting next sequence / resolve audio frags ***
 #pragma mark -
 
 
@@ -160,7 +160,7 @@ BOOL verbose = NO;
 	VerboseLog(@" CPE : check if player has reached end");
 	
 	if ( [self.player finished] ) {
-		VMCue *c = self.player.nextPlayer;
+		VMFragment *c = self.player.nextPlayer;
 		
 		if ( c.type == vmObjectType_player ) {
 			self.player = (VMPlayer*)self.player.nextPlayer;		//	pop
@@ -176,7 +176,7 @@ BOOL verbose = NO;
 	//		TODO: make the code clearer.
 	//
 	while (self.player) {
-		if ( self.player.cuePosition >= self.player.length ) {
+		if ( self.player.fragPosition >= self.player.length ) {
 			VerboseLog(@" CPE 2  : multiple pop -->" );
 			self.player = [self playerFrom:self.player.nextPlayer];
 			VerboseLog(@" CPE 2  : <--" );
@@ -188,20 +188,20 @@ BOOL verbose = NO;
 /*---------------------------------------------------------------------------------
  *
  *
- *	nextAudioCue (NAC)
+ *	nextAudioFragment (NAC)
  *
- *		get the next fragment (audioCue) from current player.
+ *		get the next fragment (audioFragment) from current player.
  *
  *
  *---------------------------------------------------------------------------------*/
 
-- (VMAudioCue*)nextAudioCue {
+- (VMAudioFragment*)nextAudioFragment {
 	if ( ! self.player )
 		return nil;
 		
 	if( verbose ) {
 		NSLog(@"\n\n");
-		NSLog(@"NAC : --- begin resolve nextAudioCue ---");
+		NSLog(@"NAC : --- begin resolve nextAudioFragment ---");
 	}
 	
 	[self checkIfPlayerHasReachedEnd];
@@ -211,13 +211,13 @@ BOOL verbose = NO;
 	//
 	//	1a)	found it: advance and push current player, make a sub-player from, then try to resolve a sequence recursively.
 	//	1b)	found, but reached the end of player: (looks redundant - clearify:TODO ) pop, then try to resolve a sequence recursively.
-	VMCue *cc = self.player.currentCue;
+	VMFragment *cc = self.player.currentFragment;
 	VMInt depth = 0;	//	only for debugging use
 	
 	doForever {
 		VMSequence *seq = [DEFAULTEVALUATOR resolveDataWithTracking:cc toType:vmObjectType_sequence];	
 		if( seq ) {
-			if ( self.player.cuePosition < self.player.length ) {
+			if ( self.player.fragPosition < self.player.length ) {
 				//
 				// case 1a:
 				//
@@ -226,8 +226,8 @@ BOOL verbose = NO;
 									depth,
 									self.player.id,
 									self.player.length,
-									self.player.cuePosition,
-									self.player.currentCue.id );
+									self.player.fragPosition,
+									self.player.currentFragment.id );
 				self.player = [self pushPlayerAndMakeSubPlayer:seq];
 			} else {
 				//
@@ -236,9 +236,9 @@ BOOL verbose = NO;
 				VerboseLog(@"NAC 1b : depth:%ld %@(popped 2)", depth, self.player.id);
 				self.player = [self playerFrom:player.nextPlayer];
 			}
-			cc = self.player.currentCue;
+			cc = self.player.currentFragment;
 			if(!cc && verbose)
-				NSLog(@"empty cue!");
+				NSLog(@"empty frag!");
 		} else
 			break;
 		
@@ -248,36 +248,36 @@ BOOL verbose = NO;
 	//
 	//	2)	after no more sequences could be resolved:
 	//
-	//	2a)	no sequence found: empty cue. cannot continue playing. (possibly an error)
-	//	2b)	found a sequence, but no audioCue was inside. cannot continue playing. (possibly an error)
-	//	2c)	did'nt find a sequence, but an audioCue: okay, why not use it. (maybe we can find a seq at next cue in sequence)
+	//	2a)	no sequence found: empty frag. cannot continue playing. (possibly an error)
+	//	2b)	found a sequence, but no audioFragment was inside. cannot continue playing. (possibly an error)
+	//	2c)	did'nt find a sequence, but an audioFragment: okay, why not use it. (maybe we can find a seq at next frag in sequence)
 	//
 	if( !cc ) {
 		//
 		// case 2a.
 		//
-		id cueId = [self.player.cues item:self.player.cuePosition];
+		id fragId = [self.player.fragments item:self.player.fragPosition];
 		if( verbose ) {
-			if ( ClassMatch(cueId, VMId) )
-				NSLog(@"NAC 2a : empty cue! possibly, %@ is not registered.", ((VMId*)cueId) );
+			if ( ClassMatch(fragId, VMId) )
+				NSLog(@"NAC 2a : empty frag! possibly, %@ is not registered.", ((VMId*)fragId) );
 			else 
-				NSLog(@"NAC 2a : empty cue! %@", cueId );
+				NSLog(@"NAC 2a : empty frag! %@", fragId );
 		}
 	}
 
-	VerboseLog(@"NAC 2 : resolve audioCue from currentCue ->");
-	VMAudioCue *ac = [DEFAULTEVALUATOR resolveDataWithTracking:cc toType:vmObjectType_audioCue];
+	VerboseLog(@"NAC 2 : resolve audioFragment from currentFragment ->");
+	VMAudioFragment *ac = [DEFAULTEVALUATOR resolveDataWithTracking:cc toType:vmObjectType_audioFragment];
 	if( ! ac ) {
 		//
 		//	case 2b:
 		//
-		NSLog(@"NAC 2b : no audioCue in sequence !");
+		NSLog(@"NAC 2b : no audioFragment in sequence !");
 		
 		/*
-		 ac = [cc resolveUntilType:vmObjectType_audioCue];
+		 ac = [cc resolveUntilType:vmObjectType_audioFragment];
 		 NSLog(@"%@",ac);
-		 self.player.cuePosition = 0;
-		 ac = [self nextAudioCue];
+		 self.player.fragPosition = 0;
+		 ac = [self nextAudioFragment];
 		 */
 	} else {
 		//
@@ -288,10 +288,10 @@ BOOL verbose = NO;
 							ac.id,
 							self.player.id,
 							self.player.length,
-							self.player.cuePosition
+							self.player.fragPosition
 							);
 		
-		[DEFAULTEVALUATOR setCueId:ac.id];
+		[DEFAULTEVALUATOR setFragmentId:ac.id];
 
 		
 	}
@@ -305,12 +305,12 @@ BOOL verbose = NO;
  *
  *		try to make a VMPlayerfrom given object.
  *
- *		1)	resolve a cue
- *			a)	object is VMPlayer:			advance, if the end of seq was reached, resolve subsequent.
- *			b)	object is VMSelector:		select one cue.
- *			c)	object is VMCue or VMId:	make sure it is a cue-able object. (convert if needed)
+ *		1)	resolve a frag
+ *			a)	object is VMPlayer:				advance, if the end of seq was reached, resolve subsequent.
+ *			b)	object is VMSelector:			select one frag.
+ *			c)	object is VMFragment or VMId:	make sure it is a queue-able fragment. (convert if needed)
  *
- *		2)	push current player and make a new player including the cue.
+ *		2)	push current player and make a new player including the frag.
  *
  *
  *---------------------------------------------------------------------------------*/
@@ -318,43 +318,43 @@ BOOL verbose = NO;
 - (VMPlayer*)playerFrom:(id)someObj {
 	if ( ! someObj ) return nil;
 	VMPlayer 	*parentPlayer 	= nil;
-	id 			cueObj 			= nil;
+	id 			fragObj 			= nil;
 	VerboseLog(@" PF : --- playerFrom:%@ ---", someObj);
 	
 	while ( ClassMatch(someObj, VMPlayer)) {
 		parentPlayer 	= someObj;
-		someObj 		= parentPlayer.currentCue;	//	this returns nextPlayer if player is finished
-		VerboseLog(@" PF 1a : got next cue %@ from player:%@",((VMData*)someObj).id, parentPlayer.id );
+		someObj 		= parentPlayer.currentFragment;	//	this returns nextPlayer if player is finished
+		VerboseLog(@" PF 1a : got next frag %@ from player:%@",((VMData*)someObj).id, parentPlayer.id );
 		
 		if( someObj == parentPlayer.nextPlayer ) {
 			VerboseLog(@" PF 1a : pop:%@ from player:%@",((VMData*)someObj).id, parentPlayer.id );
 		} else {
 			[(VMPlayer*)parentPlayer advance];
-			VerboseLog(@" PF 1a : advanced to %ld",((VMPlayer*)parentPlayer).cuePosition);
+			VerboseLog(@" PF 1a : advanced to %ld",((VMPlayer*)parentPlayer).fragPosition);
 			break;
 		}
 	}
 	
 	if ( ClassMatch(someObj, VMSelector)) {
-		VerboseLog(@" PF 1b : select cue");
-		cueObj = [(VMSelector*)someObj resolveUntilType:vmObjectCategory_cue];
-	} else if ( ClassMatch(someObj, VMCue)) {
-		VerboseLog(@" PF 1c : found cue");
-		cueObj = someObj;	//[self resolveDataWithId:((VMCue*)someObj).id untilReachType:vmObjectCategory_cue];
+		VerboseLog(@" PF 1b : select frag");
+		fragObj = [(VMSelector*)someObj resolveUntilType:vmObjectCategory_fragment];
+	} else if ( ClassMatch(someObj, VMFragment)) {
+		VerboseLog(@" PF 1c : found frag");
+		fragObj = someObj;	//[self resolveDataWithId:((VMFragment*)someObj).id untilReachType:vmObjectCategory_fragment];
 	} else if ( ClassMatch(someObj, VMId)) {
-		VerboseLog(@" PF 1c : ensure cue");
-		cueObj = [self data:someObj];
-		if ( ! [cueObj matchMask:vmObjectCategory_cue] ) {
-			cueObj = [self resolveDataWithId:(VMId*)someObj untilReachType:vmObjectCategory_cue];
+		VerboseLog(@" PF 1c : ensure frag");
+		fragObj = [self data:someObj];
+		if ( ! [fragObj matchMask:vmObjectCategory_fragment] ) {
+			fragObj = [self resolveDataWithId:(VMId*)someObj untilReachType:vmObjectCategory_fragment];
 		}
 	}
 
-	VerboseLog(@" PF 1  : cue %@ resolved from input",[cueObj description] );
+	VerboseLog(@" PF 1  : frag %@ resolved from input",[fragObj description] );
 	
 	VMPlayer *pl = nil;
 
-	if( cueObj ) 
-		pl = [self pushPlayerAndMakeSubPlayer:cueObj];
+	if( fragObj ) 
+		pl = [self pushPlayerAndMakeSubPlayer:fragObj];
 	
 	return pl;	
 }
@@ -365,14 +365,14 @@ BOOL verbose = NO;
  | the relationship between player, subseq and nextPlayer:
  |
  | rule #1: convert a sequence to player:
- | - copy cues. put subseq into nextplayer.
+ | - copy frags. put subseq into nextplayer.
  | SEQ			 subseq				PLY				   nextPlayer
- | {seq [cue1,cue2][subseq] }  	-> 	{player [cue1,cue2][subseq]}
+ | {seq [frag1,frag2][subseq] }  	-> 	{player [frag1,frag2][subseq]}
  |
  | rule #2: sequence without subseq:
- | - put the last cue in cues into nextPlayer.
+ | - put the last frag in frags into nextPlayer.
  | SEQ			 subseq				PLY			  nextPlayer
- | {seq [cue1,cue2][] }  		-> 	{player [cue1][cue2]}
+ | {seq [frag1,frag2][] }  		-> 	{player [frag1][frag2]}
  |
  | rule #3: nested sequence(1):
  | - create new player for nested sequence, put the parent player into
@@ -389,8 +389,8 @@ BOOL verbose = NO;
  |											  {player2 [..][subseq2]}
  |											  ][]}
  |
- | rule #5:convert an audioCue into player:
- | - put audioCue into cues, put parent player into nextPlayer
+ | rule #5:convert an audioFragment into player:
+ | - put audioFragment into frags, put parent player into nextPlayer
  |
  | AUQ
  | {auq}							->
@@ -402,19 +402,19 @@ BOOL verbose = NO;
  *	push player and make sub player (MSP)
  *
  *		push the current player into stack, make a new player including the
- *		input cue.
+ *		input frag.
  *
  *
  *---------------------------------------------------------------------------------*/
 
 
-- (VMPlayer*)pushPlayerAndMakeSubPlayer:(VMCue*)cue {
+- (VMPlayer*)pushPlayerAndMakeSubPlayer:(VMFragment*)frag {
 	
-	VMSequence *seq = ClassCastIfMatch(cue, VMSequence);
-	VMAudioCue *ac  = ClassCastIfMatch(cue, VMAudioCue);
+	VMSequence *seq = ClassCastIfMatch(frag, VMSequence);
+	VMAudioFragment *ac  = ClassCastIfMatch(frag, VMAudioFragment);
 	VMPlayer *newPlayer = nil;
 	
-	VerboseLog(@"  MSP : ---- push player and make sub player from %@ ---",cue.id);
+	VerboseLog(@"  MSP : ---- push player and make sub player from %@ ---",frag.id);
 	
 	if ( seq ) {
 		newPlayer = [[[VMPlayer alloc] initWithProto:seq] autorelease];		//	rule #1
@@ -423,11 +423,11 @@ BOOL verbose = NO;
 			&& [self currentPlayerHasSubseq] )
 			newPlayer.nextPlayer = self.player;								//	rules #3 & #4
 		
-		if( (! newPlayer.nextPlayer) && [newPlayer.cues count] > 1 ) {
+		if( (! newPlayer.nextPlayer) && [newPlayer.fragments count] > 1 ) {
 			VMSelector *subseq = ARInstance(VMSelector);
 			VMChance   *ch	   = ARInstance(VMChance);
-			[ch setWithData:[newPlayer.cues pop]];
-			subseq.cues = [VMArray arrayWithObject:ch];
+			[ch setWithData:[newPlayer.fragments pop]];
+			subseq.fragments = [VMArray arrayWithObject:ch];
 			subseq.id = [VMPreprocessor idWithVMPModifier:newPlayer.userGeneratedId tag:@"subseq" info:nil];
 			newPlayer.nextPlayer = subseq;										//	rule #2
 		}
@@ -436,7 +436,7 @@ BOOL verbose = NO;
 	
 	if ( ac ) {
 		newPlayer = ARInstance(VMPlayer);
-		newPlayer.cues = [VMArray arrayWithObject:ac.id];
+		newPlayer.fragments = [VMArray arrayWithObject:ac.id];
 		newPlayer.id = [VMPreprocessor idWithVMPModifier:ac.id tag:@"temp-player" info:nil];
 		newPlayer.nextPlayer = self.player;									//	rule #5
 	}	
@@ -524,7 +524,7 @@ BOOL verbose = NO;
 	self.log = nil;
 #endif
 	
-	[self->defaultCueId release];
+	[self->defaultFragmentId release];
 	[self->songName release];
     [super dealloc];
 }
@@ -533,7 +533,7 @@ BOOL verbose = NO;
 -(void)setByHash:(VMHash *)hash {
 	//self->songName = hash->hash_.songName;
 	self->songName 			= 	[HashItem(songName) retain];
-    self->defaultCueId 		=	[HashItem(defaultCueId) retain];
+    self->defaultFragmentId =	[HashItem(defaultFragmentId) retain];
     self.audioFileExtension =    HashItem(audioFileExtension);
     self.audioFileDirectory =    HashItem(audioFileDirectory);
 	if ( Pittari(self.audioFileDirectory,@"./" ))

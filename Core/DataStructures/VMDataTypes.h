@@ -16,7 +16,7 @@
  */
 @protocol VMObjectInitialization <NSObject>
 //	initialization
-- (id)initWithProto:(id)proto;	//	formerly initWithCue
+- (id)initWithProto:(id)proto;
 - (void)setWithProto:(id)proto;
 - (void)setWithData:(id)data;
 @end
@@ -34,57 +34,51 @@ typedef enum {
 	vmObjectCategory_media			=	1 << 11,
 	vmObjectCategory_function		=	1 << 12,
 	vmObjectCategory_songStruture	=	1 << 13,
-	vmObjectCategory_cue			=	1 << 14,
+	vmObjectCategory_fragment		=	1 << 14,
 	vmObjectCategory_runtime		=	1 << 15,
 	vmObjectCategory_any			=	0x0FF80,	
 	vmObjectMatch_type				= 	0x0007F		//	if one of 7 LSBits is set, perform type match, otherwise do category match.
 } vmObjectCategory;
 
 typedef enum {
-	vmObjectType_notVMObject		=	0,
+	vmObjectType_notVMObject	=	0,
 	//	base
-	vmObjectType_data				=	vmObjectCategory_base		| 	0x1		|	vmObjectCategory_unresolveable,
-	vmObjectType_reference			= 	vmObjectCategory_reference	|	0x1,
-	vmObjectType_unresolved			=	vmObjectCategory_abstract	|	0x2		|	vmObjectCategory_unresolveable,
-	vmObjectType_unknown			=   vmObjectCategory_abstract	|	0x3		|	vmObjectCategory_unresolveable,
+	vmObjectType_data			=	vmObjectCategory_base		| 	0x1		|	vmObjectCategory_unresolveable,
+	vmObjectType_reference		= 	vmObjectCategory_reference	|	0x1,
+	vmObjectType_unresolved		=	vmObjectCategory_abstract	|	0x2		|	vmObjectCategory_unresolveable,
+	vmObjectType_unknown		=   vmObjectCategory_abstract	|	0x3		|	vmObjectCategory_unresolveable,
 	
 	//	functions 
-	vmObjectType_function			=	vmObjectCategory_function	|	0x11	|	vmObjectCategory_unresolveable,
+	vmObjectType_function		=	vmObjectCategory_function	|	0x11	|	vmObjectCategory_unresolveable,
 	
 	//	chance and tags
-	vmObjectType_tag /*unused*/		=	vmObjectCategory_function	|	0x21	|	vmObjectCategory_unresolveable,
-	vmObjectType_tagList			=	vmObjectCategory_function	|	0x22	|	vmObjectCategory_unresolveable,
-	vmObjectType_chance				=	vmObjectCategory_function	|	0x41,
-	vmObjectType_scoreModifier		=	vmObjectCategory_function	|	0x42	|	vmObjectCategory_unresolveable,
-	vmObjectType_stimulator			=	vmObjectCategory_function	|	0x43	|	vmObjectCategory_unresolveable,
+	vmObjectType_tag /*unused*/	=	vmObjectCategory_function	|	0x21	|	vmObjectCategory_unresolveable,
+	vmObjectType_chance			=	vmObjectCategory_function	|	0x41,
+	vmObjectType_transformer	=	vmObjectCategory_function	|	0x42	|	vmObjectCategory_unresolveable,
+	vmObjectType_stimulator		=	vmObjectCategory_function	|	0x43	|	vmObjectCategory_unresolveable,
 	
 	//	audio
-	vmObjectType_audioInfo			=	vmObjectCategory_media		|	0x11,
-	vmObjectType_audioModifier		=	vmObjectCategory_media		| 	0x12,
+	vmObjectType_audioInfo		=	vmObjectCategory_media		|	0x11,
+	vmObjectType_audioModifier	=	vmObjectCategory_media		| 	0x12,
 	
 	//	static song structure
-	vmObjectType_cue				=	vmObjectCategory_cue		|	vmObjectCategory_songStruture	|	0x01	|	vmObjectCategory_unresolveable,
-	vmObjectType_audioCue			=	vmObjectCategory_cue		|	vmObjectCategory_songStruture	|	0x03,
-	vmObjectType_visualCue			=	vmObjectCategory_cue		|	vmObjectCategory_songStruture	|	0x04,	/*unused*/
-	vmObjectType_textCue			=	vmObjectCategory_cue		|	vmObjectCategory_songStruture	|	0x05,	/*unused*/
-	vmObjectType_voiceCue			=	vmObjectCategory_cue		|	vmObjectCategory_songStruture	|	0x06,	/*unused*/
-	vmObjectType_genericCue			=	vmObjectCategory_cue		|	vmObjectCategory_songStruture	|	0x11,	/*unused*/
-	vmObjectType_metaCue			=	vmObjectCategory_cue		|	vmObjectCategory_songStruture	|	0x12,
+	vmObjectType_fragment		=	vmObjectCategory_fragment	|	vmObjectCategory_songStruture	|	0x01	|	vmObjectCategory_unresolveable,
+	vmObjectType_audioFragment  =	vmObjectCategory_fragment	|	vmObjectCategory_songStruture	|	0x03,
+	vmObjectType_imageFragment  =	vmObjectCategory_fragment	|	vmObjectCategory_songStruture	|	0x04,	/*unused*/
+	vmObjectType_textFragment	=	vmObjectCategory_fragment	|	vmObjectCategory_songStruture	|	0x05,	/*unused*/
+	vmObjectType_voiceFragment	=	vmObjectCategory_fragment	|	vmObjectCategory_songStruture	|	0x06,	/*unused*/
+	vmObjectType_genericFragment=	vmObjectCategory_fragment	|	vmObjectCategory_songStruture	|	0x11,	/*unused*/
+	vmObjectType_metaFragment	=	vmObjectCategory_fragment	|	vmObjectCategory_songStruture	|	0x12,
 
-	vmObjectType_cueCollection		=	vmObjectCategory_abstract	|	vmObjectCategory_songStruture	|	0x21	|	vmObjectCategory_unresolveable,
-	vmObjectType_layerList			=	vmObjectCategory_cue		|	vmObjectCategory_songStruture	|	0x22,
-	vmObjectType_selector			=	vmObjectCategory_abstract	|	vmObjectCategory_songStruture	|	0x23,
-	vmObjectType_sequence			=	vmObjectCategory_cue		|	vmObjectCategory_songStruture	|	0x24,
+	vmObjectType_collection		=	vmObjectCategory_abstract	|	vmObjectCategory_songStruture	|	0x21	|	vmObjectCategory_unresolveable,
+	vmObjectType_layerList		=	vmObjectCategory_fragment	|	vmObjectCategory_songStruture	|	0x22,
+	vmObjectType_selector		=	vmObjectCategory_abstract	|	vmObjectCategory_songStruture	|	0x23,
+	vmObjectType_sequence		=	vmObjectCategory_fragment	|	vmObjectCategory_songStruture	|	0x24,
 	
 	//	dynamic song objects
-	vmObjectType_liveData			=	vmObjectCategory_abstract	|	vmObjectCategory_runtime		|	0x01,
-	vmObjectType_player				=	vmObjectCategory_cue		|	vmObjectCategory_runtime		|	0x02,
+	vmObjectType_liveData		=	vmObjectCategory_abstract	|	vmObjectCategory_runtime		|	0x01,
+	vmObjectType_player			=	vmObjectCategory_fragment	|	vmObjectCategory_runtime		|	0x02,
 } vmObjectType;
-
-typedef union {
-	vmObjectType		objectType;
-	vmObjectCategory	objectCategory;
-} vmObjectTypeDescriptor;
 
 typedef enum {
 	vmAction_play	 = 0,
@@ -124,20 +118,19 @@ typedef enum {
  *    the data class tree
  *
  * level/layer
- *    1/base        2/category      3/meta            4/static media     5/concrete      6/collection    7/dynamic       8/runtime
+ *    1/base        2/category      3/            4/static media     5/concrete      6/collection    7/dynamic       8/runtime
  *
- *    [VMData]┬--- [VMCue]--------- [VMMetaCue]-------------------------- [VMAudioCue] ----------------- [VMAudioCuePlayer]
+ *    [VMData]┬--- [VMFragment]---- [VMMetaFragment]--------------------- [VMAudioFragment] --------- [VMAudioFragmentPlayer]
  *            |                            |    └---- [VMAudioInfo]------ [VMAudioModifier]
- *            |                            └ [VMCueCollection]---------┬- [VMLayerList]
+ *            |                            └ [VMCollection]------------┬- [VMLayerList]
  *            |                                                        ├---------------- [VMSelector]
  *            |                                                        ├---------------- [VMSequence]
- *            |                                                        └-------------------------------- [VMLiveData]--- [VMPlayer]
+ *            |                                                        └----------------------------- [VMLiveData]--- [VMPlayer]
  *            ├---[VMReference]--┬- [VMChance]
  *            |                  └- [VMUnresolved]
  *            |
- *            └- (uncatecorized) ---[VMStimulator]
- *                            ├---- [VMTaglist]
- *                            ├---------------------------------------- [VMScoreModifier]
+ *            └- (uncatecorized) -- [VMStimulator]
+ *                            ├---- [VMTransformer]
  *                            └---- [VMFunction]
  */
 
@@ -149,9 +142,6 @@ typedef enum {
 @protected
 	vmObjectType	type_;
 	BOOL			shouldRegister_;
-#ifdef DEBUG
-	VMId			*id_;
-#endif
 }
 @property 	(VMNonatomic copy)			VMId			*id;
 @property	(VMNonatomic assign)		vmObjectType	type;
@@ -175,11 +165,11 @@ typedef enum {
 @end
 
 
-//------------------------ Cue (abstract) -----------------------
+//------------------------ Fragment (abstract) -----------------------
 /*
- everything cue-able
+ a fragment of some media
  */
-@interface VMCue : VMData
+@interface VMFragment : VMData
 @end
 
 //------------------------ Function -----------------------------
@@ -188,20 +178,16 @@ typedef enum {
  */
 @interface VMFunction : VMData {
 	SEL		processor_;
-#ifdef DEBUG
-	VMId			*functionName_;
-	VMHash			*parameter_;
-#endif
 }
 @property	(VMNonatomic retain)	VMId			*functionName;
 @property	(VMNonatomic retain)	VMHash			*parameter;
 @end
 
-//------------------------- MetaCue -----------------------------
+//------------------------- MetaFragment -----------------------------
 /*
- a cue with instruction
+ a fragment with instruction
  */
-@interface VMMetaCue : VMCue 
+@interface VMMetaFragment : VMFragment 
 @property	(VMNonatomic retain)	VMArray			*instructionList;
 @end
 
@@ -209,7 +195,7 @@ typedef enum {
 /*
  information about audio file
  */
-@interface VMAudioInfo : VMMetaCue {
+@interface VMAudioInfo : VMMetaFragment {
 	VMId	*fileId_;
 }
 @property	(VMNonatomic copy)		VMId						*fileId;
@@ -226,68 +212,61 @@ typedef enum {
 @property	(VMNonatomic copy)		VMId				*originalId;
 @end
 
-//------------------------ TagList -----------------------------
+//------------------------ Transformer --------------------------
 /*
- tags
+ evaluate expression and transform multiple factros into one output value
  */
-@interface VMTagList : VMData
-@property	(VMNonatomic retain)	VMArray	/*<VMId>*/	*tagArray;
-@end
-
-//------------------------ ScoreModifier --------------------------
-/*
- define the amount of a tag affects the score
- */
-@interface VMScoreModifier : VMData
-@property	(VMNonatomic copy)		VMId 				*tagName;
-@property	(VMNonatomic)			VMFloat				factor;
+@interface VMTransformer : VMData
+@property	(VMNonatomic copy)		VMString 			*scoreDescriptor;
+@property	(VMNonatomic readonly)	VMFloat				currentValue;
 @end
 
 
 //------------------------ Stimulator --------------------------
 /*
- interraction source which affects the scores of tagged chances
- */
+ external input definition
+  */
 @interface VMStimulator : VMData
 @property	(VMNonatomic copy)		VMId				*source;
-@property	(VMNonatomic retain)	VMArray /*<ScoreModifier>*/ *modifiers;
+@property	(VMNonatomic copy)		VMId				*key;
+@property	(VMNonatomic readonly)	VMFloat				currentValue;
 @end
 
 
+/*---------------------------------------------------------------------------------
+ *	Stimulator and Transformer (refactored)
+ *
+ *	example 1: react to camera input
+ *
+ *	{ type="Stimulator", id:"@Camera{Red}"	}												//	this is a built-in definition
+ *	{ type="Stimulator", id:"@Camera{Blue}"	}												//	this is a built-in definition
+ *	{ type="Stimulator", id:"@Camera{Saturation}"	}										//	this is a built-in definition
+ *
+ *	{ type="Transformer", id:"FeelsWarm",	score:"@Limit{(@Camera{Red}*0.5)+(@Camera{Saturation}*0.5)}"	},	//	user definition
+ *	{ type="Transformer", id:"FeelsCold",	score:"@Limit{(@Camera{Blue}*0.5)+(1-@Camera{Saturation}*0.5)}"	},	//	user definition
+ *
+ *	{ type="Selector", sel:["ocean_beach=FeelsWarm","home_bed=FeelsCold"] }
+ *
+ *
+ *	example 2: react to tag information
+ *
+ *	{ type="Stimulator", id:"@Tag{fresh}"	}
+ *	{ type="Stimulator", id:"@Tag{cold}"	}
+ *
+ *	{ type="Transformer", id:"EarlyMorning",	score:"(@Tag{fresh}*.5)+(@Tag{cold}*.5)+(@Tag{fresh}*@Tag{cold}*0.5)"	}
+ *	
+ *	{ type="Selector", sel:["dawn=EarlyMorning","noon=1-EarlyMorning","night=@Tag{cold}"] }
+ *
+ *---------------------------------------------------------------------------------*/
 
 
-/**----------------------------- stimulator relation ------------------------------
-
- 
- the relation between stimulator, modifier and tagList should look like:
- 
- //--- stimulators including modifiers ---
- 
- {	source:"cameraGreen",
- modifiers:["forest*3","ocean*0.3"] }
- {	source:"cameraBlue",
- modifiers:["forest*0.6","ocean*2"] }
- 
- //--- tagList-s ---
- 
- {	id:"gotoWood",	tag:["forest"]	}
- {	id:"gotoCoast",	tag:["ocean"] }
- {	id:"gotoPlain",	tag:["forest","ocean"] }
- 
- //--- selector ---
- 
- {	selector:["wood_001;gotoWood","coast_001;gotoCoast","plain_001;gotoPlain"]	}
- 
- 
- */
 
 
-
-//------------------------ AudioCue -----------------------------
+//------------------------ AudioFragment -----------------------------
 /*
- cue with audio
+ fragment with audio
  */
-@interface VMAudioCue : VMMetaCue {
+@interface VMAudioFragment : VMMetaFragment {
 	__weak VMAudioInfo	*audioInfoRef_;
 }
 @property	(nonatomic, copy)		VMId			*audioInfoId;
@@ -299,19 +278,19 @@ typedef enum {
 @property 	(weak)					VMAudioInfo		*audioInfoRef;
 @end
 
-//------------------------ AudioCuePlayer -----------------------------
+//------------------------ AudioFragmentPlayer -----------------------------
 /*
  dynamic data while playing 
  */
-@interface VMAudioCuePlayer : VMAudioCue
-@property	(VMNonatomic assign)	VMAudioCue		*nextLayer;
+@interface VMAudioFragmentPlayer : VMAudioFragment
+@property	(VMNonatomic assign)	VMAudioFragment		*nextLayer;
 @end
 
 
 
 //------------------------ Chance -----------------------------
 /*
- a cue with probability
+ a fragment with probability
  */
 @interface VMChance : VMReference {
 @private
@@ -326,30 +305,12 @@ typedef enum {
 
 @end
 
-/**----------------------------- chance instruction ------------------------------
- 
- chance string should look like:
- 
- targetCueId=scoreDescriptor	ex:	a_001_forest=3*greenTL
- or
- targetCueId					ex:	a_001
- 
- a score descriptor looks like:
- 
-primary factor expressed in decimal value		ex:		1	or 	1.3
- or
- expression 									ex:		C>1		or		someTagList		or		(C>1)*someTagList
- or
- combination of these.							ex:		2*(C>1)*someTagList
- 
- */
-
-//-------------------- CueCollection (abstract) -----------------------------
+//-------------------- Collection (abstract) -----------------------------
 /*
- generic collection of cues (abstract)
+ generic collection of fragments (abstract)
  */
-@interface VMCueCollection : VMMetaCue 
-@property	(VMNonatomic retain)	VMArray			*cues;
+@interface VMCollection : VMMetaFragment 
+@property	(VMNonatomic retain)	VMArray			*fragments;
 @property	(VMNonatomic readonly)	VMInt			length;		
 @end
 
@@ -357,22 +318,22 @@ primary factor expressed in decimal value		ex:		1	or 	1.3
 /*
  runtime properties
  */
-@interface VMLiveData : VMCueCollection
-@property	(VMNonatomic assign)	VMInt		counter;
-@property 	(VMNonatomic assign)	VMInt		cuePosition;
-@property	(VMNonatomic retain)	VMArray		*history;
+@interface VMLiveData : VMCollection
+@property	(VMNonatomic assign)	VMInt			counter;
+@property 	(VMNonatomic assign)	VMInt			fragPosition;
+@property	(VMNonatomic retain)	VMArray			*history;
 //	accessor
-@property 	(VMNonatomic readonly)	VMCue		*currentCue;	
-@property	(VMNonatomic readonly)	VMCue		*nextCue;
+@property 	(VMNonatomic readonly)	VMFragment		*currentFragment;	
+@property	(VMNonatomic readonly)	VMFragment		*nextFragment;
 @end
 
 
 
 //------------------------ Selector -----------------------------
 /*
- cue collection selector
+ fragments collection selector
  */
-@interface VMSelector : VMCueCollection {
+@interface VMSelector : VMCollection {
 	VMFloat			sumOfInnerScores_cache_;	//	for improve performance
 	VMChance		*selectedChance_;			//	for internal temporaly use
 }
@@ -385,32 +346,25 @@ primary factor expressed in decimal value		ex:		1	or 	1.3
 /*
  generic player
  */
-@interface VMPlayer : VMLiveData {
-@private
-#ifdef DEBUG
-	VMPlayer 	*nextPlayer_;
-	VMId		*staticDataId_;
-#endif
-	
-}
-@property	(VMNonatomic retain)	VMCue	 	*nextPlayer;
+@interface VMPlayer : VMLiveData
+@property	(VMNonatomic retain)	VMFragment	 	*nextPlayer;
 @property	(VMNonatomic copy)		VMId		*staticDataId;
 @end
 
 //------------------------ LayerList -----------------------------
 /*
- cue collection layer
+ fragments collection layer
  */
-@interface VMLayerList : VMCueCollection
+@interface VMLayerList : VMCollection
 @end
 
 
 //------------------------ Sequence -----------------------------
 /*
- cue collection sequence
+ fragments collection sequence
  */
-@interface VMSequence : VMCueCollection
-//	the cue which should be set after finishing sequence.
+@interface VMSequence : VMCollection
+//	the fragment which should be set after finishing sequence.
 //	only used if sequence has no parent sequence
 @property 	(VMNonatomic retain)	VMSelector		*subsequent;	
 @end
@@ -443,16 +397,16 @@ primary factor expressed in decimal value		ex:		1	or 	1.3
 - (id)valueForParameter:(VMString*)parameterName;
 - (BOOL)isEqualToFunction:(VMFunction*)aFunc;
 - (id)processWithData:(id)data action:(VMActionType)action;
-- (BOOL)doesChangeCueOrder;
+- (BOOL)doesChangeFragmentsOrder;
 @end
 
 
 
 
-//------------------------ Cue -----------------------------
-@interface VMCue(publicMethods)
+//------------------------ Fragment -----------------------------
+@interface VMFragment(publicMethods)
 //	dataId components accessor
-@property	(VMNonatomic retain)	VMId		*cueId;
+@property	(VMNonatomic retain)	VMId		*fragId;
 @property 	(VMNonatomic assign)	VMId		*partId;
 @property 	(VMNonatomic assign)	VMId		*sectionId;
 @property 	(VMNonatomic assign)	VMId		*trackId;
@@ -460,11 +414,11 @@ primary factor expressed in decimal value		ex:		1	or 	1.3
 @property	(VMNonatomic assign)	VMId		*VMPModifier;
 //	util
 - (NSString*)userGeneratedId;
-//- (VMCue*)resolve;
+//- (VMFragment*)resolve;
 @end
 
-//------------------------ MetaCue --------------------------
-@interface VMMetaCue(publicMethods)
+//------------------------ MetaFragment --------------------------
+@interface VMMetaFragment(publicMethods)
 - (void)interpreteInstructionsWithAction:(VMActionType)action;
 - (void)interpreteInstructionsWithData:(VMData*)data action:(VMActionType)action;
 - (VMFunction*)functionWithName:(VMString*)functionName;
@@ -484,11 +438,11 @@ primary factor expressed in decimal value		ex:		1	or 	1.3
 @end
 
 
-//------------------------ AudioCue -----------------------------
+//------------------------ AudioFragment -----------------------------
 /*
- cue with audio info
+ fragment of audio
  */
-@interface VMAudioCue(publicMethods)
+@interface VMAudioFragment(publicMethods)
 //	audioInfoWrapper
 @property	(VMNonatomic readonly)	VMId			*fileId;
 @property	(VMNonatomic readonly)	VMTime			duration;
@@ -496,29 +450,25 @@ primary factor expressed in decimal value		ex:		1	or 	1.3
 @property	(VMNonatomic readonly)	VMVolume		volume;
 @property	(VMNonatomic readonly)	VMTime			modulatedDuration;
 @property	(VMNonatomic readonly)	VMTime			modulatedOffset;
-//@property	(VMNonatomic readonly)	VMTime			durationBetweenCuePoints;
-
-
 @end
 
-//------------------------- MetaCue ------------------------------
-@interface VMMetaCue(publicMethods2)
+//------------------------- MetaFragment ------------------------------
+@interface VMMetaFragment(publicMethods2)
 - (void)interpreteInstructions;
 - (void)setInstructionsByString:(VMString*)instString;
 @end
 
-//------------------------ CueCollection -----------------------------
+//------------------------ Collection -----------------------------
 /*
- generic collection of cues
+ generic collection of fragments
  */
-@interface VMCueCollection (publicMethods)
+@interface VMCollection (publicMethods)
 - (VMChance*)chanceWithId:(VMId*)dataId;
 - (VMChance*)chanceWithTargetId:(VMId*)targetId;
-- (VMCue*)cueAtIndex:(VMInt)pos;
-//- (VMInt)cueCount;
-- (VMArray*)cueIdList;
-- (void)addCuesWithData:(id)data;
-- (void)convertCueObjectsToReference;
+- (VMFragment*)fragmentAtIndex:(VMInt)pos;
+- (VMArray*)fragmentIdList;
+- (void)addFragmentsWithData:(id)data;
+- (void)convertFragmentObjectsToReference;
 @end
 
 //------------------------ LiveData -----------------------------
@@ -534,18 +484,18 @@ primary factor expressed in decimal value		ex:		1	or 	1.3
 
 //------------------------ Selector -----------------------------
 /*
- cue collection selector
+ fragments collection selector
 */
 @interface VMSelector (publicMethods)
-- (VMCue*)selectOne;
-- (VMCue*)selectOneTemporaryUsingScores:(VMHash*)scoreForCues sumOfScores:(VMFloat)sum;
+- (VMFragment*)selectOne;
+- (VMFragment*)selectOneTemporaryUsingScores:(VMHash*)scoreForFragments sumOfScores:(VMFloat)sum;
 - (VMFloat)sumOfInnerScores;
 - (VMInt)counter;
 - (void)prepareLiveData;
 - (void)prepareSelection;
 
 //	return value is reference to a static VMHash.	copy if you want hold the result.
-- (VMHash*)collectScoresOfCues:(VMFloat)parentScore frameOffset:(VMInt)counterOffset normalize:(BOOL)normalize;	
+- (VMHash*)collectScoresOfFragments:(VMFloat)parentScore frameOffset:(VMInt)counterOffset normalize:(BOOL)normalize;	
 @end
 
 //------------------------ Player -----------------------------
@@ -559,7 +509,7 @@ primary factor expressed in decimal value		ex:		1	or 	1.3
 @interface VMPlayer (publicMethods)
 - (BOOL)finished;
 
-//- (VMCue*)resolveAudioCueOrPlayer;
+//- (VMFragment*)resolveAudioFragmentOrPlayer;
 
 @end
 

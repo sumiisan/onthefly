@@ -24,7 +24,7 @@
 @synthesize functionName=functionName_,parameter=parameter_;
 
 static VMHash 	*ProcessorTable__ = nil;
-static VMArray 	*cueOrderChangingFunctions__ = nil;
+static VMArray 	*fragOrderChangingFunctions__ = nil;
 
 #pragma mark public
 - (id)valueForParameter:(VMString*)parameterName {
@@ -54,9 +54,9 @@ static VMArray 	*cueOrderChangingFunctions__ = nil;
 	return result;
 }
 
-- (BOOL)doesChangeCueOrder {
-	VMInt p = [cueOrderChangingFunctions__ position:self.functionName];
-	//NSLog(@"xxx %@ changes cue order:%@", self.functionName, ( p >= 0 ) ? @"YES" : @"NO" );
+- (BOOL)doesChangeFragmentsOrder {
+	VMInt p = [fragOrderChangingFunctions__ position:self.functionName];
+	//NSLog(@"xxx %@ changes frag order:%@", self.functionName, ( p >= 0 ) ? @"YES" : @"NO" );
 	return p >= 0; 
 }
 
@@ -81,9 +81,9 @@ static VMArray 	*cueOrderChangingFunctions__ = nil;
 - (void)initProcessorTable {
 	if ( ! ProcessorTable__ ) {
 		ProcessorTable__ = [[VMHash hashWithObjectsAndKeys:		//	valid target		evaluated at action:
-							 ProcessorEntry(random)				//	cue collection		vmAction_prepare
-							 ProcessorEntry(shuffle)			//	cue collection		vmAction_prepare
-							 ProcessorEntry(reverse)			//	cue collection		vmAction_prepare
+							 ProcessorEntry(random)				//	fragments collection		vmAction_prepare
+							 ProcessorEntry(shuffle)			//	fragments collection		vmAction_prepare
+							 ProcessorEntry(reverse)			//	fragments collection		vmAction_prepare
 							 ProcessorEntry(schedule)			//	selector			vmAction_prepare
 							 ProcessorEntry(flattenScore)		//	selector			vmAction_prepare
 //							 ProcessorEntry(fluctuate)			//	audioInfo			get duration, offset etc
@@ -91,8 +91,8 @@ static VMArray 	*cueOrderChangingFunctions__ = nil;
 							 nil] retain];
 	}
 	
-	if ( ! cueOrderChangingFunctions__ ) {
-		cueOrderChangingFunctions__ = [[VMArray arrayWithObjects:
+	if ( ! fragOrderChangingFunctions__ ) {
+		fragOrderChangingFunctions__ = [[VMArray arrayWithObjects:
 									   @"random",
 									   @"shuffle",
 									   @"reverse",
@@ -110,7 +110,7 @@ static VMArray 	*cueOrderChangingFunctions__ = nil;
  -----------------------------------------------------------------------------------*/
 
 /**
- reverse order of cues in cue-collection
+ reverse order of frags in collection
  
  param name		value
  "reverse"		-
@@ -118,15 +118,15 @@ static VMArray 	*cueOrderChangingFunctions__ = nil;
 ProcessorDefinition(reverse) {
 	if ( action.intValue != vmAction_prepare ) return VMBoolObj(NO);
 	if( ClassMatch(data, VMSelector) ) data = ClassCast(data, VMSelector).liveData;
-	VMCueCollection *cc = ClassCastIfMatch(data, VMCueCollection);
+	VMCollection *cc = ClassCastIfMatch(data, VMCollection);
 	if ( cc ) {
-		[cc.cues reverse];										return VMBoolObj(YES);
+		[cc.fragments reverse];										return VMBoolObj(YES);
 	}
 	return nil;
 }
 
 /**
- shuffle cues in cue-collection
+ shuffle frags in collection
  
  param name		value
  "shuffle"		range (0..1)
@@ -134,7 +134,7 @@ ProcessorDefinition(reverse) {
 ProcessorDefinition(shuffle) {
 	if ( action.intValue != vmAction_prepare ) return VMBoolObj(NO);
 	if( ClassMatch(data, VMSelector) ) data = ClassCast(data, VMSelector).liveData;
-	VMCueCollection *cc = ClassCastIfMatch(data, VMCueCollection);
+	VMCollection *cc = ClassCastIfMatch(data, VMCollection);
 	if ( cc ) {
 		VMInt c = cc.length;
 		int range = c * [[self firstParameterValue] floatValue];
@@ -144,7 +144,7 @@ ProcessorDefinition(shuffle) {
 			VMInt swp = p+ofs;
 			if (swp < 0) swp = -swp;
 			if (swp >= c ) swp = c-(c-swp)-1;
-			if (swp > 0 && swp < c && p != swp ) [cc.cues swapItem:p withItem:swp];
+			if (swp > 0 && swp < c && p != swp ) [cc.fragments swapItem:p withItem:swp];
 		}
 		return VMBoolObj(YES);
 	}
@@ -152,7 +152,7 @@ ProcessorDefinition(shuffle) {
 }
 
 /**
- randomize cues in cue-collection
+ randomize frags in collection
  
  param name		value
  "random"		( alias for "shuffle=1" )
@@ -160,7 +160,7 @@ ProcessorDefinition(shuffle) {
 ProcessorDefinition(random) {
 	if ( action.intValue != vmAction_prepare ) return VMBoolObj(NO);
 	if( ClassMatch(data, VMSelector) ) data = ClassCast(data, VMSelector).liveData;
-	VMCueCollection *cc = ClassCastIfMatch(data, VMCueCollection);
+	VMCollection *cc = ClassCastIfMatch(data, VMCollection);
 	if ( cc ) {
 		[self.parameter setItem:VMFloatObj(1.) for:self.functionName];	//	do shuffle 100%
 		return [self ProcessorMethod(shuffle):cc action:action];
@@ -170,46 +170,46 @@ ProcessorDefinition(random) {
 
 
 /**
- schedule cues in selector
+ schedule frags in selector
  
- optimize cue selection. 
- it is useful if you have conditions allowing to play a cue only in limited frames like xxx=@C%7=1.
+ optimize frag selection. 
+ it is useful if you have conditions allowing to play a frag only in limited frames like xxx=@C%7=1.
  
  scheduiling in advance is recommended only if all conditions (except @C) are static. 
  example:
  xxx=2			...	OK. a static condition definition. 
- xxx=@LC 		...	BAD because @LC depends on last played cue, which means the condition changes dynamically.
+ xxx=@LC 		...	BAD because @LC depends on last played frag, which means the condition changes dynamically.
  xxx=@C>1 		... OK. @C (selector counter) is the only variable we can estimate at scheduling phase.
  
  param name		value
  "schedule"		-
- "frames" 		number of frames to schedule ( if omitted, default is 4 x number of cues )
+ "frames" 		number of frames to schedule ( if omitted, default is 4 x number of frags )
  */
 
 #define schedule_verbose 0
 //	subs
-- (void)removeCueOptionIfScoreIsLessThanZero:(VMId *)cueId 
-							 totalScoreOfCue:(VMHash *)totalScoreOfCue 
+- (void)removeFragmentOptionIfScoreIsLessThanZero:(VMId *)fragId
+							 totalScoreOfFragment:(VMHash *)totalScoreOfFragment 
 							   scoreForFrame:(VMArray *)scoreForFrame {
     //	remove choice option if score < 0
-    VMFloat scoreForCue = [totalScoreOfCue itemAsFloat:cueId];
-    if ( scoreForCue < 0 )
-        for ( VMHash *scoreForCues in scoreForFrame )
-            [scoreForCues removeItem:cueId];
+    VMFloat scoreForFragment = [totalScoreOfFragment itemAsFloat:fragId];
+    if ( scoreForFragment < 0 )
+        for ( VMHash *scoreForFragments in scoreForFrame )
+            [scoreForFragments removeItem:fragId];
 }
 
-- (void)setCue:(VMId *)cueId 
+- (void)setFragment:(VMId *)fragId 
 			at:(VMInt)framePosition
 	   ofArray:(VMArray *)frames 
-totalScoreOfCues:(VMHash *)totalScoreOfCues 
+totalScoreOfFragments:(VMHash *)totalScoreOfFragments 
   framesLeft_p:(VMInt *)framesLeft_p
  scoreForFrame:(VMArray *)scoreForFrame {
 	
-    [frames setItem:cueId at:framePosition];
-    [totalScoreOfCues add:-1 ontoItem:cueId];
+    [frames setItem:fragId at:framePosition];
+    [totalScoreOfFragments add:-1 ontoItem:fragId];
     --(*framesLeft_p);
-    [self removeCueOptionIfScoreIsLessThanZero:cueId 
-                               totalScoreOfCue:totalScoreOfCues 
+    [self removeFragmentOptionIfScoreIsLessThanZero:fragId 
+                               totalScoreOfFragment:totalScoreOfFragments 
                                  scoreForFrame:scoreForFrame];
 #if schedule_verbose
 	VMArray *setFrames = ARInstance(VMArray);
@@ -218,7 +218,7 @@ totalScoreOfCues:(VMHash *)totalScoreOfCues
 		[setFrames push: ( obj ? [NSString stringWithFormat:@"%03d", i] : @"---" )];
 		++i;
 	}
-	NSLog(@"setCueFor %d=%@ %@", framePosition, cueId, [frames join:@","]);
+	NSLog(@"setFragmentFor %d=%@ %@", framePosition, fragId, [frames join:@","]);
 #endif
 }
 
@@ -231,20 +231,20 @@ ProcessorDefinition(schedule) {
 	VMInt 		framesToSchedule 	= frameParam ? [frameParam intValue] : selector.length * 4;
 	
 	VMArray		*frames				= [VMArray nullFilledArrayWithSize:framesToSchedule];
-	VMHash 		*totalScoreOfCues 	= ARInstance(VMHash);
+	VMHash 		*totalScoreOfFragments 	= ARInstance(VMHash);
 	VMArray 	*scoreForFrame 		= ARInstance(VMArray);
 	
 	int framePosition;
-	//	collect score for cues		
+	//	collect score for frags		
 	for (framePosition = 0; framePosition < framesToSchedule; ++framePosition) {
 #if schedule_verbose
 		NSLog(@"---------------- phase: 1 / frame: %d -----------------",framePosition);
 #endif
-		VMHash *scoreForCue = [selector collectScoresOfCues:0. frameOffset:framePosition normalize:YES];
-		[scoreForFrame push:[[scoreForCue copy] autorelease]];
-		VMArray *cueIds = [scoreForCue keys];
-		for ( VMId *cueId in cueIds )
-			[totalScoreOfCues add:[scoreForCue itemAsFloat:cueId] ontoItem:cueId];
+		VMHash *scoreForFragment = [selector collectScoresOfFragments:0. frameOffset:framePosition normalize:YES];
+		[scoreForFrame push:[[scoreForFragment copy] autorelease]];
+		VMArray *fragIds = [scoreForFragment keys];
+		for ( VMId *fragId in fragIds )
+			[totalScoreOfFragments add:[scoreForFragment itemAsFloat:fragId] ontoItem:fragId];
 	}
 	
 	//	scheduling
@@ -254,7 +254,7 @@ ProcessorDefinition(schedule) {
 #if schedule_verbose	
 		NSLog(@"---------------- phase: 2 / frames left: %d -----------------\n%@",
 			  framesLeft,
-			  [totalScoreOfCues description]);
+			  [totalScoreOfFragments description]);
 #endif
 
 		//	scan frames with only one choice
@@ -262,10 +262,10 @@ ProcessorDefinition(schedule) {
 			didSomething = NO;
 			for ( framePosition = 0; framePosition < framesToSchedule; ++framePosition ) {
 				if ( [frames item:framePosition] ) continue;					//	already scheduled.
-				VMHash *scoreForCues = [scoreForFrame item:framePosition];
-				if ( scoreForCues.count == 1 ) {
-					[self setCue:[[scoreForCues keys] item:0] at:framePosition ofArray:frames 
-				totalScoreOfCues:totalScoreOfCues
+				VMHash *scoreForFragments = [scoreForFrame item:framePosition];
+				if ( scoreForFragments.count == 1 ) {
+					[self setFragment:[[scoreForFragments keys] item:0] at:framePosition ofArray:frames 
+				totalScoreOfFragments:totalScoreOfFragments
 					framesLeft_p:&framesLeft 
 				   scoreForFrame:scoreForFrame];
 					didSomething = YES;
@@ -282,14 +282,14 @@ ProcessorDefinition(schedule) {
 			if ( ! [frames item:randomFrame] ) framePosition = randomFrame;
 		} while ( framePosition < 0 ); 
 		
-		VMCue *c = [selector selectOneTemporaryUsingScores:[scoreForFrame item:framePosition] sumOfScores:0.];
-		[self setCue:c.id at:framePosition ofArray:frames 
-	totalScoreOfCues:totalScoreOfCues
+		VMFragment *c = [selector selectOneTemporaryUsingScores:[scoreForFrame item:framePosition] sumOfScores:0.];
+		[self setFragment:c.id at:framePosition ofArray:frames 
+	totalScoreOfFragments:totalScoreOfFragments
 		framesLeft_p:&framesLeft 
 	   scoreForFrame:scoreForFrame];
 	}
 	
-	selector.liveData.cues = frames;
+	selector.liveData.fragments = frames;
 	NSLog(@"---------------- schedule end -----------------\n%@",[frames description]);
 
 	return VMBoolObj(YES);

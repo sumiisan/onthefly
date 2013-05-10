@@ -19,7 +19,7 @@
 }
 
 @property (nonatomic, retain) NSTextField *caption;
-@property (nonatomic, retain) NSString *audioCueId;
+@property (nonatomic, retain) NSString *audioFragmentId;
 
 - (void)setInfoString:(NSString *)infoString;
 

@@ -173,10 +173,10 @@ static const VMFloat kDefaultLogItemViewHeight = 14.0;
 
 - (void)songPlayerListener:(NSNotification*)notification {
 	if ( self.currentSource != VMLogOwner_Player ) return;
-	if ( [notification.name isEqualToString:@"AudioCueQueued"] ) {
+	if ( [notification.name isEqualToString:@"AudioFragmentQueued"] ) {
 		
 		//
-		// new audioCue was queued: update player log.
+		// new audioFragment was queued: update player log.
 		//
 		VMFloat scrollerPosition = self.logScrollView.verticalScroller.floatValue;
 		
@@ -190,16 +190,16 @@ static const VMFloat kDefaultLogItemViewHeight = 14.0;
 		}
 	}
 	
-	if ( [notification.name isEqualToString:@"AudioCueFired"]) {
+	if ( [notification.name isEqualToString:@"AudioFragmentFired"]) {
 		
-		VMAudioCue *ac = [notification.userInfo objectForKey:@"audioCue"];
+		VMAudioFragment *ac = [notification.userInfo objectForKey:@"audioFragment"];
 //		NSRange range = [self.logTableView rowsInRect:self.logTableView.visibleRect];
 		
 		VMInt seekCount = 100;
 		for ( VMInt row = self.logTableView.numberOfRows -1; row > 0; --row ) {
 			VMHistoryLog *hl = [self itemAtRow:row];
 			if ( hl.VMData == ac ) {
-				[self fireAllAudioCuesBelowIndex:hl.index];
+				[self fireAllAudioFragmentsBelowIndex:hl.index];
 				break;
 			}
 			if (! --seekCount ) break;
@@ -209,7 +209,7 @@ static const VMFloat kDefaultLogItemViewHeight = 14.0;
 	}
 }
 
-- (void)fireAllAudioCuesBelowIndex:(VMInt)index {
+- (void)fireAllAudioFragmentsBelowIndex:(VMInt)index {
 	VMTime now = [NSDate timeIntervalSinceReferenceDate];
 
 	VMInt i = _log.count -1;
@@ -278,7 +278,7 @@ static const VMFloat kDefaultLogItemViewHeight = 14.0;
 }
 
 - (IBAction)clickOnRow:(id)sender {
-	[self postNotification:VMPNotificationCueSelected];
+	[self postNotification:VMPNotificationFragmentSelected];
 //	[self.logTableView reloadData];
 	NSRange visibleRange = [self.logTableView rowsInRect:[self.logTableView visibleRect]];
 	[self.logTableView reloadDataForRowIndexes:[NSIndexSet indexSetWithIndexesInRange:visibleRange]
@@ -287,7 +287,7 @@ static const VMFloat kDefaultLogItemViewHeight = 14.0;
 }
 
 - (IBAction)doubleClickOnRow:(id)sender {
-	[self postNotification:VMPNotificationCueDoubleClicked];
+	[self postNotification:VMPNotificationFragmentDoubleClicked];
 }
 
 #pragma mark filtering
@@ -308,7 +308,7 @@ static const VMFloat kDefaultLogItemViewHeight = 14.0;
 		//
 		if( [fs isSelectedForSegment:0] ) [typeArray push:@(vmObjectType_selector)];
 		if( [fs isSelectedForSegment:1] ) [typeArray push:@(vmObjectType_sequence)];
-		if( [fs isSelectedForSegment:2] ) [typeArray push:@(vmObjectType_audioCue)];
+		if( [fs isSelectedForSegment:2] ) [typeArray push:@(vmObjectType_audioFragment)];
 		if( [fs isSelectedForSegment:3] ) [typeArray push:@(vmObjectType_notVMObject)];
 		
 		self.filteredLog = [[[VMLog alloc] initWithOwner:self.currentSource managedObjectContext:nil] autorelease];
@@ -321,7 +321,7 @@ static const VMFloat kDefaultLogItemViewHeight = 14.0;
 		//
 		if( [fs isSelectedForSegment:0] ) [typeArray push:[NSString stringWithFormat:@"type_obj = %d",vmObjectType_selector]];
 		if( [fs isSelectedForSegment:1] ) [typeArray push:[NSString stringWithFormat:@"type_obj = %d",vmObjectType_sequence]];
-		if( [fs isSelectedForSegment:2] ) [typeArray push:[NSString stringWithFormat:@"type_obj = %d",vmObjectType_audioCue]];
+		if( [fs isSelectedForSegment:2] ) [typeArray push:[NSString stringWithFormat:@"type_obj = %d",vmObjectType_audioFragment]];
 		if( [fs isSelectedForSegment:3] ) [typeArray push:[NSString stringWithFormat:@"type_obj = %d",vmObjectType_notVMObject]];
 		
 		self.filteredLog = [[[VMLog alloc] initWithOwner:self.currentSource
@@ -456,15 +456,15 @@ static const VMFloat kDefaultLogItemViewHeight = 14.0;
 				case vmObjectType_selector: {
 					
 					if ( [action isEqualToString:@"SEL"] ) {
-						VMHash *scoreForCues = hl.subInfo;
-						VMArray *keys = [scoreForCues sortedKeys];
-						VMFloat sum = [[scoreForCues values] sum];
+						VMHash *scoreForFragments = hl.subInfo;
+						VMArray *keys = [scoreForFragments sortedKeys];
+						VMFloat sum = [[scoreForFragments values] sum];
 						VMFloat pixPerScore = width / sum;
 						VMFloat x = 0;
-						VMId *selectedCue = [scoreForCues item:@"vmlog_selected"];
+						VMId *selectedFragment = [scoreForFragments item:@"vmlog_selected"];
 						for( VMId *key in keys ) {
 							if ( [key isEqualToString:@"vmlog_selected"] ) continue;
-							VMFloat score = [scoreForCues itemAsFloat:key];
+							VMFloat score = [scoreForFragments itemAsFloat:key];
 							VMFloat sw = score * pixPerScore;
 							NSTextField *tf = [[NSTextField alloc] initWithFrame:NSMakeRect(x, 0, sw -1, 29)];
 							x += sw;
@@ -473,7 +473,7 @@ static const VMFloat kDefaultLogItemViewHeight = 14.0;
 							tf.drawsBackground = YES;
 							tf.stringValue = key;
 							tf.editable = tf.bordered = NO;
-							tf.font = [key isEqualToString:selectedCue] ? [NSFont boldSystemFontOfSize:9] : [NSFont systemFontOfSize:9];
+							tf.font = [key isEqualToString:selectedFragment] ? [NSFont boldSystemFontOfSize:9] : [NSFont systemFontOfSize:9];
 							tf.toolTip = key;
 							[expansionView addSubview:tf];
 							[tf release];
@@ -484,13 +484,13 @@ static const VMFloat kDefaultLogItemViewHeight = 14.0;
 					
 				case vmObjectType_sequence: {					
 					if ( hl.subInfo ) {
-						VMArray *acList = [hl.subInfo item:@"audioCues"];
+						VMArray *acList = [hl.subInfo item:@"audioFragments"];
 						VMFloat y = hl.expandedHeight - 15;
 						if ( acList ) {
-							for( VMAudioCue *ac in acList) {
+							for( VMAudioFragment *ac in acList) {
 								NSTextField *tf = [[NSTextField alloc] initWithFrame:NSMakeRect(12, y, width-12, 14)];
 								tf.stringValue = [NSString stringWithFormat:@"AC %@", ac.id];
-								tf.backgroundColor = [NSColor backgroundColorForDataType:vmObjectType_audioCue];
+								tf.backgroundColor = [NSColor backgroundColorForDataType:vmObjectType_audioFragment];
 								tf.bordered = tf.editable = NO;
 								tf.tag = -1;
 								tf.font = [NSFont systemFontOfSize:10];

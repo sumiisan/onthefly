@@ -17,9 +17,9 @@ static void BufferCallback(void *inUserData, AudioQueueRef inAQ, AudioQueueBuffe
 @end
 
 @implementation VMPAudioPlayer
-@synthesize cueId;
+@synthesize fragId;
 @synthesize playerId;
-@synthesize cueDuration, fileDuration, offset;
+@synthesize fragDuration, fileDuration, offset;
 static VMHash *processPhaseNames__ = nil;
 
 #pragma mark -
@@ -37,7 +37,6 @@ static VMHash *processPhaseNames__ = nil;
 	return ( processPhase != pp_idle );
 }
 
-
 - (BOOL)isPlaying {
 	return ( processPhase == pp_play );
 }
@@ -50,7 +49,6 @@ static VMHash *processPhaseNames__ = nil;
 #pragma mark init and finalize
 
 #define processPhaseEntry(phase) @"" #phase, VMIntObj( pp_##phase ),
-
 
 - (void)initInternal {
     processPhase = pp_idle;
@@ -119,7 +117,9 @@ static VMHash *processPhaseNames__ = nil;
 		AudioFileGetProperty(audioFile, kAudioFilePropertyPacketSizeUpperBound, &size, &maxPacketSize);
 		if (maxPacketSize > kAudioPlayer_BufferSize) {
 			// hmm... well, we don't want to go over our buffer size, so we'll have to limit it I guess
-			NSLog(@"apAudioPlayer Warning - maxPacketSize was limited.%u -> %u", (unsigned int)maxPacketSize, kAudioPlayer_BufferSize );
+			NSLog(@"apAudioPlayer Warning - maxPacketSize was limited.%u -> %u",
+				  (unsigned int)maxPacketSize,
+				  kAudioPlayer_BufferSize );
 			maxPacketSize = kAudioPlayer_BufferSize;
 		}
 		numPacketsToRead = kAudioPlayer_BufferSize / maxPacketSize;
@@ -164,7 +164,7 @@ static VMHash *processPhaseNames__ = nil;
 
 #if TARGET_OS_IPHONE
 	//	prefer hardware decoder
-	UInt32 hardwarePolicy = kAudioQueueHardwareCodecPolicy_PreferHardware;//kAudioQueueHardwareCodecPolicy_UseSoftwareOnly;
+	UInt32 hardwarePolicy = kAudioQueueHardwareCodecPolicy_PreferHardware;
 	AudioQueueSetProperty( queue, kAudioQueueProperty_HardwareCodecPolicy, &hardwarePolicy, sizeof(hardwarePolicy));
 #endif
 	
@@ -197,7 +197,7 @@ static VMHash *processPhaseNames__ = nil;
 	size = sizeof( fileDuration );
 	AudioFileGetProperty( audioFile, kAudioFilePropertyEstimatedDuration, &size, &fileDuration );
 	
-	if ( cueDuration == 0 ) cueDuration = fileDuration;
+	if ( fragDuration == 0 ) fragDuration = fileDuration;
 	//waveformSampleInterval = ( fileDuration * dataFormat.mSampleRate ) / kWaveFormCacheFrames;
 }
 
@@ -282,7 +282,7 @@ static VMHash *processPhaseNames__ = nil;
 			
 		NSLog(@"%@ \nSR:%f, <%s> flags:%x \nbytes/packet:%d frames/packet:%d \nbytes/frame:%d ch/frame:%d bits/ch:%d"
 			  "\noffs:%lld, variableFramesInPacket:%d byteSize:%d",
-			  cueId,
+			  fragId,
 			  dataFormat.mSampleRate,
 			  c,
 			  dataFormat.mFormatFlags,
@@ -423,11 +423,11 @@ static void BufferCallback(void *inUserData, AudioQueueRef inAQ, AudioQueueBuffe
 
 - (NSString*)description {
 	return [NSString stringWithFormat:
-			@"AP<%d> time:%.2f phase:%@ dur(cue:%.2f file:%.2f)", 
+			@"AP<%d> time:%.2f phase:%@ dur(frag:%.2f file:%.2f)", 
 			playerId, 
 			self.currentTime,
 			[processPhaseNames__ item:VMIntObj( processPhase )],
-			cueDuration,
+			fragDuration,
 			fileDuration
 			];
 }

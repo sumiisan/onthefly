@@ -170,8 +170,8 @@
 }
 
 
-- (VMCue*)cue {
-	return (VMCue*)self.data;
+- (VMFragment*)frag {
+	return (VMFragment*)self.data;
 }
 
 - (id)init {
@@ -458,7 +458,7 @@
 		[self log:hl];
 		[self save];
 	} else {
-		[VMException alert:@"No cue selected."];
+		[VMException alert:@"No fragment selected."];
 	}
 }
 

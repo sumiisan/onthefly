@@ -82,9 +82,6 @@ VMPlayerOSXDelegate *OnTheFly_singleton__ = nil;
 	VMTime t = DEFAULTSONGPLAYER.currentTime;
 	_timeIndicator.stringValue = [NSString stringWithFormat:@"%02d:%02d'%02d\"%1d",
 								 (int)(t/3600),((int)t/60)%60,(int)t%60,((int)(t*10))%10 ];
-	t = DEFAULTSONGPLAYER.nextCueTime;
-	_nextCueTimeIndicator.stringValue = [NSString stringWithFormat:@"%02d:%02d'%02d\"%1d",
-								 (int)(t/3600),((int)t/60)%60,(int)t%60,((int)(t*10))%10 ];
 	
 	[self performSelector:@selector(mainRunLoop) withObject:nil afterDelay:0.1];
 }
@@ -109,7 +106,7 @@ VMPlayerOSXDelegate *OnTheFly_singleton__ = nil;
 										 object:self
 									   userInfo:@{@"owner":@(VMLogOwner_System) }];
 	[VMPNotificationCenter addObserver:self selector:@selector(someWindowWillClose:) name:NSWindowWillCloseNotification object:nil];
-	[VMPNotificationCenter addObserver:self selector:@selector(dataSelected:) name:VMPNotificationCueSelected object:nil];
+	[VMPNotificationCenter addObserver:self selector:@selector(dataSelected:) name:VMPNotificationFragmentSelected object:nil];
 }
 
 - (void)applicationWillFinishLaunching:(NSNotification *)notification {
@@ -253,7 +250,7 @@ VMPlayerOSXDelegate *OnTheFly_singleton__ = nil;
 - (IBAction)routeStatics:(id)sender {
 	DEFAULTANALYZER.delegate = self;
 	[DEFAULTSONGPLAYER fadeoutAndStop:5.];
-    [DEFAULTANALYZER routeStatistic:/*[objectBrowserView currentObject]*/[DEFAULTSONG data:DEFAULTSONG.defaultCueId] numberOfIterations:20 until:nil];
+    [DEFAULTANALYZER routeStatistic:/*[objectBrowserView currentObject]*/[DEFAULTSONG data:DEFAULTSONG.defaultFragmentId] numberOfIterations:20 until:nil];
 }
 
 - (IBAction)revertDocumentToSaved:(id)sender {
@@ -305,6 +302,8 @@ VMPlayerOSXDelegate *OnTheFly_singleton__ = nil;
 - (NSError*)openVMSDocumentFromURL:(NSURL *)documentURL {
 	NSError	*err = nil;
 	[DEFAULTSONG readFromURL:documentURL error:&err];
+	//	TODO: handle error
+	[VMPNotificationCenter postNotificationName:VMPNotificationVMSDataLoaded object:self userInfo:nil];
 	return err;
 }
 

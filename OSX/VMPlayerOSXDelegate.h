@@ -41,9 +41,6 @@
 @property (assign) IBOutlet NSButton				*playStopButton;
 @property (assign) IBOutlet NSTextField				*timeIndicator;
 
-@property (assign) IBOutlet NSWindow       			*transportWindow;			//	depreciated
-@property (assign) IBOutlet NSTextField				*nextCueTimeIndicator;		//	unused
-
 //	object browser
 @property (assign) IBOutlet NSWindow       			*objectBrowserWindow;
 @property (assign) IBOutlet VMPObjectBrowserView	*objectBrowserView;

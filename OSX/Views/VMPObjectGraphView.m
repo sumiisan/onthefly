@@ -54,8 +54,8 @@
 	return 55.;
 }
 
-- (void)collectBranchData:(VMCue*)cue x:(CGFloat)x gapX:(CGFloat)gapX height:(VMFloat)height {
-	//NSLog(@"%@ \tx:%.2f",cue.id,x);
+- (void)collectBranchData:(VMFragment*)frag x:(CGFloat)x gapX:(CGFloat)gapX height:(VMFloat)height {
+	//NSLog(@"%@ \tx:%.2f",frag.id,x);
 	x += gapX + vmpCellWidth;
 	if (( x >= (self.frame.size.width - vmpCellWidth) ) || height < 1 ) return;
 	
@@ -64,18 +64,18 @@
 		hashAtX = ARInstance(VMHash);
 		[branchViewTemporary setItem:hashAtX for:@( x )];
 	}
-	[hashAtX add:height ontoItem:cue.id];
-	if ( cue.type == vmObjectType_reference ) cue = [DEFAULTSONG data:((VMReference*)cue).referenceId];
-	int parentType = cue.type;
-	if ( parentType == vmObjectType_sequence ) cue = ((VMSequence*)cue).subsequent;
-	if ( cue.type == vmObjectType_selector ) {
-		VMSelector *sel				= (VMSelector*)cue;
+	[hashAtX add:height ontoItem:frag.id];
+	if ( frag.type == vmObjectType_reference ) frag = [DEFAULTSONG data:((VMReference*)frag).referenceId];
+	int parentType = frag.type;
+	if ( parentType == vmObjectType_sequence ) frag = ((VMSequence*)frag).subsequent;
+	if ( frag.type == vmObjectType_selector ) {
+		VMSelector *sel				= (VMSelector*)frag;
 		VMLiveData *saved_liveData	= [[sel.liveData copy] autorelease];
 		[sel prepareSelection];
 		if ( sel.sumOfInnerScores == 0 ) return;
-		for( VMChance *ch in sel.cues ) {
+		for( VMChance *ch in sel.fragments ) {
 			if ( ch.cachedScore == 0 ) continue;
-			VMCue *c = [DEFAULTSONG data:ch.targetId];
+			VMFragment *c = [DEFAULTSONG data:ch.targetId];
 			if( c )
 				[self collectBranchData:c
 									  x:x
@@ -87,7 +87,7 @@
 }
 
 // TODO:handle sequences with subseq = *
-- (void)drawBranchGraph:(VMCue*)cue
+- (void)drawBranchGraph:(VMFragment*)frag
 					  x:(CGFloat)x
 					  y:(CGFloat)y
 				   gapX:(CGFloat)gapX
@@ -96,13 +96,13 @@
 	x += gapX + vmpCellWidth;
 	if ( x >= (self.frame.size.width - vmpCellWidth) ) return;
 
-//	NSLog(@"%@ %.2f %.2f", cue.id, x, y);
+//	NSLog(@"%@ %.2f %.2f", frag.id, x, y);
 	VMHash *hashAtX = [branchViewTemporary item:@( x )];
-	VMString *yPositionKey = [cue.id stringByAppendingString:@"_y"];
+	VMString *yPositionKey = [frag.id stringByAppendingString:@"_y"];
 	CGFloat yAlreadyDrawn = [hashAtX itemAsFloat:yPositionKey];
 	BOOL drawChildren = NO;
 
-	//VMFloat summedHeight = [hashAtX itemAsFloat:cue.id];
+	//VMFloat summedHeight = [hashAtX itemAsFloat:frag.id];
 	if ( yAlreadyDrawn == 0 ) {
 		if ( summedHeight < 3 ) return;
 		CGFloat moddedYBase = [hashAtX itemAsFloat:@"moddedYBase"];
@@ -113,9 +113,9 @@
 		
 		[hashAtX setItem:VMFloatObj(yAlreadyDrawn + summedHeight) for:@"moddedYBase"];
 	//	[[branchViewTemporary itemAsHash:@(x+55)] setItem:VMFloatObj(yAlreadyDrawn + summedHeight) for:@"moddedBase"];
-		[hashAtX setItem:VMFloatObj(yAlreadyDrawn) for:[cue.id stringByAppendingString:@"_y"]];
+		[hashAtX setItem:VMFloatObj(yAlreadyDrawn) for:[frag.id stringByAppendingString:@"_y"]];
 	
-		VMPCueCell *cc = [VMPCueCell cueCellWithCue:cue
+		VMPFragmentCell *cc = [VMPFragmentCell fragmentCellWithFragment:frag
 											  frame:CGRectMake(x, yAlreadyDrawn, vmpCellWidth, summedHeight)
 										   delegate:self];
 		[self addSubview:cc];
@@ -128,14 +128,14 @@
 	[self addSubview:[line clone]];
 	
 	if ( ! drawChildren ) return;	//	do not draw children
-	if ( cue.type == vmObjectType_reference ) cue = [DEFAULTSONG data:((VMReference*)cue).referenceId];
-	int parentType = cue.type;
-	if ( parentType == vmObjectType_sequence ) cue = ((VMSequence*)cue).subsequent;
-	if ( cue.type == vmObjectType_selector ) {
-		VMSelector *sel = (VMSelector*)cue;
+	if ( frag.type == vmObjectType_reference ) frag = [DEFAULTSONG data:((VMReference*)frag).referenceId];
+	int parentType = frag.type;
+	if ( parentType == vmObjectType_sequence ) frag = ((VMSequence*)frag).subsequent;
+	if ( frag.type == vmObjectType_selector ) {
+		VMSelector *sel = (VMSelector*)frag;
 		CGFloat currentY = y;
-		for( VMChance *ch in sel.cues ) {
-			VMCue *c = [DEFAULTSONG data:ch.targetId];
+		for( VMChance *ch in sel.fragments ) {
+			VMFragment *c = [DEFAULTSONG data:ch.targetId];
 			VMFloat nextGapX = [self gapBetweenTypes:c.type and:parentType];
 			VMHash *hashAtNextX = [branchViewTemporary item:@( x + nextGapX + vmpCellWidth )];
 			summedHeight = [hashAtNextX itemAsFloat:ch.targetId];
@@ -158,38 +158,38 @@
  ----------------------------------------------------------------------------------*/
 #pragma mark single selector graph
 - (void)drawSelectorGraph:(VMSelector*)selector rect:(NSRect)rect {
-	VMHash *scoreForCueIds = [selector collectScoresOfCues:0 frameOffset:0 normalize:NO];
+	VMHash *scoreForFragmentIds = [selector collectScoresOfFragments:0 frameOffset:0 normalize:NO];
 	[self buildSelectorCellForFrame:0
-					 scoreForCueIds:scoreForCueIds
+					 scoreForFragmentIds:scoreForFragmentIds
 				   sumOfInnerScores:selector.sumOfInnerScores
-					 highlightCueId:nil
-				  cueIdsInLastFrame:nil
+					 highlightFragmentId:nil
+				  fragIdsInLastFrame:nil
 						  rect:rect];
 
 }
 
 - (void)buildSelectorCellForFrame:(int)offset
-				   scoreForCueIds:(VMHash*)scoreForCueIds
+				   scoreForFragmentIds:(VMHash*)scoreForFragmentIds
 				 sumOfInnerScores:(VMFloat)sumOfInnerScores
-				   highlightCueId:(VMId*)highlightCueId
-				cueIdsInLastFrame:(VMHash *)cueIdsInLastFrame
+				   highlightFragmentId:(VMId*)highlightFragmentId
+				fragIdsInLastFrame:(VMHash *)fragIdsInLastFrame
 							 rect:(NSRect)rect {
 	
-    VMArray *cueIds = [scoreForCueIds sortedKeys];
+    VMArray *fragIds = [scoreForFragmentIds sortedKeys];
     CGFloat pixPerScore = rect.size.height / sumOfInnerScores;
     CGFloat currentY = self.cellRect.origin.y + rect.origin.y;
     
-    for ( VMId *cueId in cueIds ) {
-        VMFloat score 		= [[scoreForCueIds item:cueId] floatValue];
+    for ( VMId *fragId in fragIds ) {
+        VMFloat score 		= [[scoreForFragmentIds item:fragId] floatValue];
         if (score <= 0) continue;
         CGFloat height  	= score * pixPerScore;
         CGRect	cellRect 	= CGRectMake(rect.origin.x,
                                          currentY,
                                          rect.size.width,
                                          height);
-        VMPCueCell *cc = [VMPCueCell cueCellWithCue:[DEFAULTSONG data:cueId] frame:cellRect delegate:self];
-		cc.selected = [cueId isEqualToString:highlightCueId];
-        cc.alphaValue = ([cueIdsInLastFrame item:cueId] ? 0.5 : 1. );
+        VMPFragmentCell *cc = [VMPFragmentCell fragmentCellWithFragment:[DEFAULTSONG data:fragId] frame:cellRect delegate:self];
+		cc.selected = [fragId isEqualToString:highlightFragmentId];
+        cc.alphaValue = ([fragIdsInLastFrame item:fragId] ? 0.5 : 1. );
         [self addSubview:cc];
         currentY += height;
     }
@@ -204,8 +204,8 @@
 #pragma mark frame graph
 - (void)drawFrameGraph {
 	[self removeAllSubviews];
-	if ( self.cue.type != vmObjectType_selector ) return;
-	VMSelector *selector = ((VMSelector*)self.cue);
+	if ( self.fragment.type != vmObjectType_selector ) return;
+	VMSelector *selector = ((VMSelector*)self.fragment);
 	
 	VMLiveData *saved_livedata = [[selector.liveData copy] autorelease];
 	
@@ -216,7 +216,7 @@
 	CGFloat testHeight		= 0;
 	CGFloat marginHeight	= 5;
 	CGFloat contentHeight 	= self.frame.size.height - labelHeight - testHeight - marginHeight - 10;
-	VMHash *cueIdsInLastFrame = nil;
+	VMHash *fragIdsInLastFrame = nil;
 	
 	for ( int frame = 0; frame < num; ++frame ) {
 		
@@ -229,23 +229,23 @@
 		[self addSubview:tf];
 		
 		//	collect prior probability
-		VMHash *scoreForCueIds = [selector collectScoresOfCues:0 frameOffset:(frame+base) normalize:NO];
+		VMHash *scoreForFragmentIds = [selector collectScoresOfFragments:0 frameOffset:(frame+base) normalize:NO];
 		VMFloat sumOfInnerScores =selector.sumOfInnerScores;
 		
 		//	make selection
 		DEFAULTEVALUATOR.shouldLog = NO;
-		VMCue *selectedCue = [selector selectOne];
+		VMFragment *selectedFragment = [selector selectOne];
 		DEFAULTEVALUATOR.shouldLog = YES;
 		
 		//	build
 		[self buildSelectorCellForFrame:frame + base
-						 scoreForCueIds:scoreForCueIds
+						 scoreForFragmentIds:scoreForFragmentIds
 					   sumOfInnerScores:sumOfInnerScores
-						 highlightCueId:selectedCue.id
-					  cueIdsInLastFrame:cueIdsInLastFrame
+						 highlightFragmentId:selectedFragment.id
+					  fragIdsInLastFrame:fragIdsInLastFrame
 								   rect:CGRectMake(x, labelHeight,
 												   vmpCellWidth, contentHeight)];
-		cueIdsInLastFrame = [[scoreForCueIds copy] autorelease];
+		fragIdsInLastFrame = [[scoreForFragmentIds copy] autorelease];
 		
 	}
 	
@@ -259,19 +259,19 @@
  
  ----------------------------------------------------------------------------------*/
 
-- (void)setCue:(VMCue *)cue {	//	override
-	//	TODO: level 0 = the cue before = @F{}
+- (void)setFragment:(VMFragment *)frag {	//	override
+	//	TODO: level 0 = the frag before = @F{}
 	
-	[super setCue:cue];
+	[super setFragment:frag];
 	if ( self.frameGraphMode )
 		[self drawFrameGraph];
 	else {
 		ReleaseAndNewInstance( branchViewTemporary, VMHash );
 		DEFAULTEVALUATOR.shouldNotify = NO;
-		[self collectBranchData:self.cue x:vmpCellWidth gapX:0 height:self.frame.size.height-10];
+		[self collectBranchData:self.fragment x:vmpCellWidth gapX:0 height:self.frame.size.height-10];
 		DEFAULTEVALUATOR.shouldNotify = YES;
 		
-		[self drawBranchGraph:self.cue
+		[self drawBranchGraph:self.fragment
 							x:vmpCellWidth
 							y:5.
 						 gapX:0.
@@ -283,11 +283,11 @@
 
 
 //	delegate
-- (void)cueCellClicked:(VMPCueCell *)cueCell {
+- (void)fragmentCellClicked:(VMPFragmentCell *)fragCell {
 	for( NSView *v in self.subviews ) {
-		if( ClassMatch(v, VMPCueCell ) && cueCell != v ) ((VMPCueCell*)v).selected = NO;
+		if( ClassMatch(v, VMPFragmentCell ) && fragCell != v ) ((VMPFragmentCell*)v).selected = NO;
 	}
-	[VMPNotificationCenter postNotificationName:VMPNotificationCueSelected object:self userInfo:@{@"id":cueCell.cue.id}];
+	[VMPNotificationCenter postNotificationName:VMPNotificationFragmentSelected object:self userInfo:@{@"id":fragCell.fragment.id}];
 }
 
 #pragma mark drawing
@@ -313,8 +313,8 @@
 
 - (void)redrawLocal {
 	[self removeAllSubviews];
-	if (self.cue.type == vmObjectType_sequence) {
-		VMSequence *sequence = ((VMSequence*)self.cue);
+	if (self.fragment.type == vmObjectType_sequence) {
+		VMSequence *sequence = ((VMSequence*)self.fragment);
 		
 		VMInt num = sequence.length + 1;
 		
@@ -331,23 +331,23 @@
 												   frame:CGRectMake(x, 0, vmpCellWidth, labelHeight )];
 			[self addSubview:tf];
 			
-			VMCue *cueAtPosition = [sequence cueAtIndex:position];
-			if ( cueAtPosition.type == vmObjectType_selector ) {
-				[self drawSelectorGraph:((VMSelector*)cueAtPosition)
+			VMFragment *fragmentAtPosition = [sequence fragmentAtIndex:position];
+			if ( fragmentAtPosition.type == vmObjectType_selector ) {
+				[self drawSelectorGraph:((VMSelector*)fragmentAtPosition)
 								   rect:CGRectMake(x, labelHeight, vmpCellWidth, contentHeight)];
 			} else {
-				VMPCueCell * cueCell = [[[VMPCueCell alloc]initWithFrame:CGRectMake(x, labelHeight + vmpShadowBlurRadius, vmpCellWidth, contentHeight )] autorelease];
-				cueCell.cue = cueAtPosition;
-				cueCell.delegate = self;
-				[self addSubview:cueCell];
+				VMPFragmentCell * fragCell = [[[VMPFragmentCell alloc]initWithFrame:CGRectMake(x, labelHeight + vmpShadowBlurRadius, vmpCellWidth, contentHeight )] autorelease];
+				fragCell.fragment = fragmentAtPosition;
+				fragCell.delegate = self;
+				[self addSubview:fragCell];
 			}
 		}
 	}
 	
 }
 
-- (void)setCue:(VMCue *)cue {	//	override
-	[super setCue:cue];
+- (void)setFragment:(VMFragment *)frag {	//	override
+	[super setFragment:frag];
 	[self redrawLocal];
 }
 
@@ -417,22 +417,22 @@
 			//
 		case vmObjectType_sequence: {
 			int width = ( vmpCellWidth + vmpCellMargin ) * (((VMSequence*)self.data).length +1 ) - vmpCellMargin;
-			VMPCueCell *cueCell = [[VMPSequenceGraph alloc]initWithFrame:
+			VMPFragmentCell *fragCell = [[VMPSequenceGraph alloc]initWithFrame:
 					   CGRectPlaceInTheMiddle(CGRectMake(0,
 														 0,
 														 width,
 														 self.frame.size.height - 10),
 											  CGPointMiddleOfRect(CGRectZeroOrigin(self.frame)))];
-			[cueCell setData: self.data];
-			[self addSubview: [cueCell taggedWith:vmpg_background]];
-			[cueCell release];
+			[fragCell setData: self.data];
+			[self addSubview: [fragCell taggedWith:vmpg_background]];
+			[fragCell release];
 			break;
 		}
 			
 			//
 			//	audio info editor
 			//
-		case vmObjectType_audioCue:
+		case vmObjectType_audioFragment:
 		case vmObjectType_audioInfo: {
 			VMPAudioInfoEditorViewController *aie;
 			if( ClassMatch( self.editorViewController, VMPAudioInfoEditorViewController )) {
@@ -442,7 +442,7 @@
 			}
 			[self addSubview:aie.view];
 			aie.view.frame = self.frame;
-			[aie setData: self.data.type == vmObjectType_audioInfo ? self.data : ((VMAudioCue*)self.data).audioInfoRef ];
+			[aie setData: self.data.type == vmObjectType_audioInfo ? self.data : ((VMAudioFragment*)self.data).audioInfoRef ];
 			self.editorViewController = aie;
 			break;
 		}
@@ -453,15 +453,15 @@
 			break;
 		}
 			//
-			//	cue cell view
+			//	frag cell view
 			//
 		default: {
-			VMPCueCell *cueCell = [[VMPCueCell alloc] initWithFrame:
+			VMPFragmentCell *fragCell = [[VMPFragmentCell alloc] initWithFrame:
 					   CGRectPlaceInTheMiddle(CGRectMake(0, 0, vmpCellWidth, MIN(self.frame.size.height - 10, 100)),
 											  CGPointMiddleOfRect(CGRectZeroOrigin(self.frame)))];
-			[cueCell setData: self.data];
-			[self addSubview: [cueCell taggedWith:vmpg_background]];
-			[cueCell release];
+			[fragCell setData: self.data];
+			[self addSubview: [fragCell taggedWith:vmpg_background]];
+			[fragCell release];
 			break;
 		}
 	}
@@ -490,7 +490,7 @@
 	
 	int dataIndex = 0;
 	
-	VMArray *cues  = [report item:@"cues"];
+	VMArray *frags  = [report item:@"frags"];
 	VMArray *exits = [report item:@"parts"];
 	
 	double pixPerPercent = self.frame.size.height / 100;
@@ -499,14 +499,14 @@
 	for( int exitIdx = 0; exitIdx < exits.count; ++exitIdx ) {
 		VMPReportRecord *data = [exits item:exitIdx];
 		double percent = [data.percent doubleValue];
-		VMPCueCell *cc = [[VMPCueCell alloc] initWithFrame:
+		VMPFragmentCell *cc = [[VMPFragmentCell alloc] initWithFrame:
 						  CGRectMake(0,
 									 percentsDisplayed * pixPerPercent,
 									 vmpCellWidth,
 									 percent * pixPerPercent
 									 )];
-		cc.cue = [[[VMCue alloc] init] autorelease];
-		cc.cue.id = data.ident;
+		cc.fragment = [[[VMFragment alloc] init] autorelease];
+		cc.fragment.id = data.ident;
 		percentsDisplayed += percent;
 		[self addSubview:cc];
 		[cc release];
@@ -517,21 +517,21 @@
 	for( int column = 0; column < numberOfColumns; ++column ) {
 		percentsDisplayed = 0;
 		for (;;) {
-			VMPReportRecord *data = [cues item:dataIndex];
+			VMPReportRecord *data = [frags item:dataIndex];
 			
 			double percent = [data.percent doubleValue];
-			VMPCueCell *cc = [[VMPCueCell alloc] initWithFrame:
+			VMPFragmentCell *cc = [[VMPFragmentCell alloc] initWithFrame:
 							  CGRectMake(column * frameWidth + frameWidth,
 										 percentsDisplayed * pixPerPercent,
 										 vmpCellWidth,
 										 percent * pixPerPercent
 										 )];
-			cc.cue = [[[VMAudioCue alloc] init] autorelease];
-			cc.cue.id = data.ident;
+			cc.fragment = [[[VMAudioFragment alloc] init] autorelease];
+			cc.fragment.id = data.ident;
 			[self addSubview:cc];
 			[cc release];
 			++dataIndex;
-			if ( dataIndex >= cues.count ) break;
+			if ( dataIndex >= frags.count ) break;
 			
 			percentsDisplayed += percent;
 			if ( percentsDisplayed > percentPerRow ) break;
@@ -572,8 +572,8 @@
 	
 	//	self.dataInfoField.frame =	 		CGRectMake( 8, 65, self.frame.size.width - 16, MAX( self.frame.size.height - 70 - 70, 0 ) );
 	
-	if ( [self.data isKindOfClass:[VMCue class]] ) {
-		VMCue *c = (VMCue*)self.data;
+	if ( [self.data isKindOfClass:[VMFragment class]] ) {
+		VMFragment *c = (VMFragment*)self.data;
 		self.userGeneratedIdField.stringValue 	= c.userGeneratedId;
 		self.vmpModifierField.stringValue		= c.VMPModifier ? c.VMPModifier : @"";
 		self.userGeneratedIdField.editable

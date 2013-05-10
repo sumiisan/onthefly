@@ -114,7 +114,8 @@ static VMPObjectCell		*typeColumnCell = nil;
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
 	self = [super initWithCoder:aDecoder];
-	// seems not using this initializer.. 
+	// seems not using this initializer..
+	assert(0);		//	designated initializer if initWithFrame.
 	return self;
 }
 
@@ -133,9 +134,15 @@ static VMPObjectCell		*typeColumnCell = nil;
 		genericCell.font = [NSFont systemFontOfSize:11];
 		
 		[VMPNotificationCenter addObserver:self
-								  selector:@selector(doubleClickOnCue:)
-									  name:VMPNotificationCueDoubleClicked
+								  selector:@selector(doubleClickOnFragment:)
+									  name:VMPNotificationFragmentDoubleClicked
 									object:nil];
+		
+		[VMPNotificationCenter addObserver:self
+								  selector:@selector(reloadData:)
+									  name:VMPNotificationVMSDataLoaded
+									object:nil];
+
     }
 	
     return self;
@@ -185,12 +192,17 @@ static VMPObjectCell		*typeColumnCell = nil;
 	}
 }
 
+- (VMHash*)songData {
+	return _songData;
+}
 
 - (void)setSongData:(VMHash *)inSongData {
-	_songData = inSongData;	//	assign
-	
-	VMArray *ids = [inSongData sortedKeys];	
-	
+	_songData = inSongData;	//	weak ref
+	[self reloadData:self];
+}
+
+- (void)reloadData:(id)sender {
+	VMArray *ids = [_songData sortedKeys];
 	VMHash *parts = ARInstance(VMHash);
 	
 	for ( VMId *dataId in ids ) {
@@ -198,7 +210,7 @@ static VMPObjectCell		*typeColumnCell = nil;
 		if ( [[dataId substringToIndex:4] isEqualToString: @"VMP|"] ) continue;		//	no VMData
 		
 		VMData *d   = [_songData item:dataId];
-		VMCue  *c   = ClassCastIfMatch(d, VMCue);
+		VMFragment  *c   = ClassCastIfMatch(d, VMFragment);
 		
 		if( d ) {
 			if ( c ) {
@@ -279,8 +291,6 @@ static VMPObjectCell		*typeColumnCell = nil;
 - (BOOL)control:(NSControl *)control textView:(NSTextView *)textView doCommandBySelector:(SEL)commandSelector {
     BOOL result = NO;
 	
-//	NSLog(@"control: %@ %@",control.debugDescription, NSStringFromSelector(commandSelector) );
-	
 	if ([textView respondsToSelector:commandSelector]) {
         handlingCommand = YES;
         [textView performSelector:commandSelector withObject:nil];
@@ -304,9 +314,7 @@ static VMPObjectCell		*typeColumnCell = nil;
 	//charRange.length += 1;
 	self.currentNonCompletedSearchString = textView.string;// [[textView string] substringWithRange:charRange];
 	NSString *searchString = textView.string;
-	
-//	NSLog(@"complete %@", searchString );
-	
+		
 	if ( ! self.dataIdList ) self.dataIdList = [self.songData sortedKeys];
     keywords      = self.dataIdList.array;
     count         = [keywords count];
@@ -440,7 +448,7 @@ static VMPObjectCell		*typeColumnCell = nil;
 		[self updateFilterWithString:searchString];
 }
 
-- (void)doubleClickOnCue:(NSNotification*)notification {
+- (void)doubleClickOnFragment:(NSNotification*)notification {
 	[self findObjectById:[ notification.userInfo objectForKey:@"id"]];
 }
 
@@ -547,14 +555,14 @@ static VMPObjectCell		*typeColumnCell = nil;
 	if ( ClassMatch(item, VMReference) ) {
 		return [VMArray arrayWithObject:((VMReference*)item).referenceId];
 	}
-	if ( ClassMatch(item, VMCueCollection) ) {
-		VMArray *arr = [VMArray arrayWithArray:((VMCueCollection*)item).cues];
+	if ( ClassMatch(item, VMCollection) ) {
+		VMArray *arr = [VMArray arrayWithArray:((VMCollection*)item).fragments];
 		if ( ClassMatch(item, VMSequence) && ((VMSequence*)item).subsequent)
 			[arr push:((VMSequence*)item).subsequent];
 		return arr;
 	}
-	if ( ClassMatch(item, VMAudioCue)) {
-		return [VMArray arrayWithObject:((VMAudioCue*)item).audioInfoRef];
+	if ( ClassMatch(item, VMAudioFragment)) {
+		return [VMArray arrayWithObject:((VMAudioFragment*)item).audioInfoRef];
 	}
 	if ( ClassMatch(item, VMArray) ) {
 		return item;
@@ -595,8 +603,8 @@ static VMPObjectCell		*typeColumnCell = nil;
 					]; 
 			break;
 		}
-		case vmObjectType_audioCue: {
-			MakeVarByCast(d, data, VMAudioCue)
+		case vmObjectType_audioFragment: {
+			MakeVarByCast(d, data, VMAudioFragment)
 			return [FormString
 					@"%@",
 					(d.instructionList 
@@ -782,7 +790,7 @@ static VMPObjectCell		*typeColumnCell = nil;
 		[self.graphDelegate drawGraphWith:d];
 		[self.infoDelegate drawInfoWith:d];
 		if( d.id )	//	chances may not have id
-			[VMPNotificationCenter postNotificationName:VMPNotificationCueSelected object:self userInfo:@{@"id":d.id}];
+			[VMPNotificationCenter postNotificationName:VMPNotificationFragmentSelected object:self userInfo:@{@"id":d.id}];
 	} else {
 		id item = [self.objectTreeView itemAtRow:row];
 		if ( ClassMatch( item, VMString ) )
@@ -796,7 +804,7 @@ static VMPObjectCell		*typeColumnCell = nil;
 	VMData *d = [self dataOfRow:self.objectTreeView.clickedRow];
 
 	if (d)
-	[VMPNotificationCenter postNotificationName:VMPNotificationCueSelected
+	[VMPNotificationCenter postNotificationName:VMPNotificationFragmentSelected
 										 object:self
 									   userInfo:@{@"id":d.id} ];
 }
@@ -831,8 +839,8 @@ static VMPObjectCell		*typeColumnCell = nil;
 - (BOOL)outlineView:(NSOutlineView *)outlineView shouldTypeSelectForEvent:(NSEvent *)event withCurrentSearchString:(NSString *)searchString {
 	if ( event.type == NSKeyDown && event.keyCode == kVK_Space ) {
 		VMData *d = [DEFAULTSONG data:self.lastSelectedId];
-		if ( d.type == vmObjectType_sequence || d.type == vmObjectType_selector || d.type == vmObjectType_audioCue ) {
-			[DEFAULTSONGPLAYER startWithCueId:self.lastSelectedId];
+		if ( d.type == vmObjectType_sequence || d.type == vmObjectType_selector || d.type == vmObjectType_audioFragment ) {
+			[DEFAULTSONGPLAYER startWithFragmentId:self.lastSelectedId];
 		}
 		return NO;
 	}

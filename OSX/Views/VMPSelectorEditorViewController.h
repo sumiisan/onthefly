@@ -30,7 +30,7 @@ typedef enum {
 
 
 - (IBAction)clickOnRow:(id)sender;
-- (IBAction)clickOnCueCell:(id)sender;
+- (IBAction)clickOnFragmentCell:(id)sender;
 
 
 @end

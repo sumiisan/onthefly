@@ -53,24 +53,24 @@ enum  {
  functions() are evaluated dynamically
  
 name		description											responsible setter		implemented
- @A			current audio cue 's id								song					YES
+ @A			current audio frag 's id								song					YES
  @ABS(x)	|x|																			NO
  @C			parent selector's playback counter 					parent selector			YES
  @COS(x)	x = 0..1																	NO
  @D			alias for @D{@T}															YES
- @D{id}		distance to last appearance of cueId in frames								YES
+ @D{id}		distance to last appearance of fragId in frames								YES
  @DC		alias for @DC(@T)															NO
  @DC{id}	1 - ( 1 / @D{id} )			( for dist n = 0, 0.5, 0.666667, 0.75, 			NO
- @Eg		number of played cues since the first launch 		song					NO
- @Ec		number of played cues since launched this time		song					NO
+ @Eg		number of played frags since the first launch 		song					NO
+ @Ec		number of played frags since launched this time		song					NO
  @Eh		hours played										song					NO
  @ID		id of caller VMData object							data					YES
- @F{x}		1 if the last cueId was x, otherwise 0				-						YES
+ @F{x}		1 if the last fragId was x, otherwise 0				-						YES
  @INT(x)	(int)x												-						NO
- @L			last audio cue's id									song					NO
- @LL		audio cue before last audio cue -'s id				song					NO
+ @L			last audio frag's id									song					NO
+ @LL		audio frag before last audio frag -'s id				song					NO
  @LS		alias for @LS{@T}														YES
- @LS{id}	distance to last selection (inside selector) of cueId in frames				NO
+ @LS{id}	distance to last selection (inside selector) of fragId in frames				NO
  @LC		alias for @LC{@T}									parent selector			YES
  @LC{id}	1 - ( 1 / @LS{id} )			( for dist n = 0, 0.5, 0.666667, 0.75, 			NO
  @MAX(x,y)																				NO
@@ -89,7 +89,7 @@ internal
  */
 - (VMArray*)parseFunction:(VMString*)expression;	//	made public for test purpose.
 
-- (void)setCueId:(VMId*)cueId;
+- (void)setFragmentId:(VMId*)fragId;
 - (void)setValue:(id)value forVariable:(VMString*)variableName;
 - (id)valueForVariable:(VMString*)variableName;
 

@@ -25,7 +25,7 @@
 
 
 typedef enum {
-	vmpReportRecordType_cue,
+	vmpReportRecordType_frag,
 	VMPReportRecordType_part
 } VMPReportRecordType;
 
@@ -72,17 +72,17 @@ typedef enum {
  
  */
 @interface VMPAnalyzer : NSObject <VMPProgressWindowControllerDelegate, VMPRecordDetailPopoverDelegate> {
-    long        totalAudioCueCount;
+    long        totalAudioFragmentCount;
     long        totalPartCount;
     long        numberOfIterations;
     long        iterationsLeft;
 	BOOL        exitWhenPartChanged;
-	long		maxPartCount,maxCueCount;
+	long		maxPartCount,maxFragmentCount;
 	VMInt		sojourn;
 	VMInt		startIndexOfSojourn;
 	VMTime		totalDuration;
 	VMFloat		maxPartPercent,maxPartDuration;
-	VMFloat		maxCuePercent,maxCueDuration;
+	VMFloat		maxFragmentPercent,maxFragmentDuration;
 	VMFloat		maxVariety;
 }
 

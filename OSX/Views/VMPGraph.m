@@ -170,13 +170,13 @@ static 	VMHash *bgColorForType__ = nil;
 + (NSColor*)colorForDataType:(vmObjectType)type {
 	if ( ! bgColorForType__ )
 		bgColorForType__ = [[VMHash hashWithObjectsAndKeys:
-							 colorForType( cue, 		0.3, 0.3, 0.45 )
-							 colorForType( selector, 	0.2, 0.5, 0.0 )
-							 colorForType( sequence, 	0.1, 0.3, 0.7 )
-							 colorForType( audioCue, 	0.5, 0.0, 0.5 )
-							 colorForType( audioInfo, 	0.5, 0.1, 0.0 )
-							 colorForType( chance, 		0.5, 0.5, 0.0 )
-							 colorForType( reference,	0.4, 0.4, 0.4 )
+							 colorForType( fragment,		0.3, 0.3, 0.45 )
+							 colorForType( selector,		0.2, 0.5, 0.0 )
+							 colorForType( sequence,		0.1, 0.3, 0.7 )
+							 colorForType( audioFragment, 	0.5, 0.0, 0.5 )
+							 colorForType( audioInfo,		0.5, 0.1, 0.0 )
+							 colorForType( chance,			0.5, 0.5, 0.0 )
+							 colorForType( reference,		0.4, 0.4, 0.4 )
 							 nil] retain];
 	[bgColorForType__ setItem:[NSColor colorWithCalibratedRed:0.9 green:0.9 blue:0.9 alpha:1.] for:@(0)];
 	NSColor *c = (NSColor*)[bgColorForType__ item:@(type)];
@@ -434,29 +434,29 @@ static 	VMHash *bgColorForType__ = nil;
 
 /*---------------------------------------------------------------------------------
  
- cue cell
+ Fragment Cell
  
  ----------------------------------------------------------------------------------*/
 
 #pragma mark -
-#pragma mark *** Cue Cell ***
+#pragma mark *** Fragment Cell ***
 #pragma mark -
 
-@implementation VMPCueCell
+@implementation VMPFragmentCell
 
-+ (VMPCueCell*)cueCellWithCue:(VMCue*)cue frame:(NSRect)frame delegate:(id<VMPCueCellDelegate>)delegate {
-	VMPCueCell *cc = [[[VMPCueCell alloc] initWithFrame:frame] autorelease];
-	cc.cue = cue;
++ (VMPFragmentCell*)fragmentCellWithFragment:(VMFragment*)frag frame:(NSRect)frame delegate:(id<VMPFragmentCellDelegate>)delegate {
+	VMPFragmentCell *cc = [[[VMPFragmentCell alloc] initWithFrame:frame] autorelease];
+	cc.fragment = frag;
 	cc.delegate = delegate;
 	return cc;
 }
 
-- (void)setDelegate:(id<VMPCueCellDelegate>)delegate {
+- (void)setDelegate:(id<VMPFragmentCellDelegate>)delegate {
 	delegate_ = delegate;
 }
 
 - (void)setData:(id)data {
-	self.cue = data;
+	self.fragment = data;
 }
 
 - (void)setSelected:(BOOL)selected {
@@ -464,20 +464,20 @@ static 	VMHash *bgColorForType__ = nil;
 	_selected = selected;
 }
 
-- (id<VMPCueCellDelegate>)delegate {
+- (id<VMPFragmentCellDelegate>)delegate {
 	return delegate_;
 }
 
-- (void)setCue:(VMCue *)cue {
-	[_cue release];
+- (void)setFragment:(VMFragment *)frag {
+	[_fragment release];
 	
-	if (!cue) {
-		_cue = nil;
+	if (!frag) {
+		_fragment = nil;
 		return;
 	}
 	
-	_cue = [cue retain];
-	NSColor *c0 = [NSColor backgroundColorForDataType:cue.type];
+	_fragment = [frag retain];
+	NSColor *c0 = [NSColor backgroundColorForDataType:frag.type];
 	NSColor *c1 = [c0 colorModifiedByHueOffset:-.05 saturationFactor:1. brightnessFactor:1.];
 	NSColor *c2 = [c0 colorModifiedByHueOffset: .05 saturationFactor:1. brightnessFactor:1.];
 	self.backgroundGradient = GradientWithColors(c1,c2);
@@ -501,21 +501,21 @@ static 	VMHash *bgColorForType__ = nil;
 - (void)click:(id)sender {
 	self.selected = !self.selected;
 	if ( self.delegate )
-		[self.delegate cueCellClicked:self];
-	[VMPNotificationCenter postNotificationName:VMPNotificationCueSelected
+		[self.delegate fragmentCellClicked:self];
+	[VMPNotificationCenter postNotificationName:VMPNotificationFragmentSelected
 										 object:self
-									   userInfo:@{@"id":self.cue.id} ];
+									   userInfo:@{@"id":self.fragment.id} ];
 	self.needsDisplay = YES;
 }
 
 - (void)doubleClick:(id)sender {
-	[VMPNotificationCenter postNotificationName:VMPNotificationCueDoubleClicked
+	[VMPNotificationCenter postNotificationName:VMPNotificationFragmentDoubleClicked
 										 object:self
-									   userInfo:@{@"id":self.cue.id}];
+									   userInfo:@{@"id":self.fragment.id}];
 }
 
-- (void)selectIfIdDoesMatch:(VMId*)cueId exclusive:(BOOL)exclusive {
-	if ( [cueId isEqualToString:self.cue.id] ) {
+- (void)selectIfIdDoesMatch:(VMId*)fragId exclusive:(BOOL)exclusive {
+	if ( [fragId isEqualToString:self.fragment.id] ) {
 		self.needsDisplay &= ( ! self.selected );
 		self.selected = YES;
 	} else if (exclusive) {
@@ -544,7 +544,7 @@ static 	VMHash *bgColorForType__ = nil;
 
 - (void)dealloc {
 	[button_ release];
-	[_cue release];
+	[_fragment release];
 	self.backgroundGradient = nil;
 	[super dealloc];
 }
@@ -579,7 +579,7 @@ static 	VMHash *bgColorForType__ = nil;
 		[self.backgroundGradient drawInBezierPath:cell angle:60];
 	} RestoreGC
 	
-	if ( self.cellRect.size.height > 10 && self.cue ) {
+	if ( self.cellRect.size.height > 10 && self.fragment ) {
 		SaveGC {
 			NSMutableParagraphStyle *ps = ARInstance(NSMutableParagraphStyle);
 			ps.lineBreakMode = NSLineBreakByCharWrapping;
@@ -587,14 +587,14 @@ static 	VMHash *bgColorForType__ = nil;
 									NSFontAttributeName:[NSFont systemFontOfSize:10],
 						   NSParagraphStyleAttributeName:ps};
 			
-			NSAttributedString *str = [[NSAttributedString alloc] initWithString:self.cue.id attributes:attr];
+			NSAttributedString *str = [[NSAttributedString alloc] initWithString:self.fragment.id attributes:attr];
 			NSSize textFrameSize = NSMakeSize( self.cellRect.size.width - 12, CGFLOAT_MAX );
 			NSRect textFrameRect = [str boundingRectWithSize:textFrameSize options:NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading];
 			//NSLog(@"textFrameRectFor:%@ = %@", str.string, NSStringFromRect(textFrameRect));
 			CGFloat verticalOffset = ( self.cellRect.size.height - textFrameRect.size.height ) * 0.5;
 			if ( verticalOffset < 0 ) verticalOffset = 0;
 
-			[self.cue.id drawInRect:NSMakeRect(self.cellRect.origin.x + 6.,
+			[self.fragment.id drawInRect:NSMakeRect(self.cellRect.origin.x + 6.,
 											   self.cellRect.origin.y + verticalOffset,
 											   self.cellRect.size.width  - 12.,
 											   self.cellRect.size.height - verticalOffset )

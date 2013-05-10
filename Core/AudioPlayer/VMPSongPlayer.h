@@ -26,9 +26,9 @@
  *---------------------------------------------------------------------------------*/
 
 
-@interface VMPQueuedCue : NSObject {
+@interface VMPQueuedFragment : NSObject {
 @public
-	VMAudioCue		*audioQue;
+	VMAudioFragment		*audioFragment;
 	VMTime			cueTime;
 	VMTimeRange		cuePoints;		//	store modulated dur / offs
 	VMPAudioPlayer	*player;
@@ -47,7 +47,7 @@
 	//	audio players
 	VMArray				*audioPlayerList;
 	//	cue queueing
-	VMArray				*cueQueue;
+	VMArray				*fragQueue;
 	
 	//	volume
     VMVolume         	globalVolume;
@@ -57,7 +57,7 @@
     VMTime			  	fadeStartPoint;
 	VMFloat				fadeStartVolume;
 	VMFloat				fadeEndVolume;
-	BOOL				startPlayAfterSetCue;
+	BOOL				startPlayAfterSetFragment;
 
 	//	view
 	UInt64				frameCounter;
@@ -78,7 +78,7 @@
 - (void)coolDown;
 
 - (void)start;
-- (void)startWithCueId:(VMId*)cueId;
+- (void)startWithFragmentId:(VMId*)fragId;
 - (void)stop;
 - (void)reset;
 - (void)fadeoutAndStop:(VMTime)duration;
@@ -86,14 +86,14 @@
 
 - (void)setGlobalVolume:(VMFloat)volume;
 
-- (void)setCueId:(VMId*)cueId fadeOut:(BOOL)fadeFlag restartAfterFadeOut:(BOOL)inRestartAfterFadeOut;
-- (void)setNextCueId:(VMId*)cueId;
+- (void)setFragmentId:(VMId*)fragId fadeOut:(BOOL)fadeFlag restartAfterFadeOut:(BOOL)inRestartAfterFadeOut;
+- (void)setNextFragmentId:(VMId*)fragId;
 
-- (void)flushFiredCues;	
-- (void)flushUnfiredCues;
-- (void)flushFinishedCues;
-- (void)adjustCurrentTimeToQueuedCue;
-- (VMInt)numberOfUnfiredCues;
+- (void)flushFiredFragments;	
+- (void)flushUnfiredFragments;
+- (void)flushFinishedFragments;
+- (void)adjustCurrentTimeToQueuedFragment;
+- (VMInt)numberOfUnfiredFragments;
 
 - (void)update;
 - (BOOL)isRunning;

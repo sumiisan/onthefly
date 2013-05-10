@@ -22,8 +22,8 @@
 	self = [super initWithWindowNibName:windowNibName];
 	[self updateItemsInTable];
 	[VMPNotificationCenter addObserver:self
-							  selector:@selector(cueSelectionChanged:)
-								  name:VMPNotificationCueSelected
+							  selector:@selector(fragSelectionChanged:)
+								  name:VMPNotificationFragmentSelected
 								object:nil];
 	[VMPNotificationCenter addObserver:self
 							  selector:@selector(updateTableView:)
@@ -31,20 +31,20 @@
 								object:nil];
 	[VMPNotificationCenter addObserver:self
 							  selector:@selector(updateTableView:)
-								  name:VMPNotificationAudioCueFired
+								  name:VMPNotificationAudioFragmentFired
 								object:nil];
 	return self;
 }
 
 - (void)dealloc {
     [VMPNotificationCenter removeObserver:self];
-	self.selectedCueId = nil;
+	self.selectedFragmentId = nil;
 	self.itemsInTable = nil;
 	[super dealloc];
 }
 
-- (void)cueSelectionChanged:(NSNotification*)notification {
-	self.selectedCueId = [notification.userInfo objectForKey:@"id"];
+- (void)fragSelectionChanged:(NSNotification*)notification {
+	self.selectedFragmentId = [notification.userInfo objectForKey:@"id"];
 	[self updateItemsInTable];
 }
 
@@ -66,7 +66,7 @@
 }
 
 - (void)pushFunctionIntoTable:(NSString*)functionExpression {
-	NSString *expr = [NSString stringWithFormat:functionExpression, self.selectedCueId];
+	NSString *expr = [NSString stringWithFormat:functionExpression, self.selectedFragmentId];
 	[_itemsInTable push:[VMHash hashWith:@{@"name":expr, @"value":@( [DEFAULTEVALUATOR evaluate:expr ] ) }]];
 }
 
@@ -104,14 +104,14 @@
 	}
 	
 	if ( [self.typeSelector isSelectedForSegment:2] ) {
-		VMData *d = [DEFAULTSONG data:self.selectedCueId];
+		VMData *d = [DEFAULTSONG data:self.selectedFragmentId];
 		if ( d.type == vmObjectType_selector || d.type == vmObjectType_sequence ) {
 			if (d.type == vmObjectType_sequence ) d = ((VMSequence*)d).subsequent;			
 			VMArray *history = ((VMSelector*)d).liveData.history;
 			[_itemsInTable push:[VMHash hashWith:@{@"name":@"** selector history **"}]];
 			int index = 1;
-			for( VMString *cueId in history ) {
-				[_itemsInTable push:[VMHash hashWith:@{@"name":VMIntObj(index),@"value":cueId}]];
+			for( VMString *fragId in history ) {
+				[_itemsInTable push:[VMHash hashWith:@{@"name":VMIntObj(index),@"value":fragId}]];
 				++index;
 			}
 		}

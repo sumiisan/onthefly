@@ -213,15 +213,15 @@ SEFunctionDefinition( D ) {
 }
 
 SEFunctionDefinition( F ) {
-	VMId *lastCueId = [self valueForVariable:@"@A"];	//	this is the last cue when before the next cue is selected.
-	if ( ! lastCueId || (!ClassMatch(lastCueId, VMId))) return VMBoolObj( NO );
+	VMId *lastFragmentId = [self valueForVariable:@"@A"];	//	this is the last frag when before the next frag is selected.
+	if ( ! lastFragmentId || (!ClassMatch(lastFragmentId, VMId))) return VMBoolObj( NO );
 	
 	BOOL t = NO;
 	
 	VMArray *comparatorArray = [VMArray arrayWithString:parameter splitBy:@","];
 	
 	for( VMString *comparator in comparatorArray ) {
-		BOOL match = (	[lastCueId rangeOfString:comparator].location != NSNotFound );
+		BOOL match = (	[lastFragmentId rangeOfString:comparator].location != NSNotFound );
 		t |= match;
 	}
 	return VMIntObj( t ? 1. : 0. );
@@ -231,10 +231,10 @@ SEFunctionDefinition( F ) {
 // 	LS / LC
 //
 //	sub
-- (VMFloat)distanceToLastSelectionOfCue:(VMId*)cueId {	
+- (VMFloat)distanceToLastSelectionOfFragment:(VMId*)fragId {	
 	VMArray *history = [variables_ item:@"@selectorHistory"];
 	if ( ! history ) return 1e30f;
-	VMInt p = [history position:cueId];
+	VMInt p = [history position:fragId];
 	if ( p < 0 ) return 1e30f;					//	return a very big number if not found
 	return p;
 }
@@ -243,14 +243,14 @@ SEFunctionDefinition( LS ) {
 	vmObjectType type = [variables_ itemAsFloat:@"@TYPE"];
 	if ( type != vmObjectType_selector )
 		return nil;
-	return VMFloatObj( [self distanceToLastSelectionOfCue:( parameter ? parameter : [self.variables item:@"@T"] )] );
+	return VMFloatObj( [self distanceToLastSelectionOfFragment:( parameter ? parameter : [self.variables item:@"@T"] )] );
 }
 
 SEFunctionDefinition( LC ) {
 	vmObjectType type = [variables_ itemAsFloat:@"@TYPE"];
 	if ( type != vmObjectType_selector )
 		return nil;
-	VMFloat dist = [self distanceToLastSelectionOfCue:( parameter ? parameter : [self.variables item:@"@T"] )] +1;
+	VMFloat dist = [self distanceToLastSelectionOfFragment:( parameter ? parameter : [self.variables item:@"@T"] )] +1;
 	if ( dist == 0 ) return VMFloatObj( 1. );
 	VMFloat recip = 1.001 - ( 1 / dist );
 	/*	dist = 0	
@@ -272,10 +272,10 @@ if (kUseNotification && shouldNotify_)
 									   userInfo:@{}];
 }
 
-- (void)setCueId:(VMId*)cueId {
+- (void)setFragmentId:(VMId*)fragId {
 	[self setValue:[self valueForVariable:@"@L"]		forVariable:@"@LL"];
 	[self setValue:[self valueForVariable:@"@A"]		forVariable:@"@L"];	
-	[self setValue:cueId 								forVariable:@"@A"];
+	[self setValue:fragId 								forVariable:@"@A"];
 }
 
 //	

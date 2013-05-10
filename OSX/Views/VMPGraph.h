@@ -103,13 +103,13 @@ enum {
 @end
 
 
-@class VMPCueCell;
+@class VMPFragmentCell;
 
 #pragma mark -
-#pragma mark VMPCueCellDelegate
-//------------------- protocol VMPCueCellDelegate -----------------------
-@protocol VMPCueCellDelegate <NSObject>
-- (void)cueCellClicked:(VMPCueCell*)cueCell;
+#pragma mark VMPFragmentCellDelegate
+//------------------- protocol VMPFragmentCellDelegate -----------------------
+@protocol VMPFragmentCellDelegate <NSObject>
+- (void)fragmentCellClicked:(VMPFragmentCell*)fragCell;
 @end
 
 
@@ -157,22 +157,22 @@ enum {
 
 
 #pragma mark -
-#pragma mark VMPCueCell
-//---------------------------- VMPCueCell -------------------------------
-@interface VMPCueCell : VMPGraph <VMPDataGraphObject> {
+#pragma mark VMPFragmentCell
+//---------------------------- VMPFragmentCell -------------------------------
+@interface VMPFragmentCell : VMPGraph <VMPDataGraphObject> {
 @private
 	VMPButton	*button_;
-	__weak id <VMPCueCellDelegate> delegate_;
+	__weak id <VMPFragmentCellDelegate> delegate_;
 }
 @property (nonatomic)							CGRect					cellRect;
-@property (nonatomic,retain)					VMCue 					*cue;
+@property (nonatomic,retain)					VMFragment 				*fragment;
 @property (nonatomic)							VMFloat 				score;				//	not used internally
 @property (nonatomic,retain)					NSGradient				*backgroundGradient;
 @property (nonatomic,getter = isSelected)		BOOL					selected;
-@property (nonatomic,weak)						id <VMPCueCellDelegate>	delegate;
+@property (nonatomic,weak)						id <VMPFragmentCellDelegate>	delegate;
 
-- (void)selectIfIdDoesMatch:(VMId*)cueId exclusive:(BOOL)exclusive;
-+ (VMPCueCell*)cueCellWithCue:(VMCue*)cue frame:(NSRect)frame delegate:(id<VMPCueCellDelegate>)delegate;
+- (void)selectIfIdDoesMatch:(VMId*)fragId exclusive:(BOOL)exclusive;
++ (VMPFragmentCell*)fragmentCellWithFragment:(VMFragment*)frag frame:(NSRect)frame delegate:(id<VMPFragmentCellDelegate>)delegate;
 @end
 
 

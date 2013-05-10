@@ -13,20 +13,22 @@
 
 #define VMPNotificationCenter [NSNotificationCenter defaultCenter]
 
+//	loading
+static NSString *VMPNotificationVMSDataLoaded __unused			= @"VMSDataLoaded";
+
 //	log was added
 static NSString *VMPNotificationLogAdded __unused				= @"LogAdded";
 
 //	song player / log
 
-static NSString *VMPNotificationAudioCueQueued __unused			= @"AudioCueQueued";
-static NSString *VMPNotificationAudioCueFired  __unused			= @"AudioCueFired";
+static NSString *VMPNotificationAudioFragmentQueued __unused	= @"AudioFragmentQueued";
+static NSString *VMPNotificationAudioFragmentFired  __unused	= @"AudioFragmentFired";
 
 //	score evaluator
 static NSString *VMPNotificationVariableValueChanged __unused	= @"VariableValueChanged";
 
-
 //	editor
-static NSString *VMPNotificationCueDoubleClicked  __unused		= @"CueDoubleClicked";
-static NSString *VMPNotificationCueSelected __unused			= @"CueSelected";
+static NSString *VMPNotificationFragmentDoubleClicked  __unused	= @"FragmentDoubleClicked";
+static NSString *VMPNotificationFragmentSelected __unused		= @"FragmentSelected";
 
 #endif

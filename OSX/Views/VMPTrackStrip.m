@@ -34,7 +34,7 @@
 }
 
 - (void)dealloc {
-	self.audioCueId = nil;
+	self.audioFragmentId = nil;
 	self.caption = nil;
    [super dealloc];
 }
@@ -118,10 +118,10 @@
 }
 
 - (void)doubleClickOnTrackStrip:(NSEvent*)event {
-	if (self.audioCueId)
-		[VMPNotificationCenter postNotificationName:VMPNotificationCueDoubleClicked
+	if (self.audioFragmentId)
+		[VMPNotificationCenter postNotificationName:VMPNotificationFragmentDoubleClicked
 											 object:self
-										   userInfo:@{@"id":self.audioCueId}];
+										   userInfo:@{@"id":self.audioFragmentId}];
 }
 
 @end

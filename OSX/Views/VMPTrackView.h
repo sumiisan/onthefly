@@ -1,5 +1,5 @@
 //
-//  debugview.h
+//  VMPTrackView.h
 //  OnTheFly
 //
 //  Created by cboy on 10/04/18.

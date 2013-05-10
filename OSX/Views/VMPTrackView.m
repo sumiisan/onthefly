@@ -1,5 +1,5 @@
 //
-//  debugview.m
+//  VMPTrackView.m
 //  OnTheFly
 //
 //  Created by cboy on 10/04/18.
@@ -72,13 +72,13 @@
 - (void)redraw: (int)idx player:(VMPAudioPlayer*)audioPlayer {
     tracks[idx]->playing    = [audioPlayer currentTime] / audioPlayer.fileDuration;
 	tracks[idx]->loading    = [audioPlayer loadedRatio];
-    tracks[idx]->duration   = audioPlayer.cueDuration / audioPlayer.fileDuration;
+    tracks[idx]->duration   = audioPlayer.fragDuration / audioPlayer.fileDuration;
     tracks[idx]->offset     = ( audioPlayer.offset / audioPlayer.fileDuration );
-	if( [audioPlayer cueId] && [audioPlayer isBusy] && ( [audioPlayer currentTime] > -10. ) ) {
-		tracks[idx].audioCueId = audioPlayer.cueId;
+	if( [audioPlayer fragId] && [audioPlayer isBusy] && ( [audioPlayer currentTime] > -10. ) ) {
+		tracks[idx].audioFragmentId = audioPlayer.fragId;
         tracks[idx].infoString = [NSString stringWithFormat:@"[%i]  %@ (%2.2f)",
                                     idx+1,
-                               [audioPlayer cueId], 
+                               [audioPlayer fragId], 
                                [audioPlayer currentTime]];
         [tracks[idx] VMPSetAlpha:([audioPlayer isPlaying] ? 1. : 0.7 )];
 	} else {

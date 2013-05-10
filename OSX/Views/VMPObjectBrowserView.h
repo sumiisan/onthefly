@@ -32,20 +32,21 @@
 @interface VMPOutlineView : NSOutlineView
 @end
 
-@protocol ObjectBrowserGraphDelegate <NSObject>
+@protocol VMPObjectBrowserGraphDelegate <NSObject>
 - (void)drawGraphWith:(VMData*)data;
 - (void)drawReportGraph:(VMHash*)report;
 @end
 
-@protocol ObjectBrowserInfoDelegate <NSObject>
+@protocol VMPObjectBrowserInfoDelegate <NSObject>
 - (void)drawInfoWith:(VMData*)data;
 @end
 
 @interface VMPObjectBrowserView : NSView
 <NSOutlineViewDelegate, NSOutlineViewDataSource, NSWindowDelegate, VMPAnalyzerDelegate> {
 @private
-	BOOL					performingAutoComplete;
-	BOOL					handlingCommand;
+				BOOL	performingAutoComplete;
+				BOOL	handlingCommand;
+	__weak		VMHash	*_songData;
 }
 
 - (IBAction)clickOnRow:(id)sender;
@@ -59,10 +60,10 @@
 @property (nonatomic, retain)	NSString			*currentNonCompletedSearchString;
 @property (nonatomic, retain)	NSString			*currentFilterString;
 
-@property (nonatomic, assign)	VMHash				*songData;
+@property (weak)				VMHash				*songData;
 @property (nonatomic, retain)	VMArray				*dataIdList;
-@property (nonatomic, assign)	id <ObjectBrowserGraphDelegate>	graphDelegate;
-@property (nonatomic, assign)	id <ObjectBrowserInfoDelegate>	infoDelegate;
+@property (nonatomic, assign)	id <VMPObjectBrowserGraphDelegate>	graphDelegate;
+@property (nonatomic, assign)	id <VMPObjectBrowserInfoDelegate>	infoDelegate;
 @property (nonatomic, retain)   VMId				*lastSelectedId;
 @property (nonatomic, retain)	VMPFieldEditor		*fieldEditor;
 

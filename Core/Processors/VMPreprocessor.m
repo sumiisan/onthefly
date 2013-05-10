@@ -45,13 +45,13 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 
 //	(2.10) 	all data must have it's own type
 - (vmObjectType) 		guessType:(VMHash*)hash;
-//	(2.20) 	remove type specific dialects like selector: or layer: and replace with cues:  (leave alternatives in sequence and layer)
+//	(2.20) 	remove type specific dialects like selector: or layer: and replace with frags:  (leave alternatives in sequence and layer)
 - (id)					guessTypeAndCleanUpTypeSpecificDialects:(id)inObject;
 
-//	(2.40)	flatten tree-formed object structure (i.e cues)
+//	(2.40)	flatten tree-formed object structure (i.e frags)
 - (void)				flattenTreeStructure:(VMHash*)hash into:(VMArray**)flattened;
 
-//	(2.50) resolve shortcuts in	arrays 'cues', 'alt' and 'subseq'  
+//	(2.50) resolve shortcuts in	arrays 'frags', 'alt' and 'subseq'  
 - (void)				completeIdsInsideHash:(VMHash*)hash;
 
 //	(2.80)	add myself into alternatives		abolished
@@ -62,55 +62,53 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 - (void)				preprocessPhase3:(VMArray*)dataArray;
 //	utils
 - (VMId*)				completeId:(VMId*)dataId withParentId:(VMId*)parentId;
-- (void)				registerData:(VMData*)cue;
+- (void)				registerData:(VMData*)data;
 - (void)				unRegister:(VMId*)dataId;
-- (void)				registerAliasOfCue:(VMData*)cue as:(VMId*)aliasId;
+- (void)				registerAliasOfFragment:(VMData*)frag as:(VMId*)aliasId;
 - (void)				makeAlias:(VMData*)data changeIdTo:(VMId*)newId;
 
 //	(3.10)	if tags was specified as array, convert them into tagList
-- (VMTagList*)			convertTagsIntoTagList:(VMHash*)dict;
+//- (VMTagList*)			convertTagsIntoTagList:(VMHash*)dict;	obsolete
 //	(3.11)	register tagList for non-chance objects. (this will be added later to chance)
-- (void)				cacheTagListIdForCueId:(VMId*)cueId tagListId:(VMId*)tlId;
+- (void)				cacheTagListIdForFragmentId:(VMId*)fragmentId tagListId:(VMId*)tlId;
 
-//	(3.31)	if a sequence or layer has no cueCollection, create one from id.
-- (void)				createCollectionIfItDoesNotHave:(VMCueCollection*)collection;
-//	(3.35) 	all ids inside cues should be completed with the owner's id
-//- (void)				completeIdsInsideCues:(VMData*)data;				//	done in phase 2.0
+//	(3.31)	if a sequence or layer has no Collection, create one from id.
+- (void)				createCollectionIfItDoesNotHave:(VMCollection*)collection;
+//	(3.35) 	all ids inside frags should be completed with the owner's id
 
 //	(3.36)		
 //	(3.40)	if audioInfo related key is supplied, create audioInfo
-- (VMAudioInfo*) 		createAudioInfoFromCue:(VMData*)data ifInfoProvidedBy:(VMHash*)hash;
-//	(3.41) 	if audioInfoId was supplied, a cue (cue obj or cue inside sequence) should be audioCue
-- (VMCue*)				convertCue:(VMData**)data withAudioInfoIdIntoAudioCues:(VMHash*)hash;
-//	(3.42)	if an audioInfo is placed naked in a sequence or selector, wrap it by an audioCue
-- (void)				wrapAudioInfoInsideCueCollectionByAudioCue:(VMCueCollection*)cc;
+- (VMAudioInfo*) 		createAudioInfoFromFragment:(VMData*)data ifInfoProvidedBy:(VMHash*)hash;
+//	(3.41) 	if audioInfoId was supplied, a frag (frag obj or frag inside sequence) should be audioFragment
+- (VMFragment*)				convertFragment:(VMData**)data withAudioInfoIdIntoAudioFragments:(VMHash*)hash;
+//	(3.42)	if an audioInfo is placed naked in a sequence or selector, wrap it by an audioFragment
+- (void)				wrapAudioInfoInsideCollectionByAudioFragment:(VMCollection*)cc;
 
 //	(3.50)	if the object has "alt" (alternatives), 
 //			it has to wrapped by a selector.
 //			for each alternative, 
 //			clone myself and register to make it ready for overwrite.
-- (VMSelector*)			wrapCue:(VMData*)data withSelectorIfNeeded:(VMHash*)hash;
+- (VMSelector*)			wrapFragment:(VMData*)data withSelectorIfNeeded:(VMHash*)hash;
 
 //	(3.55)	all id's in a selector must be converted into chances.	btw, selectors should have instruction
-- (void)				convertCuesToChances:(VMSelector*)selector;
+- (void)				convertFragmentsToChances:(VMSelector*)selector;
 
 //	(3.60)	all chance-targets (don't forget sequence's subsequent) should be registered at least as Unresolved
 - (void)				markUnresolvedChanceTargets:(VMSelector*)sel;
 
 //	(3.90)	register entrypoints
-- (void)				registerEntryPoint:(VMCue*)cue;
+- (void)				registerEntryPoint:(VMFragment*)frag;
 
 
 //----- object optimization phase (4) ------------------------------------------
 - (void)				preprocessPhase4;
 
-//	(4.05)	if a sequence has no subseq, shift the last cue in sequence into subseq.	//	abolished
-//- (void)				fillSubseqWithLastCueIfEmpty:(VMSequence*)seq;
+//	(4.05)	if a sequence has no subseq, shift the last frag in sequence into subseq.	//	abolished
 
 //	(4.10)	copy tagLists attached to non-chance objects to chances targeting it.
 - (void)				copyTagListsOfTargets:(VMSelector*)selector;
-//	(4.30)	set audioInfoRef in audioCue-s
-- (void)				setAudioInfoRefInAudioCues:(VMAudioCue*)audioCue;
+//	(4.30)	set audioInfoRef in audioFragment-s
+- (void)				setAudioInfoRefInAudioFragments:(VMAudioFragment*)audioFragment;
 
 //	(4.80)	check unresolved objects
 - (void)				throwErrorIfUnresolved:(VMData*)d;
@@ -271,7 +269,7 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 	
 	//	remove original targetId entry
 	if ( chanceId != targetId )
-		[selector.cues deleteItemWithValue:targetId];
+		[selector.fragments deleteItemWithValue:targetId];
 	
 	//	
 	[selector feedEvaluator];
@@ -289,8 +287,8 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 		  reader.targetId,						@"targetId",
 		  newScoreDescriptor,					@"score",
 		  nil]];
-		if ( ! selector.cues ) selector.cues = ARInstance(VMArray);
-		[selector.cues push:ch];
+		if ( ! selector.fragments ) selector.fragments = ARInstance(VMArray);
+		[selector.fragments push:ch];
 	} else {
 		[DEFAULTPREPROCESSOR logWarning:@"Preprocessor: modifying score." withData:[ch description]];
 		if( isnan( ch.primaryFactor ) ) 
@@ -319,16 +317,16 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 	}
 }
 
-- (void)separateIdAndScoreDescriptor:(VMId*)cueId
+- (void)separateIdAndScoreDescriptor:(VMId*)fragId
 							   outId:(VMId**)outId 
 				  outScoreDescriptor:(VMId**)outScoreDescriptor {
-	VMArray *comp = [VMArray arrayWithString:cueId splitBy:@"="];
+	VMArray *comp = [VMArray arrayWithString:fragId splitBy:@"="];
 	*outId = [comp unshift];
 	if ( comp.count > 0 )
 		*outScoreDescriptor = [comp join:@"="];
 }
 
-- (VMId*)purifiedId:(VMId*)cueId {
+- (VMId*)purifiedId:(VMId*)fragmentId {
 	VMId *purifiedId;
 	
 	if ( ! self->vmReservedCharacterSet ) {
@@ -373,17 +371,17 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 			] retain];
 	}
 	
-	if ( Pittari( [cueId substringToIndex:1], @"#" ) )	//	can not complete #
-		[VMException raise:@"Can't purify abbreviated id." format:@"id: %@",cueId];
+	if ( Pittari( [fragmentId substringToIndex:1], @"#" ) )	//	can not complete #
+		[VMException raise:@"Can't purify abbreviated id." format:@"id: %@",fragmentId];
 	
-	NSScanner *sc = [NSScanner scannerWithString:cueId];
+	NSScanner *sc = [NSScanner scannerWithString:fragmentId];
 	[sc scanUpToCharactersFromSet:self->vmReservedCharacterSet intoString:&purifiedId];
-	if ( purifiedId.length != cueId.length ) return purifiedId;
+	if ( purifiedId.length != fragmentId.length ) return purifiedId;
 	return nil;
 }
 
-- (BOOL)isAutogenaratedId:(VMId*)cueId {	
-	VMArray *c = [VMArray arrayWithString:cueId splitBy:@"|"];
+- (BOOL)isAutogenaratedId:(VMId*)fragId {	
+	VMArray *c = [VMArray arrayWithString:fragId splitBy:@"|"];
 	return [c count] > 1;
 }
 
@@ -394,10 +392,10 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 	
 	[self separateIdAndScoreDescriptor:dataId outId:&idPart outScoreDescriptor:&scoreDescriptor];
 	
-	VMCue *data = ARInstance(VMCue);
+	VMFragment *data = ARInstance(VMFragment);
 	data.id = idPart;
 	
-	VMCue *parent = ARInstance(VMCue);
+	VMFragment *parent = ARInstance(VMFragment);
 	parent.id = parentId;
 	
 	if ( ! data.partId     ) 
@@ -462,16 +460,16 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 
 //------------ Register Data and Alias, mark Unresolved ----------------
 
-- (void)registerData:(VMData*)d {
-	if( !d ) return;
-	[self setData:d withId:d.id];
+- (void)registerData:(VMData*)data {
+	if( !data ) return;
+	[self setData:data withId:data.id];
 }
 
 - (void)unRegister:(NSString *)dataId {
 	[song_.songData removeItem:dataId];
 }
 
-- (void)registerAliasOfCue:(VMData*)d as:(VMId*)aliasId {
+- (void)registerAliasOfFragment:(VMData*)d as:(VMId*)aliasId {
 	if ([self rawData:aliasId]) {
 		[self logError:@"The dataId specified for alias was already registered."
 			  withData:aliasId];
@@ -486,7 +484,7 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 - (void)makeAlias:(VMData*)data changeIdTo:(VMId*)newId {
 	VMId *oldId = [data.id copy];
 	[self renameData:data newId:newId];
-	[self registerAliasOfCue:data as:oldId];
+	[self registerAliasOfFragment:data as:oldId];
 	[oldId release];
 }
 
@@ -526,7 +524,7 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 	NSString *result = nil;
 	
 	NSString *indentString = [@"                                          " substringToIndex:indentDepth * 2];
-	VMCue *cue = ClassCastIfMatch( data, VMCue );
+	VMFragment *frag = ClassCastIfMatch( data, VMFragment );
 	
 	switch ( data.type ) {
 		case vmObjectType_audioInfo: {
@@ -537,9 +535,9 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 			break;
 		}
 			
-		case vmObjectType_audioCue: {
-			if ( cue.VMPModifier && skipAutogenerated ) break;
-			VMAudioCue  *ac = ClassCast( cue, VMAudioCue );
+		case vmObjectType_audioFragment: {
+			if ( frag.VMPModifier && skipAutogenerated ) break;
+			VMAudioFragment  *ac = ClassCast( frag, VMAudioFragment );
 			VMAudioInfo *ai = [self data:ac.audioInfoId];
 			result = [NSString stringWithFormat:@"%@%@\n%@  %@",
 					  indentString, [ac description], 
@@ -549,13 +547,13 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 			
 		case vmObjectType_sequence: {
 			
-			VMSequence *seq = ClassCast( cue, VMSequence );
+			VMSequence *seq = ClassCast( frag, VMSequence );
 			VMArray *descArr = ARInstance(VMArray);
 			
-			for ( id subCue in seq.cues ) {
-				VMCue *d = ( ClassMatch( subCue, VMId ) 
-							? [self data: subCue] 
-							: subCue );
+			for ( id subFragment in seq.fragments ) {
+				VMFragment *d = ( ClassMatch( subFragment, VMId ) 
+							? [self data: subFragment] 
+							: subFragment );
 				
 				if ( ! d.VMPModifier ) {
 					[descArr push:[NSString stringWithFormat:@"%@  %@", indentString, d.id]];
@@ -631,10 +629,10 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 	
 	[self preprocessPhase3:dataArray];
 	
-	//	(4.30)	set audioInfoRef in audioCue-s
+	//	(4.30)	set audioInfoRef in audioFragment-s
 	[self preprocessPhase4];
 	
-#ifdef DEBUG
+#if VMP_DESKTOP
 	//[self dataDump];	
 	if ([APPDELEGATE.systemLog count] > 0) {
 		if ( fatalErrors > 0 ) {
@@ -703,14 +701,14 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 		//
 		//	(2.10) 	all data must have it's own type
 		//	(2.20) 	remove type specific dialects like selector: or layer: 
-		//	and replace with cues:  
+		//	and replace with frags:  
 		//	(except alternatives in sequence and layer)
-		//	scan cues recursively
+		//	scan frags recursively
 		//
 		[self guessTypeAndCleanUpTypeSpecificDialects:hash];
 		
 		
-		//	(2.40)	flatten tree-formed object structure (i.e cues)
+		//	(2.40)	flatten tree-formed object structure (i.e frags)
 		VMArray *flattened = nil;
 		[self flattenTreeStructure:hash into:&flattened];
 		if( flattened ) {
@@ -720,7 +718,7 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 		}
 		
 		//
-		//	(2.50) resolve shortcuts in	arrays 'cues', 'alt' and 'subseq'  
+		//	(2.50) resolve shortcuts in	arrays 'frags', 'alt' and 'subseq'  
 		//
 		[self completeIdsInsideHash:hash];
 		//
@@ -753,22 +751,22 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 	
 	for(;;) {	//	dummy block
 		//	runtime types
-		GuessTypeFromHash(cuePosition, player)	//	NOTE: currently, there is no way to sort out VMLiveData from VMPlayer
+		GuessTypeFromHash(fragPosition, player)	//	NOTE: currently, there is no way to sort out VMLiveData from VMPlayer
 		
 		//	static song structures
 		GuessTypeFromHash(sel, selector)	//	prefer sel before seq.
 		GuessTypeFromHash(subseq, sequence)
 		GuessTypeFromHash(seq, sequence)
 		GuessTypeFromHash(lay, layerList)
-		GuessTypeFromHash(cues, cueCollection)
+		GuessTypeFromHash(cues, collection)	//	left for compatibility. remove in future
+		GuessTypeFromHash(frag, collection)
 		
 		//	chances and modifiers
 		GuessTypeFromHash(targetId, chance)
 		GuessTypeFromHash(parameter, function)
-		GuessTypeFromHash(audioInfoId, audioCue)
+		GuessTypeFromHash(audioInfoId, audioFragment )
 		GuessTypeFromHash(modifiers, stimulator)
-		GuessTypeFromHash(factor, scoreModifier)
-		GuessTypeFromHash(tag, tagList)
+	//	GuessTypeFromHash(score, transformer)		does not work properly
 		
 		//	audio
 		GuessTypeFromHash(original, audioModifier)
@@ -777,7 +775,7 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 		GuessTypeFromHash(volume, audioInfo)
 		
 		//	meta
-		GuessTypeFromHash(instruction, metaCue)
+		GuessTypeFromHash(instruction, metaFragment)
 		
 		//	base
 		GuessTypeFromHash(ref, reference)
@@ -797,7 +795,7 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 	return typ;
 }
 
-//	(2.20)	remove type specific dialects like selector: or layer: and replace with cues:  
+//	(2.20)	remove type specific dialects like selector: or layer: and replace with frags:  
 //	(leave alternatives in sequence and layer)
 - (id) guessTypeAndCleanUpTypeSpecificDialects:(id)inObject {
 	VMArray	*arrObj 	= ReadAsVMArray(inObject);
@@ -830,7 +828,7 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 }
 
 
-//	(2.40)	flatten tree structure (cues)
+//	(2.40)	flatten tree structure (fragments)
 
 //	subs
 - (VMId *)generateOrCompleteId:(VMHash *)hash
@@ -864,13 +862,13 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 			  parentDataToCopy:(VMHash *)parentDataToCopy {
     //	don't place bare audioInfo in a selector/sequence
     if ( *type_p == vmObjectType_audioInfo ) {
-		*type_p = vmObjectType_audioCue;
+		*type_p = vmObjectType_audioFragment;
 		SetHashItem(type, VMIntObj(*type_p));
 	}
     
-    //	upgrade selector or audioCue to sequence if subseq was supplied.
+    //	upgrade selector or audioFragment to sequence if subseq was supplied.
     if ( [parentDataToCopy item:@"subseq"] 
-        && ( *type_p==vmObjectType_selector || *type_p == vmObjectType_audioCue )) {
+        && ( *type_p==vmObjectType_selector || *type_p == vmObjectType_audioFragment )) {
         *type_p = vmObjectType_sequence;
 		SetHashItem(type, VMIntObj(*type_p));
     }
@@ -891,7 +889,7 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 		VMHash 	*hash 		= ReadAsVMHash(obj);
 		
 		if ( rawArray ) {
-			//	assume raw array inside cues as selector
+			//	assume raw array inside frags as selector
 			hash = ARInstance( VMHash );
 			SetHashItem(sel, rawArray);
 			SetHashItem(type, VMIntObj(vmObjectType_selector));
@@ -939,12 +937,12 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 /*	if ( Pittari(objId, @"a_14_~F;sel") )
 		NSLog(@"dd");
 */	
-	if (HashItem(cues)) {
-		if( type==vmObjectType_selector && HashItem(subseq) ) {//	if a selector has subseq data, distribute them into sub-cues
+	if (HashItem(frag)) {
+		if( type==vmObjectType_selector && HashItem(subseq) ) {//	if a selector has subseq data, distribute them into sub-fragments
 			if( ! Pittari( HashItem(subseq),@"*" )) CopyHashItem(subseq, hash, parentDataToCopy);
 		}
-		SetHashItem(cues, 
-					[self flattenObjectsIn:ConvertToVMArray( HashItem(cues) ) 
+		SetHashItem(frag,
+					[self flattenObjectsIn:ConvertToVMArray( HashItem(frag) ) 
 										to:flattened 
 							  withParentId:objId
 							copyParentData:parentDataToCopy ]);	
@@ -968,7 +966,7 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 }
 
 
-//	(2.50) resolve shortcuts in	arrays 'cues', 'alt' and 'subseq'  
+//	(2.50) resolve shortcuts in	arrays 'frag', 'alt', 'subseq', 'seq' and 'layer'
 
 //	sub
 - (VMArray *)completeIdsInsideArray:(VMArray *)ary withId:(VMId*)parentId {
@@ -980,9 +978,9 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 			if( cmp ) 
 				[ary setItem:cmp at:i];
 		}
-		if ( ClassMatch(oid, VMCue)) {
-			VMId *cmp = [self completeId:ClassCast(oid,VMCue).id withParentId:parentId];
-			if( cmp ) ClassCast(oid,VMCue).id = cmp;
+		if ( ClassMatch(oid, VMFragment)) {
+			VMId *cmp = [self completeId:ClassCast(oid,VMFragment).id withParentId:parentId];
+			if( cmp ) ClassCast(oid,VMFragment).id = cmp;
 		}
 	}
 	return ary;
@@ -1002,11 +1000,11 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 					if( compId ) SetHashItem( clone, compId );
 					)
 	
-	IfHashItemExist(cues, 	SetHashItem(cues, 	[self completeIdsInsideArray:ConvertToVMArray( HASHITEM ) withId:objid] );)
+	IfHashItemExist(frag, 	SetHashItem(frag, 	[self completeIdsInsideArray:ConvertToVMArray( HASHITEM ) withId:objid] );)
 	IfHashItemExist(alt, 	SetHashItem(alt, 	[self completeIdsInsideArray:ConvertToVMArray( HASHITEM ) withId:objid] );)
 	IfHashItemExist(subseq,	SetHashItem(subseq, [self completeIdsInsideArray:ConvertToVMArray( HASHITEM ) withId:objid] );)
 	IfHashItemExist(seq,	SetHashItem(seq, 	[self completeIdsInsideArray:ConvertToVMArray( HASHITEM ) withId:objid] );)
-	IfHashItemExist(layer,	SetHashItem(kayer, 	[self completeIdsInsideArray:ConvertToVMArray( HASHITEM ) withId:objid] );)
+	IfHashItemExist(layer,	SetHashItem(layer, 	[self completeIdsInsideArray:ConvertToVMArray( HASHITEM ) withId:objid] );)
 }
 
 #pragma mark -
@@ -1014,10 +1012,10 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 
 
 //----- object creation phase (3) ------------------------------------------
-- (void)preprocessPhase3:(VMArray*)cueArray {
+- (void)preprocessPhase3:(VMArray*)fragArray {
 	
 	//	---------------	iteration 3.0 -------------------
-	for ( VMHash *hash in cueArray ) {
+	for ( VMHash *hash in fragArray ) {
 		VMData *data = nil;
 		vmObjectType typ = vmObjectType_unknown;
 //		if ( [ HashItem(id) isEqualToString:@"r_sel_A" ] )
@@ -1045,57 +1043,57 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 		}
 		
 				
-		//
+		//	Obsolete
 		//	(3.10)	if tag was specified as an array, convert them into tagList
 		//
-		VMTagList *tl =
-		[self convertTagsIntoTagList:hash];
+//		VMTagList *tl =
+//		[self convertTagsIntoTagList:hash];
 		
 		//	
 		//	(3.11)	register tagList for non-chance objects.
 		//	(this will be added later to chance)
 		
-		VMId *tagListId = Default(HashItem(tagListId), ( tl ? tl.id : nil ));
+//		VMId *tagListId = Default(HashItem(tagListId), ( tl ? tl.id : nil ));
 		
-		if( tagListId && typ != vmObjectType_chance ) 
-			[self cacheTagListIdForCueId:data.id tagListId:tagListId];
+//		if( tagListId && typ != vmObjectType_chance )
+//			[self cacheTagListIdForFragmentId:data.id tagListId:tagListId];
 		
 		
 		//
-		//	(3.31)	if a sequence or layer has no cueCollection, create one from id.
+		//	(3.31)	if a sequence or layer has no Collection, create one from id.
 		//
 		if ( typ == vmObjectType_sequence || typ == vmObjectType_layerList ) {
-			[self createCollectionIfItDoesNotHave:ClassCast(data, VMCueCollection)];
+			[self createCollectionIfItDoesNotHave:ClassCast(data, VMCollection)];
 		}
 		
 		//
 		//	(3.40)	if audioInfo related key is supplied, create audioInfo and set audioInfoId
 		//
-		[self createAudioInfoFromCue:data ifInfoProvidedBy:hash];
+		[self createAudioInfoFromFragment:data ifInfoProvidedBy:hash];
 		
 		//
-		//	(3.41) 	if audioInfoId was supplied, a cue (cue obj or cue inside sequence) should be audioCue
+		//	(3.41) 	if audioInfoId was supplied, a frag (frag obj or frag inside sequence) should be audioFragment
 		//
-		[self convertCue:&data withAudioInfoIdIntoAudioCues:hash];
+		[self convertFragment:&data withAudioInfoIdIntoAudioFragments:hash];
 		
 		//
-		//	(3.42)	if an audioInfo is placed bare in a sequence or selector, wrap it by an audioCue
+		//	(3.42)	if an audioInfo is placed bare in a sequence or selector, wrap it by an audioFragment
 		//
-		if ( ClassMatch(data, VMCueCollection) ) 
-			[self wrapAudioInfoInsideCueCollectionByAudioCue:ClassCast(data, VMCueCollection)];
+		if ( ClassMatch(data, VMCollection) ) 
+			[self wrapAudioInfoInsideCollectionByAudioFragment:ClassCast(data, VMCollection)];
 		
 		//
 		//	(3.50)	if the object has "alt" (alternatives), it has to wrapped by a selector.
 		//			for each alternative, clone myself and register to make it ready for overwrite.
 		//
-		VMSelector *sel = [self wrapCue:data withSelectorIfNeeded:hash];
+		VMSelector *sel = [self wrapFragment:data withSelectorIfNeeded:hash];
 		
 		//
 		//	(3.55)	all id's in a selector must be converted into chances, btw, selectors should have instructions
 		//
-		if( ClassMatch(data, VMSelector) ) [self convertCuesToChances:ClassCast(data, VMSelector)];
-		if( ClassMatch(data, VMSequence) ) [self convertCuesToChances:ClassCast(data, VMSequence).subsequent];
-		if(sel) [self convertCuesToChances:sel];	
+		if( ClassMatch(data, VMSelector) ) [self convertFragmentsToChances:ClassCast(data, VMSelector)];
+		if( ClassMatch(data, VMSequence) ) [self convertFragmentsToChances:ClassCast(data, VMSequence).subsequent];
+		if(sel) [self convertFragmentsToChances:sel];	
 		
 		//
 		//	(3.60)	all chance-targets (don't forget sequence's subsequent) should be registered at least as Unresolved
@@ -1107,7 +1105,7 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 		//
 		VMString *entryPoint = HashItem(entryPoint);
 		if( Pittari(entryPoint,@"YES" )) {
-			VMCue *c = ClassCastIfMatch( data, VMCue );
+			VMFragment *c = ClassCastIfMatch( data, VMFragment );
 			if( c ) { 
 				[self registerEntryPoint:c];
 			} else {
@@ -1120,6 +1118,7 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
     }
 }
 
+/*	OBSOLETE - tags and score modifiers are refactored into VMTransformer
 //	
 //	(3.10)	if tags was specified as array, convert them into tagList
 - (VMTagList*) convertTagsIntoTagList:(VMHash*)hash {
@@ -1134,7 +1133,7 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 	}
 	return tl;
 }
-
+*/
 
 //
 //	tagListId cache
@@ -1149,34 +1148,34 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 }
 
 //	(3.11)	register tagList for non-chance objects. (this will be added later to chance)
-- (void)cacheTagListIdForCueId:(VMId*)cueId tagListId:(VMId*)tlId {
-	[[self tagListIdCache] setItem:tlId for:cueId];
+- (void)cacheTagListIdForFragmentId:(VMId*)fragmentId tagListId:(VMId*)tlId {
+	[[self tagListIdCache] setItem:tlId for:fragmentId];
 }
 
-- (VMId*)tagListIdForCueId:(VMId*)cueId {
-	return [[self tagListIdCache] valueForKey:cueId];
+- (VMId*)tagListIdForFragmentId:(VMId*)fragmentId {
+	return [[self tagListIdCache] valueForKey:fragmentId];
 }
 
 //
-//	(3.31)	if a sequence or layer has no cueCollection, create one from id.
+//	(3.31)	if a sequence or layer has no Collection, create one from id.
 //
-- (void) createCollectionIfItDoesNotHave:(VMCueCollection*)collection {
-	if( collection.cues && [collection.cues count] > 0 ) return;
-	collection.cues = ARInstance(VMArray);
-	VMId *cueId 	= [VMPP idWithVMPModifier:collection.id tag:@"cue" info:nil];
+- (void) createCollectionIfItDoesNotHave:(VMCollection*)collection {
+	if( collection.fragments && [collection.fragments count] > 0 ) return;
+	collection.fragments = ARInstance(VMArray);
+	VMId *fragId 	= [VMPP idWithVMPModifier:collection.id tag:@"frag" info:nil];
 	
-	//	make cue
-	[collection.cues push:cueId];
-	VMCue *cue		= ARInstance( VMCue );
-	cue.id = cueId;
-	[self registerData:cue];
+	//	make frag
+	[collection.fragments push:fragId];
+	VMFragment *frag		= ARInstance( VMFragment );
+	frag.id = fragId;
+	[self registerData:frag];
 }
 
 //
 //	(3.40)	if audioInfo related key is supplied, create audioInfo
 //
-- (VMAudioInfo*)createAudioInfoFromCue:(VMData*)data ifInfoProvidedBy:(VMHash*)hash {
-	VMCue *c  = ClassCastIfMatch(data, VMCue);
+- (VMAudioInfo*)createAudioInfoFromFragment:(VMData*)data ifInfoProvidedBy:(VMHash*)hash {
+	VMFragment *c  = ClassCastIfMatch(data, VMFragment);
 	if( ! c || c.type == vmObjectType_audioInfo ) return nil;
 	
 	if ( HashItem(audioInfo)) {
@@ -1220,63 +1219,63 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 }
 
 //
-//	(3.41) 	if audioInfoId was supplied, a cue (cue obj or cue inside sequence) should be audioCue
+//	(3.41) 	if audioInfoId was supplied, a frag (frag obj or frag inside sequence) should be audioFragment
 //
-- (void)convertCue:(VMData**)data_p withAudioInfoIdIntoAudioCues:(VMHash*)hash {
+- (void)convertFragment:(VMData**)data_p withAudioInfoIdIntoAudioFragments:(VMHash*)hash {
 	VMId *aiId = HashItem(audioInfoId);
 	if( aiId ) {	
-		//	(3.41) 	if audioInfoId was supplied, a cue (cue obj or cue inside sequence) should be audioCue
-		VMArray *cueIdsToConvert = nil;
+		//	(3.41) 	if audioInfoId was supplied, a frag (frag obj or frag inside sequence) should be audioFragment
+		VMArray *fragIdsToConvert = nil;
 		
-		if( (*data_p).type == vmObjectType_cue )
-			cueIdsToConvert = [VMArray arrayWithObject:(*data_p).id];
+		if( (*data_p).type == vmObjectType_fragment )
+			fragIdsToConvert = [VMArray arrayWithObject:(*data_p).id];
 		else
 			if( (*data_p).type == vmObjectType_sequence )
-				cueIdsToConvert = [ClassCast(*data_p, VMSequence) cues];
+				fragIdsToConvert = [ClassCast(*data_p, VMSequence) fragments];
 		
-		if(! cueIdsToConvert ) return;
+		if(! fragIdsToConvert ) return;
 		
-		for ( id idObj in cueIdsToConvert ) {
-			VMCue 		*cue 	= [self data:ReadAsVMId(idObj)];
-			VMAudioCue 	*ac		= ClassCastIfMatch(cue, VMAudioCue);
+		for ( id idObj in fragIdsToConvert ) {
+			VMFragment 		*frag 	= [self data:ReadAsVMId(idObj)];
+			VMAudioFragment 	*ac		= ClassCastIfMatch(frag, VMAudioFragment);
 			if( ! ac ) {
 				//	check if it is compatible
-				if ( ! [self is:vmObjectType_audioInfo upperCompatibleOf:cue.type] ) {
+				if ( ! [self is:vmObjectType_audioInfo upperCompatibleOf:frag.type] ) {
 					[VMException raise:@"Can not convert into audioInfo." 
 								format:@"%@ has audioInfo related data %@, but not compatible with them.",
-					 cue.id,
+					 frag.id,
 					 [hash description]
 					 ];
 				}
 				
-				//	make audioCue.
-				ac = ARInstance( VMAudioCue );
-				[ac setWithProto:cue];
+				//	make audioFragment.
+				ac = ARInstance( VMAudioFragment );
+				[ac setWithProto:frag];
 				ac.id = ReadAsVMId(idObj);
 			}
-			ac.audioInfoId = aiId;	//	we use the same audioInfoId for all cues in sequence.	when overvrite, we must make a copy of them.
+			ac.audioInfoId = aiId;	//	we use the same audioInfoId for all frags in sequence.	when overvrite, we must make a copy of them.
 			[self registerData:ac];
-			if ( Pittari( (*data_p).id, cue.id ) ) data_p = &cue;	//	replace data with audioCue
+			if ( Pittari( (*data_p).id, frag.id ) ) data_p = &frag;	//	replace data with audioFragment
 		}
 	}
 }
 
 //
-//	(3.42)	if an audioInfo is placed bare in a sequence or selector, wrap it by an audioCue
+//	(3.42)	if an audioInfo is placed bare in a sequence or selector, wrap it by an audioFragment
 //
-- (void)wrapAudioInfoInsideCueCollectionByAudioCue:(VMCueCollection*)cc {
-	VMInt c = cc.cues.count;
+- (void)wrapAudioInfoInsideCollectionByAudioFragment:(VMCollection*)cc {
+	VMInt c = cc.fragments.count;
 	for ( VMInt i = 0; i < c; ++i ) {
-		id d = [cc.cues item:i];
+		id d = [cc.fragments item:i];
 		if ( ClassMatch( d, VMId ) ) d = [self data:d];
 		if ( ! ClassMatch( d, VMAudioInfo ) ) continue;
 		
-		VMAudioCue 	*ac = ARInstance( VMAudioCue );
+		VMAudioFragment 	*ac = ARInstance( VMAudioFragment );
 		VMAudioInfo *ai = d;
 		ac.audioInfoId = ai.id;
-		ac.id = [VMPreprocessor idWithVMPModifier:ai.userGeneratedId tag:@"cue" info:nil];
+		ac.id = [VMPreprocessor idWithVMPModifier:ai.userGeneratedId tag:@"frag" info:nil];
 		[self registerData:ac];
-		[cc.cues setItem:ac.id at:i];
+		[cc.fragments setItem:ac.id at:i];
 	}
 }
 
@@ -1291,14 +1290,14 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 
 //	subs:
 
-- (VMCue*)cloneCue:(VMCue*)cue newId:(VMId*)newId {
-	VMCue *clone = [VMPP dataWithData:cue];
+- (VMFragment*)cloneFragment:(VMFragment*)frag newId:(VMId*)newId {
+	VMFragment *clone = [VMPP dataWithData:frag];
 	clone.id = newId;
 	return clone;
 }
 
-- (void)cloneAudioInfo:(VMCue *)cue newId:(VMId *)newId {
-	VMAudioCue *ac = ClassCastIfMatch( cue, VMAudioCue );
+- (void)cloneAudioInfo:(VMFragment *)frag newId:(VMId *)newId {
+	VMAudioFragment *ac = ClassCastIfMatch( frag, VMAudioFragment );
 	if ( ! ac ) return;
 	
 	VMId *cloneId = [VMPP idWithVMPModifier:newId tag:@"audioInfo" info:nil];
@@ -1312,22 +1311,22 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 	ac.audioInfoId = clonedAI.id;
 }
 
-- (VMCue*)cloneAutogeneratedCue:(VMCue*)cue newId:(VMId*)newId {
-	VMCue *clonedCue = [self cloneCue:cue 
+- (VMFragment*)cloneAutogeneratedFragment:(VMFragment*)frag newId:(VMId*)newId {
+	VMFragment *clonedFragment = [self cloneFragment:frag
 								newId:[VMPP idWithVMPModifier:newId 
-														  tag:@"cue" 
+														  tag:@"frag" 
 														 info:nil]];
 	
-	if ( ClassMatch( clonedCue, VMAudioCue ))
-		[self cloneAudioInfo:clonedCue newId:newId];
+	if ( ClassMatch( clonedFragment, VMAudioFragment ))
+		[self cloneAudioInfo:clonedFragment newId:newId];
 	
-	[self registerData:clonedCue];
-	return clonedCue;
+	[self registerData:clonedFragment];
+	return clonedFragment;
 }
 
-//	wrap cue main:
+//	wrap frag main:
 
-- (VMSelector*)	wrapCue:(VMData*)original withSelectorIfNeeded:(VMHash*)hash {
+- (VMSelector*)	wrapFragment:(VMData*)original withSelectorIfNeeded:(VMHash*)hash {
 	id 		alt;
 	if( original.type == vmObjectType_selector || (! ( alt = HashItem(alt) ) )) return nil;
 	
@@ -1354,93 +1353,93 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 		chance = NewInstance(VMChance);		
 		[chance setWithData:ReadAsVMId(obj)];
 		
-		VMId *cueId 	= chance.targetId;		
-		if ( Pittari(cueId, originalId) ) {
-			[sel.cues deleteItemWithValue:cueId];	//	remove from selector
-			cueId = wrappedId;						//	change original's id
+		VMId *fragId 	= chance.targetId;		
+		if ( Pittari(fragId, originalId) ) {
+			[sel.fragments deleteItemWithValue:fragId];	//	remove from selector
+			fragId = wrappedId;						//	change original's id
 			needToAddMyself = NO;
 		}
 		
-		VMCue *cue = [self data:cueId];				//	this is the alternative cue-object
-		VMAudioInfo *audioInfo = ClassCastIfMatch(cue, VMAudioInfo);
-		if( audioInfo ) {				//	it can happen that in-line specified cue has been interpreted as AudioInfo.
-			//	generally, no AudioInfo should be placed bare in a cue container.
-			[self renameData:cue newId:[VMPP idWithVMPModifier:cue.userGeneratedId tag:@"audioInfo" info:nil]];
-			cue = nil;
+		VMFragment *frag = [self data:fragId];				//	this is the alternative frag-object
+		VMAudioInfo *audioInfo = ClassCastIfMatch(frag, VMAudioInfo);
+		if( audioInfo ) {				//	it can happen that in-line specified frag has been interpreted as AudioInfo.
+			//	generally, no AudioInfo should be placed bare in a frag container.
+			[self renameData:frag newId:[VMPP idWithVMPModifier:frag.userGeneratedId tag:@"audioInfo" info:nil]];
+			frag = nil;
 		}
 		
-		if( !cue ) {
-			VMAudioCue *audioCue = ClassCastIfMatch( original, VMAudioCue );
-			if ( audioCue ) {
-				if ( [self isAutogenaratedId:audioCue.id ] )
-					cue = [self cloneAutogeneratedCue:audioCue newId:cueId];
+		if( !frag ) {
+			VMAudioFragment *audioFragment = ClassCastIfMatch( original, VMAudioFragment );
+			if ( audioFragment ) {
+				if ( [self isAutogenaratedId:audioFragment.id ] )
+					frag = [self cloneAutogeneratedFragment:audioFragment newId:fragId];
 			} 
 			
 			else 
 				
 			{
 				
-				cue = [VMPP dataWithData:original];		//	clone original
+				frag = [VMPP dataWithData:original];		//	clone original
 				
-				VMSequence *sequence = ClassCastIfMatch( cue, VMSequence );
+				VMSequence *sequence = ClassCastIfMatch( frag, VMSequence );
 				if ( sequence ) {
-					BOOL cueIsAutogenerated = ( [self isAutogenaratedId:[sequence cueAtIndex:0].id ] );
+					BOOL fragIsAutogenerated = ( [self isAutogenaratedId:[sequence fragmentAtIndex:0].id ] );
 					
-					if ( cueIsAutogenerated ) {	
+					if ( fragIsAutogenerated ) {	
 						//	alt stands for alternate the original sequence itself:
-						//	autogenerated audiocues inside sequence has to be cloned
-						sequence.id = cueId;
+						//	autogenerated audioFragments inside sequence has to be cloned
+						sequence.id = fragId;
 						int p = 0;
 						
 						while( p < sequence.length ) {			//	for each sequence member in alternative.
-							id aSequenceMember = [sequence.cues item:p];	//	don't use [sequence cueAtIndex] since it resolves dataObject.
+							id aSequenceMember = [sequence.fragments item:p];	//	don't use [sequence fragmentAtIndex] since it resolves dataObject.
 							BOOL isObjRef = ClassMatch( aSequenceMember, VMData );
-							VMId  *subCueId = isObjRef 
+							VMId  *subFragmentId = isObjRef 
 							? ClassCast( aSequenceMember, VMData ).id 
 							: ClassCast( aSequenceMember, VMId ); 
 							
-							if ( [self isAutogenaratedId:subCueId] ) {
-								VMCue *clonedCue;
+							if ( [self isAutogenaratedId:subFragmentId] ) {
+								VMFragment *clonedFragment;
 								if( isObjRef )
-									clonedCue = [self cloneAutogeneratedCue:aSequenceMember newId:cueId];	//should not happen, since we have flattened the data structure.
+									clonedFragment = [self cloneAutogeneratedFragment:aSequenceMember newId:fragId];	//should not happen, since we have flattened the data structure.
 								else 
-									clonedCue = [self cloneAutogeneratedCue:[self data:aSequenceMember] newId:cueId];
+									clonedFragment = [self cloneAutogeneratedFragment:[self data:aSequenceMember] newId:fragId];
 								
 								//	we always set VMId into sequence menber. even if there was set an object before.
-								[sequence.cues setItem:clonedCue.id at:p];
+								[sequence.fragments setItem:clonedFragment.id at:p];
 							}
 							++p;
 						}
 					} else {
-						//	alt stands for alternate the cue inside sequence:
-						//	non-autogenarated audiocues inside sequence has to be replaced by alt
-						sequence.id = [VMPP idWithVMPModifier:cueId tag:@"seqWrap" info:nil];
-						sequence.cues = [VMArray arrayWithObject:cueId];
+						//	alt stands for alternate the frag inside sequence:
+						//	non-autogenarated audiofrags inside sequence has to be replaced by alt
+						sequence.id = [VMPP idWithVMPModifier:fragId tag:@"seqWrap" info:nil];
+						sequence.fragments = [VMArray arrayWithObject:fragId];
 					}
 				}
-				[self registerData:cue];
+				[self registerData:frag];
 			}
 			
 			
-		}	//	end if ( ! cue )
+		}	//	end if ( ! frag )
 		
-		chance.targetId = cue.id;
-		[sel addCuesWithData:chance];	//	add cue
+		chance.targetId = frag.id;
+		[sel addFragmentsWithData:chance];	//	add frag
 		[chance release];
 	}
 	if ( needToAddMyself ) {
 		chance = ARInstance(VMChance);
-		VMArray *cues = ConvertToVMArray( HashItem(cues) );
-		if (cues) {	//	try to read from cues arr
-			[chance setWithData:ReadAsVMId( [cues item:0] ) ]; 
+		VMArray *frags = ConvertToVMArray( HashItem(frags) );
+		if (frags) {	//	try to read from frags arr
+			[chance setWithData:ReadAsVMId( [frags item:0] ) ]; 
 		} else {
 			chance.scoreDescriptor=@"1";	//	nothing specified
 		}
 		chance.targetId = wrappedId;
-		[sel addCuesWithData:chance];	//	add myself		
+		[sel addFragmentsWithData:chance];	//	add myself		
 	}
 	
-	[self convertCuesToChances:sel];
+	[self convertFragmentsToChances:sel];
 	
 	[self registerData:sel];	//	overwrite alias of original
 	
@@ -1451,20 +1450,20 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 //
 //	(3.55)	all id's in selector must be converted into chances
 //
-- (void)convertCuesToChances:(VMSelector*) selector {
-	for ( id obj in selector.cues ) {
+- (void)convertFragmentsToChances:(VMSelector*) selector {
+	for ( id obj in selector.fragments ) {
 		if ( ClassMatch(obj, VMChance)) continue;
-		VMId *cueId = ReadAsVMId(obj);
+		VMId *fragId = ReadAsVMId(obj);
 		[VMPP createOrModifyChanceWithId:selector 
-								  target:cueId
+								  target:fragId
 								   score:0
 								 tagList:nil];
 	}
 }
 
 //	(3.90)	register entrypoints
-- (void)registerEntryPoint:(VMCue*)cue {
-	[song_.entryPoints pushUnique:cue.id];
+- (void)registerEntryPoint:(VMFragment*)frag {
+	[song_.entryPoints pushUnique:frag.id];
 }
 
 
@@ -1480,9 +1479,9 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 		if ( Pittari( [did substringToIndex:4], @"VMP|" )) continue;	//	no VMData
 		VMData *c = [self data:did];
 		
-		//	(4.30)	set audioInfoRef in audioCue-s
-		if ( c.type == vmObjectType_audioCue ) {
-			[self setAudioInfoRefInAudioCues:ClassCast(c, VMAudioCue)];
+		//	(4.30)	set audioInfoRef in audioFragment-s
+		if ( c.type == vmObjectType_audioFragment ) {
+			[self setAudioInfoRefInAudioFragments:ClassCast(c, VMAudioFragment)];
 		}
 	}
 }
@@ -1493,13 +1492,13 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 }
 
 
-//	(4.30)	set audioInfoRef in audioCue-s
-- (void)setAudioInfoRefInAudioCues:(VMAudioCue*)audioCue {
-	VMAudioInfo *ai = [self data:audioCue.audioInfoId];
+//	(4.30)	set audioInfoRef in audioFragment-s
+- (void)setAudioInfoRefInAudioFragments:(VMAudioFragment*)audioFragment {
+	VMAudioInfo *ai = [self data:audioFragment.audioInfoId];
 	if (ai) 
-		audioCue.audioInfoRef = ai;
+		audioFragment.audioInfoRef = ai;
 	else
-		[self logError:@"AudioInfo not found for:" withData:[audioCue description]];
+		[self logError:@"AudioInfo not found for:" withData:[audioFragment description]];
 }
 
 
@@ -1525,9 +1524,9 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
  * level/layer
  *	1/base		2/category		3/meta			4/static media		5/concrete		6/collection	7/dynamic 		8/runtime
  *
- *	[VMData]---- [VMCue]--------- [VMMetaCue]------------------------ [VMAudioCue] ------------------ [VMAudioCuePlayer]
- *			|							|	└---- [VMAudioInfo]	----- [VMAudioModifier]
- *			|							└ [VMCueCollection]---------- [VMLayerList]
+ *	[VMData]---- [VMFragment]--------- [VMMetaFragment]----------- [VMAudioFragment] ------------------ [VMAudioFragmentPlayer]
+ *			|							|	└---- [VMAudioInfo]	-- [VMAudioModifier]
+ *			|							└ [VMCollection]---------- [VMLayerList]
  *			|														└---------------- [VMSelector]
  *			|														└---------------- [VMSequence]
  *			|														└-------------------------------- [VMLiveData]--- [VMPlayer]
@@ -1551,22 +1550,21 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 	SetClassTable( VMData, 			data,			D,		1.0 )
 	//	category
 	SetClassTable( VMReference,		reference,		REF,	2.0 )
-	SetClassTable( VMCue,			cue,			CUE,	2.1 )
+	SetClassTable( VMFragment,		fragment,		FRG,	2.1 )
 	//	meta
 	SetClassTable( VMUnresolved,	unresolved,		UNR,	3.0 )
-	SetClassTable( VMMetaCue,		metaCue,		MC,		3.1 )
+	SetClassTable( VMMetaFragment,	metaFragment,	MFG,	3.1 )
 	SetClassTable( VMFunction,		function,		FNC,	3.2 )
-	SetClassTable( VMTagList,		tagList,		TAG,	3.4 )
 	SetClassTable( VMChance,		chance,			CH,		3.5 )
-	SetClassTable( VMCueCollection,	cueCollection,	COL,	3.9 )
+	SetClassTable( VMCollection,	collection,		COL,	3.9 )
 	//	static media
 	SetClassTable( VMAudioInfo,		audioInfo,		AI,		4.5 )
 	SetClassTable( VMStimulator,	stimulator,		STM,	4.6 )
 	//	concrete instanization
 	SetClassTable( VMAudioModifier,	audioModifier,	AM,		5.1 )
 	SetClassTable( VMLayerList,		layerList,		LAY,	5.3 )
-	SetClassTable( VMAudioCue,		audioCue,		AC,		5.4 )
-	SetClassTable( VMScoreModifier,	scoreModifier,	SCM,	5.5 )
+	SetClassTable( VMAudioFragment,	audioFragment,	AFG,	5.4 )
+	SetClassTable( VMTransformer,	transformer,	TFM,	5.5 )
 	//	collection
 	SetClassTable( VMSelector,		selector,		SEL,	6.1 )
 	SetClassTable( VMSequence,		sequence,		SEQ,	6.5 )
@@ -1583,6 +1581,9 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 		@"ref",			@"reference",
 		@"alt",			@"alternatives",
 		@"dur",			@"duration",
+		@"frag",		@"fragments",
+		@"frag",		@"fragment",
+		@"frag",		@"frags",
 		@"sel",			@"selector",
 		@"seq",   		@"sequence",
 		@"ofs",			@"offset",
@@ -1598,9 +1599,9 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 - (void)initDialects {
 	dialects
 	= [[VMHash hashWithObjectsAndKeys:
-		@"cues", 		@"sel",
-		@"cues",	 	@"layer",
-		@"cues",		@"seq",
+		@"frag", 		@"sel",
+		@"frag",	 	@"layer",
+		@"frag",		@"seq",
 		@"instruction",	@"instructions",
 		nil] retain];
 }
