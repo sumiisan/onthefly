@@ -99,6 +99,17 @@ va_end(args)
 	[al runModal];
 }
 
+#if VMP_OSX
+static NSTextView *textViewForSpeak__ = nil;
+#endif
+
++ (void)speak:(NSString*)message {
+#if VMP_OSX
+	if ( ! textViewForSpeak__ ) textViewForSpeak__ = [[NSTextView alloc] init];
+	textViewForSpeak__.string = message;
+	[textViewForSpeak__ startSpeaking:self];
+#endif
+}
 
 + (BOOL)ensure:(NSString *)format, ...  {
 	parseMessageFromArg(NSString *message);

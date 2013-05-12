@@ -8,6 +8,7 @@
 
 #import <Cocoa/Cocoa.h>
 #import "VMPGraph.h"
+#import "VMPEditorWindowController.h"
 
 #pragma mark -
 #pragma mark VMPSelectorGraph
@@ -31,9 +32,13 @@
 #pragma mark -
 #pragma mark VMPObjectGraphView
 //------------------------ VMPObjectGraphView ----------------------------
-@interface VMPObjectGraphView : VMPGraph <VMPObjectBrowserGraphDelegate>
+@interface VMPObjectGraphView : VMPGraph
 @property (nonatomic,retain) NSViewController	*editorViewController;
 @property (nonatomic, assign) VMData *data;
+
+- (void)drawGraphWith:(VMData*)data;
+- (void)drawReportGraph:(VMHash*)report;
+
 @end
 
 
@@ -41,10 +46,13 @@
 #pragma mark -
 #pragma mark VMPObjectInfoView
 //------------------------ VMPObjectInfoView ----------------------------
-@interface VMPObjectInfoView : VMPGraph <VMPObjectBrowserInfoDelegate>
+@interface VMPObjectInfoView : VMPGraph
 @property (nonatomic, assign) VMData *data;
 @property (assign) IBOutlet NSTextField *userGeneratedIdField;
 @property (assign) IBOutlet NSTextField *vmpModifierField;
 @property (assign) IBOutlet NSTextField *typeLabel;
+
+- (void)drawInfoWith:(VMData*)data;
+
 @end
 

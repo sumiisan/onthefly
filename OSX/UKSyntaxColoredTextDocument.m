@@ -124,9 +124,10 @@ static BOOL			sSyntaxColoredTextDocPrefsInited = NO;
 	// Do initial syntax coloring of our file:
 	[self recolorCompleteFile:nil];
 	
-	// Make sure we can use "find" if we're on 10.3:
+/*	// Make sure we can use "find" if we're on 10.3:
 	if( [textView respondsToSelector: @selector(setUsesFindPanel:)] )
 		[textView setUsesFindPanel: YES];
+ */
 }
 
 /* -----------------------------------------------------------------------------

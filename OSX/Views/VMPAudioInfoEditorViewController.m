@@ -115,12 +115,12 @@ static const CGFloat kWaveDisplayHorizontalMargin = 20;
 	//self.waveDisplay.frame = CGRectMakeFromOriginAndSize(self.waveDisplay.frame.origin, waveDisplaySize);
 	self.waveAndMarkerView.frame = CGRectMake(self.waveAndMarkerView.x, self.waveAndMarkerView.y,
 											  waveDisplaySize.width + kWaveDisplayHorizontalMargin *2, self.waveAndMarkerView.height);
-	NSLog(@"wavescale:%.2f %.2f %@ | %@ / %@",self.waveScale,
+	/*NSLog(@"wavescale:%.2f %.2f %@ | %@ / %@",self.waveScale,
 		  waveDisplaySize.width,
 		  NSStringFromSize(self.waveDisplay.frame.size),
 		  NSStringFromSize(self.waveAndMarkerView.frame.size),
 		  NSStringFromSize(self.waveAndMarkerView.bounds.size)
-		  );
+		  );*/
 	self.waveAndMarkerView.needsDisplay = YES;
 }
 

@@ -102,6 +102,24 @@
 									   userInfo:@{@"id":rec.ident} ];
 }
 
+- (BOOL)validateMenuItem:(NSMenuItem *)menuItem {
+	SEL action = menuItem.action;
+	if (action==@selector(moveHistoryBack:)) {
+		if ( DEFAULTANALYZER.historyPosition < 1 ) return NO;
+	}
+	if (action==@selector(moveHistoryForward:)) {
+		if ( DEFAULTANALYZER.historyPosition >= DEFAULTANALYZER.history.count -1 ) return NO;
+	}
+	return YES;
+}
+
+- (IBAction)moveHistoryForward:(id)sender {
+	[DEFAULTANALYZER moveHistory:1];
+}
+
+- (IBAction)moveHistoryBack:(id)sender {
+	[DEFAULTANALYZER moveHistory:-1];
+}
 
 - (void)updateButtonStates {
 	[((NSButton*)[self viewWithTag: 100]) setEnabled:( DEFAULTANALYZER.historyPosition < DEFAULTANALYZER.history.count -1 )];
@@ -239,9 +257,9 @@ static const int	kLengthOfPartTraceRoute					= 10000;	//	gives up after 10000 ti
 			//
 			// part domestic route statistics
 			//
-			VMId *partId = [[VMArray arrayWithString:[VMPlayerOSXDelegate singleton].objectBrowserView.lastSelectedId
+			VMId *partId = [[VMArray arrayWithString:APPDELEGATE.editorViewController.lastSelectedId
 											 splitBy:@"_"] item:0];
-			VMData *entrySelector = [DEFAULTSONG data:[partId stringByAppendingString:@"_sel"]];
+			VMFragment *entrySelector = [DEFAULTSONG data:[partId stringByAppendingString:@"_sel"]];
 			if (entrySelector) {
 				[self routeStatistic:entrySelector numberOfIterations:kNumberOfIterationsOfPartTraceRoute until:@"exit-part"];
 			}
@@ -251,7 +269,7 @@ static const int	kLengthOfPartTraceRoute					= 10000;	//	gives up after 10000 ti
 			//
 			// validate vm structure:	check unresolved
 			//
-			[self validateVMS];
+			[self findUnresolveables];
 			break;
 		}
 		case 3: {
@@ -269,10 +287,10 @@ static const int	kLengthOfPartTraceRoute					= 10000;	//	gives up after 10000 ti
 	}
 }
 
-- (IBAction)moveHistoryFromMenu:(id)sender {
-	NSMenuItem *i = sender;
-	[self moveHistory:(VMInt)i.tag];
+- (BOOL)validateMenuItem:(NSMenuItem *)menuItem {
+	return ! self.busy;
 }
+
 
 - (void)updateGraphView {
 	[self.countHistogramView setData:[self.histograms item:@"count"] numberOfBins:0];
@@ -377,8 +395,10 @@ static const int	kLengthOfPartTraceRoute					= 10000;	//	gives up after 10000 ti
  
  process analysis
  
+ @return	YES if it should exit analyze_step loop
+ 
  ----------------------------------------------------------------------------------*/
-- (void)analyze_step {
+- (BOOL)analyze_step {
 	@autoreleasepool {
 		VMAudioFragment *ac = [DEFAULTSONG nextAudioFragment];
 		if( ! ac ) {
@@ -388,7 +408,7 @@ static const int	kLengthOfPartTraceRoute					= 10000;	//	gives up after 10000 ti
 			[self incrementRouteForId:@"unresolved" from:_lastFragmentId to:nil];
 			[self incrementRouteForId:_lastFragmentId from:nil to:@"unresolved"];
 			[self reset_proc];
-			return;
+			return exitWhenPartChanged;
 		}
 		
 		++sojourn;
@@ -409,7 +429,7 @@ static const int	kLengthOfPartTraceRoute					= 10000;	//	gives up after 10000 ti
 				startIndexOfSojourn = [self.log nextIndex];
 				++totalPartCount;
 				[self reset_proc];
-				return;
+				return exitWhenPartChanged;
 			}
 		} else {
 			VMInt c = [_countForPart itemAsInt:ac.partId];
@@ -432,6 +452,7 @@ static const int	kLengthOfPartTraceRoute					= 10000;	//	gives up after 10000 ti
 		++totalAudioFragmentCount;
 		self.lastFragmentId = ac.fragId;
 	}
+	return NO;
 }
 
 - (void)reset_proc {
@@ -441,11 +462,11 @@ static const int	kLengthOfPartTraceRoute					= 10000;	//	gives up after 10000 ti
 
 - (void)analyze_proc {
     for ( long j  = ( exitWhenPartChanged ? kLengthOfPartTraceRoute : kLengthOfGlobalTraceRoute ) ; j; --j) {
-		[self analyze_step];
+		if ( [self analyze_step] ) break;
     }
 	[self.progressWC setProgress:(double)(numberOfIterations - iterationsLeft)
 						 ofTotal:(double)numberOfIterations message:@"Analyzing:"
-						  window:[VMPlayerOSXDelegate singleton].objectBrowserWindow];
+						  window:[VMPlayerOSXDelegate singleton].editorViewController.window];
 	if ( --iterationsLeft > 0 ) {
 		[self performSelector:@selector(analyze_proc) withObject:nil afterDelay:0.005];
 	} else {
@@ -546,7 +567,7 @@ static const int	kLengthOfPartTraceRoute					= 10000;	//	gives up after 10000 ti
 - (void)finishAnalysis {
 	VMHash *durationForPart = ARInstance(VMHash);
 	VMHash *numberOfFragmentsForPart = ARInstance(VMHash);
-	[self.progressWC setProgress:0 ofTotal:0 message:nil window:[VMPlayerOSXDelegate singleton].objectBrowserWindow];
+	[self.progressWC setProgress:0 ofTotal:0 message:nil window:[VMPlayerOSXDelegate singleton].editorViewController.window];
 
 	totalDuration=maxPartCount=maxPartPercent=maxPartDuration=maxFragmentCount=maxFragmentPercent=maxFragmentDuration=maxVariety=0;
 	
@@ -673,7 +694,7 @@ static const int	kLengthOfPartTraceRoute					= 10000;	//	gives up after 10000 ti
 	
 	[self.progressWC setProgress:(double)self.currentPositionInDataIdList
 						 ofTotal:(double)dataCount message:@"Checking File:"
-						  window:APPDELEGATE.objectBrowserWindow];
+						  window:APPDELEGATE.editorViewController.window];
 	
 	if ( ++self.currentPositionInDataIdList < dataCount ) {
 		[self performSelector:@selector(checkFiles_proc) withObject:nil afterDelay:0.005];
@@ -686,7 +707,7 @@ static const int	kLengthOfPartTraceRoute					= 10000;	//	gives up after 10000 ti
 			[APPDELEGATE.systemLog record:self.unresolveables filter:NO];
 		}
 		
-		[self.progressWC setProgress:0 ofTotal:0 message:nil window:[VMPlayerOSXDelegate singleton].objectBrowserWindow];
+		[self.progressWC setProgress:0 ofTotal:0 message:nil window:[VMPlayerOSXDelegate singleton].editorViewController.window];
 		[VMPNotificationCenter postNotificationName:VMPNotificationLogAdded
 											 object:self
 										   userInfo:@{@"owner":@(VMLogOwner_System)}];
@@ -695,6 +716,30 @@ static const int	kLengthOfPartTraceRoute					= 10000;	//	gives up after 10000 ti
 	}
 }
 
+#define addReferrerForId(targetId) \
+VMHash *referrerOfData = [referrer itemAsHash:targetId];\
+if ( ! referrerOfData ) {\
+	referrerOfData = ARInstance(VMHash);\
+	[referrer setItem:referrerOfData for:targetId];\
+}\
+[referrerOfData setItem:@(YES) for:dataId]
+
+#define addReferrerAndCheckUnresolved(targetId) \
+VMId *tid = targetId ; \
+addReferrerForId(tid); \
+unresolved = ! [DEFAULTSONG data:tid]
+
+#define addRefererAndAddUnresolved(targetId) {\
+VMId *tid2 = targetId; \
+addReferrerForId(tid2); \
+if ( ! [DEFAULTSONG data:tid2] ) [self addUnresolveable:tid2]; }
+
+#define addReferrerAndCheckUnresolvedForSubData(subData) {\
+if( ClassMatch(subData, VMId)) \
+	addRefererAndAddUnresolved( subData ) \
+else if( ClassMatch(subData, VMChance )) \
+	addRefererAndAddUnresolved( ((VMChance*)subData).targetId ) \
+}
 
 
 /*---------------------------------------------------------------------------------
@@ -702,11 +747,13 @@ static const int	kLengthOfPartTraceRoute					= 10000;	//	gives up after 10000 ti
  vms validation
  
  ----------------------------------------------------------------------------------*/
-- (void)validateVMS {
-	self.dataIdToProcess = [DEFAULTSONG.songData sortedKeys];
-	self.unresolveables = ARInstance(VMArray);
+- (VMHash*)collectReferrer {
+	self.dataIdToProcess	= [DEFAULTSONG.songData sortedKeys];
+	self.unresolveables		= ARInstance(VMArray);
+	VMHash *referrer		= ARInstance(VMHash);		// this is for collecting referrer info. not used to find unresolveables.
 	for( VMId* dataId in self.dataIdToProcess ) {
 		VMData *data = [DEFAULTSONG.songData item:dataId];
+		
 		BOOL unresolved = NO;
 		switch ( (int)data.type) {
 			case vmObjectType_unresolved:
@@ -714,30 +761,24 @@ static const int	kLengthOfPartTraceRoute					= 10000;	//	gives up after 10000 ti
 				unresolved = YES;
 				break;
 				
-			case vmObjectType_audioFragment:
-				unresolved = ( ! [DEFAULTSONG data:((VMAudioFragment*)data).audioInfoId] );
+			case vmObjectType_audioFragment: {
+				addReferrerAndCheckUnresolved( ((VMAudioFragment*)data).audioInfoId );
 				break;
-				
+			}
 			case vmObjectType_reference:
-			case vmObjectType_chance:
-				unresolved = ( ! [DEFAULTSONG data:((VMReference*)data).referenceId] );
+			case vmObjectType_chance: {
+				addReferrerAndCheckUnresolved(((VMReference*)data).referenceId );
 				break;
-				
+			}
 			case vmObjectType_collection:
 			case vmObjectType_selector:
 			case vmObjectType_sequence: {
 				for( id subData in ((VMCollection*)data).fragments ) {
-					if( ClassMatch(subData, VMId) && ( ! [DEFAULTSONG data:(VMId*)subData] ))
-						[self addUnresolveable:subData];
-					if( ClassMatch(subData, VMChance) && ( ! [DEFAULTSONG data:((VMChance*)subData).targetId] ) )
-						[self addUnresolveable:subData];
+					addReferrerAndCheckUnresolvedForSubData( subData );
 				}
 				if ( data.type == vmObjectType_sequence ) {
 					for( id subData in ((VMSequence*)data).subsequent.fragments ) {
-						if( ClassMatch(subData, VMId) && ( ! [DEFAULTSONG data:(VMId*)subData] ))
-							[self addUnresolveable:subData];
-						if( ClassMatch(subData, VMChance) && ( ! [DEFAULTSONG data:((VMChance*)subData).targetId] ) )
-							[self addUnresolveable:subData];
+						addReferrerAndCheckUnresolvedForSubData( subData );
 					}
 				}
 				break;
@@ -746,6 +787,12 @@ static const int	kLengthOfPartTraceRoute					= 10000;	//	gives up after 10000 ti
 		if ( unresolved ) [self addUnresolveable:data];
 	}
 	
+	_busy = NO;
+	return referrer;
+}
+
+- (void)findUnresolveables {
+	[self collectReferrer];
 	if( self.unresolveables.count == 0 )
 		[APPDELEGATE.systemLog addTextLog:@"Validate VM Structure" message:@"no issue."];
 	else {
@@ -756,7 +803,6 @@ static const int	kLengthOfPartTraceRoute					= 10000;	//	gives up after 10000 ti
 	[VMPNotificationCenter postNotificationName:VMPNotificationLogAdded
 										 object:self
 									   userInfo:@{@"owner":@(VMLogOwner_System)}];
-	_busy = NO;
 }
 
 

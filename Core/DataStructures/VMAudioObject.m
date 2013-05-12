@@ -105,33 +105,39 @@
 	return waveData + frame * cachedAudioFormat.mBytesPerFrame;
 }
 
+//
+//	we should not draw the entire waveform at once.
+//	TODO: draw only requested rect from the waveview's draw method.
+//
 - (NSImage*)drawWaveImageWithSize:(NSSize)size foreColor:(NSColor*)foreColor backColor:(NSColor*)backColor {
 	NSImage *image = [[[NSImage alloc] initWithSize:size] autorelease];
-	VMFloat pixelPerFrame =  size.width / _numberOfFrames;
-	VMFloat currentX = 0;
-	int x = 0;
-	VMFloat m = size.height * 0.5;
-	Float32 *waveDataBorder = waveData + self.bytesPerFrame * _numberOfFrames;
-	Float32 min = 0;
-	Float32 max = 0;
-	
-	[image lockFocus];
-	[backColor set];
-	NSRectFill(NSMakeRect(0, 0, size.width, size.height));
-	[foreColor setStroke];
-	for( Float32 *p = waveData; p < waveDataBorder; ) {
-		Float32 l = *p++;
-		Float32 r = *p++;
-		max = ( l > max ? l : ( r > max ? r : max ));
-		min = ( l < min ? l : ( r < min ? r : min ));
-		currentX += pixelPerFrame;
-		if ( ((int)currentX) > x ) {
-			[NSBezierPath strokeLineFromPoint:NSMakePoint(x+0.5, m + m * min) toPoint:NSMakePoint(x+0.5, m + m * max )];
-			min = max = 0;
-			++x;
+	if ( size.height > 0 && size.width > 0 ) {
+		VMFloat pixelPerFrame =  size.width / _numberOfFrames;
+		VMFloat currentX = 0;
+		int x = 0;
+		VMFloat m = size.height * 0.5;
+		Float32 *waveDataBorder = waveData + self.bytesPerFrame * _numberOfFrames;
+		Float32 min = 0;
+		Float32 max = 0;
+		
+		[image lockFocus];
+		[backColor set];
+		NSRectFill(NSMakeRect(0, 0, size.width, size.height));
+		[foreColor setStroke];
+		for( Float32 *p = waveData; p < waveDataBorder; ) {
+			Float32 l = *p++;
+			Float32 r = *p++;
+			max = ( l > max ? l : ( r > max ? r : max ));
+			min = ( l < min ? l : ( r < min ? r : min ));
+			currentX += pixelPerFrame;
+			if ( ((int)currentX) > x ) {
+				[NSBezierPath strokeLineFromPoint:NSMakePoint(x+0.5, m + m * min) toPoint:NSMakePoint(x+0.5, m + m * max )];
+				min = max = 0;
+				++x;
+			}
 		}
-	}	
-	[image unlockFocus];
+		[image unlockFocus];
+	}
 	return image;
 }
 

@@ -470,7 +470,6 @@
 
 }
 
-#pragma mark object browser delegate
 - (void)drawGraphWith:(VMData*)data {
 	self.data = data;
 	[self redraw];
@@ -590,7 +589,6 @@
 	self.needsDisplay = YES;
 }
 
-#pragma mark object info delegate
 - (void)drawInfoWith:(VMData*)data {
 	self.data = data;
 	[self redraw];

@@ -24,7 +24,7 @@
 @implementation VMPSyntaxColoredtextDocument
 
 - (NSString*)windowNibName {
-	return nil;		//	no nibs since it's automatically by the VMPObjectBrowserView
+	return nil;		//	no nibs since it's inited by the VMPEditorViewController
 }
 
 -(NSDictionary*)	defaultTextAttributes {
@@ -68,68 +68,11 @@
 	[self recolorCompleteFile:nil];
 	
 	// Make sure we can use "find" if we're on 10.3:
-	if( [textView respondsToSelector: @selector(setUsesFindPanel:)] )
+/*	if( [textView respondsToSelector: @selector(setUsesFindPanel:)] )
 		[textView setUsesFindPanel: YES];
-	
+*/	
 }
 
-
-@end
-
-/*---------------------------------------------------------------------------------
- 
- VMPHighlightTextView
- 
- ----------------------------------------------------------------------------------*/
-
-#pragma mark -
-#pragma mark VMPHighlightTextView
-
-@implementation VMPHighlightTextView
-
-- (void) drawViewBackgroundInRect:(NSRect)rect {
-	[super drawViewBackgroundInRect:rect];
-	NSRange sel = [self selectedRange];
-	if ( sel.length == 0 ) return;
-	NSString *str = [self string];
-	if (sel.location <= [str length]) {
-		NSRange lineRange = [str lineRangeForRange:NSMakeRange(sel.location,0)];
-		NSRect lineRect = [self highlightRectForRange:lineRange];
-		NSColor *highlightColor = [NSColor colorWithCalibratedRed:.5 green:.8 blue:.5 alpha:.5];
-		[highlightColor set];
-		[NSBezierPath fillRect:lineRect];
-	}
-}
-
-// Returns a rectangle suitable for highlighting a background rectangle for the given text range.
-- (NSRect) highlightRectForRange:(NSRange)aRange {
-	NSRange r = aRange;
-	NSRange startLineRange = [[self string] lineRangeForRange:NSMakeRange(r.location, 0)];
-	NSInteger er = NSMaxRange(r)-1;
-	NSString *text = [self string];
-	
-	if (er >= [text length]) {
-		return NSZeroRect;
-	}
-	if (er < r.location) {
-		er = r.location;
-	}
-	
-	NSRange endLineRange = [[self string] lineRangeForRange:NSMakeRange(er, 0)];
-	
-	NSRange gr = [[self layoutManager] glyphRangeForCharacterRange:NSMakeRange(startLineRange.location, NSMaxRange(endLineRange)-startLineRange.location-1)
-											  actualCharacterRange:NULL];
-	NSRect br = [[self layoutManager] boundingRectForGlyphRange:gr inTextContainer:[self textContainer]];
-	NSRect b = [self bounds];
-	CGFloat h = br.size.height;
-	CGFloat w = b.size.width;
-	CGFloat y = br.origin.y;
-	NSPoint containerOrigin = [self textContainerOrigin];
-	NSRect aRect = NSMakeRect(0, y, w, h);
-	// Convert from view coordinates to container coordinates
-	aRect = NSOffsetRect(aRect, containerOrigin.x, containerOrigin.y);
-	return aRect;
-}
 
 @end
 
@@ -151,19 +94,17 @@
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
 	self = [super initWithCoder:aDecoder];
-	[self setupNotificationListeners];
 	return self;
 }
 
-- (id)initWithFrame:(NSRect)frameRect {
+- (id)initWithFrame:(NSRect)frameRect {	
 	self = [super initWithFrame:frameRect];
-	[self setupNotificationListeners];
 	return self;
 }
 
-- (void)setupNotificationListeners {
+- (void)setup {	//	extra method, because it must be called after editorViewController was inited.
 	[VMPNotificationCenter addObserver:self selector:@selector(fragmentSelectedInBrowser:)
-								  name:VMPNotificationFragmentSelected object:APPDELEGATE.objectBrowserView];
+								  name:VMPNotificationFragmentSelected object:APPDELEGATE.editorViewController];
 	[VMPNotificationCenter addObserver:self selector:@selector(reloadData:)
 								  name:VMPNotificationVMSDataLoaded object:nil];
 }
@@ -180,6 +121,9 @@
 #pragma mark update editor selection
 
 - (void)setSourceCode:(NSString*)sourceCode {
+//	self.textView.string = sourceCode;
+//	return;	//test
+	
 	if ( ! self.vmsDocument )
 		self.vmsDocument = [[[VMPSyntaxColoredtextDocument alloc] init] autorelease];
 	[self.vmsDocument setTextView:self.textView sourceCode:sourceCode];
@@ -194,7 +138,7 @@
 }
 
 - (void)fragmentSelectedInBrowser:(NSNotification*)notification {
-	if ( notification.object != APPDELEGATE.objectBrowserView ) return;
+	if ( notification.object != APPDELEGATE.editorViewController ) return;
 	//	actually, we added a observer with this object..
 	if ( self.sourceCode.length == 0 )
 		[self setSourceCode:DEFAULTSONG.vmsData];
@@ -216,7 +160,7 @@
 
 - (NSString*)escapeFragIdForICURegex:(NSString*)string {
 	NSMutableString *escaped = [[string mutableCopy] autorelease];
-	[escaped replaceOccurrencesOfString:@"([|+()])" withString:@"\\\\$1"
+	[escaped replaceOccurrencesOfString:@"([|\\+()\\~])" withString:@"\\\\$1"
 								options:NSRegularExpressionSearch
 								  range:NSMakeRange(0, escaped.length)];
 	return escaped;
@@ -232,12 +176,7 @@
 - (NSRange)seekIdAndSelectIfFound:(NSString*)fragId inRange:(NSRange)searchRange {
 	NSRange range = [self seekId:fragId inRange:searchRange];
 	
-	if( range.length > 0 ) {
-	//	NSLog(@"found: %ld(%ld) = %@", (unsigned long)range.location, (unsigned long)range.length, [self.textView.string substringWithRange:range] );
-		self.textView.selectedRange = range;
-	} else {
-	//		(@"not found: %@", fragId );
-	}
+	if( range.length > 0 ) self.textView.selectedRange = range;
 	return range;
 }
 
@@ -259,7 +198,10 @@
 	self.textView.selectedRange = NSMakeRange( self.textView.selectedRange.location , 0 );
 
 	do {	//	dummy block
-		//	perfect match
+		//	try perfect match
+		if ( [self seekIdAndSelectIfFound:[fr.userGeneratedId stringByAppendingString:@"\""]].length > 0 ) break;
+		
+		//	try head match
 		if ( [self seekIdAndSelectIfFound:fr.userGeneratedId].length > 0 ) break;
 		//
 		//	let's seek incremental
@@ -298,22 +240,16 @@
 						self.textView.selectedRange = result;
 						break;
 					}
-					//	now find out parent's id
-					NSRange parentBlock = [self blockRangeFromLocation:
-										   [self startLocationOfBlockFromLocation:result.location
-																		 inString:self.textView.string] -1	// up one level
-															  inString:nil ];
-					//	note that we don't resolve the parentId hierarchical. (support in future maybe)
-					//	we just exit hierarchies until we have found a complete (unabbreviated) id.
-					VMId *parentId = [self idOfBlock:parentBlock inString:nil];
 					
-					NSString *completedId = [DEFAULTPREPROCESSOR completeId:abbreviatedId withParentId:parentId];
-					if ( [completedId isEqualToString:fragId] ) {
+					NSRange  block = [self blockRangeFromLocation:result.location inString:nil];
+					NSString *blockId = [self idOfBlock:block inString:nil];
+					
+					if ( [blockId isEqualToString:fragId] ) {
 						tempComp = nil;
 						self.textView.selectedRange = result;
 						break;
 					}
-					NSInteger searchLocation = parentBlock.location+parentBlock.length;
+					NSInteger searchLocation = block.location + block.length;
 					searchRange = NSMakeRange(searchLocation, self.textView.string.length -1 - searchLocation);
 				} else {
 					break;	//	could not found any with this pattern.
@@ -324,9 +260,14 @@
 		} while (tempComp.count);
 
 	} while (0);
-	self.textView.selectedRange = [self blockRangeFromLocation:self.textView.selectedRange.location inString:nil];
-	if( scrollVisible )
-		[self.textView scrollRangeToVisible:self.textView.selectedRange];
+	NSRange block = [self blockRangeFromLocation:self.textView.selectedRange.location inString:nil];
+	VMId *idOfBlock = [self idOfBlock:block inString:nil];
+	if ( [fragId isEqualToString:idOfBlock] ) {
+		self.textView.selectedRange = block;
+		if( scrollVisible )
+			[self.textView scrollRangeToVisible:block];
+		[self.textView showFindIndicatorForRange:block];
+	}
 }
 
 #pragma mark -
@@ -358,7 +299,9 @@
 	
 	if ( [ident hasPrefix:@"#"] && blockRange.location > 0 ) {
 		//	we are still in a block. try go one level higher in hierarchies
-		return [self idOfBlock:[self blockRangeFromLocation:blockRange.location-1 inString:string] inString:string];
+		VMId *parentId = [self idOfBlock:[self blockRangeFromLocation:blockRange.location-1 inString:string] inString:string];
+		VMId *compId = [DEFAULTPREPROCESSOR completeId:ident withParentId:parentId];
+		if ( compId ) return compId;
 	}
 	
 	return ident;
@@ -434,27 +377,5 @@
 
 	[self selectBlockWithId:fragId scrollVisible:YES];
 }
-/*
-- (void)markBlockFromLocation:(NSUInteger)location {
-	NSLog(@"markLoc: %@", [self.textView.string substringWithRange:NSMakeRange(location, 100)]);
-	
-	
-	NSRange block = [self blockRangeFromLocation:location inString:nil];
-	self.textView.selectedRange = block;
-	[self.textView scrollRangeToVisible:block];
-}*/
-
-#pragma mark -
-#pragma mark menu validation and find bar
-
-- (IBAction)performTextFinderAction:(id)sender {
-	self.textFinder = ARInstance(NSTextFinder);
-	//self.textFinder.client = (NSTextView*)self.textView;
-}
-
-- (BOOL)validateAction:(NSTextFinderAction)action {
-	return YES;
-}
-
 
 @end

@@ -425,7 +425,7 @@ if ([self scanFunc] == NO) {\
 				
 		didThrownError__ = YES;
 		//	highlight error in editor.
-		[APPDELEGATE.objectBrowserView.codeEditorView
+		[APPDELEGATE.editorViewController.codeEditorView
 		 markBlockUsingHintsBefore:[theUserInfo objectForKey:@"beforeSnip"] after:[theUserInfo objectForKey:@"afterSnip"]];
 	}
 

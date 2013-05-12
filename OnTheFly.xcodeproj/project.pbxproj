@@ -144,8 +144,8 @@
 		1677774116C0D600007206CF /* VMPApplescriptReceiver.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677773816C0D600007206CF /* VMPApplescriptReceiver.m */; };
 		1677781816C0D6A0007206CF /* VMPTrackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677780B16C0D6A0007206CF /* VMPTrackView.m */; };
 		1677781916C0D6A0007206CF /* VMPTrackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677780B16C0D6A0007206CF /* VMPTrackView.m */; };
-		1677781C16C0D6A0007206CF /* VMPObjectBrowserView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677780D16C0D6A0007206CF /* VMPObjectBrowserView.m */; };
-		1677781D16C0D6A0007206CF /* VMPObjectBrowserView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677780D16C0D6A0007206CF /* VMPObjectBrowserView.m */; };
+		1677781C16C0D6A0007206CF /* VMPEditorWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677780D16C0D6A0007206CF /* VMPEditorWindowController.m */; };
+		1677781D16C0D6A0007206CF /* VMPEditorWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677780D16C0D6A0007206CF /* VMPEditorWindowController.m */; };
 		1677782816C0D6A0007206CF /* VMPTrackStrip.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677781316C0D6A0007206CF /* VMPTrackStrip.m */; };
 		1677782916C0D6A0007206CF /* VMPTrackStrip.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677781316C0D6A0007206CF /* VMPTrackStrip.m */; };
 		1677782C16C0D6A0007206CF /* VMPCanvas.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677781516C0D6A0007206CF /* VMPCanvas.m */; };
@@ -346,8 +346,8 @@
 		1677773816C0D600007206CF /* VMPApplescriptReceiver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VMPApplescriptReceiver.m; sourceTree = "<group>"; };
 		1677780A16C0D6A0007206CF /* VMPTrackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VMPTrackView.h; sourceTree = "<group>"; };
 		1677780B16C0D6A0007206CF /* VMPTrackView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = VMPTrackView.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		1677780C16C0D6A0007206CF /* VMPObjectBrowserView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = VMPObjectBrowserView.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		1677780D16C0D6A0007206CF /* VMPObjectBrowserView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = VMPObjectBrowserView.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		1677780C16C0D6A0007206CF /* VMPEditorWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = VMPEditorWindowController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		1677780D16C0D6A0007206CF /* VMPEditorWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = VMPEditorWindowController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		1677781216C0D6A0007206CF /* VMPTrackStrip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VMPTrackStrip.h; sourceTree = "<group>"; };
 		1677781316C0D6A0007206CF /* VMPTrackStrip.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = VMPTrackStrip.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		1677781416C0D6A0007206CF /* VMPCanvas.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VMPCanvas.h; sourceTree = "<group>"; };
@@ -830,8 +830,8 @@
 				160E519717338EA500C3D9BB /* VMPObjectGraphView.m */,
 				1662313A173C8A4A00F70FCB /* VMPCodeEditorView.h */,
 				1662313B173C8A4A00F70FCB /* VMPCodeEditorView.m */,
-				1677780C16C0D6A0007206CF /* VMPObjectBrowserView.h */,
-				1677780D16C0D6A0007206CF /* VMPObjectBrowserView.m */,
+				1677780C16C0D6A0007206CF /* VMPEditorWindowController.h */,
+				1677780D16C0D6A0007206CF /* VMPEditorWindowController.m */,
 			);
 			name = Editor;
 			sourceTree = "<group>";
@@ -1118,7 +1118,7 @@
 				162F7B4D16A112D300420443 /* main.m in Sources */,
 				1677774016C0D600007206CF /* VMPApplescriptReceiver.m in Sources */,
 				1677781816C0D6A0007206CF /* VMPTrackView.m in Sources */,
-				1677781C16C0D6A0007206CF /* VMPObjectBrowserView.m in Sources */,
+				1677781C16C0D6A0007206CF /* VMPEditorWindowController.m in Sources */,
 				1677782816C0D6A0007206CF /* VMPTrackStrip.m in Sources */,
 				1677782C16C0D6A0007206CF /* VMPCanvas.m in Sources */,
 				16347C1216C286C9002BE1FE /* VMPGraph.m in Sources */,
@@ -1173,7 +1173,7 @@
 				162F7B4316A0341E00420443 /* TraumBaumTests.m in Sources */,
 				1677774116C0D600007206CF /* VMPApplescriptReceiver.m in Sources */,
 				1677781916C0D6A0007206CF /* VMPTrackView.m in Sources */,
-				1677781D16C0D6A0007206CF /* VMPObjectBrowserView.m in Sources */,
+				1677781D16C0D6A0007206CF /* VMPEditorWindowController.m in Sources */,
 				1677782916C0D6A0007206CF /* VMPTrackStrip.m in Sources */,
 				1677782D16C0D6A0007206CF /* VMPCanvas.m in Sources */,
 				16347C1316C286C9002BE1FE /* VMPGraph.m in Sources */,
@@ -1439,7 +1439,7 @@
 				GCC_WARN_SHADOW = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "Variable Media Player OSX";
 				SDKROOT = "";
@@ -1463,7 +1463,7 @@
 				GCC_WARN_SHADOW = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				PRODUCT_NAME = "Variable Media Player OSX";
 				SDKROOT = "";
 				WARNING_CFLAGS = "";

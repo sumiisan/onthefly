@@ -1,12 +1,12 @@
 //
-//  ObjectBrowserView.m
+//  VMPEditorWindowController.m
 //  OnTheFly
 //
 //  Created by  on 13/01/28.
-//  Copyright (c) 2013 __MyCompanyName__. All rights reserved.
+//  Copyright (c) 2013 sumiisan. All rights reserved.
 //
 
-#import "VMPObjectBrowserView.h"
+#import "VMPEditorWindowController.h"
 #import "VMPMacros.h"
 #import "VMPSongPlayer.h"
 #import "VMPreprocessor.h"
@@ -15,7 +15,7 @@
 #import "KeyCodes.h"
 #import "VMPNotification.h"
 #import "VMPCodeEditorView.h"
-
+#import "VMPObjectGraphView.h"
 
 #define FormString NSString stringWithFormat:
 
@@ -98,41 +98,35 @@
 /*---------------------------------------------------------------------------------
  *
  *
- *	object browser view
+ *	editor view controller
  *
  *
  *---------------------------------------------------------------------------------*/
 
 
 #pragma mark -
-#pragma mark object browser view
+#pragma mark ** editor view controller **
 #pragma mark -
 
-@implementation VMPObjectBrowserView
+@implementation VMPEditorWindowController
 
 static VMPObjectCell		*genericCell = nil;
 static VMPObjectCell		*typeColumnCell = nil;
 
-- (id)initWithCoder:(NSCoder *)aDecoder {
-	assert(0);		//	designated initializer is initWithFrame.
+- (id)initWithWindowNibName:(NSString *)windowNibName {
+//	self = [super initWithWindowNibName:windowNibName];
+	assert(0);		//	designated initializer is init
 	return nil;
 }
 
-- (id)initWithFrame:(CGRect)frame {
-    self = [super initWithFrame:frame];
-    if (self) {
-        // Initialization code
-		genericCell = [[VMPObjectCell alloc] init];
-		genericCell.drawsBackground	= YES;
-		genericCell.font = [NSFont systemFontOfSize:11];
-		
-		typeColumnCell						= [[VMPObjectCell alloc] init];
-		typeColumnCell.textColor			= [NSColor whiteColor];
-		typeColumnCell.drawsBackground		= YES;
-		typeColumnCell.lineBreakMode		= NSLineBreakByClipping;
-		genericCell.font = [NSFont systemFontOfSize:11];
-		
-		
+- (id)initWithCoder:(NSCoder *)aDecoder {
+	assert(0);		//	designated initializer is init
+	return nil;
+}
+
+- (id)init {
+	self = [super init];
+	if ( self ) {
 		[VMPNotificationCenter addObserver:self
 								  selector:@selector(doubleClickOnFragment:)
 									  name:VMPNotificationFragmentDoubleClicked
@@ -142,18 +136,39 @@ static VMPObjectCell		*typeColumnCell = nil;
 								  selector:@selector(reloadData:)
 									  name:VMPNotificationVMSDataLoaded
 									object:nil];
+		// Initialization code
+		genericCell = [[VMPObjectCell alloc] init];
+		genericCell.drawsBackground	= YES;
+		genericCell.font = [NSFont systemFontOfSize:11];
+		
+		typeColumnCell						= [[VMPObjectCell alloc] init];
+		typeColumnCell.textColor			= [NSColor whiteColor];
+		typeColumnCell.drawsBackground		= YES;
+		typeColumnCell.lineBreakMode		= NSLineBreakByClipping;
+		typeColumnCell.font = [NSFont systemFontOfSize:11];
 
-    }
-	
-    return self;
+	}
+	return self;
 }
 
-- (void)awakeFromNib {
+- (void)applicationDidLaunch {
 	self.objectTreeView.doubleAction = @selector(doubleClickOnRow:);
+	[self.codeEditorView setup];
+	[self reloadData:self];
+	
+	return;
+	//test
+	
+	[self.infoView removeFromSuperview];
+	[self.graphView removeFromSuperview];
+	self.infoView = nil;
+	self.graphView = nil;
 }
+
 
 - (void)dealloc {
 	[VMPNotificationCenter removeObserver:self];
+	self.referrerList = nil;
 	self.objectRoot = nil;
     self.lastSelectedId = nil;
 	self.dataIdList = nil;
@@ -181,8 +196,6 @@ static VMPObjectCell		*typeColumnCell = nil;
 }
 
 - (void)addChildNodesToNode:(NSTreeNode *)node children:(VMArray*)children {
-//	[node.mutableChildNodes removeAllObjects];
-	
     for( id child in children ) {
 		VMData *childObj = nil;
 		if( ClassMatch(child, VMId) ) childObj = [_songData item:child];
@@ -198,11 +211,13 @@ static VMPObjectCell		*typeColumnCell = nil;
 
 - (void)setSongData:(VMHash *)inSongData {
 	_songData = inSongData;	//	weak ref
-	self.window.title = DEFAULTSONG.songName ? DEFAULTSONG.songName : @"Untitled";
 	[self reloadData:self];
 }
 
 - (void)reloadData:(id)sender {
+	_songData = DEFAULTSONG.songData;
+	self.editorWindow.title = DEFAULTSONG.songName ? DEFAULTSONG.songName : @"Untitled";
+	
 	VMArray *ids = [_songData sortedKeys];
 	VMHash *parts = ARInstance(VMHash);
 	
@@ -229,8 +244,6 @@ static VMPObjectCell		*typeColumnCell = nil;
 				
 				[self push:dataId intoMember:sectionId ofHash:partHash];
 				
-			} else {
-				//[self push:dataId intoArrayMember:@"*" ofHash:parts];
 			}
 		}
 	}
@@ -257,6 +270,8 @@ static VMPObjectCell		*typeColumnCell = nil;
 		[self.objectRoot.mutableChildNodes addObject:sections];
 	}
 	[self.objectTreeView reloadData];
+	
+	self.referrerList = [DEFAULTANALYZER collectReferrer];
 }
 
 #pragma mark -
@@ -268,7 +283,7 @@ static VMPObjectCell		*typeColumnCell = nil;
  ----------------------------------------------------------------------------------*/
 #pragma mark search: fieldEditor
 
-//	NSWindow delegate for a custom FieldEditor (don't commit completion on tying spage, _ ; etc)
+//	NSWindow delegate for a custom FieldEditor (don't commit completion on tying space, _ ; etc)
 - (id)windowWillReturnFieldEditor:(NSWindow *)sender toObject:(id)anObject {
 	if (! self.fieldEditor )
 		self.fieldEditor = ARInstance( VMPFieldEditor );
@@ -277,14 +292,12 @@ static VMPObjectCell		*typeColumnCell = nil;
 
 - (void)controlTextDidChange:(NSNotification *)obj {
 	NSTextView* textView = [[obj userInfo] objectForKey:@"NSFieldEditor"];
-//	NSLog(@"text change: %@",textView.string);
 
     if ( !performingAutoComplete && !handlingCommand) {	// prevent calling "complete" too often
 		[self updateFilterWithString:self.currentNonCompletedSearchString];
         performingAutoComplete = YES;
         [textView complete:nil];
         performingAutoComplete = NO;
-//		NSLog(@"updateFilter after completing");
     } else {
 	}
 }
@@ -312,8 +325,7 @@ static VMPObjectCell		*typeColumnCell = nil;
     NSInteger		i,count;
     NSString*		string;
 	
-	//charRange.length += 1;
-	self.currentNonCompletedSearchString = textView.string;// [[textView string] substringWithRange:charRange];
+	self.currentNonCompletedSearchString = textView.string;
 	NSString *searchString = textView.string;
 		
 	if ( ! self.dataIdList ) self.dataIdList = [self.songData sortedKeys];
@@ -362,7 +374,6 @@ static VMPObjectCell		*typeColumnCell = nil;
 			}
 		}
 	}
-	//NSLog(@"seeking %@ in %@ match:%@ %@",inId,inNode.representedObject,result.representedObject,*outMatchedExact?@"exact":@"");
 	return result;
 }
 
@@ -389,7 +400,6 @@ static VMPObjectCell		*typeColumnCell = nil;
 			}
 		}
 	}
-	//NSLog(@"reverse seeking %@ in %@ match:%@ %@",inId,inNode.representedObject,result.representedObject,*outMatchedExact?@"exact":@"");
 	return result;
 }
 
@@ -406,14 +416,17 @@ static VMPObjectCell		*typeColumnCell = nil;
 	[self.objectTreeView reloadItem:item];
 
 	if( ClassMatch(item, NSTreeNode)) item = ((NSTreeNode*)item).representedObject;
+	
 	VMData *d = ClassCastIfMatch( item, VMData );
-	if ( d ) {
+	if ( d )
 		self.lastSelectedId = d.id;
-		[self.graphDelegate drawGraphWith:d];
-		[self.infoDelegate drawInfoWith:d];
-	}
 }
 
+- (void)referrerSelected:(id)sender {
+	NSMenuItem *mi = sender;
+	if ( mi.tag > 0 )
+		[self updateFilterWithString:mi.title];
+}
 
 - (BOOL)expand:(id)item {
 	if ( [self.objectTreeView isExpandable:item] ) {
@@ -459,7 +472,6 @@ static VMPObjectCell		*typeColumnCell = nil;
 }
 
 - (void)updateFilterWithString:(NSString*)searchString {
-//	NSLog(@"update filter with: %@",searchString);
 	self.currentFilterString = searchString;
 	
 	NSCharacterSet *delimiterSet = [NSCharacterSet characterSetWithCharactersInString:@"_|;="];
@@ -503,7 +515,7 @@ static VMPObjectCell		*typeColumnCell = nil;
 		assert(0);
 		return;	//	do not seek inside bare VMData.	should not happen since we create NSTreeNodes on the fly
 	}
-//
+
 	NSTreeNode *branchNode = sectionNode;
 	doForever {
 		leafData	= [self seekId:searchString inNode:branchNode matchedExact:&whole_matchedExact];
@@ -779,14 +791,34 @@ static VMPObjectCell		*typeColumnCell = nil;
 }
 
 #pragma mark -
-#pragma mark click action
+#pragma mark actions
+
+- (BOOL)validateMenuItem:(NSMenuItem *)menuItem {
+	SEL action = menuItem.action;
+	
+	if ( action == @selector(zoomIn:) || action == @selector(zoomOut:) ) {
+		vmObjectType type = ((VMData*)[DEFAULTSONG data:self.lastSelectedId]).type;
+		if ( type != vmObjectType_audioFragment && type != vmObjectType_audioInfo ) return NO;
+	}
+	
+	if ( action == @selector(moveHistoryBack:) || action == @selector(moveHistoryForward:)) {
+		return NO;	//	currently not supported
+	}
+		
+	return YES;	//	the default
+}
+
+- (IBAction)focusTextSearchField:(id)sender {
+	[self.window makeKeyAndOrderFront:sender];
+	[self.searchField becomeFirstResponder];
+}
+
 
 /*---------------------------------------------------------------------------------
  
  selectRow - internally set the row selected and update editors accordingly.
  
  ----------------------------------------------------------------------------------*/
-
 
 - (void)selectRow:(VMInt)row {
 	VMData *d = [self dataOfRow:row];
@@ -808,17 +840,38 @@ static VMPObjectCell		*typeColumnCell = nil;
 		//
 		//	update editors
 		//
-		[self.graphDelegate drawGraphWith:((d.type != vmObjectType_chance)
+		[_graphView drawGraphWith:((d.type != vmObjectType_chance)
 										   ? d
 										   : [DEFAULTSONG data:((VMChance*)d).targetId] )];
-		[self.infoDelegate drawInfoWith:d];
+		[_infoView drawInfoWith:d];
 		
-		
+		//
+		//	referrer pulldown
+		//
+		[self.referrerMenu removeAllItems];
+		NSMenuItem *menuItem = [[[NSMenuItem alloc] initWithTitle:@"-- referrer --"
+														   action:@selector(referrerSelected:)
+													keyEquivalent:@""] autorelease];
+		[self.referrerMenu addItem:menuItem];
+		VMArray *keys = [[self.referrerList itemAsHash:d.id] sortedKeys];
+		int p = 0;
+		for( VMId *fid in keys ) {
+			menuItem = [[[NSMenuItem alloc] initWithTitle:fid
+												   action:@selector(referrerSelected:)
+											keyEquivalent:@""] autorelease];
+			menuItem.target = self;
+			menuItem.tag = ++p;
+			[self.referrerMenu addItem:menuItem];
+		}
+
 	} else {
 		//
 		// row with NSTreeNode was selected. 
 		//
 		id item = [self.objectTreeView itemAtRow:row];
+		if ( ClassMatch(item, NSTreeNode))
+			item = ((NSTreeNode*)item).representedObject;
+		
 		if ( ClassMatch( item, VMString ) )
 			self.lastSelectedId = item;
 	}
@@ -827,12 +880,6 @@ static VMPObjectCell		*typeColumnCell = nil;
 
 - (IBAction)clickOnRow:(id)sender {
 	[self selectRow:self.objectTreeView.clickedRow];
-	/*	if (d)
-	VMData *d = [self dataOfRow:self.objectTreeView.clickedRow];
-
-	[VMPNotificationCenter postNotificationName:VMPNotificationFragmentSelected
-										 object:self
-									   userInfo:@{@"id":d.id} ];*/
 }
 
 - (IBAction)doubleClickOnRow:(id)sender {
@@ -846,6 +893,16 @@ static VMPObjectCell		*typeColumnCell = nil;
 		}
 	}
 }
+
+
+//	unimplemented
+
+- (IBAction)moveHistoryBack:(id)sender {}
+- (IBAction)moveHistoryForward:(id)sender {}
+
+//	generalized zoom action		--	defaults firstResponder
+- (IBAction)zoomIn:(id)sender {}
+- (IBAction)zoomOut:(id)sender {}
 
 #pragma mark type select
 
@@ -890,7 +947,7 @@ static VMPObjectCell		*typeColumnCell = nil;
 #pragma mark VMPAnalyzer delegate
 //	VMPAnalyzer delegate
 - (void)analysisFinished:(VMHash*)report {
-	[self.graphDelegate drawReportGraph:report];
+	[_graphView drawReportGraph:report];
 }
 
 

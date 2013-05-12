@@ -58,13 +58,13 @@ VMPlayerOSXDelegate *OnTheFly_singleton__ = nil;
 
 - (void)awakeFromNib {
 	DEFAULTSONGPLAYER.trackView = _trackView;
-	_objectBrowserView.songData = DEFAULTSONG.songData;
 	[self restoreWindows];
 }
 
 
 - (void)dealloc {
 	[DEFAULTSONGPLAYER coolDown];
+	self.editorViewController = nil;
 	self.variablesPanelController = nil;
 	self.systemLog = nil;
 	self.userLog = nil;
@@ -77,11 +77,14 @@ VMPlayerOSXDelegate *OnTheFly_singleton__ = nil;
 }
 
 - (void)mainRunLoop {
-	_playStopButton.state = DEFAULTSONGPLAYER.isRunning ? 1 : 0;
-	VMTime t = DEFAULTSONGPLAYER.currentTime;
-	_timeIndicator.stringValue = [NSString stringWithFormat:@"%02d:%02d'%02d\"%02d",
-								 (int)(t/3600),((int)t/60)%60,(int)t%60,((int)(t*100))%100 ];
-	
+	if ( DEFAULTSONGPLAYER.isRunning ) {
+		_playStopButton.state = 1;
+		VMTime t = DEFAULTSONGPLAYER.currentTime;
+		_timeIndicator.stringValue = [NSString stringWithFormat:@"%02d:%02d'%02d\"%02d",
+									  (int)(t/3600),((int)t/60)%60,(int)t%60,((int)(t*100))%100 ];
+	} else {
+		_playStopButton.state = 0;
+	}
 	[self performSelector:@selector(mainRunLoop) withObject:nil afterDelay:0.01];
 }
 
@@ -141,7 +144,7 @@ VMPlayerOSXDelegate *OnTheFly_singleton__ = nil;
 		[_transportPanel makeKeyAndOrderFront:self ];
 	}
 	if ( [name isEqualToString:@"Object Browser"] ) {
-		[_objectBrowserWindow makeKeyAndOrderFront:self ];
+		[_editorViewController.window makeKeyAndOrderFront:self ];
 	}
 	if ( [name isEqualToString:@"Statistics"] ) {
 		[DEFAULTANALYZER.reportWindow makeKeyAndOrderFront:self ];
@@ -168,12 +171,12 @@ VMPlayerOSXDelegate *OnTheFly_singleton__ = nil;
 
 - (NSString*)nameOfWindow:(NSWindow*)window {
 	NSDictionary *windowNames = @{
-							   (_transportPanel ? _transportPanel.identifier: @"dummy1"):@"Transport",
-		  (_objectBrowserWindow ? _objectBrowserWindow.identifier : @"dummy2" ):@"Object Browser",
+		  (_transportPanel ? _transportPanel.identifier: @"dummy1"):@"Transport",
+		  (_editorViewController.window ? _editorViewController.window.identifier : @"dummy2" ):@"Object Browser",
 		  ( DEFAULTANALYZER.reportWindow ? DEFAULTANALYZER.reportWindow.identifier : @"dummy3" ) :@"Statistics",
 		  (_trackPanel ? _trackPanel.identifier : @"dummy4" ) :@"Tracks",
-		   (_variablesPanelController ? _variablesPanelController.window.identifier : @"dummy5" ):@"Variables",
-		   (_logPanel ? _logPanel.identifier : @"dummy6" ) :@"Log" };
+		  (_variablesPanelController.window ? _variablesPanelController.window.identifier : @"dummy5" ):@"Variables",
+		  (_logPanel ? _logPanel.identifier : @"dummy6" ) :@"Log" };
 	
 	return [windowNames objectForKey:window.identifier];
 }
@@ -212,13 +215,13 @@ VMPlayerOSXDelegate *OnTheFly_singleton__ = nil;
 - (IBAction)revertDocument:(id)sender {
     [self openVMSDocumentFromURL:self.currentDocumentURL];
     DEFAULTSONGPLAYER.song = DEFAULTSONG;
-	[self.objectBrowserView.objectTreeView reloadData];
+	[self.editorViewController.objectTreeView reloadData];
 	[DEFAULTANALYZER.statisticsView.reportView reloadData];
 }
 
 - (IBAction)reloadDataFromEditor:(id)sender {
 	NSError *error = nil;
-	if ( [DEFAULTSONG readFromString:self.objectBrowserView.codeEditorView.textView.string error:&error] )
+	if ( [DEFAULTSONG readFromString:self.editorViewController.codeEditorView.textView.string error:&error] )
 		[VMPNotificationCenter postNotificationName:VMPNotificationVMSDataLoaded object:self userInfo:nil];
 	else
 		[VMPNotificationCenter postNotificationName:VMPNotificationLogAdded object:self userInfo:@{@"owner":@(VMLogOwner_System)}];
@@ -226,7 +229,7 @@ VMPlayerOSXDelegate *OnTheFly_singleton__ = nil;
 
 - (IBAction)saveDocument:(id)sender {
 	NSError *error = nil;
-	if( [DEFAULTSONG readFromString:self.objectBrowserView.codeEditorView.textView.string error:&error] )
+	if( [DEFAULTSONG readFromString:self.editorViewController.codeEditorView.textView.string error:&error] )
 		[self saveVMSDocumentToURL:self.currentDocumentURL];
 }
 
@@ -282,8 +285,7 @@ VMPlayerOSXDelegate *OnTheFly_singleton__ = nil;
 	[self revertDocument:self];	//	load
 	//
 	[DEFAULTSONGPLAYER warmUp];
-	_objectBrowserView.graphDelegate = _objectGraphView;
-	_objectBrowserView.infoDelegate  = _objectInfoView;
+	[_editorViewController applicationDidLaunch];
 	DEFAULTSONG.showReport.current = [NSNumber numberWithBool:YES];
 	[self performSelector:@selector(mainRunLoop) withObject:nil afterDelay:0.5];
 	
@@ -385,7 +387,7 @@ VMPlayerOSXDelegate *OnTheFly_singleton__ = nil;
 	}
 	
 	if (menuItem.action == @selector(reloadDataFromEditor:)) {
-		if ( self.objectBrowserView.codeEditorView.textView.string.length == 0 ) return NO;
+		if ( self.editorViewController.codeEditorView.textView.string.length == 0 ) return NO;
 	}
 	
 	//	the default

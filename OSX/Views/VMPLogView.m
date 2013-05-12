@@ -416,7 +416,7 @@ static const VMFloat kDefaultLogItemViewHeight = 14.0;
 		NSString *action = hl.action;
 		if ( ! action ) return nil;
 		
-		NSColor *bgColor = [NSColor grayColor];
+		NSColor *bgColor = [NSColor colorWithCalibratedRed:.5 green:.5 blue:.5 alpha:1.];
 		if( type != vmObjectType_notVMObject ) {
 			action = [action stringByAppendingFormat:@"\t%@",hl.VMData.id];
 			bgColor = [NSColor backgroundColorForDataType:type];

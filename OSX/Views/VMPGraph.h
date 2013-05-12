@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "VMPObjectBrowserView.h"
+#import "VMPEditorWindowController.h"
 #import "VMDataTypes.h"
 
 

@@ -58,8 +58,13 @@ typedef enum {
 
 - (void)updateButtonStates;
 - (void)setInfoText:(VMString*)infoText;
+
 - (IBAction)clickOnRow:(id)sender;
 - (IBAction)clickOnButton:(id)sender;
+
+//	defaults first responder
+- (IBAction)moveHistoryBack:(id)sender;
+- (IBAction)moveHistoryForward:(id)sender;
 
 @property (assign)	IBOutlet	NSTableView *reportView;
 
@@ -88,13 +93,19 @@ typedef enum {
 }
 
 + (VMPAnalyzer*)defaultAnalyzer;
-//- (void)showProgress:(double)current ofTotal:(double)total message:(VMString*)message;
-- (BOOL)routeStatistic:(VMData*)entryPoint numberOfIterations:(const long)numberOfIterations until:(VMString*)exitCondition;
-- (void)addUnresolveable:(id)dataId;
+
+//	accessor
 - (void)selectRow:(NSInteger)row;
 - (VMPReportRecord *)recordForRow:(NSInteger)row;
 - (void)moveHistory:(VMInt)vector;
-- (IBAction)moveHistoryFromMenu:(id)sender;
+
+//	called back from VMSelector
+- (void)addUnresolveable:(id)dataId;
+
+//	utility
+- (VMHash*)collectReferrer;
+
+//	actions
 - (IBAction)performStatistics:(id)sender;
 - (IBAction)openGraphView:(id)sender;
 

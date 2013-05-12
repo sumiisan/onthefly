@@ -9,8 +9,7 @@
 #import <Cocoa/Cocoa.h>
 #import "VMPSongPlayer.h"
 #import "VMPTrackView.h"
-#import "VMPObjectBrowserView.h"
-#import "VMPObjectGraphView.h"
+#import "VMPEditorWindowController.h"
 #import "VMPVariablesPanelController.h"
 #import "VMPLogView.h"
 
@@ -38,23 +37,20 @@
  *---------------------------------------------------------------------------------*/
 
 //	transport panel
-@property (assign) IBOutlet NSPanel					*transportPanel;
-@property (assign) IBOutlet NSButton				*playStopButton;
-@property (assign) IBOutlet NSTextField				*timeIndicator;
+@property (assign) IBOutlet NSPanel							*transportPanel;
+@property (assign) IBOutlet NSButton						*playStopButton;
+@property (assign) IBOutlet NSTextField						*timeIndicator;
 
 //	object browser
-@property (assign) IBOutlet NSWindow       			*objectBrowserWindow;
-@property (assign) IBOutlet VMPObjectBrowserView	*objectBrowserView;
-@property (assign) IBOutlet VMPObjectGraphView		*objectGraphView;
-@property (assign) IBOutlet VMPObjectInfoView		*objectInfoView;
+@property (assign) IBOutlet VMPEditorWindowController		*editorViewController;
 
 //	audioplayer track view
-@property (assign) IBOutlet NSPanel					*trackPanel;
-@property (assign) IBOutlet VMPTrackView       		*trackView;
+@property (assign) IBOutlet NSPanel							*trackPanel;
+@property (assign) IBOutlet VMPTrackView					*trackView;
 
 //	log panel
-@property (assign) IBOutlet NSPanel					*logPanel;
-@property (assign) IBOutlet VMPLogView				*logView;
+@property (assign) IBOutlet NSPanel							*logPanel;
+@property (assign) IBOutlet VMPLogView						*logView;
 
 //	variables panel
 @property (nonatomic, retain) VMPVariablesPanelController	*variablesPanelController;
