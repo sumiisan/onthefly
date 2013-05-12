@@ -10,8 +10,13 @@
 #import "VMPAudioPlayer.h"
 #import "VMPAnalyzer.h"
 #import "VMPNotification.h"
+#import "VMPUserDefaults.h"
+#import "VMException.h"
+#import "VMPCodeEditorView.h"
 
 VMPlayerOSXDelegate *OnTheFly_singleton__ = nil;
+
+#pragma mark VMPlayer OSX Delegate
 
 @implementation VMPlayerOSXDelegate
 
@@ -47,7 +52,6 @@ VMPlayerOSXDelegate *OnTheFly_singleton__ = nil;
 																   kDefaultVMDirectory,
 																   kDefaultVMSFileName]
 													  isDirectory:NO] autorelease];
-	[self revertDocumentToSaved:self];
 	return self;
 }
 
@@ -58,11 +62,6 @@ VMPlayerOSXDelegate *OnTheFly_singleton__ = nil;
 	[self restoreWindows];
 }
 
-- (void)restoreWindows {
-	NSArray *openedWindows = [[NSUserDefaults standardUserDefaults] stringArrayForKey:@"openedWindows"];
-	for( NSString *windowName in openedWindows )
-		[self showWindowByName:windowName];
-}
 
 - (void)dealloc {
 	[DEFAULTSONGPLAYER coolDown];
@@ -80,11 +79,195 @@ VMPlayerOSXDelegate *OnTheFly_singleton__ = nil;
 - (void)mainRunLoop {
 	_playStopButton.state = DEFAULTSONGPLAYER.isRunning ? 1 : 0;
 	VMTime t = DEFAULTSONGPLAYER.currentTime;
-	_timeIndicator.stringValue = [NSString stringWithFormat:@"%02d:%02d'%02d\"%1d",
-								 (int)(t/3600),((int)t/60)%60,(int)t%60,((int)(t*10))%10 ];
+	_timeIndicator.stringValue = [NSString stringWithFormat:@"%02d:%02d'%02d\"%02d",
+								 (int)(t/3600),((int)t/60)%60,(int)t%60,((int)(t*100))%100 ];
 	
-	[self performSelector:@selector(mainRunLoop) withObject:nil afterDelay:0.1];
+	[self performSelector:@selector(mainRunLoop) withObject:nil afterDelay:0.01];
 }
+
+#pragma mark -
+#pragma mark notification - selection
+
+- (void)dataSelected:(NSNotification*)notification {
+	self.lastSelectedDataId = [notification.userInfo objectForKey:@"id"];
+}
+
+
+#pragma mark -
+#pragma mark * user actions *
+#pragma mark -
+#pragma mark action - player
+
+- (IBAction)songPlay:(id)sender {
+	[DEFAULTSONGPLAYER stop];
+    [DEFAULTSONGPLAYER start];
+	[self.logView locateLogWithIndex:-1 ofSource:VMLogOwner_Player];
+}
+
+- (IBAction)songStop:(id)sender {
+    [DEFAULTSONGPLAYER stop];
+}
+
+- (IBAction)songFadeout:(id)sender {
+    [DEFAULTSONGPLAYER fadeoutAndStop:kDefaultFadeoutTime];
+}
+
+- (IBAction)songReset:(id)sender {
+    [DEFAULTSONGPLAYER reset];
+}
+
+- (IBAction)playButtonClicked:(id)sender {
+	switch ( DEFAULTSONGPLAYER.isRunning ) {
+		case YES:
+			[DEFAULTSONGPLAYER fadeoutAndStop:0.2];
+			break;
+		case NO:
+			[DEFAULTSONGPLAYER start];
+			[self.logView locateLogWithIndex:-1 ofSource:VMLogOwner_Player];
+			break;
+	}
+}
+
+#pragma mark action - window
+- (void)restoreWindows {
+	NSArray *openedWindows = [[NSUserDefaults standardUserDefaults] stringArrayForKey:VMPUserDefaultsKey_OpenedWindows];
+//	NSLog(@"restore windows:%@", openedWindows );
+	for( NSString *windowName in openedWindows )
+		[self showWindowByName:windowName];
+}
+
+- (void)showWindowByName:(NSString*)name {
+	if ( [name isEqualToString:@"Transport"] ) {
+		[_transportPanel makeKeyAndOrderFront:self ];
+	}
+	if ( [name isEqualToString:@"Object Browser"] ) {
+		[_objectBrowserWindow makeKeyAndOrderFront:self ];
+	}
+	if ( [name isEqualToString:@"Statistics"] ) {
+		[DEFAULTANALYZER.reportWindow makeKeyAndOrderFront:self ];
+	}
+	if ( [name isEqualToString:@"Tracks"] ) {
+		[_trackPanel makeKeyAndOrderFront:self ];
+	}
+	if ( [name isEqualToString:@"Variables"] ) {
+		if ( ! self.variablesPanelController )
+			self.variablesPanelController = [[[VMPVariablesPanelController alloc]
+											  initWithWindowNibName:@"VMPVariablesPanel"] autorelease];
+		[self.variablesPanelController.window makeKeyAndOrderFront:self];
+	}
+	if ( [name isEqualToString:@"Log"] ) {
+		[_logPanel makeKeyAndOrderFront:self ];
+	}
+	
+	VMArray *openedWindows = [VMArray arrayWithArray:
+							  [[NSUserDefaults standardUserDefaults] stringArrayForKey:VMPUserDefaultsKey_OpenedWindows]];
+	[openedWindows pushUnique:name];
+	//NSLog(@"Open %@ : opened windows %@", name, openedWindows);
+	[[NSUserDefaults standardUserDefaults] setObject:openedWindows.array forKey:VMPUserDefaultsKey_OpenedWindows];
+}
+
+- (NSString*)nameOfWindow:(NSWindow*)window {
+	NSDictionary *windowNames = @{
+							   (_transportPanel ? _transportPanel.identifier: @"dummy1"):@"Transport",
+		  (_objectBrowserWindow ? _objectBrowserWindow.identifier : @"dummy2" ):@"Object Browser",
+		  ( DEFAULTANALYZER.reportWindow ? DEFAULTANALYZER.reportWindow.identifier : @"dummy3" ) :@"Statistics",
+		  (_trackPanel ? _trackPanel.identifier : @"dummy4" ) :@"Tracks",
+		   (_variablesPanelController ? _variablesPanelController.window.identifier : @"dummy5" ):@"Variables",
+		   (_logPanel ? _logPanel.identifier : @"dummy6" ) :@"Log" };
+	
+	return [windowNames objectForKey:window.identifier];
+}
+
+- (IBAction)showWindow:(id)sender {
+	if (((NSView*)sender).tag == 505 ) {
+		//	SOS !
+		[VMException alert:@"No help available yet. Maybe you have more luck at https://github.com/sumiisan/onthefly/wiki"];
+//		[self showWindowByName:@"Help"];
+	}
+	
+	if ( [sender isKindOfClass:[NSMenuItem class]] )
+		[self showWindowByName: ((NSMenuItem*)sender).title ];
+	if ( [sender isKindOfClass:[NSButton class]] )
+		[self showWindowByName: ((NSButton*)sender).title ];
+}
+
+#pragma mark action - log
+
+//
+//	user log
+//
+- (IBAction)addUserLog:(id)sender {
+	//	this message is sent from menu to first responder
+	//	we could also handle in each active window
+	[self.userLog addUserLogWithText:@"" dataId:self.lastSelectedDataId];
+	[VMPNotificationCenter postNotificationName:VMPNotificationLogAdded
+										 object:self
+									   userInfo:@{@"owner":@(VMLogOwner_User) }];
+}
+
+
+
+#pragma mark action - load, reload(from editor), revert and save vms
+
+- (IBAction)revertDocument:(id)sender {
+    [self openVMSDocumentFromURL:self.currentDocumentURL];
+    DEFAULTSONGPLAYER.song = DEFAULTSONG;
+	[self.objectBrowserView.objectTreeView reloadData];
+	[DEFAULTANALYZER.statisticsView.reportView reloadData];
+}
+
+- (IBAction)reloadDataFromEditor:(id)sender {
+	NSError *error = nil;
+	if ( [DEFAULTSONG readFromString:self.objectBrowserView.codeEditorView.textView.string error:&error] )
+		[VMPNotificationCenter postNotificationName:VMPNotificationVMSDataLoaded object:self userInfo:nil];
+	else
+		[VMPNotificationCenter postNotificationName:VMPNotificationLogAdded object:self userInfo:@{@"owner":@(VMLogOwner_System)}];
+}
+
+- (IBAction)saveDocument:(id)sender {
+	NSError *error = nil;
+	if( [DEFAULTSONG readFromString:self.objectBrowserView.codeEditorView.textView.string error:&error] )
+		[self saveVMSDocumentToURL:self.currentDocumentURL];
+}
+
+- (IBAction)saveDocumentAs:(id)sender {
+	[VMException alert:@"Not implemented yet!"];
+}
+
+- (IBAction)openDocument:(id)sender {
+	[VMException alert:@"Not implemented yet!"];
+}
+
+#pragma mark -
+#pragma mark method - load and save VMSong
+//	TODO: handle error
+
+- (NSError*)openVMSDocumentFromURL:(NSURL *)documentURL {
+	NSError	*error = nil;
+	if( [DEFAULTSONG readFromURL:documentURL error:&error] ) {
+		[VMPNotificationCenter postNotificationName:VMPNotificationVMSDataLoaded object:self userInfo:nil];
+	} else {
+		//	handle error
+		[VMException logError:@"Failed to load VMS" format:@"URL:%@ Error:%@ Reason:%@",
+		 [documentURL absoluteString], error.localizedDescription, error.localizedFailureReason
+		 ];
+	}
+	return error;
+}
+
+- (NSError*)saveVMSDocumentToURL:(NSURL *)documentURL {
+	NSError	*error = nil;
+	if ( [DEFAULTSONG saveToURL:documentURL error:&error] ) {
+		[VMPNotificationCenter postNotificationName:VMPNotificationVMSDataLoaded object:self userInfo:nil];
+	} else {
+		//	handle error
+		[VMException logError:@"Failed to load VMS" format:@"URL:%@ Error:%@ Reason:%@",
+		 [documentURL absoluteString], error.localizedDescription, error.localizedFailureReason
+		 ];
+	}
+	return error;
+}
+
 
 
 #pragma mark -
@@ -96,6 +279,8 @@ VMPlayerOSXDelegate *OnTheFly_singleton__ = nil;
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
     // Startup!
+	[self revertDocument:self];	//	load
+	//
 	[DEFAULTSONGPLAYER warmUp];
 	_objectBrowserView.graphDelegate = _objectGraphView;
 	_objectBrowserView.infoDelegate  = _objectInfoView;
@@ -176,156 +361,36 @@ VMPlayerOSXDelegate *OnTheFly_singleton__ = nil;
 	[self.trackView reLayout];
 }
 
-- (void)someWindowWillClose:(NSNotification*)notification {
-	
-}
-
-
-
-#pragma mark -
-#pragma mark action
-
-
-//
-//  menu item
-//
-- (IBAction)playStart:(id)sender {
-	[DEFAULTSONGPLAYER stop];
-    [DEFAULTSONGPLAYER start];
-	[self.logView locateLogWithIndex:-1 ofSource:VMLogOwner_Player];
-}
-
-- (IBAction)playStop:(id)sender {
-    [DEFAULTSONGPLAYER stop];
-}
-
-- (IBAction)fadeoutAndStop:(id)sender {
-    [DEFAULTSONGPLAYER fadeoutAndStop:kDefaultFadeoutTime];
-}
-
-- (IBAction)reset:(id)sender {
-    [DEFAULTSONGPLAYER reset];
-}
-
-- (void)showWindowByName:(NSString*)name {
-	if ( [name isEqualToString:@"Transport"] ) {
-		[_transportPanel makeKeyAndOrderFront:self ];
-	}
-	if ( [name isEqualToString:@"Object Browser"] ) {
-		[_objectBrowserWindow makeKeyAndOrderFront:self ];
-	}
-	if ( [name isEqualToString:@"Statistics"] ) {
-		[DEFAULTANALYZER.reportWindow makeKeyAndOrderFront:self ];
-	}
-	if ( [name isEqualToString:@"Tracks"] ) {
-		[_trackPanel makeKeyAndOrderFront:self ];
-	}
-	if ( [name isEqualToString:@"Variables"] ) {
-		if ( ! self.variablesPanelController )
-			self.variablesPanelController = [[[VMPVariablesPanelController alloc]
-											  initWithWindowNibName:@"VMPVariablesPanel"] autorelease];
-		[self.variablesPanelController.window makeKeyAndOrderFront:self];
-	}
-	if ( [name isEqualToString:@"Log"] ) {
-		[_logPanel makeKeyAndOrderFront:self ];
-	}
-	
+- (void)someWindowWillClose:(NSNotification*)notification {	
 	VMArray *openedWindows = [VMArray arrayWithArray:
-							  [[NSUserDefaults standardUserDefaults] stringArrayForKey:@"openedWindows"]];
-	[openedWindows pushUnique:name];
-	[[NSUserDefaults standardUserDefaults] setObject:openedWindows.array forKey:@"openedWindows"];
+							  [[NSUserDefaults standardUserDefaults] stringArrayForKey:VMPUserDefaultsKey_OpenedWindows]];
+	[openedWindows deleteItemWithValue:[self nameOfWindow:notification.object]];
+//	NSLog(@"Close %@ : opened windows %@", [self nameOfWindow:notification.object], openedWindows);
+	[[NSUserDefaults standardUserDefaults] setObject:openedWindows.array forKey:VMPUserDefaultsKey_OpenedWindows];
+}
+
+#pragma mark -
+#pragma mark menu validation
+
+- (BOOL)validateMenuItem:(NSMenuItem *)menuItem {
 	
-}
-
-- (IBAction)showWindow:(id)sender {
-	if ( [sender isKindOfClass:[NSMenuItem class]] )
-		[self showWindowByName: ((NSMenuItem*)sender).title ];
-	if ( [sender isKindOfClass:[NSButton class]] )
-		[self showWindowByName: ((NSButton*)sender).title ];
-}
-
-
-
-//	unused
-- (IBAction)routeStatics:(id)sender {
-	DEFAULTANALYZER.delegate = self;
-	[DEFAULTSONGPLAYER fadeoutAndStop:5.];
-    [DEFAULTANALYZER routeStatistic:/*[objectBrowserView currentObject]*/[DEFAULTSONG data:DEFAULTSONG.defaultFragmentId] numberOfIterations:20 until:nil];
-}
-
-- (IBAction)revertDocumentToSaved:(id)sender {
-    [self openVMSDocumentFromURL:self.currentDocumentURL];
-    DEFAULTSONGPLAYER.song = DEFAULTSONG;
-	[self.objectBrowserView.objectTreeView reloadData];
-	[DEFAULTANALYZER.statisticsView.reportView reloadData];
-}
-
-//	unused
-- (void)analysisFinished:(VMHash *)report {
-	//	nothing to do here
-}
-
-//
-//	user log
-//
-- (IBAction)addUserLog:(id)sender {
-	[self.userLog addUserLogWithText:@"" dataId:self.lastSelectedDataId];
-	[VMPNotificationCenter postNotificationName:VMPNotificationLogAdded
-										 object:self
-									   userInfo:@{@"owner":@(VMLogOwner_User) }];
-}
-
-
-- (void)dataSelected:(NSNotification*)notification {
-	self.lastSelectedDataId = [notification.userInfo objectForKey:@"id"];
-}
-
-//
-//	playback control
-//
-
-- (IBAction)playButtonClicked:(id)sender {
-	switch ( DEFAULTSONGPLAYER.isRunning ) {
-	case YES:
-		[DEFAULTSONGPLAYER fadeoutAndStop:0.2];
-		break;
-	case NO:
-		[DEFAULTSONGPLAYER start];
-			[self.logView locateLogWithIndex:-1 ofSource:VMLogOwner_Player];
-		break;
+	if ( menuItem.action == @selector(showWindow:)) {
+		if ( [menuItem.title isEqualToString:@"Statistics"] ) {
+			if ( ! DEFAULTANALYZER.report ) return NO;
+		}
 	}
+	
+	if (menuItem.action == @selector(addUserLog:)) {
+		if ( self.lastSelectedDataId.length == 0 ) return NO;
+	}
+	
+	if (menuItem.action == @selector(reloadDataFromEditor:)) {
+		if ( self.objectBrowserView.codeEditorView.textView.string.length == 0 ) return NO;
+	}
+	
+	//	the default
+	return YES;
 }
-
-#pragma mark -
-#pragma mark loading vms document
-
-- (NSError*)openVMSDocumentFromURL:(NSURL *)documentURL {
-	NSError	*err = nil;
-	[DEFAULTSONG readFromURL:documentURL error:&err];
-	//	TODO: handle error
-	[VMPNotificationCenter postNotificationName:VMPNotificationVMSDataLoaded object:self userInfo:nil];
-	return err;
-}
-
-#pragma mark -
-#pragma mark saving vms document (unimplemented)
-
-/**
-    Performs the save action for the application, which is to send the save: message to the application's managed object context. Any encountered errors are presented to the user.
- */
-- (IBAction) saveAction:(id)sender {
-    NSError *error = nil;
-    
-    if (![[self managedObjectContext] commitEditing]) {
-        NSLog(@"%@:%@ unable to commit editing before saving", [self class], NSStringFromSelector(_cmd));
-    }
-
-    if (![[self managedObjectContext] save:&error]) {
-        [[NSApplication sharedApplication] presentError:error];
-    }
-}
-
-
 
 
 #pragma mark -
@@ -449,6 +514,21 @@ VMPlayerOSXDelegate *OnTheFly_singleton__ = nil;
 
 - (NSEntityDescription*)entityDescriptionFor:(NSString*)entityName {
 	return [[[self managedObjectModel] entitiesByName] objectForKey:entityName];
+}
+
+/**
+ Performs the save action for the application, which is to send the save: message to the application's managed object context. Any encountered errors are presented to the user.
+ */
+- (void)saveManagedObjectContext {
+    NSError *error = nil;
+    
+    if (![[self managedObjectContext] commitEditing]) {
+        NSLog(@"%@:%@ unable to commit editing before saving", [self class], NSStringFromSelector(_cmd));
+    }
+	
+    if (![[self managedObjectContext] save:&error]) {
+        [[NSApplication sharedApplication] presentError:error];
+    }
 }
 
 

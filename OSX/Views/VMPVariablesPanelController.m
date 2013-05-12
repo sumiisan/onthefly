@@ -77,7 +77,6 @@
 	VMArray *names = [vars sortedKeys];
 	if ( [self.typeSelector isSelectedForSegment:0] ) {
 		//	variables
-		[_itemsInTable push:[VMHash hashWith:@{@"name":@"** variables **"}]];
 		for( VMString *name in names ) {
 			if ( [name hasPrefix:@"@"] ) continue;
 			id var = [vars item:name];
@@ -87,7 +86,6 @@
 	
 	if ( [self.typeSelector isSelectedForSegment:1] ) {
 		//	functions
-		[_itemsInTable push:[VMHash hashWith:@{@"name":@"** functions **"}]];
 		for( VMString *name in names ) {
 			if (! [name hasPrefix:@"@"] ) continue;
 			id var = [vars item:name];
@@ -106,9 +104,8 @@
 	if ( [self.typeSelector isSelectedForSegment:2] ) {
 		VMData *d = [DEFAULTSONG data:self.selectedFragmentId];
 		if ( d.type == vmObjectType_selector || d.type == vmObjectType_sequence ) {
-			if (d.type == vmObjectType_sequence ) d = ((VMSequence*)d).subsequent;			
+			if (d.type == vmObjectType_sequence ) d = ((VMSequence*)d).subsequent;
 			VMArray *history = ((VMSelector*)d).liveData.history;
-			[_itemsInTable push:[VMHash hashWith:@{@"name":@"** selector history **"}]];
 			int index = 1;
 			for( VMString *fragId in history ) {
 				[_itemsInTable push:[VMHash hashWith:@{@"name":VMIntObj(index),@"value":fragId}]];

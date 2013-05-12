@@ -70,7 +70,7 @@
 + (VMPreprocessor*)defaultPreprocessor;
 
 //	preprocess
-- (void)preprocess:(NSString*)vmsText;
+- (BOOL)preprocess:(NSString*)vmsText error:(NSError**)outError;
 
 //	databse access
 - (id)data:(VMId*)dataId;			//	this does resolve aliases.
@@ -87,6 +87,7 @@
 + (NSString*)shortTypeStringForType:(vmObjectType)typ;
 + (NSString*)typeStringForType:(vmObjectType)typ;
 + (VMId*)idWithVMPModifier:(NSString*)dataId tag:(NSString*)tag info:(NSString*)info;
+- (VMId*)completeId:(VMId*)dataId withParentId:(VMId*)parentId;
 - (VMId*)purifiedId:(VMId*)fragId;
 
 @end

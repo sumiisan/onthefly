@@ -352,11 +352,11 @@ VMOBLIGATORY_setWithData()
  |_______ userGeneratedId _________|
  */
 
-- (NSString*)userGeneratedId {
+- (VMId*)userGeneratedId {
 	return [[self.id componentsSeparatedByString:@"|"] objectAtIndex:0];
 }
 
-- (NSString*)fileId_internal {	/*protected*/
+- (VMId*)fileIdPart {
 	return [[[self userGeneratedId] componentsSeparatedByString:@";"] objectAtIndex:0];
 }
 
@@ -364,27 +364,27 @@ VMOBLIGATORY_setWithData()
 	return self.id;
 }
 
-- (void)setFragmentId:(VMId *)fragId {
+- (void)setFragmentId:(VMId*)fragId {
 	self.id = fragId;
 }
 
 - (VMId*)partId {	/*public*/
-	VMId *pid = [[VMArray arrayWithString:[self fileId_internal] splitBy:@"_"] item:0];
-	return Pittari(pid,@"") ? nil : pid;
+	VMId *pid = [[VMArray arrayWithString:[self fileIdPart] splitBy:@"_"] item:0];
+	return pid.length ? pid : nil;
 }
 
 - (VMId*)sectionId {	/*public*/
-	VMId *sid = [[VMArray arrayWithString:[self fileId_internal] splitBy:@"_"] item:1];
-	return Pittari(sid,@"") ? nil : sid;
+	VMId *sid = [[VMArray arrayWithString:[self fileIdPart] splitBy:@"_"] item:1];
+	return sid.length ? sid : nil;
 }
 
 - (VMId*)trackId {	/*public*/
-	VMArray *arr = [VMArray arrayWithString:[self fileId_internal] splitBy:@"_"];
+	VMArray *arr = [VMArray arrayWithString:[self fileIdPart] splitBy:@"_"];
 	if ( [arr count] > 2 ) {
 		[arr unshift];
 		[arr unshift];
 		VMId *tid = [arr join:@"_"];
-		return Pittari(@"",tid) ? nil : tid;
+		return tid.length ? tid : nil;
 	}
 	return nil;
 }

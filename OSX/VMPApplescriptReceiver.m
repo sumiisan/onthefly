@@ -1,15 +1,15 @@
 //
-//  ApplescriptReceiver.m
+//  VMPApplescriptReceiver.m
 //  VariableMusicPlayer
 //
 //  Created by cboy on 12/10/22.
 //  Copyright 2012 sumiisan (aframasda.com). All rights reserved.
 //
 
-#import "ApplescriptReceiver.h"
+#import "VMPApplescriptReceiver.h"
 #import "VMPSongPlayer.h"
 
-@implementation ApplescriptReceiver
+@implementation VMPApplescriptReceiver
 
 - (id)init
 {

@@ -21,7 +21,7 @@
 	self.caption.font = [VMPFont systemFontOfSize:11];
 	[self addSubview:self.caption];
 	
-#if VMP_DESKTOP
+#if VMP_EDITOR
 	VMPButton *button = [[VMPButton alloc] initWithFrame:CGRectZeroOrigin(frameRect)];
 	button.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
 	button.transparent = YES;

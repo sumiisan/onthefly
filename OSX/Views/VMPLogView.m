@@ -110,12 +110,11 @@ static const VMFloat kDefaultLogItemViewHeight = 14.0;
 }
 
 - (void)awakeFromNib {
-	//	don't place anything in here because it get's called from tableview datasource method.
+	//	don't place anything heavy in here because it get's called from tableview datasource method.
+	self.logTableView.doubleAction = @selector(doubleClickOnRow:);
 }
 
-- (void)viewDidMoveToSuperview {
-	self.logTableView.doubleAction = @selector(doubleClickOnRow:);
-	[self sourceChoosen:self];
+- (void)viewDidMoveToWindow {
 	[self sourceChoosen:self];
 }
 

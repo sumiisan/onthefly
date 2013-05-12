@@ -26,6 +26,12 @@
 	#define LLog(...)
 	#define VerboseLog(...)
 #endif
+#define Warning(type,detail)	NSLog(@"[%@] %@ at %s",type,detail,__PRETTY_FUNCTION__)
+
+//	benchmark
+#define MakeTimestamp(name) NSTimeInterval name = [NSDate timeIntervalSinceReferenceDate];
+#define LogTimeBetweenTimestamps(ts1,ts2) NSLog( @"excecution time: %.3fsec", fabs( ts2 - ts1 ));
+
 
 //	alloc instances
 #define NewInstance(cls) [[cls alloc]init]

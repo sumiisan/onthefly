@@ -16,7 +16,8 @@
 
 #define kDefaultVMSFileName @"default.vms"
 
-@interface VMPlayerOSXDelegate : NSObject <NSApplicationDelegate,VMPAnalyzerDelegate,NSWindowDelegate> {
+@interface VMPlayerOSXDelegate : NSObject
+	<NSApplicationDelegate, NSWindowDelegate> {
 @private
     NSPersistentStoreCoordinator *__persistentStoreCoordinator;
     NSManagedObjectModel *__managedObjectModel;
@@ -60,17 +61,6 @@
 
 /*---------------------------------------------------------------------------------
  
- persistent data
- 
- ----------------------------------------------------------------------------------*/
-@property (nonatomic, retain, readonly) NSPersistentStoreCoordinator *persistentStoreCoordinator;
-@property (nonatomic, retain, readonly) NSManagedObjectModel *managedObjectModel;
-@property (nonatomic, retain, readonly) NSManagedObjectContext *managedObjectContext;
-
-- (NSEntityDescription*)entityDescriptionFor:(NSString*)entityName;
-
-/*---------------------------------------------------------------------------------
- 
  methods
  
  ----------------------------------------------------------------------------------*/
@@ -84,14 +74,39 @@
  
  ----------------------------------------------------------------------------------*/
 
-- (IBAction)saveAction:(id)sender;
-- (IBAction)playStart:(id)sender;
-- (IBAction)playStop:(id)sender;
-- (IBAction)fadeoutAndStop:(id)sender;
-- (IBAction)reset:(id)sender;
+//	document			defaults firstResponder
+- (IBAction)saveDocument:(id)sender;
+- (IBAction)saveDocumentAs:(id)sender;
+- (IBAction)revertDocument:(id)sender;
+- (IBAction)reloadDataFromEditor:(id)sender;
+- (IBAction)openDocument:(id)sender;
+
+
+//	player control		defaults firstResponder
+- (IBAction)songPlay:(id)sender;
+- (IBAction)songStop:(id)sender;
+- (IBAction)songFadeout:(id)sender;
+- (IBAction)songReset:(id)sender;
 - (IBAction)playButtonClicked:(id)sender;
-- (IBAction)routeStatics:(id)sender;
-- (IBAction)revertDocumentToSaved:(id)sender;
+
+//	window
+- (IBAction)showWindow:(id)sender;
+
+//	log
+- (IBAction)addUserLog:(id)sender;
+
+
+/*---------------------------------------------------------------------------------
+ 
+ persistent store
+ 
+ ----------------------------------------------------------------------------------*/
+@property (nonatomic, retain, readonly) NSPersistentStoreCoordinator *persistentStoreCoordinator;
+@property (nonatomic, retain, readonly) NSManagedObjectModel *managedObjectModel;
+@property (nonatomic, retain, readonly) NSManagedObjectContext *managedObjectContext;
+
+- (NSEntityDescription*)entityDescriptionFor:(NSString*)entityName;
+- (void)saveManagedObjectContext;
 
 
 @end

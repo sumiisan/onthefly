@@ -1,5 +1,5 @@
 //
-//  ApplescriptReceiver.h
+//  VMPApplescriptReceiver.h
 //  VariableMusicPlayer
 //
 //  Created by cboy on 12/10/22.
@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 
 
-@interface ApplescriptReceiver : NSScriptCommand {
+@interface VMPApplescriptReceiver : NSScriptCommand {
 @private
     
 }

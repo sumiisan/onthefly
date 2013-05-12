@@ -58,8 +58,12 @@
     cachedAudioFormat.mBytesPerFrame	= cachedAudioFormat.mBitsPerChannel / 8 * cachedAudioFormat.mChannelsPerFrame;
     cachedAudioFormat.mBytesPerPacket	= cachedAudioFormat.mBytesPerFrame * cachedAudioFormat.mFramesPerPacket;
 	
-    err = ExtAudioFileSetProperty( audioFile, kExtAudioFileProperty_ClientDataFormat, sizeof( cachedAudioFormat ), &cachedAudioFormat);
-	if (err) return err;
+    err = ExtAudioFileSetProperty( audioFile,
+								  kExtAudioFileProperty_ClientDataFormat,
+								  sizeof( cachedAudioFormat ),
+								  &cachedAudioFormat);
+	if (err)
+		return err;
 	
 	//	alloc buffers
 	UInt64	dataSize = _numberOfFrames * cachedAudioFormat.mBytesPerFrame;

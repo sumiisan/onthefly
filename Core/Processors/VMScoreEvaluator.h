@@ -7,7 +7,6 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "VMPrimitives.h"
 #import "VMDataTypes.h"
 #import "MultiPlatform.h"
 

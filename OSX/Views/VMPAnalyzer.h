@@ -42,6 +42,7 @@ typedef enum {
 @property (nonatomic,retain) NSNumber	*duration;
 @property (nonatomic,retain) NSNumber	*variety;
 @property (nonatomic,retain) NSNumber	*sojourn;
+
 @property (nonatomic)		 VMPReportRecordType type;
 - (id)initWithType:(VMPReportRecordType)type id:(VMId*)inId count:(int)inCount percent:(double)inPercent duration:(double)inDuration;
 
@@ -101,6 +102,7 @@ typedef enum {
 @property (nonatomic,assign)	VMInt		historyPosition;
 @property (assign)				id			<VMPAnalyzerDelegate>	delegate;
 @property (retain)				VMLog		*log;
+@property (nonatomic,retain)	VMHash		*report;
 
 
 /*---------------------------------------------------------------------------------

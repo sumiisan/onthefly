@@ -2,34 +2,20 @@
 //  VMPJSONScanner.m
 //  TouchCode
 //
+//	subclass of CJSONScanner, originally
 //  Created by Jonathan Wight on 12/07/2005.
 //  Copyright 2005 toxicsoftware.com. All rights reserved.
-//
-//  Permission is hereby granted, free of charge, to any person
-//  obtaining a copy of this software and associated documentation
-//  files (the "Software"), to deal in the Software without
-//  restriction, including without limitation the rights to use,
-//  copy, modify, merge, publish, distribute, sublicense, and/or sell
-//  copies of the Software, and to permit persons to whom the
-//  Software is furnished to do so, subject to the following
-//  conditions:
-//
-//  The above copyright notice and this permission notice shall be
-//  included in all copies or substantial portions of the Software.
-//
-//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-//  EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-//  OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-//  NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-//  HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-//  WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-//  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-//  OTHER DEALINGS IN THE SOFTWARE.
 //
 
 #import "VMPJSONScanner.h"
 #import "VMException.h"
 #import "CDataScanner_Extensions.h"
+#import "MultiPlatform.h"
+
+#if VMP_EDITOR
+#import "VMPlayerOSXDelegate.h"
+#import "VMPCodeEditorView.h"
+#endif
 
 #undef TREAT_COMMENTS_AS_WHITESPACE
 #define TREAT_COMMENTS_AS_WHITESPACE 1				//	strip comments
@@ -55,6 +41,8 @@ inline static int HexToInt(char inCharacter)
 
 @implementation VMPJSONScanner
 
+static BOOL didThrownError__ = NO;
+
 @synthesize lastKey;
 
 #define ScanInst(scanFunc,errorCode,descriptionString ) \
@@ -66,6 +54,15 @@ if ([self scanFunc] == NO) {\
 	[theDictionary release];\
 	return(NO);\
 }
+
+- (id)init {
+	self = [super init];
+	if (self) {
+		didThrownError__ = NO;
+	}
+	return self;
+}
+
 
 
 - (void)dealloc {
@@ -360,21 +357,39 @@ if ([self scanFunc] == NO) {\
 	
     NSUInteger theCharacter = current - theLineStart;
 	
-    NSRange theStartRange = NSIntersectionRange((NSRange){ .location = MAX((NSInteger)self.scanLocation - 20, 0), .length = 20 + (NSInteger)self.scanLocation - 20 }, (NSRange){ .location = 0, .length = self.data.length });
-    NSRange theEndRange = NSIntersectionRange((NSRange){ .location = self.scanLocation, .length = 30 }, (NSRange){ .location = 0, .length = self.data.length });
+	NSInteger beforeSpan = MIN( (NSInteger)self.scanLocation, 300 );
+    NSRange beforeRange = NSIntersectionRange(
+											   (NSRange){
+												   .location	= self.scanLocation - beforeSpan,
+												   .length		= beforeSpan
+											   },
+											   (NSRange){
+												   .location	= 0,
+												   .length		= self.data.length
+											   });
+    NSRange afterRange	= NSIntersectionRange(
+											   (NSRange){
+												   .location	= self.scanLocation,
+												   .length		= 300
+											   },
+											   (NSRange){
+												   .location	= 0,
+												   .length		= self.data.length
+											   });
 	
 	
-    NSString *theSnippet = [NSString stringWithFormat:@"HERE > %@ \n\n---------------- snippet ----------------\n%@",	//	ss changed format
-							[[[NSString alloc] initWithData:[self.data subdataWithRange:theEndRange] encoding:NSUTF8StringEncoding] autorelease],
-							[[[NSString alloc] initWithData:[self.data subdataWithRange:theStartRange] encoding:NSUTF8StringEncoding] autorelease]
-							];
+    NSString *beforeSnip = [[[NSString alloc] initWithData:[self.data subdataWithRange:beforeRange]
+												  encoding:NSUTF8StringEncoding] autorelease];
+	NSString *afterSnip  = [[[NSString alloc] initWithData:[self.data subdataWithRange:afterRange]
+												  encoding:NSUTF8StringEncoding] autorelease];
 	
     NSDictionary *theUserInfo = [NSDictionary dictionaryWithObjectsAndKeys:
 								 [NSNumber numberWithUnsignedInteger:theLine], @"line",
 								 [NSNumber numberWithUnsignedInteger:theCharacter], @"character",
 								 [NSNumber numberWithUnsignedInteger:self.scanLocation], @"location",
-								 theSnippet, @"snippet",
-								 NULL];
+								 beforeSnip, @"beforeSnip",
+								 afterSnip, @"afterSnip",
+								 nil];
     return(theUserInfo);    
 }
 
@@ -397,15 +412,25 @@ if ([self scanFunc] == NO) {\
 	}
 	if ( ! idStr && self.lastKey )
 		idStr = self.lastKey;
+
+#if VMP_EDITOR
 	
-	[VMException raise:inDescription
-				format:@"%@line:%d charancter:%d location:%d\n%@",
-	 ( idStr ? [NSString stringWithFormat:@"in definition of \"%@\"\n", idStr] : @"" ),
-	 [[theUserInfo objectForKey:@"line"] unsignedIntValue],
-	 [[theUserInfo objectForKey:@"character"] unsignedIntValue],
-	 [[theUserInfo objectForKey:@"location"] unsignedIntValue],
-	 [[theUserInfo objectForKey:@"snippet"] substringToIndex:300]
-	 ];
+	if ( ! didThrownError__ ) {
+		[VMException alert:inDescription
+					format:@"%@line:%d charancter:%d location:%d",
+		 ( idStr ? [NSString stringWithFormat:@"in definition of \"%@\"\n", idStr] : @"" ),
+		 [[theUserInfo objectForKey:@"line"] unsignedIntValue],
+		 [[theUserInfo objectForKey:@"character"] unsignedIntValue],
+		 [[theUserInfo objectForKey:@"location"] unsignedIntValue]];
+				
+		didThrownError__ = YES;
+		//	highlight error in editor.
+		[APPDELEGATE.objectBrowserView.codeEditorView
+		 markBlockUsingHintsBefore:[theUserInfo objectForKey:@"beforeSnip"] after:[theUserInfo objectForKey:@"afterSnip"]];
+	}
+
+#endif
+	
 	NSError *theError = [NSError errorWithDomain:kJSONScannerErrorDomain code:inCode userInfo:theUserInfo];
 
 	return(theError);

@@ -3,28 +3,28 @@
 <dictionary title="VMPlayer sdef">
 	<suite name="VMPlayer" code="suNP" description="Variable Music Player">
 		<command name="StartVMP" code="suNPstrt" description="Start VMP.">
-			<cocoa name="StartVMP" class="ApplescriptReceiver"/>
+			<cocoa name="StartVMP" class="VMPApplescriptReceiver"/>
 		</command>
 		<command name="StopVMP" code="suNPstop" description="Stop VMP.">
-			<cocoa name="StopVMP" class="ApplescriptReceiver"/>
+			<cocoa name="StopVMP" class="VMPApplescriptReceiver"/>
 		</command>
 		<command name="FadeoutAndStopVMP" code="suNPfstp" description="Fade out and stop VMP.">
-			<cocoa name="FadeoutAndStopVMP" class="ApplescriptReceiver"/>
+			<cocoa name="FadeoutAndStopVMP" class="VMPApplescriptReceiver"/>
             <parameter name="length" code="suFL" type="real" optional="yes" description="fade out length.">
                 <cocoa key="length"/>
             </parameter>
 		</command>
 		<command name="SetParameter" code="suNPsprm" description="Set a parameter.">
-			<cocoa name="SetParameter" class="ApplescriptReceiver"/>
+			<cocoa name="SetParameter" class="VMPApplescriptReceiver"/>
             <parameter name="volume" code="suVL" type="real" optional="yes" description="global volume.">
                 <cocoa key="volume"/>
             </parameter>
 		</command>
 		<command name="Hide" code="suNPhide" description="Hide window.">
-			<cocoa name="Hide" class="ApplescriptReceiver"/>
+			<cocoa name="Hide" class="VMPApplescriptReceiver"/>
 		</command>
 		<command name="Unhide" code="suNPactv" description="Unhide window.">
-			<cocoa name="Unhide" class="ApplescriptReceiver"/>
+			<cocoa name="Unhide" class="VMPApplescriptReceiver"/>
 		</command>
 	</suite>
 </dictionary>

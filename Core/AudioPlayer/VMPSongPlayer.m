@@ -13,7 +13,7 @@
 #import "VMScoreEvaluator.h"
 #import "VMPNotification.h"
 
-#if VMP_DESKTOP
+#if VMP_EDITOR
 #import "VMPlayerOSXDelegate.h"
 #endif
 
@@ -32,11 +32,6 @@
 			player ? player.description : @"no player"
 			];
 }
-@end
-
-
-@interface VMPSongPlayer(private)
--(void)setFragment;
 @end
 
 
@@ -400,10 +395,6 @@ static VMPSongPlayer 	*songPlayer_singleton__ = nil;
 	++frameCounter;
 	
 	VMTime 			endTimeOfLastFragment 	= RESET_TIME;
-#if 0 //VMP_DESKTOP
-	VMPlayer 		*currentPlayer 		= [song.player retain];
-#endif
-	//VMPqueuedFragment	*newlyFiredFragment		= nil;
 	VMPQueuedFragment	*nextUpcomingFragment	= nil;
 		
 	for ( VMInt i = 0; i < fragQueue.count; ++i ) {
@@ -465,17 +456,6 @@ static VMPSongPlayer 	*songPlayer_singleton__ = nil;
         
         VMPSetNeedsDisplay(trackView_);
 	}
-
-#if 0 //VMP_DESKTOP
-	//	sequence view update
-	if ( newlyFiredFragment && nextUpcomingFragment ) {
-		[sequenceView_ setCurrentPart:currentPlayer
-						 currentFragmentId:newlyFiredFragment->audioFragment.id
-							nextFragmentId:nextUpcomingFragment->audioFragment.id 
-							  advance:YES];
-	}
-	[currentPlayer release];
-#endif
 	
 }
 
@@ -627,7 +607,15 @@ static VMPSongPlayer 	*songPlayer_singleton__ = nil;
 //
 -(void)warmUp {
 	if ( self.isWarmedUp ) return;
+	DEFAULTEVALUATOR.testMode = YES;
+	VMAudioFragment *af = [song_ resolveDataWithId:song_.defaultFragmentId
+									untilReachType:vmObjectType_audioFragment];
+	if ( ! af ) {
+		DEFAULTEVALUATOR.testMode = NO;
+		return;
+	}
 	
+	VMPQueuedFragment *frag = [self queue:af at:0];
 	if( audioPlayerList ) [audioPlayerList release];
 	audioPlayerList = NewInstance(VMArray);
 	
@@ -642,10 +630,6 @@ static VMPSongPlayer 	*songPlayer_singleton__ = nil;
     //
     //  dummy cue to warm up audio engine
     //
-	DEFAULTEVALUATOR.testMode = YES;
-	VMPQueuedFragment *frag = [self queue:[song_ resolveDataWithId:song_.defaultFragmentId
-											 untilReachType:vmObjectType_audioFragment]
-								 at:0];	
     [self setFragmentIntoAudioPlayer:frag];
 	VMPAudioPlayer *firstAP = [self audioPlayer:0];
 	[firstAP setVolume:0.0];

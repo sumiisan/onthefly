@@ -8,15 +8,49 @@
 
 #import "VMException.h"
 #import "MultiPlatform.h"
+#if VMP_EDITOR
+#import "VMPlayerOSXDelegate.h"
+#import "VMPNotification.h"
+#endif
+#import "VMPMacros.h"
 
 @implementation VMException
 
+/*---------------------------------------------------------------------------------
+ *
+ *
+ *	VM Exception
+ *
+ *
+ *---------------------------------------------------------------------------------*/
+
+#define parseMessageFromArg(containerDeclaration) \
+va_list args;\
+va_start(args, format);\
+containerDeclaration = [[[NSString alloc] initWithFormat:format arguments:args] autorelease];\
+va_end(args)
+
+
+
++ (void)logError:(NSString*)name format:(NSString *)format, ... {
+	//
+	// only OSX supported.
+	//	maybe we can use notification on iOS
+	//
+#if VMP_EDITOR
+	parseMessageFromArg(NSString *message);
+	
+	[APPDELEGATE.systemLog logError:message withData:nil];
+	[VMPNotificationCenter postNotificationName:VMPNotificationLogAdded
+										 object:self
+									   userInfo:@{@"owner":@( VMLogOwner_System )}];
+#endif
+}
+
 
 + (void)raise:(NSString *)name format:(NSString *)format, ... {
-	va_list args;
-	va_start(args, format);
-	NSString *message = [[[NSString alloc] initWithFormat:format arguments:args] autorelease];
-	va_end(args);
+	parseMessageFromArg(NSString *message);
+	
 #if VMP_OSX
 	NSAlert *al = [NSAlert alertWithMessageText:name 
 								 defaultButton:@"OK" 
@@ -43,7 +77,9 @@
 #endif
 }
 
-+ (void)alert:(NSString*)message {
++ (void)alert:(NSString *)format, ...  {
+	parseMessageFromArg(NSString *message);
+
 	NSAlert *al = [NSAlert alertWithMessageText:@"Alert:"
 								  defaultButton:@"OK"
 								alternateButton:nil
@@ -52,7 +88,21 @@
 	[al runModal];
 }
 
-+ (BOOL)ensure:(NSString*)message {
++ (void)alert:(NSString *)name format:(NSString*)format, ...  {
+	parseMessageFromArg(NSString *message);
+	
+	NSAlert *al = [NSAlert alertWithMessageText:name
+								  defaultButton:@"OK"
+								alternateButton:nil
+									otherButton:nil
+					  informativeTextWithFormat:@"%@",message];
+	[al runModal];
+}
+
+
++ (BOOL)ensure:(NSString *)format, ...  {
+	parseMessageFromArg(NSString *message);
+
 	NSAlert *al = [NSAlert alertWithMessageText:@"Confirm:"
 								  defaultButton:@"Cancel"
 								alternateButton:@"OK"

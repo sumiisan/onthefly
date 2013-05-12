@@ -8,7 +8,7 @@
 
 #import <Cocoa/Cocoa.h>
 #import "VMPCanvas.h"
-#import "VMDataTypes.h"
+#import "VMPrimitives.h"
 
 typedef enum {
 	VMPHistogramType_linear = 0,

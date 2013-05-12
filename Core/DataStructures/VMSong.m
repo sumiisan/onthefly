@@ -12,6 +12,7 @@
 #import "VMException.h"
 #include "VMPMacros.h"
 
+
 /*---------------------------------------------------------------------------------
  *
  *
@@ -22,7 +23,8 @@
 
 
 @implementation VMSong
-@synthesize songName, audioFileExtension, vsFilePath, audioFileDirectory, defaultFragmentId;
+@synthesize songName=songName_, audioFileExtension=audioFileExtension_,
+vsFilePath=vsFilePath_, audioFileDirectory=audioFileDirectory_, defaultFragmentId=defaultFragmentId_;
 @synthesize songData=songData_, entryPoints=entryPoints_, history=history_;
 @synthesize player;
 @synthesize showReport=showReport_;
@@ -455,27 +457,52 @@ BOOL verbose = NO;
 #pragma mark -
 #pragma mark loading
 
-
+//	returns YES on success, NO if failed.
 - (BOOL)readFromURL:(NSURL *)url error:(NSError **)outError {
     NSData *data = [NSData dataWithContentsOfURL:url options:NSDataReadingUncached error:outError];
-    return [self readFromData:data error:outError];
+	return [self readFromData:data error:outError];
 }
 
+//	returns YES on success, NO if failed.
 - (BOOL)readFromData:(NSData *)data error:(NSError **)outError {
 	if ( data ) {
-		NSString *vmsText = [[NSString alloc] initWithData:data encoding:vmFileEncoding];
-		
-		[self.songData clear];
-		self.showReport.current = NO;
-		
-		DEFAULTPREPROCESSOR.song = self;
-		[DEFAULTPREPROCESSOR preprocess:vmsText];
-		
-		[self.showReport restore];
-		[vmsText release];
-		[self reset];
+		return [self readFromString:[[[NSString alloc] initWithData:data encoding:vmFileEncoding] autorelease]
+							  error:outError ];
 	}
-    return YES;
+	return NO;
+}
+
+//	returns YES on success, NO if failed.
+- (BOOL)readFromString:(VMString *)string error:(NSError **)outError {
+	self.vmsData = string;
+	[self.songData clear];
+	self.showReport.current = NO;
+	
+	DEFAULTPREPROCESSOR.song = self;
+	BOOL success = [DEFAULTPREPROCESSOR preprocess:self.vmsData error:outError];
+	
+#if VMP_EDITOR
+	if (!success) {
+		//	handle errors during preprocessing if any:
+		
+		//	JSON-parse error is handled inside JSON-parser
+		//	because the Touch-JSON does not report leaf-node errors upon return.
+	}
+#endif
+	
+	[self.showReport restore];
+	[self reset];
+	
+	return success;
+}
+
+- (BOOL)saveToURL:(NSURL *)url error:(NSError **)outError {		//	note: outError is never set
+	if( self.vmsData.length == 0 ) {
+		[VMException alert:@"Can not save empty structure!"];
+		return NO;
+	}
+	NSData *data = [self.vmsData dataUsingEncoding:vmFileEncoding];
+	return [data writeToURL:url atomically:YES];
 }
 
 
@@ -517,23 +544,23 @@ BOOL verbose = NO;
 	= nil;
 	self.vsFilePath 
 	= self.audioFileDirectory 
-	= self.audioFileExtension 
+	= self.audioFileExtension
+	= self.vmsData
 	= nil;
 	
 #if VMP_LOGGING
 	self.log = nil;
 #endif
 	
-	[self->defaultFragmentId release];
-	[self->songName release];
+	[defaultFragmentId_ release];
+	[songName_ release];
     [super dealloc];
 }
 
-
 -(void)setByHash:(VMHash *)hash {
 	//self->songName = hash->hash_.songName;
-	self->songName 			= 	[HashItem(songName) retain];
-    self->defaultFragmentId =	[HashItem(defaultFragmentId) retain];
+	songName_				= 	[HashItem(songName) retain];
+    defaultFragmentId_		=	[HashItem(defaultFragmentId) retain];
     self.audioFileExtension =    HashItem(audioFileExtension);
     self.audioFileDirectory =    HashItem(audioFileDirectory);
 	if ( Pittari(self.audioFileDirectory,@"./" ))

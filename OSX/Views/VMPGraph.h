@@ -7,7 +7,6 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "VMPrimitives.h"
 #import "VMPObjectBrowserView.h"
 #import "VMDataTypes.h"
 

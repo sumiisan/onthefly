@@ -18,6 +18,7 @@
 
 //	song data structure
 @property (VMNonatomic retain)	VMHash	 *songData;
+@property (VMNonatomic retain)	VMString *vmsData;
 
 //	static song properties
 @property (nonatomic, readonly)	VMString *songName;
@@ -57,8 +58,12 @@
 - (VMPlayer*)playerFrom:(id)someObj;
 - (id)resolveDataWithId:(VMId*)dataId untilReachType:(int)mask;
 
-
+//
+//	read and save
+//
 - (BOOL)readFromURL:(NSURL *)url error:(NSError **)outError;
 - (BOOL)readFromData:(NSData *)data error:(NSError **)outError;
+- (BOOL)readFromString:(VMString *)string error:(NSError **)outError;
+- (BOOL)saveToURL:(NSURL *)url error:(NSError **)outError;
 
 @end

@@ -87,9 +87,10 @@
 	NSTableView *tableView = sender;
 	[DEFAULTANALYZER selectRow:[tableView selectedRow]];
 	VMPReportRecord *rec = [DEFAULTANALYZER recordForRow:tableView.selectedRow];
-	[VMPNotificationCenter postNotificationName:VMPNotificationFragmentSelected
-										 object:self
-									   userInfo:@{@"id":rec.ident} ];
+	if ( rec )
+		[VMPNotificationCenter postNotificationName:VMPNotificationFragmentSelected
+											 object:self
+										   userInfo:@{@"id":rec.ident} ];
 }
 
 
@@ -133,10 +134,9 @@
 @property (retain)						VMHash						*sojournDataForPart;
 @property (retain)						VMHash						*histograms;
 @property (retain)						VMArray						*unresolveables;
-@property (retain)						VMHash						*report;
 
 @property (readonly, getter=isBusy)		BOOL						busy;
-@property (retain)						VMFragment						*entryPoint;
+@property (retain)						VMFragment					*entryPoint;
 @property (retain)						VMId						*currentPartId;
 
 @property (retain)						VMArray						*dataIdToProcess;
@@ -306,6 +306,7 @@ static const int	kLengthOfPartTraceRoute					= 10000;	//	gives up after 10000 ti
 	if ( self.isBusy ) return NO;
 	
     _busy = YES;
+	self.report = nil;
 	self.entryPoint = inEntryPoint;
 	self.log = [[[VMLog alloc] initWithOwner:VMLogOwner_Statistics
 						managedObjectContext:nil] autorelease];

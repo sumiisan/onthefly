@@ -13,7 +13,7 @@
 #import "VMException.h"
 #include "VMPMacros.h"
 
-#if VMP_DESKTOP
+#if VMP_EDITOR
 #import "VMPlayerOSXDelegate.h"
 #endif
 
@@ -21,7 +21,7 @@
 
 static	VMPreprocessor	*vmpp__singleton__ = nil;
 
-@interface VMPreprocessor(internal)
+@interface VMPreprocessor()
 
 //--------------------------------------------------------------------------
 //
@@ -30,13 +30,11 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 //--------------------------------------------------------------------------
 
 //------ text-file formatting phase (1) ------------------------------------
-- (VMHash*)				preprocessPhase1:(NSString*)data;
+- (VMHash*)				preprocessPhase1:(NSString*)data error:(NSError**)outError;
 
-//	(1.00) 	vmp file must be json-ified. 	#1: strip comments
 //	(1.01)	shorten key-names like selector: or sequence: to sel: and seq:
-//	(1.02) 	vmp file must be json-ified.	#2:	put property names into double quote
 //	(1.90) 	scan json and make hash.
-- (VMHash*)				scanJSON:(NSString*)data;
+- (VMHash*)				scanJSON:(NSString*)data error:(NSError**)outError;
 
 //----- hash formatting phase (2) -----------------------------------
 - (void)preprocessPhase2:(VMArray*)dataArray;
@@ -67,11 +65,6 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 - (void)				registerAliasOfFragment:(VMData*)frag as:(VMId*)aliasId;
 - (void)				makeAlias:(VMData*)data changeIdTo:(VMId*)newId;
 
-//	(3.10)	if tags was specified as array, convert them into tagList
-//- (VMTagList*)			convertTagsIntoTagList:(VMHash*)dict;	obsolete
-//	(3.11)	register tagList for non-chance objects. (this will be added later to chance)
-- (void)				cacheTagListIdForFragmentId:(VMId*)fragmentId tagListId:(VMId*)tlId;
-
 //	(3.31)	if a sequence or layer has no Collection, create one from id.
 - (void)				createCollectionIfItDoesNotHave:(VMCollection*)collection;
 //	(3.35) 	all ids inside frags should be completed with the owner's id
@@ -80,7 +73,7 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 //	(3.40)	if audioInfo related key is supplied, create audioInfo
 - (VMAudioInfo*) 		createAudioInfoFromFragment:(VMData*)data ifInfoProvidedBy:(VMHash*)hash;
 //	(3.41) 	if audioInfoId was supplied, a frag (frag obj or frag inside sequence) should be audioFragment
-- (VMFragment*)				convertFragment:(VMData**)data withAudioInfoIdIntoAudioFragments:(VMHash*)hash;
+- (void)				convertFragment:(VMData**)data_p withAudioInfoIdIntoAudioFragments:(VMHash*)hash;
 //	(3.42)	if an audioInfo is placed naked in a sequence or selector, wrap it by an audioFragment
 - (void)				wrapAudioInfoInsideCollectionByAudioFragment:(VMCollection*)cc;
 
@@ -90,11 +83,8 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 //			clone myself and register to make it ready for overwrite.
 - (VMSelector*)			wrapFragment:(VMData*)data withSelectorIfNeeded:(VMHash*)hash;
 
-//	(3.55)	all id's in a selector must be converted into chances.	btw, selectors should have instruction
+//	(3.55)	all id's in a selector must be converted into chances.
 - (void)				convertFragmentsToChances:(VMSelector*)selector;
-
-//	(3.60)	all chance-targets (don't forget sequence's subsequent) should be registered at least as Unresolved
-- (void)				markUnresolvedChanceTargets:(VMSelector*)sel;
 
 //	(3.90)	register entrypoints
 - (void)				registerEntryPoint:(VMFragment*)frag;
@@ -109,9 +99,6 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 - (void)				copyTagListsOfTargets:(VMSelector*)selector;
 //	(4.30)	set audioInfoRef in audioFragment-s
 - (void)				setAudioInfoRefInAudioFragments:(VMAudioFragment*)audioFragment;
-
-//	(4.80)	check unresolved objects
-- (void)				throwErrorIfUnresolved:(VMData*)d;
 
 @end
 
@@ -603,19 +590,23 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 	[lines release];	
 }
 
-/*-------------------------------------------------------------------------
+/**-------------------------------------------------------------------------
  
- pre-processing  vms data
+ @brief		pre-processing  vms data
+ 
+ @return	YES on success, NO if failed. 
  
  -------------------------------------------------------------------------*/
 #pragma mark -
 #pragma mark ---> preprocess entry <---
 
-- (void)preprocess:(NSString*)vmsText {	
+- (BOOL)preprocess:(NSString*)vmsText error:(NSError **)outError {
 	//
 	//	(1.00)	format text-file and make json
 	//
-	VMHash *vmsHash = [self preprocessPhase1:vmsText];	
+	VMHash	*vmsHash = [self preprocessPhase1:vmsText error:outError];
+	if ( !vmsHash ) return NO;
+	
 	VMArray *dataArray = [VMArray arrayWithArray: [vmsHash item:@"data"]];
 	
 	//
@@ -632,7 +623,7 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 	//	(4.30)	set audioInfoRef in audioFragment-s
 	[self preprocessPhase4];
 	
-#if VMP_DESKTOP
+#if VMP_EDITOR
 	//[self dataDump];	
 	if ([APPDELEGATE.systemLog count] > 0) {
 		if ( fatalErrors > 0 ) {
@@ -640,42 +631,40 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 		}
 	}
 #endif
+	return YES;
 }
 
 #pragma mark -
 #pragma mark (1) text-file formatting phase 
 
 //------ text-file formatting phase (1) ------------------------------------
-- (VMHash*) preprocessPhase1:(NSString*)data {
+- (VMHash*)preprocessPhase1:(NSString*)data error:(NSError**)outError {
 	
-	NSMutableString *ms = [NSMutableString stringWithString:data];
-	
-	//
-	//	(1.00) 	vmp file must be json-ified. 	#1: strip comments
-	//
-	//	[VMTextPreprocessor stripCommentsAndCRLF:ms];		done by VMPJSON scanner ss121210
+	NSMutableString *mutableString = [[data mutableCopy] autorelease];
 	
 	//
 	//	(1.01)	shorten key-names like selector: or sequence: to sel: and seq:
 	//
-	[VMTextPreprocessor replaceKeyNamesIn:ms with:shortKeyword];
-	
-	//
-	//	(1.02) 	vmp file must be json-ified.	#2:	put property names into double quote
-	//
-	//	[VMTextPreprocessor putPropertyNames:propNames IntoDoubleQuote:ms];		VMPJSONScanner does accept string constants without double quotes. ss121210
+	[VMTextPreprocessor replaceKeyNamesIn:mutableString with:shortKeyword];
 	
 	//
 	//	(1.90) 	scan json and make dictionary.
 	//
-	return [self scanJSON:ms];
+	return [self scanJSON:mutableString error:outError];
 }
 
-- (VMHash*) scanJSON:(NSString*)data {
-	NSError *outError = [[[NSError alloc] init] autorelease];
+- (VMHash*)scanJSON:(NSString*)data error:(NSError**)outError {
     VMPJSONDeserializer *decoder = [[VMPJSONDeserializer alloc] init];
-    NSDictionary *dict = [decoder deserializeAsDictionary:[data dataUsingEncoding:vmFileEncoding] error:&outError];
+    NSDictionary *dict = [decoder deserializeAsDictionary:[data dataUsingEncoding:vmFileEncoding] error:outError];
 	[decoder release];
+	
+	if( outError && *outError ) {
+		//	handle error if needed
+		NSLog(@"%@",(*outError).description);
+		
+		return nil;
+	}
+
 	return [VMHash hashWithDictionary:dict];
 }
 
@@ -1042,23 +1031,6 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 			data = [self findOrCreateNewObjectWithHash:hash];
 		}
 		
-				
-		//	Obsolete
-		//	(3.10)	if tag was specified as an array, convert them into tagList
-		//
-//		VMTagList *tl =
-//		[self convertTagsIntoTagList:hash];
-		
-		//	
-		//	(3.11)	register tagList for non-chance objects.
-		//	(this will be added later to chance)
-		
-//		VMId *tagListId = Default(HashItem(tagListId), ( tl ? tl.id : nil ));
-		
-//		if( tagListId && typ != vmObjectType_chance )
-//			[self cacheTagListIdForFragmentId:data.id tagListId:tagListId];
-		
-		
 		//
 		//	(3.31)	if a sequence or layer has no Collection, create one from id.
 		//
@@ -1089,17 +1061,12 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 		VMSelector *sel = [self wrapFragment:data withSelectorIfNeeded:hash];
 		
 		//
-		//	(3.55)	all id's in a selector must be converted into chances, btw, selectors should have instructions
+		//	(3.55)	all id's in a selector must be converted into chances, btw
 		//
 		if( ClassMatch(data, VMSelector) ) [self convertFragmentsToChances:ClassCast(data, VMSelector)];
 		if( ClassMatch(data, VMSequence) ) [self convertFragmentsToChances:ClassCast(data, VMSequence).subsequent];
 		if(sel) [self convertFragmentsToChances:sel];	
-		
-		//
-		//	(3.60)	all chance-targets (don't forget sequence's subsequent) should be registered at least as Unresolved
-		//
-		//[self markUnresolvedChanceTargets:(VMSelector*)sel];		IMPLEMENT LATER
-		
+				
 		//
 		//	(3.90)	register entrypoints
 		//
@@ -1112,48 +1079,7 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 				[self logError:@"Invalid entryPoint" withData:data.description];
 			}
 		}
-		
-		// - (void)					markUnresolvedChanceTargets:(VMSelector):sel;
-		//	(3.90)	check unresolved objects
     }
-}
-
-/*	OBSOLETE - tags and score modifiers are refactored into VMTransformer
-//	
-//	(3.10)	if tags was specified as array, convert them into tagList
-- (VMTagList*) convertTagsIntoTagList:(VMHash*)hash {
-	VMTagList *tl = nil;
-	id tags = ConvertToVMArray(HashItem(tags));
-	if ( tags ) {
-		tl = ARInstance(VMTagList);
-		tl.tagArray = tags;
-		tl.id = [VMPP idWithVMPModifier:HashItem(id)
-									tag:@"tagList" info:nil];
-		[self registerData:tl];
-	}
-	return tl;
-}
-*/
-
-//
-//	tagListId cache
-//
-- (VMHash*)tagListIdCache {
-	VMHash *d = [self rawData:@"VMP|TagListCache"];
-	if (!d) {
-		d = ARInstance(VMHash);
-		[self setData:d withId:@"VMP|TagListCache"];
-	}
-	return d;
-}
-
-//	(3.11)	register tagList for non-chance objects. (this will be added later to chance)
-- (void)cacheTagListIdForFragmentId:(VMId*)fragmentId tagListId:(VMId*)tlId {
-	[[self tagListIdCache] setItem:tlId for:fragmentId];
-}
-
-- (VMId*)tagListIdForFragmentId:(VMId*)fragmentId {
-	return [[self tagListIdCache] valueForKey:fragmentId];
 }
 
 //

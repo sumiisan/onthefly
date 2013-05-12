@@ -7,11 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "VMPAudioPlayer.h"
-#import "VMPrimitives.h"
-#import "VMDataTypes.h"
 #import "VMSong.h"
-
+#import "VMPAudioPlayer.h"
 #import "VMPTrackView.h"
 #import "VMPlayerBase.h"
 
@@ -29,9 +26,9 @@
 @interface VMPQueuedFragment : NSObject {
 @public
 	VMAudioFragment		*audioFragment;
-	VMTime			cueTime;
-	VMTimeRange		cuePoints;		//	store modulated dur / offs
-	VMPAudioPlayer	*player;
+	VMTime				cueTime;
+	VMTimeRange			cuePoints;		//	store modulated dur / offs
+	VMPAudioPlayer		*player;
 }
 @end
 
@@ -61,9 +58,10 @@
 
 	//	view
 	UInt64				frameCounter;
+	__weak VMSong		*song_;
 }
 
-@property (VMNonatomic retain)				VMSong 				*song;				//	the Variable Music Data
+@property (nonatomic, weak)					VMSong 				*song;				//	the Variable Music Data
 @property (assign)							VMPTrackView 		*trackView;			//	tracks view
 @property (atomic)							VMTime				nextCueTime;
 @property (nonatomic, getter = isDimmed)	BOOL				dimmed;

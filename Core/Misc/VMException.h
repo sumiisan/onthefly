@@ -9,9 +9,12 @@
 #import <Foundation/Foundation.h>
 
 @interface VMException : NSException <NSAlertDelegate>
-+ (BOOL)ensure:(NSString*)message;	//	not actually an exception. maybe make a separate class later.
-+ (void)alert:(NSString*)message;
++ (BOOL)ensure:(NSString *)format, ...;	//	not actually an exception. maybe make a separate class later.
++ (void)alert:(NSString *)format, ...;
++ (void)alert:(NSString *)name format:(NSString*)format, ...;
 
-//	overridw
-+ (void)raise:(NSString *)name format:(NSString *)format, ... ;
+//	override
++ (void)raise:(NSString *)name format:(NSString *)format, ...;
++ (void)logError:(NSString*)name format:(NSString *)format, ...;
+
 @end

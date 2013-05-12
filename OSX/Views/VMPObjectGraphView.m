@@ -13,6 +13,7 @@
 #import "VMPNotification.h"
 #import "VMScoreEvaluator.h"
 #import "VMPMacros.h"
+#import "VMPreprocessor.h"
 
 /*---------------------------------------------------------------------------------
  
@@ -556,31 +557,27 @@
 
 @implementation VMPObjectInfoView
 @synthesize data=data_;
-@synthesize userGeneratedIdField=tf1_,vmpModifierField=tf2_,dataInfoField=tf3_;
+@synthesize userGeneratedIdField=tf1_,vmpModifierField=tf2_,typeLabel=tf3_;
 
 - (void)awakeFromNib {
 	self.flippedYCoordinate = NO;
 	self.userGeneratedIdField.stringValue = @"";
 	self.vmpModifierField.stringValue = @"";
-	self.dataInfoField.stringValue = @"";
+	self.typeLabel.stringValue = @"";
 }
 
 - (void)redraw {
-	
-	//	self.userGeneratedIdField.frame =	CGRectMake( 8, 10, self.frame.size.width - 16, 40 );
-	//	self.vmpModifierField.frame =	 	CGRectMake( 8, 50, self.frame.size.width - 16, 16 );
-	
-	//	self.dataInfoField.frame =	 		CGRectMake( 8, 65, self.frame.size.width - 16, MAX( self.frame.size.height - 70 - 70, 0 ) );
-	
+	if ( ! self.data ) return;
 	if ( [self.data isKindOfClass:[VMFragment class]] ) {
 		VMFragment *c = (VMFragment*)self.data;
 		self.userGeneratedIdField.stringValue 	= c.userGeneratedId;
 		self.vmpModifierField.stringValue		= c.VMPModifier ? c.VMPModifier : @"";
-		self.userGeneratedIdField.editable
-		= self.userGeneratedIdField.bezeled
-		= self.userGeneratedIdField.drawsBackground
-		= ( !c || c.VMPModifier.length == 0 );
+		self.userGeneratedIdField.bezeled		= YES;
+		self.userGeneratedIdField.drawsBackground
+			= self.userGeneratedIdField.editable
+			= ( !c || c.VMPModifier.length == 0 );
 		self.userGeneratedIdField.hidden		= NO;
+		self.userGeneratedIdField.textColor =  ( !c || c.VMPModifier.length == 0 ) ? [NSColor controlTextColor] : [NSColor disabledControlTextColor];
 	} else {
 		self.userGeneratedIdField.stringValue 	= self.data.id ? self.data.id : @"";
 		self.vmpModifierField.stringValue 		= @"";
@@ -588,16 +585,9 @@
 		self.userGeneratedIdField.hidden		= (!self.data.id);
 	}
 	
-	self.dataInfoField.stringValue = @"";
-	
-	if ( [self.data isKindOfClass:[VMSelector class] ] ) {
-		VMSelector *s = (VMSelector*)self.data;
-		self.dataInfoField.stringValue = [NSString stringWithFormat:@"counter: %ld\n",
-										  s.counter
-										  ];
-		
-	}
-	
+	self.typeLabel.stringValue = [VMPreprocessor shortTypeStringForType:self.data.type];
+	self.typeLabel.backgroundColor = self.backgroundColor = [NSColor colorForDataType:self.data.type];
+	self.needsDisplay = YES;
 }
 
 #pragma mark object info delegate

@@ -56,7 +56,7 @@ static const BOOL kUseNotification = NO;
 //  osx
 // 
 //-------------------------------------------------------------
-#define VMP_DESKTOP 1
+#define VMP_EDITOR 1
 #define VMP_OSX 1
 #define VMP_LOGGING 1
 static const float kTimerInterval = 0.005;			//  1/2000 sec interruption for audio

@@ -413,7 +413,8 @@ typedef enum {
 @property	(VMNonatomic assign)	VMId		*variantId;
 @property	(VMNonatomic assign)	VMId		*VMPModifier;
 //	util
-- (NSString*)userGeneratedId;
+- (VMId*)userGeneratedId;
+- (VMId*)fileIdPart;
 //- (VMFragment*)resolve;
 @end
 

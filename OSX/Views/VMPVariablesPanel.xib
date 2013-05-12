@@ -50,7 +50,6 @@
 				<string key="NSWindowClass">NSPanel</string>
 				<nil key="NSViewClass"/>
 				<nil key="NSUserInterfaceItemIdentifier"/>
-				<string key="NSWindowContentMaxSize">{250, 40000}</string>
 				<string key="NSWindowContentMinSize">{250, 200}</string>
 				<object class="NSView" key="NSWindowView" id="972634788">
 					<reference key="NSNextResponder"/>
@@ -113,7 +112,7 @@
 											<string key="NSFrameSize">{252, 313}</string>
 											<reference key="NSSuperview" ref="933140722"/>
 											<reference key="NSWindow"/>
-											<reference key="NSNextKeyView" ref="853460276"/>
+											<reference key="NSNextKeyView" ref="397608157"/>
 											<string key="NSReuseIdentifierKey">_NS:13</string>
 											<bool key="NSEnabled">YES</bool>
 											<bool key="NSAllowsLogicalLayoutDirection">NO</bool>
@@ -288,7 +287,7 @@
 							<string key="NSFrame">{{0, 67}, {250, 313}}</string>
 							<reference key="NSSuperview" ref="972634788"/>
 							<reference key="NSWindow"/>
-							<reference key="NSNextKeyView" ref="397608157"/>
+							<reference key="NSNextKeyView" ref="933140722"/>
 							<string key="NSReuseIdentifierKey">_NS:9</string>
 							<int key="NSsFlags">150160</int>
 							<reference key="NSVScroller" ref="853460276"/>
@@ -342,7 +341,6 @@
 											<string key="NSFrame">{{18, 4}, {219, 17}}</string>
 											<reference key="NSSuperview" ref="822498917"/>
 											<reference key="NSWindow"/>
-											<reference key="NSNextKeyView"/>
 											<string key="NSReuseIdentifierKey">_NS:9</string>
 											<bool key="NSEnabled">YES</bool>
 											<object class="NSTextFieldCell" key="NSCell" id="1051921890">
@@ -398,8 +396,9 @@
 				</object>
 				<string key="NSScreenRect">{{0, 0}, {1366, 746}}</string>
 				<string key="NSMinSize">{250, 216}</string>
-				<string key="NSMaxSize">{250, 40016}</string>
+				<string key="NSMaxSize">{10000000000000, 10000000000000}</string>
 				<string key="NSFrameAutosaveName">VMPVariablePanelAutoSave</string>
+				<int key="NSWindowCollectionBehavior">260</int>
 				<bool key="NSWindowIsRestorable">YES</bool>
 			</object>
 		</array>
@@ -645,7 +644,7 @@
 				<string key="18.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="19.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="3.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<boolean value="YES" key="3.NSWindowTemplate.visibleAtLaunch"/>
+				<boolean value="NO" key="3.NSWindowTemplate.visibleAtLaunch"/>
 				<string key="4.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="5.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="6.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>

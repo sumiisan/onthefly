@@ -45,6 +45,6 @@
 @property (nonatomic, assign) VMData *data;
 @property (assign) IBOutlet NSTextField *userGeneratedIdField;
 @property (assign) IBOutlet NSTextField *vmpModifierField;
-@property (assign) IBOutlet NSTextField *dataInfoField;
+@property (assign) IBOutlet NSTextField *typeLabel;
 @end
 

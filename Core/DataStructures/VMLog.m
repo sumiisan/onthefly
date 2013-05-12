@@ -10,7 +10,7 @@
 #import "VMPMacros.h"
 #import "VMException.h"
 #import "VMPreprocessor.h"
-#if VMP_DESKTOP
+#if VMP_EDITOR
 #import "VMPlayerOSXDelegate.h"
 #endif
 /*---------------------------------------------------------------------------------

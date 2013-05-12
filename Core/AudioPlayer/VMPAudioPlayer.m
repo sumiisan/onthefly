@@ -272,34 +272,6 @@ static VMHash *processPhaseNames__ = nil;
 	 packetIndex, 
 	 &numPackets,
 	 inBuffer->mAudioData );
-	
-	/*
-	if ( ! logDone ) {
-		char c[5];
-		UInt32 *f = (UInt32*)c;
-		*f = dataFormat.mFormatID;	//	hmm reversed byte order :/
-		c[4] = 0;
-			
-		NSLog(@"%@ \nSR:%f, <%s> flags:%x \nbytes/packet:%d frames/packet:%d \nbytes/frame:%d ch/frame:%d bits/ch:%d"
-			  "\noffs:%lld, variableFramesInPacket:%d byteSize:%d",
-			  fragId,
-			  dataFormat.mSampleRate,
-			  c,
-			  dataFormat.mFormatFlags,
-			  dataFormat.mBytesPerPacket,
-			  dataFormat.mFramesPerPacket,
-			  dataFormat.mBytesPerFrame,
-			  dataFormat.mChannelsPerFrame,
-			  dataFormat.mBitsPerChannel,
-			  packetDescs->mStartOffset,
-			  packetDescs->mVariableFramesInPacket,
-			  packetDescs->mDataByteSize
-			  );
-		
-		logDone = 1;
-	}
-	*/
-	
 
     if (numPackets > 0)	{
         // - End Of File has not been reached yet since we read some packets, so enqueue the buffer we just read into
@@ -328,8 +300,11 @@ static VMHash *processPhaseNames__ = nil;
     processPhase = pp_locked;
     
 	UInt32 preparedFrames;
-    int primeFrames = 0x200;
-    /*OSErr status =*/ AudioQueuePrime( queue, primeFrames, &preparedFrames );    
+    UInt32 primeFrames = 0x200;
+	
+	OSErr status = AudioQueuePrime( queue, primeFrames, &preparedFrames );
+	if( status )
+		NSLog(@"AudioQueuePrime Error:%d",status);
     processPhase = pp_prime;
 }
 
@@ -361,7 +336,7 @@ static VMHash *processPhaseNames__ = nil;
             break;
             
         case pp_waitCue:        //  waiting for the start time 
-            //  firing is handled by songplayer 
+            //  firing is handled by the songplayer 
 /*            if ( self.currentTime >= 0 && self.currentTime < 1 )
                                                     [self playWithVolume:-1];
 */            break;
@@ -371,7 +346,6 @@ static VMHash *processPhaseNames__ = nil;
     }
 	
 	if( self.currentTime > fileDuration -0.2 )      AudioQueueStop(queue, NO );	// <- makes more noise?!
-	
 	if( self.currentTime > fileDuration +1.0 )      [self stop];
 }	
 

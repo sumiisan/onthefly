@@ -300,7 +300,7 @@ VMFloat limitedSNDRand(VMFloat min, VMFloat max) {
 		index 
 		= [array_ indexOfObjectPassingTest:
 		   ^BOOL(id obj, NSUInteger idx, BOOL *stop) {
-			   if( [obj class] == valClass && Pittari( (NSString*)obj,(NSString *)val )) {
+			   if( [obj isKindOfClass:[NSString class]] && [(NSString*)obj isEqualToString:(NSString *)val ] ) {
 				   *stop = YES;
 				   return YES;
 			   };

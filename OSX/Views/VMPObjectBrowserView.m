@@ -14,6 +14,7 @@
 #import "VMPGraph.h"
 #import "KeyCodes.h"
 #import "VMPNotification.h"
+#import "VMPCodeEditorView.h"
 
 
 #define FormString NSString stringWithFormat:
@@ -113,10 +114,8 @@ static VMPObjectCell		*genericCell = nil;
 static VMPObjectCell		*typeColumnCell = nil;
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
-	self = [super initWithCoder:aDecoder];
-	// seems not using this initializer..
-	assert(0);		//	designated initializer if initWithFrame.
-	return self;
+	assert(0);		//	designated initializer is initWithFrame.
+	return nil;
 }
 
 - (id)initWithFrame:(CGRect)frame {
@@ -132,6 +131,7 @@ static VMPObjectCell		*typeColumnCell = nil;
 		typeColumnCell.drawsBackground		= YES;
 		typeColumnCell.lineBreakMode		= NSLineBreakByClipping;
 		genericCell.font = [NSFont systemFontOfSize:11];
+		
 		
 		[VMPNotificationCenter addObserver:self
 								  selector:@selector(doubleClickOnFragment:)
@@ -198,6 +198,7 @@ static VMPObjectCell		*typeColumnCell = nil;
 
 - (void)setSongData:(VMHash *)inSongData {
 	_songData = inSongData;	//	weak ref
+	self.window.title = DEFAULTSONG.songName ? DEFAULTSONG.songName : @"Untitled";
 	[self reloadData:self];
 }
 
@@ -624,7 +625,7 @@ static VMPObjectCell		*typeColumnCell = nil;
 		case vmObjectType_selector: {
 			MakeVarByCast(d, data, VMSelector)
 			return [FormString
-					@"%ldcue%@%@",
+					@"%ldfragment%@%@",
 					d.length,
 					(d.length > 1 ? @"s" : @""),
 					(d.instructionList 
@@ -636,7 +637,7 @@ static VMPObjectCell		*typeColumnCell = nil;
 		case vmObjectType_sequence: {
 			MakeVarByCast(d, data, VMSequence)
 			return [FormString
-					@"%ldcue%@%@",
+					@"%ldfragment%@%@",
 					d.length,
 					(d.length > 1 ? @"s" : @""),
 					(d.instructionList 
@@ -710,7 +711,7 @@ static VMPObjectCell		*typeColumnCell = nil;
 			if ( ClassMatch(item, VMId) )
 				return item;
 			if ( ClassMatch(item, VMReference))
-				return @"";
+				return [NSString stringWithFormat:@"->%@", ((VMReference*)item).referenceId];
 			if ( ClassMatch(item, VMData ) )
 				return ((VMData*)item).id;
 			break;
@@ -780,18 +781,43 @@ static VMPObjectCell		*typeColumnCell = nil;
 #pragma mark -
 #pragma mark click action
 
+/*---------------------------------------------------------------------------------
+ 
+ selectRow - internally set the row selected and update editors accordingly.
+ 
+ ----------------------------------------------------------------------------------*/
 
 
 - (void)selectRow:(VMInt)row {
 	VMData *d = [self dataOfRow:row];
 	if (d) {
-		if ( [self.lastSelectedId isEqualToString:d.id] ) return;	//	don't select twice.
+		//
+		// row with VMData was selected.
+		//
+		if ( [self.lastSelectedId isEqualToString:d.id] )
+			return;	//	don't select twice.
+		
+		//
+		//	memory and notify selected id.
+		//
         self.lastSelectedId = d.id;
-		[self.graphDelegate drawGraphWith:d];
-		[self.infoDelegate drawInfoWith:d];
+		//	notify
 		if( d.id )	//	chances may not have id
 			[VMPNotificationCenter postNotificationName:VMPNotificationFragmentSelected object:self userInfo:@{@"id":d.id}];
+		
+		//
+		//	update editors
+		//
+		[self.graphDelegate drawGraphWith:((d.type != vmObjectType_chance)
+										   ? d
+										   : [DEFAULTSONG data:((VMChance*)d).targetId] )];
+		[self.infoDelegate drawInfoWith:d];
+		
+		
 	} else {
+		//
+		// row with NSTreeNode was selected. 
+		//
 		id item = [self.objectTreeView itemAtRow:row];
 		if ( ClassMatch( item, VMString ) )
 			self.lastSelectedId = item;
@@ -801,12 +827,12 @@ static VMPObjectCell		*typeColumnCell = nil;
 
 - (IBAction)clickOnRow:(id)sender {
 	[self selectRow:self.objectTreeView.clickedRow];
+	/*	if (d)
 	VMData *d = [self dataOfRow:self.objectTreeView.clickedRow];
 
-	if (d)
 	[VMPNotificationCenter postNotificationName:VMPNotificationFragmentSelected
 										 object:self
-									   userInfo:@{@"id":d.id} ];
+									   userInfo:@{@"id":d.id} ];*/
 }
 
 - (IBAction)doubleClickOnRow:(id)sender {
@@ -836,12 +862,19 @@ static VMPObjectCell		*typeColumnCell = nil;
 	return nil;
 }
 
+- (IBAction)songPlay:(id)sender {
+	if (sender != self)
+		NSLog(@"just wanted to know");
+	VMData *d = [DEFAULTSONG data:self.lastSelectedId];
+	if ( d.type == vmObjectType_sequence || d.type == vmObjectType_selector || d.type == vmObjectType_audioFragment ) {
+		[DEFAULTSONGPLAYER startWithFragmentId:self.lastSelectedId];
+	}
+
+}
+
 - (BOOL)outlineView:(NSOutlineView *)outlineView shouldTypeSelectForEvent:(NSEvent *)event withCurrentSearchString:(NSString *)searchString {
 	if ( event.type == NSKeyDown && event.keyCode == kVK_Space ) {
-		VMData *d = [DEFAULTSONG data:self.lastSelectedId];
-		if ( d.type == vmObjectType_sequence || d.type == vmObjectType_selector || d.type == vmObjectType_audioFragment ) {
-			[DEFAULTSONGPLAYER startWithFragmentId:self.lastSelectedId];
-		}
+		[self songPlay:self];
 		return NO;
 	}
 	

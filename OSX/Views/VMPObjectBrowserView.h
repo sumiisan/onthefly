@@ -6,9 +6,9 @@
 //  Copyright (c) 2013 __MyCompanyName__. All rights reserved.
 //
 
-#import "VMPrimitives.h"
-#import "VMDataTypes.h"
 #import "VMPAnalyzer.h"
+
+@class VMPCodeEditorView;
 
 //--------------------- custom field editor -----------------------------
 @interface VMPFieldEditor : NSTextView
@@ -41,6 +41,15 @@
 - (void)drawInfoWith:(VMData*)data;
 @end
 
+/*---------------------------------------------------------------------------------
+ *
+ *
+ *	VMP Object Browser View:
+ *
+ *	it's actually the view controller for editors inside.
+ *
+ *---------------------------------------------------------------------------------*/
+
 @interface VMPObjectBrowserView : NSView
 <NSOutlineViewDelegate, NSOutlineViewDataSource, NSWindowDelegate, VMPAnalyzerDelegate> {
 @private
@@ -51,11 +60,16 @@
 
 - (IBAction)clickOnRow:(id)sender;
 - (IBAction)updateFilter:(id)sender;
+- (IBAction)songPlay:(id)sender;		//	defaults firstResponder
+
 - (void)findObjectById:(VMId*)dataId;
 
-@property (assign) IBOutlet 	VMPOutlineView		*objectTreeView;
-@property (assign) IBOutlet		NSSearchField		*searchField;
-@property (VMNonatomic retain)	NSTreeNode			*objectRoot;
+@property (nonatomic, assign)	IBOutlet VMPOutlineView		*objectTreeView;
+@property (nonatomic, assign)	IBOutlet NSSearchField		*searchField;
+@property (nonatomic, assign)	IBOutlet VMPCodeEditorView	*codeEditorView;
+
+
+@property (nonatomic, retain)	NSTreeNode			*objectRoot;
 
 @property (nonatomic, retain)	NSString			*currentNonCompletedSearchString;
 @property (nonatomic, retain)	NSString			*currentFilterString;
@@ -65,6 +79,10 @@
 @property (nonatomic, assign)	id <VMPObjectBrowserGraphDelegate>	graphDelegate;
 @property (nonatomic, assign)	id <VMPObjectBrowserInfoDelegate>	infoDelegate;
 @property (nonatomic, retain)   VMId				*lastSelectedId;
-@property (nonatomic, retain)	VMPFieldEditor		*fieldEditor;
+@property (nonatomic, retain)	VMPFieldEditor		*fieldEditor;		//	custom field editor for searchField
 
 @end
+
+
+
+

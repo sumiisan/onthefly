@@ -217,7 +217,7 @@ static 	VMHash *bgColorForType__ = nil;
 
 - (id)init {
 	self = [super init];
-#if VMP_DESKTOP
+#if VMP_OSX
 	self.flippedYCoordinate = YES;
 #endif
 	return self;
@@ -225,7 +225,7 @@ static 	VMHash *bgColorForType__ = nil;
 
 - (id)initWithFrame:(NSRect)frameRect {
 	self = [super initWithFrame:frameRect];
-#if VMP_DESKTOP
+#if VMP_OSX
 	self.flippedYCoordinate = YES;
 #endif
 	return self;
@@ -332,16 +332,6 @@ static 	VMHash *bgColorForType__ = nil;
 	((VMPGraph*)g).graphDelegate = self.graphDelegate;
 	return g;
 }
-
-/*
-- (id)initWithCoder:(NSCoder *)aDecoder {
-	self = [super initWithCoder:aDecoder];
-#if VMP_DESKTOP
-	self.flippedYCoordinate = YES;
-#endif
-	return self;
-}
-*/
 
 //	NSCoding
 
