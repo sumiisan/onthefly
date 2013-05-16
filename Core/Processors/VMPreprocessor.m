@@ -104,11 +104,6 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 
 @implementation VMPreprocessor
 @synthesize song=song_;
-
-#pragma mark -
-#pragma mark *** utilities and misc ***
-#pragma mark -
-
 #pragma mark singleton
 
 + (VMPreprocessor*)defaultPreprocessor {
@@ -116,6 +111,11 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 	return vmpp__singleton__;
 }
 
+#pragma mark -
+#pragma mark *** utilities and misc ***
+
+
+#pragma mark -
 #pragma mark type
 
 + (Class)classForType:(vmObjectType)inType {
@@ -358,7 +358,7 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 			] retain];
 	}
 	
-	if ( Pittari( [fragmentId substringToIndex:1], @"#" ) )	//	can not complete #
+	if ( [fragmentId hasPrefix: @"#"] )	//	can not complete #
 		[VMException raise:@"Can't purify abbreviated id." format:@"id: %@",fragmentId];
 	
 	NSScanner *sc = [NSScanner scannerWithString:fragmentId];
@@ -385,13 +385,20 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 	VMFragment *parent = ARInstance(VMFragment);
 	parent.id = parentId;
 	
-	if ( ! data.partId     ) 
+	NSArray *arr = [[data fileIdPart] componentsSeparatedByString:@"_"];
+	VMId *pid = [arr objectAtIndex:0];
+	VMId *sid = arr.count > 1 ? [arr objectAtIndex:1] : nil;
+	VMId *tid = ( arr.count > 2 )
+	? [[arr subarrayWithRange:NSMakeRange(2, arr.count-2)] componentsJoinedByString:@"_"]
+	: nil;
+	
+	if ( pid.length == 0 )
 		data.partId 	= parent.partId;
 	
-	if ( ! data.sectionId  ) 
+	if ( sid.length == 0 )
 		data.sectionId	= parent.sectionId;
 	
-	if ( [ data.trackId hasPrefix:@"_" ] ) 
+	if ( [ tid hasPrefix:@"_" ] )
 		data.trackId = [parent.trackId stringByAppendingString:( data.trackId.length > 1 ? data.trackId : @"" ) ];
 	
 	return scoreDescriptor ? [data.id stringByAppendingFormat:@"=%@", scoreDescriptor] : data.id;
@@ -437,8 +444,60 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 
 #pragma mark -
 #pragma mark *** the variable music preprocessor ***
-#pragma mark -
 
+
+/**-------------------------------------------------------------------------
+ 
+ @brief		pre-processing  vms data
+ 
+ @return	YES on success, NO if failed.
+ 
+ -------------------------------------------------------------------------*/
+#pragma mark -
+#pragma mark ---> preprocess entry <---
+
+- (BOOL)preprocess:(NSString*)vmsText error:(NSError **)outError {
+	DEFAULTEVALUATOR.shouldNotify = NO;
+
+	MakeTimestamp(begin_preprocess);
+	//
+	//	(1.00)	format text-file and make json
+	//
+	VMHash	*vmsHash = [self preprocessPhase1:vmsText error:outError];
+	if ( !vmsHash ) return NO;
+	
+	VMArray *dataArray = [VMArray arrayWithArray: [vmsHash item:@"data"]];
+	
+	//
+	//	(2.00)	pre-process hash
+	//
+	[self preprocessPhase2:dataArray];
+	//
+	//	(2.90)	scan song properties
+	//
+	[song_ setByHash:vmsHash];
+	
+	[self preprocessPhase3:dataArray];
+	
+	//	(4.30)	set audioInfoRef in audioFragment-s
+	[self preprocessPhase4];
+	
+	DEFAULTEVALUATOR.shouldNotify = YES;
+	
+#if VMP_EDITOR
+	//[self dataDump];
+	if ([APPDELEGATE.systemLog count] > 0) {
+		if ( fatalErrors > 0 ) {
+			[VMException alert:@"Preprocoessor: error while preprocessing. see system log for details."];
+		}
+	}
+#endif
+	MakeTimestamp(end_preprocess);
+	LogTimeBetweenTimestamps(begin_preprocess, end_preprocess);
+	return YES;
+}
+
+#pragma mark -
 #pragma mark preprocessor utils
 /*
  preprocessor utils
@@ -588,50 +647,6 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 	}
 	NSLog( @"\n%@", [lines join:@",\n"] );
 	[lines release];	
-}
-
-/**-------------------------------------------------------------------------
- 
- @brief		pre-processing  vms data
- 
- @return	YES on success, NO if failed. 
- 
- -------------------------------------------------------------------------*/
-#pragma mark -
-#pragma mark ---> preprocess entry <---
-
-- (BOOL)preprocess:(NSString*)vmsText error:(NSError **)outError {
-	//
-	//	(1.00)	format text-file and make json
-	//
-	VMHash	*vmsHash = [self preprocessPhase1:vmsText error:outError];
-	if ( !vmsHash ) return NO;
-	
-	VMArray *dataArray = [VMArray arrayWithArray: [vmsHash item:@"data"]];
-	
-	//
-	//	(2.00)	pre-process hash 
-	//
-	[self preprocessPhase2:dataArray];
-	//
-	//	(2.90)	scan song properties
-	//
-	[song_ setByHash:vmsHash];
-	
-	[self preprocessPhase3:dataArray];
-	
-	//	(4.30)	set audioInfoRef in audioFragment-s
-	[self preprocessPhase4];
-	
-#if VMP_EDITOR
-	//[self dataDump];	
-	if ([APPDELEGATE.systemLog count] > 0) {
-		if ( fatalErrors > 0 ) {
-			[VMException alert:@"Preprocoessor: error while preprocessing. see system log for details."];
-		}
-	}
-#endif
-	return YES;
 }
 
 #pragma mark -
@@ -828,7 +843,7 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
     VMId *objId = HashItem(id);
 	
     if ( ! objId ) {			//	autogenerate id for unnamed objects
-		if ( Pittari( HashItem(fileId), @"space" ) ) 
+		if ( [HashItem(fileId) isEqualToString:@"space"] )
 			objId = [NSString stringWithFormat:@"%@_%@%ld", parentId, @"SPC", 									(position+1)];
 		else
 			objId = [NSString stringWithFormat:@"%@_%@%ld", parentId, [shortTypeStringForType item:VMIntObj(type)], (position+1)];
@@ -923,9 +938,6 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 	
 	VMId *objId = HashItem(id);
 	
-/*	if ( Pittari(objId, @"a_14_~F;sel") )
-		NSLog(@"dd");
-*/	
 	if (HashItem(frag)) {
 		if( type==vmObjectType_selector && HashItem(subseq) ) {//	if a selector has subseq data, distribute them into sub-fragments
 			if( ! Pittari( HashItem(subseq),@"*" )) CopyHashItem(subseq, hash, parentDataToCopy);
@@ -1068,10 +1080,10 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 		if(sel) [self convertFragmentsToChances:sel];	
 				
 		//
-		//	(3.90)	register entrypoints
+		//	(3.90)	register entrypoints		//	the term 'entryPoint' is nearly obsolete. possibly removed in future.
 		//
 		VMString *entryPoint = HashItem(entryPoint);
-		if( Pittari(entryPoint,@"YES" )) {
+		if( [entryPoint isEqualToString:@"YES"] ) {
 			VMFragment *c = ClassCastIfMatch( data, VMFragment );
 			if( c ) { 
 				[self registerEntryPoint:c];
@@ -1113,7 +1125,7 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 		}
 	}
 	
-	if ( ! ( HashItem(dur) || HashItem(ofs) || HashItem(volume) || HashItem(fileId))  ) return nil;
+	if ( ! hash || ! ( HashItem(dur) || HashItem(ofs) || HashItem(volume) || HashItem(fileId))  ) return nil;
 	
 	VMId *aiId = Default( HashItem(audioInfoId),
 						 [VMPP idWithVMPModifier:[c userGeneratedId] tag:@"audioInfo" info:nil]);
@@ -1162,7 +1174,10 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 		if(! fragIdsToConvert ) return;
 		
 		for ( id idObj in fragIdsToConvert ) {
-			VMFragment 		*frag 	= [self data:ReadAsVMId(idObj)];
+			VMFragment			*frag 	= [self data:ReadAsVMId(idObj)];
+			
+			if( [frag.id isEqualToString:@"x3_t003_SEL1"] )
+				NSLog(@"debug!");
 			VMAudioFragment 	*ac		= ClassCastIfMatch(frag, VMAudioFragment);
 			if( ! ac ) {
 				//	check if it is compatible
@@ -1181,7 +1196,7 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 			}
 			ac.audioInfoId = aiId;	//	we use the same audioInfoId for all frags in sequence.	when overvrite, we must make a copy of them.
 			[self registerData:ac];
-			if ( Pittari( (*data_p).id, frag.id ) ) data_p = &frag;	//	replace data with audioFragment
+			if ( [(*data_p).id isEqualToString:frag.id] ) data_p = &frag;	//	replace data with audioFragment
 		}
 	}
 }
@@ -1280,7 +1295,7 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 		[chance setWithData:ReadAsVMId(obj)];
 		
 		VMId *fragId 	= chance.targetId;		
-		if ( Pittari(fragId, originalId) ) {
+		if ( [fragId isEqualToString:originalId] ) {
 			[sel.fragments deleteItemWithValue:fragId];	//	remove from selector
 			fragId = wrappedId;						//	change original's id
 			needToAddMyself = NO;
@@ -1402,7 +1417,7 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 	
 	VMArray *keys = [song_.songData keys];
 	for ( VMId *did in keys ) {
-		if ( Pittari( [did substringToIndex:4], @"VMP|" )) continue;	//	no VMData
+		if ( [[did substringToIndex:4] isEqualToString: @"VMP|"] ) continue;	//	no VMData
 		VMData *c = [self data:did];
 		
 		//	(4.30)	set audioInfoRef in audioFragment-s

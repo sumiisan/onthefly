@@ -136,7 +136,7 @@ typedef enum {
 @class VMHash;
 
 @interface VMArray : VMArrayBase <NSCoding, NSCopying, NSFastEnumeration, VMBasicArray> {
-@protected
+@public
 	NSMutableArray *array_;
 }
 @property (readonly) NSMutableArray *array;
@@ -214,7 +214,7 @@ typedef enum {
 
 
 @interface VMHash : VMArrayBase<NSCoding,NSCopying> {
-@private
+@public
 	NSMutableDictionary *hash_;
 }
 @property (readonly) NSDictionary *hash;

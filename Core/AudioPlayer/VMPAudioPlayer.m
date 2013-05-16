@@ -20,7 +20,7 @@ static void BufferCallback(void *inUserData, AudioQueueRef inAQ, AudioQueueBuffe
 @synthesize fragId;
 @synthesize playerId;
 @synthesize fragDuration, fileDuration, offset;
-static VMHash *processPhaseNames__ = nil;
+static VMHash *processPhaseNames_static_ = nil;
 
 #pragma mark -
 #pragma mark accessor
@@ -52,8 +52,8 @@ static VMHash *processPhaseNames__ = nil;
 
 - (void)initInternal {
     processPhase = pp_idle;
-	if (! processPhaseNames__) {
-		processPhaseNames__ = [[VMHash hashWithObjectsAndKeys:
+	if (! processPhaseNames_static_) {
+		processPhaseNames_static_ = [[VMHash hashWithObjectsAndKeys:
 								processPhaseEntry( idle )
 								processPhaseEntry( warmUp )
 								processPhaseEntry( fileOpened )
@@ -185,8 +185,11 @@ static VMHash *processPhaseNames__ = nil;
 	}
 	
 	// try to open up the file using the specified path
-	if (noErr != AudioFileOpenURL((CFURLRef)[NSURL fileURLWithPath:path], 0x01, kAudioFileCAFType, &audioFile)) {
-		[VMException raise:@"Failed to open audio file." format:@"Audio file at path:%@", path];
+	NSURL		*url = [NSURL URLWithString:path];
+	OSStatus	status;
+	status =	AudioFileOpenURL( (CFURLRef)url, 0x01, 0, &audioFile );
+	if ( noErr != status ) {
+		[VMException alert:@"Failed to open audio file." format:@"Audio file at path %@ status=%d", url, status];
 	}
 	
 	// get the data format of the file
@@ -400,7 +403,7 @@ static void BufferCallback(void *inUserData, AudioQueueRef inAQ, AudioQueueBuffe
 			@"AP<%d> time:%.2f phase:%@ dur(frag:%.2f file:%.2f)", 
 			playerId, 
 			self.currentTime,
-			[processPhaseNames__ item:VMIntObj( processPhase )],
+			[processPhaseNames_static_ item:VMIntObj( processPhase )],
 			fragDuration,
 			fileDuration
 			];

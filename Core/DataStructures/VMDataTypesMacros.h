@@ -3,7 +3,7 @@
 //  OnTheFly
 //
 //  Created by  on 13/02/08.
-//  Copyright (c) 2013 __MyCompanyName__. All rights reserved.
+//  Copyright (c) 2013 sumiisan. All rights reserved.
 //
 
 #ifndef OnTheFly_VMDataTypesMacro_h
@@ -12,7 +12,7 @@
 #define PropertyDescriptionString(prop,format) \
 (self.prop ? [NSString stringWithFormat:format,self.prop] : @"" )
 
-#define VMOBLIGATORY_init(vmObjectType,vmShouldRegister,__code__) \
+#define VMOBLIGATORY_init(vmObjectType,vmShouldRegister,_code_) \
 - (void)initAttributes {\
 type_				= vmObjectType;\
 shouldRegister_ 	= vmShouldRegister;\
@@ -21,7 +21,7 @@ shouldRegister_ 	= vmShouldRegister;\
 - (id)init {\
 if ((self = [super init])) {\
 [self initAttributes];\
-__code__ \
+_code_ \
 } \
 return self;\
 }
@@ -32,38 +32,38 @@ if ((self=[super init] )) [self setWithProto:proto];\
 return self;\
 }
 
-#define VMOBLIGATORY_setWithProto(__code__) \
+#define VMOBLIGATORY_setWithProto(_code_) \
 - (void)setWithProto:(id)proto {\
 [super setWithProto:proto]; \
-__code__ \
+_code_ \
 }
 
-#define VMOBLIGATORY_setWithData(__code__) \
+#define VMOBLIGATORY_setWithData(_code_) \
 - (void)setWithData:(id)data {\
 if ( ClassMatch(data, [self class])) [self setWithProto:data]; \
 else {\
 [super setWithData:data];\
-__code__\
+_code_\
 }\
 }
 
-#define VMObligatory_resolveUntilType(__code__) \
+#define VMObligatory_resolveUntilType(_code_) \
 -(id)resolveUntilType:(int)mask {\
 ReturnValueIfNotNil( [self matchMask:mask] );\
-__code__ \
+_code_ \
 return nil; \
 }
 
-#define VMObligatory_encodeWithCoder(__code__) \
+#define VMObligatory_encodeWithCoder(_code_) \
 - (void)encodeWithCoder:(NSCoder *)encoder { \
-__code__ \
+_code_ \
 }
 
-#define VMObligatory_initWithCoder(__code__) \
+#define VMObligatory_initWithCoder(_code_) \
 - (id)initWithCoder:(NSCoder *)decoder { \
 if ((self = [super init])) {\
 [self initAttributes];\
-__code__ \
+_code_ \
 } \
 return self;\
 }

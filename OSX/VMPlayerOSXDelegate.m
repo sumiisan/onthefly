@@ -6,6 +6,9 @@
 //  Copyright 2012 sumiisan (aframasda.com). All rights reserved.
 //
 
+#define TEST
+
+
 #import "VMPlayerOSXDelegate.h"
 #import "VMPAudioPlayer.h"
 #import "VMPAnalyzer.h"
@@ -13,8 +16,10 @@
 #import "VMPUserDefaults.h"
 #import "VMException.h"
 #import "VMPCodeEditorView.h"
-
-VMPlayerOSXDelegate *OnTheFly_singleton__ = nil;
+#ifdef TEST
+#import "VMPTest.h"
+#endif
+VMPlayerOSXDelegate *OnTheFly_singleton_static_ = nil;
 
 #pragma mark VMPlayer OSX Delegate
 
@@ -36,22 +41,27 @@ VMPlayerOSXDelegate *OnTheFly_singleton__ = nil;
  */
 
 + (VMPlayerOSXDelegate*)singleton {
-	return OnTheFly_singleton__;
+	return OnTheFly_singleton_static_;
 }
 
 - (id)init {
 	self = [super init];
 	if(! self )return nil;
     
-    OnTheFly_singleton__ = self;
+    OnTheFly_singleton_static_ = self;
 	self.systemLog	= [[[VMLog alloc] initWithOwner:VMLogOwner_System managedObjectContext:nil] autorelease];
 	self.userLog	= [[[VMLog alloc] initWithOwner:VMLogOwner_User managedObjectContext:[self managedObjectContext]] autorelease];
 	
-	self.currentDocumentURL = [[[NSURL alloc] initFileURLWithPath:[NSString stringWithFormat:@"%@/%@/%@",
+	NSString *urlString = [[NSUserDefaults standardUserDefaults] stringForKey:VMPUserDefaultsKey_LastDocumentURL];
+	if ( urlString )
+		self.currentDocumentURL = [[[NSURL alloc] initFileURLWithPath:urlString] autorelease];
+	
+	/*[[[NSURL alloc] initFileURLWithPath:[NSString stringWithFormat:@"%@/%@/%@",
 																   [[NSBundle mainBundle] resourcePath],
 																   kDefaultVMDirectory,
 																   kDefaultVMSFileName]
 													  isDirectory:NO] autorelease];
+	 */
 	return self;
 }
 
@@ -237,8 +247,39 @@ VMPlayerOSXDelegate *OnTheFly_singleton__ = nil;
 	[VMException alert:@"Not implemented yet!"];
 }
 
+
+- (IBAction)closeDocument:(id)sender {
+	//	TODO: check for unsaved changes
+	[DEFAULTSONG clear];
+}
+
 - (IBAction)openDocument:(id)sender {
-	[VMException alert:@"Not implemented yet!"];
+	[self closeDocument:self];
+	
+	//	TODO: we might use a document controller to populate 'recent files' menu.
+//	NSDocumentController *dc = [NSDocumentController sharedDocumentController];
+	
+	
+	NSOpenPanel *op = [NSOpenPanel openPanel];
+	op.canChooseFiles = YES;
+	op.canCreateDirectories = NO;
+	op.canChooseDirectories = YES;
+	op.allowsMultipleSelection = NO;
+	op.allowedFileTypes = [NSArray arrayWithObject:@"vms"];
+	
+	if( [op runModal] == NSOKButton ) {
+		NSURL *url = [op.URLs objectAtIndex:0];
+		
+		NSError *err = [self openVMSDocumentFromURL:url];
+		if( !err ) {
+			DEFAULTSONGPLAYER.song = DEFAULTSONG;
+			[self.editorViewController.objectTreeView reloadData];
+			[DEFAULTANALYZER.statisticsView.reportView reloadData];
+			
+			self.currentDocumentURL = url;
+			[[NSUserDefaults standardUserDefaults] setValue:[url path] forKey:VMPUserDefaultsKey_LastDocumentURL];
+		}
+	}
 }
 
 #pragma mark -
@@ -281,8 +322,12 @@ VMPlayerOSXDelegate *OnTheFly_singleton__ = nil;
 //
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
+#ifdef TEST
+	[VMPTest test];
+#endif
     // Startup!
-	[self revertDocument:self];	//	load
+	if ( self.currentDocumentURL )
+		[self revertDocument:self];	//	load
 	//
 	[DEFAULTSONGPLAYER warmUp];
 	[_editorViewController applicationDidLaunch];
@@ -375,19 +420,27 @@ VMPlayerOSXDelegate *OnTheFly_singleton__ = nil;
 #pragma mark menu validation
 
 - (BOOL)validateMenuItem:(NSMenuItem *)menuItem {
+	SEL action = menuItem.action;
 	
-	if ( menuItem.action == @selector(showWindow:)) {
+	if ( action == @selector(showWindow:)) {
 		if ( [menuItem.title isEqualToString:@"Statistics"] ) {
 			if ( ! DEFAULTANALYZER.report ) return NO;
 		}
 	}
 	
-	if (menuItem.action == @selector(addUserLog:)) {
+	if ( action == @selector(addUserLog:)) {
 		if ( self.lastSelectedDataId.length == 0 ) return NO;
 	}
 	
-	if (menuItem.action == @selector(reloadDataFromEditor:)) {
+	if ( action == @selector(reloadDataFromEditor:)) {
+		if ( ! self.currentDocumentURL ) return NO;
 		if ( self.editorViewController.codeEditorView.textView.string.length == 0 ) return NO;
+	}
+	
+	if ( action == @selector(saveDocument:)
+		|| action == @selector(saveDocumentAs:)
+		|| action == @selector(revertDocument:) ) {
+		return ( self.currentDocumentURL != nil );
 	}
 	
 	//	the default

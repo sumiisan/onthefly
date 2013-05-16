@@ -51,8 +51,16 @@
 	__weak		VMHash	*_songData;
 }
 
-- (IBAction)clickOnRow:(id)sender;
-- (IBAction)updateFilter:(id)sender;
+
+//	public methods
+- (void)findObjectById:(VMId*)dataId;	//	display object if found. does not make editor window key.
+
+//	data structure
+@property (weak)				VMHash							*songData;
+
+//	current item
+@property (nonatomic, retain)   VMId							*lastSelectedId;
+
 
 //	actions below defaults first responder
 - (IBAction)songPlay:(id)sender;
@@ -66,9 +74,11 @@
 - (IBAction)zoomIn:(id)sender;
 - (IBAction)zoomOut:(id)sender;
 
-//	methods
-- (void)findObjectById:(VMId*)dataId;
-- (void)applicationDidLaunch;	//	initial setup after app is launched
+//	used internal
+- (IBAction)clickOnRow:(id)sender;
+- (IBAction)updateFilter:(id)sender;
+- (void)applicationDidLaunch;			//	initial setup after app is launched
+
 
 //	views
 @property (nonatomic, assign)	IBOutlet NSWindow				*editorWindow;
@@ -84,21 +94,7 @@
 @property (nonatomic, assign)	IBOutlet NSPopUpButton			*referrerPopup;
 @property (nonatomic, assign)	IBOutlet NSMenu					*referrerMenu;
 
-//	data structure
-@property (nonatomic, retain)	NSTreeNode						*objectRoot;
-@property (weak)				VMHash							*songData;
-@property (nonatomic, retain)	VMArray							*dataIdList;
-@property (nonatomic, retain)	VMHash							*referrerList;
 
-
-//	current item
-@property (nonatomic, retain)   VMId							*lastSelectedId;
-
-
-//	incremental search
-@property (nonatomic, retain)	VMPFieldEditor					*fieldEditor;		//	custom field editor for searchField
-@property (nonatomic, retain)	NSString						*currentNonCompletedSearchString;
-@property (nonatomic, retain)	NSString						*currentFilterString;
 
 @end
 

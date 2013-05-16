@@ -69,9 +69,11 @@
 
 + (VMPSongPlayer*)defaultPlayer;
 
+//	audio player
 - (int)numberOfAudioPlayers;
+- (VMPAudioPlayer*)audioPlayerForFileId:(VMId*)fileId;
 
-
+//	player control
 - (void)warmUp;
 - (void)coolDown;
 
@@ -87,13 +89,14 @@
 - (void)setFragmentId:(VMId*)fragId fadeOut:(BOOL)fadeFlag restartAfterFadeOut:(BOOL)inRestartAfterFadeOut;
 - (void)setNextFragmentId:(VMId*)fragId;
 
+//	queue
 - (void)flushFiredFragments;	
 - (void)flushUnfiredFragments;
 - (void)flushFinishedFragments;
 - (void)adjustCurrentTimeToQueuedFragment;
 - (VMInt)numberOfUnfiredFragments;
 
-- (void)update;
+- (void)update;	//	force call runloop
 - (BOOL)isRunning;
 
 

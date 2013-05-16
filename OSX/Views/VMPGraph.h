@@ -131,6 +131,10 @@ enum {
 @property (nonatomic, retain)	NSColor					*foregroundColor;	//	unused, subclass may use it
 @property (nonatomic, retain)	VMPGraph				*topOverlay;
 @property (weak)				id <VMPGraphDelegate>	graphDelegate;
+@property (nonatomic, assign)	CGFloat					x;
+@property (nonatomic, assign)	CGFloat					y;
+@property (nonatomic, assign)	CGFloat					width;
+@property (nonatomic, assign)	CGFloat					height;
 
 - (void)redraw;
 - (void)addTopOverlay;

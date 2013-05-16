@@ -9,10 +9,11 @@
 #ifndef OnTheFly_VMPreprocessorMacros_h
 #define OnTheFly_VMPreprocessorMacros_h
 
-//	
+//	primitives
+//#define Default(expr,default) ((expr)?(expr):(default))
+#define Default(expr,default) ({ __typeof__( expr ) tmp_ = (expr); tmp_ ? tmp_ : (default); })
 #define SMAX(A,B)	( (A) < (B) ? (B) : (A) )	// just a simple max function allowing us nesting without warings.
 #define SMIN(A,B)	( (A) > (B) ? (B) : (A) )	// just a simple min function allowing us nesting without warings.
-
 
 //	c language related
 #define until(expression) while(!(expression))
@@ -30,7 +31,7 @@
 
 //	benchmark
 #define MakeTimestamp(name) NSTimeInterval name = [NSDate timeIntervalSinceReferenceDate];
-#define LogTimeBetweenTimestamps(ts1,ts2) NSLog( @"excecution time: %.3fsec", fabs( ts2 - ts1 ));
+#define LogTimeBetweenTimestamps(ts1,ts2) NSLog( @"Time(%@ - %@): %.3fsec", @"" #ts1, @"" #ts2, fabs( ts2 - ts1 ));
 
 
 //	alloc instances
@@ -60,9 +61,6 @@
 #define AsVMFloatObj(x)	[x floatValue]
 #define AsVMBool(x)		[x boolValue]
 
-//	primitive
-#define Default(expr,default) ((expr)?(expr):(default))
-
 //	the 'pittari-ping-pong' (perfect-fit) macro. (macro name invented by my daughter)
 #define Pittari(dynObj,statObj) ((ClassMatch((statObj),VMString))?[((NSString*)(statObj)) isEqualToString:((NSString*)(dynObj))]\
 								:(ClassMatch((statObj),NSNumber)?[((NSNumber*)(statObj)) isEqualToNumber:((NSNumber*)(dynObj))]\
@@ -85,8 +83,14 @@
 
 //	hash macro			 
 #define MakeHashFromData MakeVarByCast(hash,data,VMHash);
-#define ItemInHash(key,hash) [hash item:@"" #key]
-#define SetItemInHash(key,hash,val) [hash setItem:val for:@"" #key]
+
+//#define ItemInHash(key,hash) [hash item:@"" #key]
+//#define SetItemInHash(key,hash,val) [hash setItem:val for:@"" #key]
+
+//	direct access to NSMutableDictionary
+#define ItemInHash(key,hash) [hash->hash_ objectForKey:@"" #key]
+#define SetItemInHash(key,hash,val) [hash->hash_ setObject:val forKey:@"" #key]
+
 #define HashItem(key) ItemInHash(key,hash)
 #define IfHashItemExist(key,__code__) {\
 id HASHITEM=HashItem(key); \
@@ -128,8 +132,10 @@ self.propName=structVal;}
 #define RedirectPropSetterToObject(cls,setterName,prop,obj) \
 - (void)setterName:(cls)value {obj.prop=value;}
 
-//	condition
+//	nil
 #define ReturnValueIfNotNil(value) {id tempValue=(value); if(tempValue) return tempValue;}
+#define NSNullIfNil(obj) (( obj ) ?  obj : [NSNull null] )
+#define NilIfNSNull(obj) (( obj == [NSNull null] ) ? nil : obj )
 
 
 #endif

@@ -49,7 +49,7 @@ typedef enum {
  *---------------------------------------------------------------------------------*/
 
 @interface VMHistoryLog : VMLogItem {
-	CGFloat expandedHeightCache__;
+	CGFloat expandedHeightCache_static_;
 }
 
 @property (nonatomic)									VMInt			index;

@@ -40,19 +40,15 @@
 
 - (void)setTextView:(NSTextView*)inTextView sourceCode:(NSString*)inSourceCode {
 	
+	//	we don't want unnecessary re-coloring
+	if ( textView == inTextView && [textView.string isEqualToString:inSourceCode] ) return;
+	
 	textView = inTextView;		//	try just assign
 	textView.string = inSourceCode;
 	
 	// Set up some sensible defaults for syntax coloring:
 	[[self class] makeSurePrefsAreInited];
 		
-	// Set up our progress indicator:
-	[progress setStyle: NSProgressIndicatorSpinningStyle];	// NIB forgets that :-(
-	[progress setDisplayedWhenStopped:NO];
-	[progress setUsesThreadedAnimation:YES];
-	
-	[status setStringValue: @"Finished."];
-	
 	// Register for "text changed" notifications of our text storage:
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(processEditing:)
 												 name: NSTextStorageDidProcessEditingNotification
@@ -64,13 +60,11 @@
 	// Make sure text isn't wrapped:
 	[self turnOffWrapping];
 	
+	MakeTimestamp(begin_syntax_color);
 	// Do initial syntax coloring of our file:
 	[self recolorCompleteFile:nil];
-	
-	// Make sure we can use "find" if we're on 10.3:
-/*	if( [textView respondsToSelector: @selector(setUsesFindPanel:)] )
-		[textView setUsesFindPanel: YES];
-*/	
+	MakeTimestamp(end_syntax_color);
+	LogTimeBetweenTimestamps(begin_syntax_color, end_syntax_color);
 }
 
 

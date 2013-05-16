@@ -3,7 +3,7 @@
 //  VariableMusicPlayer
 //
 //  Created by  on 13/02/08.
-//  Copyright (c) 2013 __MyCompanyName__. All rights reserved.
+//  Copyright (c) 2013 sumiisan. All rights reserved.
 //
 
 #import "VMDataTypes.h"
@@ -23,8 +23,8 @@
 @implementation VMFunction
 @synthesize functionName=functionName_,parameter=parameter_;
 
-static VMHash 	*ProcessorTable__ = nil;
-static VMArray 	*fragOrderChangingFunctions__ = nil;
+static VMHash 	*ProcessorTable_static_ = nil;
+static VMArray 	*fragOrderChangingFunctions_static_ = nil;
 
 #pragma mark public
 - (id)valueForParameter:(VMString*)parameterName {
@@ -40,7 +40,7 @@ static VMArray 	*fragOrderChangingFunctions__ = nil;
 }
 
 - (id)processWithData:(id)data action:(VMActionType)action {
-	SEL sel = [[ProcessorTable__ item:self.functionName] pointerValue];
+	SEL sel = [[ProcessorTable_static_ item:self.functionName] pointerValue];
 	if (! sel)return nil;
 	if (! [self respondsToSelector:sel] ) 
 		[VMException raise:@"Function processor not found." 
@@ -55,7 +55,7 @@ static VMArray 	*fragOrderChangingFunctions__ = nil;
 }
 
 - (BOOL)doesChangeFragmentsOrder {
-	VMInt p = [fragOrderChangingFunctions__ position:self.functionName];
+	VMInt p = [fragOrderChangingFunctions_static_ position:self.functionName];
 	//NSLog(@"xxx %@ changes frag order:%@", self.functionName, ( p >= 0 ) ? @"YES" : @"NO" );
 	return p >= 0; 
 }
@@ -79,8 +79,8 @@ static VMArray 	*fragOrderChangingFunctions__ = nil;
 #define ProcessorDefinition(proc)		- (id)ProcessorMethod(proc):(id)data action:(NSNumber*)action
 
 - (void)initProcessorTable {
-	if ( ! ProcessorTable__ ) {
-		ProcessorTable__ = [[VMHash hashWithObjectsAndKeys:		//	valid target		evaluated at action:
+	if ( ! ProcessorTable_static_ ) {
+		ProcessorTable_static_ = [[VMHash hashWithObjectsAndKeys:		//	valid target		evaluated at action:
 							 ProcessorEntry(random)				//	fragments collection		vmAction_prepare
 							 ProcessorEntry(shuffle)			//	fragments collection		vmAction_prepare
 							 ProcessorEntry(reverse)			//	fragments collection		vmAction_prepare
@@ -91,8 +91,8 @@ static VMArray 	*fragOrderChangingFunctions__ = nil;
 							 nil] retain];
 	}
 	
-	if ( ! fragOrderChangingFunctions__ ) {
-		fragOrderChangingFunctions__ = [[VMArray arrayWithObjects:
+	if ( ! fragOrderChangingFunctions_static_ ) {
+		fragOrderChangingFunctions_static_ = [[VMArray arrayWithObjects:
 									   @"random",
 									   @"shuffle",
 									   @"reverse",
@@ -308,7 +308,7 @@ ProcessorDefinition(set) {
 	
 	VMArray *paramNames = [self.parameter keys];
 	for ( VMString *paramName in paramNames ) {
-		if ( Pittari(paramName, self.functionName )) continue;
+		if ( [paramName isEqualToString: self.functionName ] ) continue;
 		VMString *val = [self valueForParameter:paramName];
 		VMFloat f = [DEFAULTEVALUATOR evaluate:val];
 		if ( ! isnan(f) ) 

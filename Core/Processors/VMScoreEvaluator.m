@@ -3,7 +3,7 @@
 //  OnTheFly
 //
 //  Created by  on 13/02/02.
-//  Copyright (c) 2013 __MyCompanyName__. All rights reserved.
+//  Copyright (c) 2013 sumiisan. All rights reserved.
 //
 
 /*
@@ -26,8 +26,8 @@
 
 @implementation VMScoreEvaluator
 
-static VMHash *operatorTable__ = nil;
-static VMHash *seFunctionTable__ = nil;
+static VMHash *operatorTable_static_ = nil;
+static VMHash *seFunctionTable_static_ = nil;
 static BOOL verbose = NO;
 
 @synthesize numberFormatter=numberFormatter_;
@@ -37,20 +37,20 @@ shouldLog=shouldLog_,shouldNotify=shouldNotify_;
 
 #define BoolAsFloat(expr) ((expr)?1.:0.)
 #define SetTypeForOp(type,string) VMIntObj( vmOperatorType_##type ),@"" string,
-#define OperatorCase(type,__code__) case vmOperatorType_##type : { return __code__; }
+#define OperatorCase(type,_code_) case vmOperatorType_##type : { return _code_; }
 
 #define SEFunctionMethod(type)			seFunction_##type
 #define SEFunctionEntry(type)			[NSValue valueWithPointer:@selector( SEFunctionMethod(type): )],	@"" #type,
 #define SEFunctionDefinition(type)		- (id)SEFunctionMethod(type):(id)parameter
 
-static VMScoreEvaluator *se_singleton__ = nil;
+static VMScoreEvaluator *se_singleton_static_ = nil;
 
 #pragma mark -
 #pragma mark creation / termination
 
 + (VMScoreEvaluator*)defaultEvaluator {
-	if ( ! se_singleton__ ) se_singleton__ = [[VMScoreEvaluator alloc] init];
-	return se_singleton__;
+	if ( ! se_singleton_static_ ) se_singleton_static_ = [[VMScoreEvaluator alloc] init];
+	return se_singleton_static_;
 }
 
 - (id)init {
@@ -58,8 +58,8 @@ static VMScoreEvaluator *se_singleton__ = nil;
 		self.numberFormatter = [[[NSNumberFormatter alloc] init] autorelease];
 		self.numberFormatter.locale	= [[[NSLocale alloc] initWithLocaleIdentifier:@"ja_JA"] autorelease];
 		
-		if ( ! operatorTable__ ) 
-			operatorTable__ = [[VMHash hashWithObjectsAndKeys:
+		if ( ! operatorTable_static_ )
+			operatorTable_static_ = [[VMHash hashWithObjectsAndKeys:
 								SetTypeForOp( equal, "=" )
 								SetTypeForOp( notequal, "!=" )
 								SetTypeForOp( add, "+" )
@@ -78,8 +78,8 @@ static VMScoreEvaluator *se_singleton__ = nil;
 								SetTypeForOp( not, "!" )					  
 								nil] retain];
 		
-		if ( ! seFunctionTable__ ) 
-			seFunctionTable__ = [[VMHash hashWithObjectsAndKeys:
+		if ( ! seFunctionTable_static_ )
+			seFunctionTable_static_ = [[VMHash hashWithObjectsAndKeys:
 								  SEFunctionEntry( LC )
 								  SEFunctionEntry( LS )
 								  SEFunctionEntry( F )
@@ -286,7 +286,7 @@ if (kUseNotification && shouldNotify_)
 		VMString *type = 		[ar objectAtIndex:1];
 		VMString *parameter = 	[ar objectAtIndex:2];
 		
-		SEL sel = [[seFunctionTable__ item:type] pointerValue];
+		SEL sel = [[seFunctionTable_static_ item:type] pointerValue];
 		if ( sel ) {
 			if (! [self respondsToSelector:sel] ) 
 				[VMException raise:@"ScoreEvaluator function not found." 
@@ -335,10 +335,9 @@ if (kUseNotification && shouldNotify_)
 		rval = [fm objectAtIndex:3];
 		
 		lValf 	= lval.length	? [self evaluateSingleValue:lval ] : 0;
-		opType 	= op.length		? [operatorTable__ itemAsInt:op ] : vmOperatorType_undefined;
+		opType 	= op.length		? [operatorTable_static_ itemAsInt:op ] : vmOperatorType_undefined;
 		rValf 	= rval.length 	? [self evaluateSingleValue:rval ] : 0;
 		relict 	= Default( [fm objectAtIndex:4], nil );
-		
 		if ( opType == vmOperatorType_undefined ) 
 			return lValf;
 		result = [self evalOperator:opType withLvalue:lValf andRvalue:rValf];

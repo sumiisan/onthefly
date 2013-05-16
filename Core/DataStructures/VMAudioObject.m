@@ -15,7 +15,7 @@
 
 - (void)dealloc {
 	if ( audioFile ) ExtAudioFileDispose( audioFile );
-    if ( waveData ) free( waveData );
+    if ( _waveData ) free( _waveData );
 	[super dealloc];
 }
 
@@ -68,9 +68,9 @@
 	//	alloc buffers
 	UInt64	dataSize = _numberOfFrames * cachedAudioFormat.mBytesPerFrame;
 	
-	if ( waveData ) free( waveData );
-    waveData = malloc( dataSize );
-    if ( !waveData ) {
+	if ( _waveData ) free( _waveData );
+    _waveData = malloc( dataSize );
+    if ( ! _waveData ) {
 		[VMException raise:@"Could not allocate memory."
 					format:@"VMAudioObject could not allocate memory (%.2fkbytes) for reading file %@ ", dataSize / 1024., path ];
 	}
@@ -79,7 +79,7 @@
     audioBufferList.mNumberBuffers = 1;
     audioBufferList.mBuffers[0].mNumberChannels = cachedAudioFormat.mChannelsPerFrame;
     audioBufferList.mBuffers[0].mDataByteSize = (UInt32)dataSize;
-    audioBufferList.mBuffers[0].mData = waveData;
+    audioBufferList.mBuffers[0].mData = _waveData;
 	UInt32 frames = (UInt32)_numberOfFrames;
 		
 	//	read
@@ -102,12 +102,15 @@
 
 - (void*)dataAtFrame:(NSInteger)frame {
 	if ( _numberOfFrames <= frame ) return nil;
-	return waveData + frame * cachedAudioFormat.mBytesPerFrame;
+	return _waveData + frame * cachedAudioFormat.mBytesPerFrame;
+}
+
+- (void*)waveDataBorder {
+	return _waveData + self.bytesPerFrame * _numberOfFrames;
 }
 
 //
-//	we should not draw the entire waveform at once.
-//	TODO: draw only requested rect from the waveview's draw method.
+//	note: this method draws the entire wave-form at once. use VMPWaveView to draw only the visible rect
 //
 - (NSImage*)drawWaveImageWithSize:(NSSize)size foreColor:(NSColor*)foreColor backColor:(NSColor*)backColor {
 	NSImage *image = [[[NSImage alloc] initWithSize:size] autorelease];
@@ -116,7 +119,7 @@
 		VMFloat currentX = 0;
 		int x = 0;
 		VMFloat m = size.height * 0.5;
-		Float32 *waveDataBorder = waveData + self.bytesPerFrame * _numberOfFrames;
+		Float32 *waveDataBorder = self.waveDataBorder;
 		Float32 min = 0;
 		Float32 max = 0;
 		
@@ -124,7 +127,7 @@
 		[backColor set];
 		NSRectFill(NSMakeRect(0, 0, size.width, size.height));
 		[foreColor setStroke];
-		for( Float32 *p = waveData; p < waveDataBorder; ) {
+		for( Float32 *p = _waveData; p < waveDataBorder; ) {
 			Float32 l = *p++;
 			Float32 r = *p++;
 			max = ( l > max ? l : ( r > max ? r : max ));

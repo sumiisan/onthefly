@@ -3,7 +3,7 @@
 //  OnTheFly
 //
 //  Created by  on 13/02/04.
-//  Copyright (c) 2013 __MyCompanyName__. All rights reserved.
+//  Copyright (c) 2013 sumiisan. All rights reserved.
 //
 
 #import "VMException.h"
@@ -100,14 +100,14 @@ va_end(args)
 }
 
 #if VMP_OSX
-static NSTextView *textViewForSpeak__ = nil;
+static NSTextView *textViewForSpeak_static_ = nil;
 #endif
 
 + (void)speak:(NSString*)message {
 #if VMP_OSX
-	if ( ! textViewForSpeak__ ) textViewForSpeak__ = [[NSTextView alloc] init];
-	textViewForSpeak__.string = message;
-	[textViewForSpeak__ startSpeaking:self];
+	if ( ! textViewForSpeak_static_ ) textViewForSpeak_static_ = [[NSTextView alloc] init];
+	textViewForSpeak_static_.string = message;
+	[textViewForSpeak_static_ startSpeaking:self];
 #endif
 }
 

@@ -59,7 +59,7 @@ static const VMFloat	secondsPreroll			= 0.3;
 static const VMFloat	secondsPreparePlayer	= 3.;
 static const VMFloat	secondsLookAhead		= secondsPreparePlayer + 0.5;
 static const VMFloat	secondsAutoFadeOut		= 0.5;
-static VMPSongPlayer 	*songPlayer_singleton__ = nil;
+static VMPSongPlayer 	*songPlayer_singleton_static_ = nil;
 
 
 - (void)watchNextCueTimeForDebug {
@@ -129,7 +129,7 @@ static VMPSongPlayer 	*songPlayer_singleton__ = nil;
 		[VMException raise:@"Attempted to queue an empty frag." format:@"at %f", cueTime ];
 	}
 	
-	if ( Pittari( audioFragment.fileId, @"*" ) ) return nil;	//	ignore empty file.
+	if ( [audioFragment.fileId isEqualToString: @"*"] ) return nil;	//	ignore empty file.
 	
 	VMPQueuedFragment *c = ARInstance(VMPQueuedFragment);
 	c->cueTime 	= cueTime;
@@ -198,7 +198,13 @@ static VMPSongPlayer 	*songPlayer_singleton__ = nil;
 	}
 }
 
-- (VMTime)startTimeOfFirstCue {
+- (VMPAudioPlayer*)audioPlayerForFileId:(VMId*)fileId {
+	for ( VMPQueuedFragment *frag in fragQueue )
+		if ( [frag->audioFragment.fileId isEqualToString:fileId] ) return frag->player;
+	return nil;
+}
+
+- (VMTime)startTimeOfFirstFragment {
 	VMTime t = INFINITE_TIME;
 	for ( VMPQueuedFragment *frag in fragQueue ) 
 		if ( frag->cueTime < t ) t = frag->cueTime - frag->cuePoints.start;
@@ -231,7 +237,7 @@ static VMPSongPlayer 	*songPlayer_singleton__ = nil;
 }
 
 - (void)adjustCurrentTimeToQueuedFragment {
-    VMTime startTimeOfFirstFragment = [self startTimeOfFirstCue];
+    VMTime startTimeOfFirstFragment = [self startTimeOfFirstFragment];
 	if ( startTimeOfFirstFragment != INFINITE_TIME )
 		self.currentTime = startTimeOfFirstFragment - secondsPreroll;
 }
@@ -306,26 +312,25 @@ static VMPSongPlayer 	*songPlayer_singleton__ = nil;
 }
 
 - (VMString*)filePathForFileId:(VMString*)fileId {
+	/*
+	 we do not throw any exceptions for missing files at runtime !
+	 use 'check missing audio files' in OnTheFly Editor's utility menu to prevent error.
+	 */
+	
 	NSString *filePath;
-	NSString *soundDir = song_.audioFileDirectory;
 
 #if VMP_IPHONE
 	filePath = [[NSBundle bundleForClass: [self class]] pathForResource:fileId ofType:typeExt inDirectory:kDefaultVMDirectory];
 	
 #elif VMP_OSX
-	NSString *typeExt  = song_.audioFileExtension;
-	filePath = [[NSBundle mainBundle] pathForResource:fileId ofType:typeExt inDirectory:soundDir ];
-/*
- do not check files at run-time !
- instead, use 'check missing audio files' in utility menu. 
- 
-	if ( ! filePath ) {
-		[VMException raise:@"Could not open audio file."
-					format:@"\"%@.%@\" in directory \"%@\" was not found.", fileId, typeExt, soundDir];
-	}
- */
-#else
-#warning - unsupported platform -
+	//filePath = [[NSBundle mainBundle] pathForResource:fileId ofType:song_.audioFileExtension inDirectory:kDefaultVMDirectory];
+	//
+	filePath = [[[[[song_.fileURL 
+					path] stringByDeletingLastPathComponent]
+				  stringByAppendingPathComponent:song_.audioFileDirectory]
+				 stringByAppendingPathComponent:fileId ]
+				stringByAppendingPathExtension:song_.audioFileExtension];
+
 #endif
 	return filePath;
 }
@@ -351,7 +356,8 @@ static VMPSongPlayer 	*songPlayer_singleton__ = nil;
 	if(kUseNotification)
 		[VMPNotificationCenter postNotificationName:VMPNotificationAudioFragmentFired
 											 object:self
-										   userInfo:@{ @"audioFragment":queuedFragment->audioFragment } ];
+										   userInfo:@{ @"audioFragment":queuedFragment->audioFragment,
+		 @"player":NSNullIfNil( queuedFragment->player ) } ];
 //	NSLog(@"fired:%@\n%@",queuedFragment->audioFragment.id,self.description);	
 }
 
@@ -364,7 +370,7 @@ static VMPSongPlayer 	*songPlayer_singleton__ = nil;
 - (BOOL)fillQueueAt:(VMTime)time {
 	VMAudioFragment *nextAudioFragment = [song_ nextAudioFragment];
 	
-	if ( nextAudioFragment && (! Pittari( nextAudioFragment.fileId, @"*" ))) {
+	if ( nextAudioFragment && (! [nextAudioFragment.fileId isEqualToString: @"*"] )) {
 		if ( time < self.currentTime ) time = self.currentTime + secondsPreroll;
 		VMPQueuedFragment *qc = [self queue:nextAudioFragment at:time];
 		self.nextCueTime = time + ( qc ? LengthOfVMTimeRange( qc->cuePoints) : 0 );
@@ -685,10 +691,10 @@ static VMPSongPlayer 	*songPlayer_singleton__ = nil;
 }
 
 + (VMPSongPlayer*)defaultPlayer {
-	if ( songPlayer_singleton__ == nil ) {
-		songPlayer_singleton__ = [[VMPSongPlayer alloc] init];
+	if ( songPlayer_singleton_static_ == nil ) {
+		songPlayer_singleton_static_ = [[VMPSongPlayer alloc] init];
 	}
-	return songPlayer_singleton__;
+	return songPlayer_singleton_static_;
 }
 
 //	description

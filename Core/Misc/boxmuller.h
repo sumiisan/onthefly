@@ -2,13 +2,6 @@
 //  boxmuller.h
 //  VMPlayer
 //
-//  Created by  on 13/01/21.
-//  Copyright (c) 2013 __MyCompanyName__. All rights reserved.
-
-//
-//
-//	copyright of the .c code:
-//
 /*
  
  (c) Copyright 1994, Everett F. Carter Jr.
@@ -17,7 +10,6 @@
  copyright notice is preserved.
  
  */
-//
 
 #ifndef VMPlayer_boxmuller_h
 #define VMPlayer_boxmuller_h

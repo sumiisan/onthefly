@@ -17,6 +17,19 @@
 
 static const int kMaxSelectorHistoryNumber = 100;
 
+#define VMF_ComponentPart(idComponent,separator,default) \
+({ VMString *idc_ = idComponent; idc_.length ? [separator stringByAppendingString: idc_] : default; })
+
+#define VMF_DisassembleComponents \
+NSArray *arr = [[self fileIdPart] componentsSeparatedByString:@"_"];\
+VMId *pid __unused = [arr objectAtIndex:0];\
+VMId *sid __unused = arr.count > 1 ? [arr objectAtIndex:1] : nil;\
+VMId *tid __unused = ( arr.count > 2 )\
+? [[arr subarrayWithRange:NSMakeRange(2, arr.count-2)] componentsJoinedByString:@"_"]\
+: nil;
+
+
+
 
 /*---------------------------------------------------------------------------------
  
@@ -151,7 +164,7 @@ static const int kMaxSelectorHistoryNumber = 100;
 - (void)setId:(VMId *)inId {
 	[id_ release];
 	id_ = [inId copy];
-	if( Pittari([inId substringToIndex:1],@"#") ) {
+	if( [id_ hasPrefix:@"#" ] ) {
 		[VMException raise:@"UnCompleted Id set" format:@"at %@", [self description]];
 	}
 }
@@ -169,7 +182,7 @@ static const int kMaxSelectorHistoryNumber = 100;
 }
 
 - (void)feedEvaluator {	//	base
-	[DEFAULTEVALUATOR setValue:self.id forVariable:@"@ID"];
+	[DEFAULTEVALUATOR setValue:id_ forVariable:@"@ID"];
 	[DEFAULTEVALUATOR setValue:VMIntObj(self.type) forVariable:@"@TYPE"];
 }
 
@@ -241,7 +254,7 @@ VMObligatory_encodeWithCoder(
 - (NSString*)description {
 	return [NSString stringWithFormat:@"%@<%@>%@",
 			[VMPreprocessor shortTypeStringForType:type_],
-			Default(self.id, @"?"),
+			Default(id_, @"?"),
 			PropertyDescriptionString(comment,@"(%@)")
 			];
 }
@@ -326,23 +339,6 @@ VMOBLIGATORY_setWithData()
 	[super setId:inId];
 }
 
-
--(NSString*)sectionIdComponentPart {
-    return (self.sectionId) ? [NSString stringWithFormat: @"_%@", self.sectionId] : @"_";
-}
-
--(NSString*)trackIdComponentPart { 
-    return (self.trackId) ? [NSString stringWithFormat: @"_%@", self.trackId] : @"";
-}
-
--(NSString*)variantIdComponentPart {
-    return (self.variantId) ? [NSString stringWithFormat: @";%@", self.variantId] : @"";
-}
-
--(NSString*)VMPModifierComponentPart {
-    return (self.VMPModifier) ? [NSString stringWithFormat: @"|%@", self.VMPModifier] : @"";
-}
-
 #pragma mark accessor
 /*
  id scheme:
@@ -353,7 +349,7 @@ VMOBLIGATORY_setWithData()
  */
 
 - (VMId*)userGeneratedId {
-	return [[self.id componentsSeparatedByString:@"|"] objectAtIndex:0];
+	return [[id_ componentsSeparatedByString:@"|"] objectAtIndex:0];
 }
 
 - (VMId*)fileIdPart {
@@ -361,7 +357,7 @@ VMOBLIGATORY_setWithData()
 }
 
 - (VMId*)fragId {
-	return self.id;
+	return id_;
 }
 
 - (void)setFragmentId:(VMId*)fragId {
@@ -369,77 +365,82 @@ VMOBLIGATORY_setWithData()
 }
 
 - (VMId*)partId {	/*public*/
-	VMId *pid = [[VMArray arrayWithString:[self fileIdPart] splitBy:@"_"] item:0];
+	VMId *pid = [[[self fileIdPart] componentsSeparatedByString:@"_"] objectAtIndex:0];
 	return pid.length ? pid : nil;
 }
 
 - (VMId*)sectionId {	/*public*/
-	VMId *sid = [[VMArray arrayWithString:[self fileIdPart] splitBy:@"_"] item:1];
+	NSArray *arr = [[self fileIdPart] componentsSeparatedByString:@"_"];
+	VMId *sid = arr.count > 1 ? [arr objectAtIndex:1] : nil;
 	return sid.length ? sid : nil;
 }
 
 - (VMId*)trackId {	/*public*/
-	VMArray *arr = [VMArray arrayWithString:[self fileIdPart] splitBy:@"_"];
-	if ( [arr count] > 2 ) {
-		[arr unshift];
-		[arr unshift];
-		VMId *tid = [arr join:@"_"];
+	NSArray *arr = [[self fileIdPart] componentsSeparatedByString:@"_"];
+	if ( arr.count > 2 ) {
+		VMId *tid = [[arr subarrayWithRange:NSMakeRange(2, arr.count-2)] componentsJoinedByString:@"_"];
 		return tid.length ? tid : nil;
 	}
 	return nil;
 }
 
 - (VMId*)variantId {
+	
 	return [[VMArray arrayWithString:[self userGeneratedId] splitBy:@";"] item:1];
 }
 
 - (VMId*)VMPModifier {
-	return [[VMArray arrayWithString:self.id splitBy:@"|"] item:1];
+	return [[VMArray arrayWithString:id_ splitBy:@"|"] item:1];
+}
+
+- (void)idComponentsForPart:(VMId**)part_p section:(VMId**)section_p track:(VMId**)track_p {
+	VMF_DisassembleComponents
+	if ( part_p    ) *part_p    = pid;
+	if ( section_p ) *section_p = sid;
+	if ( track_p   ) *track_p   = tid;
 }
 
 -(void)setPartId:(VMId *)partId {
-    self.id = [NSString stringWithFormat:@"%@%@%@%@%@", 
-				  partId, 
-				  [self sectionIdComponentPart], 
-				  [self trackIdComponentPart], 
-				  [self variantIdComponentPart],
-				  [self VMPModifierComponentPart] ];
+	VMF_DisassembleComponents
+	self.id = [NSString stringWithFormat:@"%@%@%@%@%@",
+			   partId,
+			   VMF_ComponentPart(sid, @"_", @"_"),
+			   VMF_ComponentPart(tid, @"_", @""),
+			   VMF_ComponentPart(self.variantId, @";", @""),
+			   VMF_ComponentPart(self.VMPModifier, @"|", @"") ];
 }
 
 -(void)setSectionId:(VMId *)sectionId {
-    self.id = [NSString stringWithFormat:@"%@_%@%@%@%@", 
-				  self.partId, 
-				  sectionId, 
-				  [self trackIdComponentPart], 
-				  [self variantIdComponentPart],
-				  [self VMPModifierComponentPart] ];
+	VMF_DisassembleComponents
+	self.id = [NSString stringWithFormat:@"%@_%@%@%@%@",
+			   pid,
+			   sectionId,
+			   VMF_ComponentPart(tid, @"_", @""),
+			   VMF_ComponentPart(self.variantId, @";", @""),
+			   VMF_ComponentPart(self.VMPModifier, @"|", @"") ];
 }
 
 -(void)setTrackId:(VMId *)trackId {
-    self.id = [NSString stringWithFormat:@"%@%@_%@%@%@", 
-				  self.partId, 
-				  [self sectionIdComponentPart], 
-				  trackId, 
-				  [self variantIdComponentPart],
-				  [self VMPModifierComponentPart] ];
+	VMF_DisassembleComponents
+    self.id = [NSString stringWithFormat:@"%@%@_%@%@%@",
+			   pid,
+			   VMF_ComponentPart(sid, @"_", @"_"),
+			   trackId,
+			   VMF_ComponentPart(self.variantId, @";", @""),
+			   VMF_ComponentPart(self.VMPModifier, @"|", @"") ];
 }
 
 -(void)setVariantId:(VMId *)variantId {
-    self.id = [NSString stringWithFormat:@"%@%@%@;%@%@", 
-			   self.partId, 
-			   [self sectionIdComponentPart], 
-			   [self trackIdComponentPart], 
+    self.id = [NSString stringWithFormat:@"%@;%@%@",
+			   [self fileIdPart],
 			   variantId,
-			   [self VMPModifierComponentPart] ];
+			   VMF_ComponentPart(self.VMPModifier, @"|", @"") ];
 }
 
 -(void)setVMPModifier:(VMId *)VMPModifier {
-    self.id = [NSString stringWithFormat:@"%@%@%@%@|%@", 
-			   self.partId, 
-			   [self sectionIdComponentPart], 
-			   [self trackIdComponentPart], 
-			   [self variantIdComponentPart],
-			   VMPModifier ];
+	 self.id = [NSString stringWithFormat:@"%@|%@",
+				[self userGeneratedId],
+				VMPModifier ];
 }
 
 
@@ -497,7 +498,7 @@ VMOBLIGATORY_setWithData(
 
 - (VMFunction*)functionWithName:(VMString*)functionName {
 	for( VMFunction *func in self.instructionList )
-		if ( Pittari( func.functionName, functionName )) return func;
+		if ( [func.functionName isEqualToString: functionName ] ) return func;
 	return nil;
 }
 
@@ -591,7 +592,7 @@ VMObligatory_encodeWithCoder(
 	if( ! fileId_ ) {
 		// the default for fileId
 		return [[VMArray arrayWithString:
-				 [[VMArray arrayWithString:self.id splitBy:@"|"] itemAsString:0]
+				 [[VMArray arrayWithString:id_ splitBy:@"|"] itemAsString:0]
 								 splitBy:@";"] itemAsString:0];
 	}
 	return fileId_;
@@ -1055,14 +1056,14 @@ if ( ClassMatch(data, NSString)) {
 - (VMChance*)chanceWithId:(VMId*)dataId {
 	for( id ch in frags_ ) {
 		VMId *did = ReadAsVMId(ch);
-		if( Pittari( dataId, did ) ) return ch;
+		if( [dataId isEqualToString:did ] ) return ch;
 	}
 	return nil;
 }
 
 - (VMChance*)chanceWithTargetId:(VMId*)targetId {
 	for( VMChance *c in frags_ ) 
-		if( Pittari(targetId, c.targetId) ) return c;
+		if( [targetId isEqualToString:c.targetId] ) return c;
 	return nil;
 }
 
@@ -1214,7 +1215,7 @@ VMObligatory_encodeWithCoder
 @implementation VMSelector
 @synthesize liveData=liveData_;
 
-static VMHash *scoreForFragment__ = nil;
+static VMHash *scoreForFragment_static_ = nil;
 
 #pragma meta cue
 - (void)interpreteInstructionsWithData:(VMData*)data action:(VMActionType)action {	//	override
@@ -1302,12 +1303,12 @@ static VMHash *scoreForFragment__ = nil;
 	BOOL rootNode = ( parentScore == 0 );
 	if ( rootNode ) {
 		//	init if i'm root.
-		ReleaseAndNewInstance(scoreForFragment__, VMHash);
+		ReleaseAndNewInstance(scoreForFragment_static_, VMHash);
 		parentScore = normalize ? 1 : sumOfInnerScores_cache_;
 	}
 	
 	VMFloat soi = [self sumOfInnerScores];
-	if ( soi == 0 ) return scoreForFragment__;	//	sumOfInnerScores = 0;	no choice.
+	if ( soi == 0 ) return scoreForFragment_static_;	//	sumOfInnerScores = 0;	no choice.
 	double scoreFactor = parentScore / soi;
 	
 	for ( VMChance *chance in self.fragments ) {
@@ -1327,17 +1328,17 @@ static VMHash *scoreForFragment__ = nil;
 						frameOffset:counterOffset normalize:normalize];
 		} else {
 			//	leaf node: increment score
-			[scoreForFragment__ add:score ontoItem:chance.targetId];
+			[scoreForFragment_static_ add:score ontoItem:chance.targetId];
 		}
 	}
 	
 	if ( rootNode ) {
 		//	clean up score
-		VMArray *keys = [scoreForFragment__ keys];
+		VMArray *keys = [scoreForFragment_static_ keys];
 		for ( VMId *key in keys ) 
-			if ( [scoreForFragment__ itemAsFloat:key] == 0 ) [scoreForFragment__ removeItem:key];
+			if ( [scoreForFragment_static_ itemAsFloat:key] == 0 ) [scoreForFragment_static_ removeItem:key];
 	}
-	return scoreForFragment__;
+	return scoreForFragment_static_;
 }
 
 
@@ -1753,7 +1754,7 @@ VMObligatory_encodeWithCoder
 #pragma mark public method
 - (VMFragment*)currentFragment {	//	override
 	VMFragment *c = [self fragmentAtIndex:self.fragPosition];
-	if ( Pittari( c.id, self.staticDataId )) {
+	if ( [ c.id isEqualToString: self.staticDataId ] ) {
 		[VMException raise:@"Possibility of circular reference." 
 					format:@"current frag %ld in %@", self.fragPosition, self.description ];
 		//	possibility of circular reference.

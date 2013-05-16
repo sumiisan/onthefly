@@ -3,7 +3,7 @@
 //  OnTheFlyOSX
 //
 //  Created by  on 13/02/26.
-//  Copyright (c) 2013 __MyCompanyName__. All rights reserved.
+//  Copyright (c) 2013 sumiisan. All rights reserved.
 //
 
 #import "VMPAnalyzer.h"
@@ -176,8 +176,8 @@ static NSColor *oliveColor, *teaColor, *mandarineColor;
 
 @implementation VMPAnalyzer 
 
-static VMPAnalyzer		*analyzer_singleton__		= nil;
-static VMPRecordCell	*recordCell_defaultCell__	= nil;
+static VMPAnalyzer		*analyzer_singleton_static_		= nil;
+static VMPRecordCell	*recordCell_defaultCell_static_	= nil;
 
 //	50000 times
 static const int	kNumberOfIterationsOfGlobalTraceRoute   =  1000;
@@ -189,13 +189,13 @@ static const int	kLengthOfPartTraceRoute					= 10000;	//	gives up after 10000 ti
 
 + (VMPAnalyzer*)defaultAnalyzer {
 
-	if ( ! analyzer_singleton__ ) {
-		analyzer_singleton__ = [[VMPAnalyzer alloc] init];
+	if ( ! analyzer_singleton_static_ ) {
+		analyzer_singleton_static_ = [[VMPAnalyzer alloc] init];
 	}
-	if ( ! recordCell_defaultCell__ ) {
-		recordCell_defaultCell__ = [[VMPRecordCell alloc] initTextCell:@""];
-		[recordCell_defaultCell__ setFont:[NSFont systemFontOfSize:11]];
-		[recordCell_defaultCell__ setAlignment:NSRightTextAlignment ];
+	if ( ! recordCell_defaultCell_static_ ) {
+		recordCell_defaultCell_static_ = [[VMPRecordCell alloc] initTextCell:@""];
+		[recordCell_defaultCell_static_ setFont:[NSFont systemFontOfSize:11]];
+		[recordCell_defaultCell_static_ setAlignment:NSRightTextAlignment ];
 	}
 	if ( ! oliveColor ) {
 		oliveColor		= [[NSColor colorWithCalibratedRed:0.3 green:0.7 blue:0.4 alpha:0.9] retain];
@@ -203,13 +203,13 @@ static const int	kLengthOfPartTraceRoute					= 10000;	//	gives up after 10000 ti
 		mandarineColor	= [[NSColor colorWithCalibratedRed:1.0 green:0.7 blue:0.3 alpha:0.9] retain];
 	}
 	
-	return analyzer_singleton__;
+	return analyzer_singleton_static_;
 }
 
 - (id)init {
 	self=[super init];
 	if (self) {
-		analyzer_singleton__ = self;
+		analyzer_singleton_static_ = self;
 		self.progressWC = [[[VMPProgressWindowController alloc] initWithWindow:nil] autorelease];
 		[NSBundle loadNibNamed: @"VMPProgressWindow" owner: self.progressWC];
 		self.progressWC.delegate = self;
@@ -918,7 +918,7 @@ else if( ClassMatch(subData, VMChance )) \
 	char type = [tableColumn.identifier cStringUsingEncoding:NSASCIIStringEncoding][0];
 	if ( type == 'i' || type == 'c' || type == 's' ) return [tableColumn dataCellForRow:row];
 	
-	VMPRecordCell *cell = recordCell_defaultCell__;
+	VMPRecordCell *cell = recordCell_defaultCell_static_;
 	cell.title = [self textForColumnType:type record:record];
 	VMFloat ratio;
 	switch (type) {

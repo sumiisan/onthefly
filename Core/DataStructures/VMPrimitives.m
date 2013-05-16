@@ -92,8 +92,6 @@ VMFloat limitedSNDRand(VMFloat min, VMFloat max) {
 
 @end
 
-#define NSNullIfNil(obj) (( obj ) ?  obj : [NSNull null] )
-#define NilIfNSNull(obj) (( obj == [NSNull null] ) ? nil : obj )
 
 
 #pragma mark -

@@ -16,9 +16,11 @@
 
 @interface VMSong : NSObject
 
+@property (nonatomic, retain)	NSURL	*fileURL;
+
 //	song data structure
-@property (VMNonatomic retain)	VMHash	 *songData;
-@property (VMNonatomic retain)	VMString *vmsData;
+@property (nonatomic, retain)	VMHash	 *songData;
+@property (nonatomic, retain)	VMString *vmsData;
 
 //	static song properties
 @property (nonatomic, readonly)	VMString *songName;
@@ -61,6 +63,7 @@
 //
 //	read and save
 //
+- (void)clear;
 - (BOOL)readFromURL:(NSURL *)url error:(NSError **)outError;
 - (BOOL)readFromData:(NSData *)data error:(NSError **)outError;
 - (BOOL)readFromString:(VMString *)string error:(NSError **)outError;

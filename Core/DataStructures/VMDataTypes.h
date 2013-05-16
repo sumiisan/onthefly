@@ -142,6 +142,7 @@ typedef enum {
 @protected
 	vmObjectType	type_;
 	BOOL			shouldRegister_;
+	VMId			*id_;
 }
 @property 	(VMNonatomic copy)			VMId			*id;
 @property	(VMNonatomic assign)		vmObjectType	type;
@@ -415,7 +416,7 @@ typedef enum {
 //	util
 - (VMId*)userGeneratedId;
 - (VMId*)fileIdPart;
-//- (VMFragment*)resolve;
+- (void)idComponentsForPart:(VMId**)part_p section:(VMId**)section_p track:(VMId**)track_p;
 @end
 
 //------------------------ MetaFragment --------------------------

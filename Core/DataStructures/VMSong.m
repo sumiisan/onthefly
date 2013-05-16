@@ -29,7 +29,7 @@ vsFilePath=vsFilePath_, audioFileDirectory=audioFileDirectory_, defaultFragmentI
 @synthesize player;
 @synthesize showReport=showReport_;
 
-static VMSong *vmsong_singleton__;
+static VMSong *vmsong_singleton_static_;
 //static BOOL reportNotRegisteredObjects = NO;
 BOOL verbose = NO;
 
@@ -58,8 +58,8 @@ BOOL verbose = NO;
 }
 
 + (VMSong*)defaultSong {
-	if( ! vmsong_singleton__ ) vmsong_singleton__ = NewInstance(VMSong);
-	return vmsong_singleton__;
+	if( ! vmsong_singleton_static_ ) vmsong_singleton_static_ = NewInstance(VMSong);
+	return vmsong_singleton_static_;
 }
 
 - (BOOL)isVerbose {
@@ -118,7 +118,7 @@ BOOL verbose = NO;
 	//	overriding by adding sel's is not allowed.
 	VMSelector *subseq = ClassCastIfMatch( player.nextPlayer, VMSelector );
 	if ( subseq )
-		return (! Pittari( [[subseq chanceAtIndex:0] targetId], @"*" ));
+		return (! [[[subseq chanceAtIndex:0] targetId] isEqualToString: @"*"] );
 	
 	VMPlayer *pl = ClassCastIfMatch( player.nextPlayer, VMPlayer );
 	if ( pl )
@@ -460,7 +460,11 @@ BOOL verbose = NO;
 //	returns YES on success, NO if failed.
 - (BOOL)readFromURL:(NSURL *)url error:(NSError **)outError {
     NSData *data = [NSData dataWithContentsOfURL:url options:NSDataReadingUncached error:outError];
-	return [self readFromData:data error:outError];
+	if ( [self readFromData:data error:outError] ) {
+		self.fileURL = url;
+		return YES;
+	}
+	return NO;
 }
 
 //	returns YES on success, NO if failed.
@@ -470,6 +474,14 @@ BOOL verbose = NO;
 							  error:outError ];
 	}
 	return NO;
+}
+
+- (void)clear {
+	self.fileURL = nil;
+	[songName_ release];
+	songName_ = nil;
+	[self reset];
+	[self.songData clear];
 }
 
 //	returns YES on success, NO if failed.
@@ -502,7 +514,11 @@ BOOL verbose = NO;
 		return NO;
 	}
 	NSData *data = [self.vmsData dataUsingEncoding:vmFileEncoding];
-	return [data writeToURL:url atomically:YES];
+	if ( [data writeToURL:url atomically:YES] ) {
+		self.fileURL = url;
+		return YES;
+	}
+	return NO;
 }
 
 
@@ -529,16 +545,17 @@ BOOL verbose = NO;
 #if VMP_LOGGING
 		self.log				= [[[VMLog alloc] initWithOwner:VMLogOwner_Player managedObjectContext:nil] autorelease];
 #endif
-		if (!vmsong_singleton__) {
-			vmsong_singleton__ = self;
+		if (!vmsong_singleton_static_) {
+			vmsong_singleton_static_ = self;
 		}
     }
     return self;
 }
 
 - (void)dealloc {
+	self.fileURL = nil;
 	self.songData = nil;
-	self.entryPoints 
+	self.entryPoints
 	= self.history
 	= self.showReport
 	= nil;
@@ -563,8 +580,7 @@ BOOL verbose = NO;
     defaultFragmentId_		=	[HashItem(defaultFragmentId) retain];
     self.audioFileExtension =    HashItem(audioFileExtension);
     self.audioFileDirectory =    HashItem(audioFileDirectory);
-	if ( Pittari(self.audioFileDirectory,@"./" ))
-		self.audioFileDirectory = kDefaultVMDirectory;
+	if ( [self.audioFileDirectory isEqualToString:@"./"] ) self.audioFileDirectory = @"";
 }
 
 

@@ -15,10 +15,12 @@
 	ExtAudioFileRef					audioFile;
 	AudioStreamBasicDescription		audioFileFormat;
 	AudioStreamBasicDescription		cachedAudioFormat;
-	void							*waveData;
+	void							*_waveData;
 }
 
-@property (nonatomic)			UInt64 numberOfFrames;
+@property (nonatomic, readonly)		void *waveData;
+@property (nonatomic, readonly)		void *waveDataBorder;
+@property (nonatomic)				UInt64 numberOfFrames;
 
 - (OSErr)load:(NSString*)path;
 - (int)bytesPerFrame;

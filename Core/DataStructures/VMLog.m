@@ -75,7 +75,7 @@
 		log.type = 0;
 		log.data = data;
 	}
-	log->expandedHeightCache__ = -1;	
+	log->expandedHeightCache_static_ = -1;
 	return log;
 }
 #pragma mark -
@@ -135,22 +135,22 @@
 }
 
 - (CGFloat)expandedHeight {
-	if ( expandedHeightCache__ < 0 ) {
-		expandedHeightCache__ = 0;
+	if ( expandedHeightCache_static_ < 0 ) {
+		expandedHeightCache_static_ = 0;
 		
-		if( [self.action isEqualToString:@"SEL"] ) expandedHeightCache__ += 30.;
+		if( [self.action isEqualToString:@"SEL"] ) expandedHeightCache_static_ += 30.;
 				
 		VMString *message = [[self.subInfo item:@"message"] stringByAppendingString:@" "];
 		if ( message ) {
-			expandedHeightCache__ += [self heightForStringDrawing:message font:[NSFont systemFontOfSize:10] width:250] +3;
+			expandedHeightCache_static_ += [self heightForStringDrawing:message font:[NSFont systemFontOfSize:10] width:250] +3;
 		}
 
 	}
-	return expandedHeightCache__;
+	return expandedHeightCache_static_;
 }
 
 - (void)setExpandedHeight:(CGFloat)expandedHeight {
-	expandedHeightCache__ = expandedHeight;
+	expandedHeightCache_static_ = expandedHeight;
 }
 
 /*
@@ -181,7 +181,7 @@
 
 - (id)initWithEntity:(NSEntityDescription *)entity insertIntoManagedObjectContext:(NSManagedObjectContext *)context {
 	self = [super initWithEntity:entity insertIntoManagedObjectContext:context];
-	expandedHeightCache__ = -1;
+	expandedHeightCache_static_ = -1;
 	return self;
 }
 

@@ -3,7 +3,7 @@
 //  OnTheFly
 //
 //  Created by  on 13/02/06.
-//  Copyright (c) 2013 __MyCompanyName__. All rights reserved.
+//  Copyright (c) 2013 sumiisan. All rights reserved.
 //
 
 #import "VMPGraph.h"
@@ -141,7 +141,7 @@ colorModifiedByHueOffset:0 saturationFactor:0.3 brightnessFactor:1.7],	@( vmObje
 
 #define clipRange0to1(x) ((x)>1?1:((x)<0?0:(x)))
 
-static 	VMHash *bgColorForType__ = nil;
+static 	VMHash *bgColorForType_static_ = nil;
 
 
 - (NSColor*)colorModifiedByRedFactor:(const CGFloat)red greenFactor:(const CGFloat)green blueFactor:(const CGFloat)blue {
@@ -168,8 +168,8 @@ static 	VMHash *bgColorForType__ = nil;
 }
 
 + (NSColor*)colorForDataType:(vmObjectType)type {
-	if ( ! bgColorForType__ )
-		bgColorForType__ = [[VMHash hashWithObjectsAndKeys:
+	if ( ! bgColorForType_static_ )
+		bgColorForType_static_ = [[VMHash hashWithObjectsAndKeys:
 							 colorForType( fragment,		0.3, 0.3, 0.45 )
 							 colorForType( selector,		0.2, 0.5, 0.0 )
 							 colorForType( sequence,		0.1, 0.3, 0.7 )
@@ -178,15 +178,15 @@ static 	VMHash *bgColorForType__ = nil;
 							 colorForType( chance,			0.5, 0.5, 0.0 )
 							 colorForType( reference,		0.4, 0.4, 0.4 )
 							 nil] retain];
-	[bgColorForType__ setItem:[NSColor colorWithCalibratedRed:0.9 green:0.9 blue:0.9 alpha:1.] for:@(0)];
-	NSColor *c = (NSColor*)[bgColorForType__ item:@(type)];
+	[bgColorForType_static_ setItem:[NSColor colorWithCalibratedRed:0.9 green:0.9 blue:0.9 alpha:1.] for:@(0)];
+	NSColor *c = (NSColor*)[bgColorForType_static_ item:@(type)];
 
 	return ( c ? c : [NSColor grayColor]);
 }
 
 + (NSColor*)backgroundColorForDataType:(vmObjectType)type {
-	if ( ! bgColorForType__ ) [NSColor colorForDataType:0];	//	dummy call
-	NSColor *c = (NSColor*)[bgColorForType__ item:@(((int)type)*-1)];
+	if ( ! bgColorForType_static_ ) [NSColor colorForDataType:0];	//	dummy call
+	NSColor *c = (NSColor*)[bgColorForType_static_ item:@(((int)type)*-1)];
 	return ( c ? c : [NSColor colorWithCalibratedWhite:.9 alpha:1.]);
 }
 
@@ -304,6 +304,21 @@ static 	VMHash *bgColorForType__ = nil;
 	return self.flippedYCoordinate;
 }
 
+- (void)setX:(CGFloat)x {
+	self.frame = CGRectMakeFromOriginAndSize( CGPointMake(x, self.frame.origin.y ), self.frame.size );
+}
+
+- (void)setY:(CGFloat)y {
+	self.frame = CGRectMakeFromOriginAndSize( CGPointMake( self.frame.origin.x, y ), self.frame.size );
+}
+
+- (void)setWidth:(CGFloat)width {
+	self.frame = CGRectMakeFromOriginAndSize( self.frame.origin, CGSizeMake( width, self.frame.size.height ));
+}
+
+- (void)setHeight:(CGFloat)height {
+	self.frame = CGRectMakeFromOriginAndSize( self.frame.origin, CGSizeMake( self.frame.size.width, height ));
+}
 
 - (CGFloat)x {
 	return self.frame.origin.x;

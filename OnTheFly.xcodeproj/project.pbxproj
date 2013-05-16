@@ -28,26 +28,15 @@
 		160ECFDC173B51160009D04B /* VMPSongPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ECFD5173B51160009D04B /* VMPSongPlayer.m */; };
 		160ECFDD173B51160009D04B /* VMPSongPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ECFD5173B51160009D04B /* VMPSongPlayer.m */; };
 		160ECFDE173B51160009D04B /* VMPSongPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ECFD5173B51160009D04B /* VMPSongPlayer.m */; };
-		160ED02F173B517A0009D04B /* License.html in Resources */ = {isa = PBXBuildFile; fileRef = 160ECFF7173B517A0009D04B /* License.html */; };
-		160ED030173B517A0009D04B /* License.html in Resources */ = {isa = PBXBuildFile; fileRef = 160ECFF7173B517A0009D04B /* License.html */; };
 		160ED031173B517A0009D04B /* License.html in Resources */ = {isa = PBXBuildFile; fileRef = 160ECFF7173B517A0009D04B /* License.html */; };
-		160ED032173B517A0009D04B /* License.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 160ECFF8173B517A0009D04B /* License.rtf */; };
-		160ED033173B517A0009D04B /* License.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 160ECFF8173B517A0009D04B /* License.rtf */; };
 		160ED034173B517A0009D04B /* License.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 160ECFF8173B517A0009D04B /* License.rtf */; };
-		160ED035173B517A0009D04B /* RegexKitLite.html in Resources */ = {isa = PBXBuildFile; fileRef = 160ECFFA173B517A0009D04B /* RegexKitLite.html */; };
-		160ED036173B517A0009D04B /* RegexKitLite.html in Resources */ = {isa = PBXBuildFile; fileRef = 160ECFFA173B517A0009D04B /* RegexKitLite.html */; };
 		160ED037173B517A0009D04B /* RegexKitLite.html in Resources */ = {isa = PBXBuildFile; fileRef = 160ECFFA173B517A0009D04B /* RegexKitLite.html */; };
 		160ED038173B517A0009D04B /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ECFFB173B517A0009D04B /* RegexKitLite.m */; };
 		160ED039173B517A0009D04B /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ECFFB173B517A0009D04B /* RegexKitLite.m */; };
 		160ED03A173B517A0009D04B /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ECFFB173B517A0009D04B /* RegexKitLite.m */; };
-		160ED03B173B517A0009D04B /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 160ECFFD173B517A0009D04B /* .gitignore */; };
-		160ED03C173B517A0009D04B /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 160ECFFD173B517A0009D04B /* .gitignore */; };
 		160ED03D173B517A0009D04B /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 160ECFFD173B517A0009D04B /* .gitignore */; };
 		160ED03E173B517A0009D04B /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 160ECFFE173B517A0009D04B /* Config.xcconfig */; };
-		160ED03F173B517A0009D04B /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 160ECFFE173B517A0009D04B /* Config.xcconfig */; };
 		160ED040173B517A0009D04B /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 160ECFFE173B517A0009D04B /* Config.xcconfig */; };
-		160ED041173B517A0009D04B /* README.markdown in Resources */ = {isa = PBXBuildFile; fileRef = 160ECFFF173B517A0009D04B /* README.markdown */; };
-		160ED042173B517A0009D04B /* README.markdown in Resources */ = {isa = PBXBuildFile; fileRef = 160ECFFF173B517A0009D04B /* README.markdown */; };
 		160ED043173B517A0009D04B /* README.markdown in Resources */ = {isa = PBXBuildFile; fileRef = 160ECFFF173B517A0009D04B /* README.markdown */; };
 		160ED044173B517A0009D04B /* CDataScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ED002173B517A0009D04B /* CDataScanner.m */; };
 		160ED045173B517A0009D04B /* CDataScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ED002173B517A0009D04B /* CDataScanner.m */; };
@@ -99,7 +88,6 @@
 		162F7B2016A0341C00420443 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 162F7B1E16A0341C00420443 /* InfoPlist.strings */; };
 		162F7B2616A0341C00420443 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 162F7B2416A0341C00420443 /* Credits.rtf */; };
 		162F7B3816A0341D00420443 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 168CEBB2163186B400B721E2 /* Cocoa.framework */; };
-		162F7B4016A0341E00420443 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 162F7B3E16A0341E00420443 /* InfoPlist.strings */; };
 		162F7B4316A0341E00420443 /* TraumBaumTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 162F7B4216A0341E00420443 /* TraumBaumTests.m */; };
 		162F7B4D16A112D300420443 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 168CEBBF163186B400B721E2 /* main.m */; };
 		162F7B4E16A1130300420443 /* VMPlayerOSXDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 168CEBC5163186B400B721E2 /* VMPlayerOSXDelegate.m */; };
@@ -109,7 +97,15 @@
 		162F7B6916A1167D00420443 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 168CEBD41631871400B721E2 /* CoreAudio.framework */; };
 		162F7B6B16A1171300420443 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 162F7B6A16A1171200420443 /* SenTestingKit.framework */; };
 		162FBB95173CB5460060E003 /* SyntaxDefinition.plist in Resources */ = {isa = PBXBuildFile; fileRef = 162FBB94173CB5460060E003 /* SyntaxDefinition.plist */; };
-		162FBB96173CB5460060E003 /* SyntaxDefinition.plist in Resources */ = {isa = PBXBuildFile; fileRef = 162FBB94173CB5460060E003 /* SyntaxDefinition.plist */; };
+		162FBBC017405A360060E003 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 168CEBD41631871400B721E2 /* CoreAudio.framework */; };
+		162FBBC117405A410060E003 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16A27EFF16F9730F0081C1E8 /* AudioToolbox.framework */; };
+		162FBBC4174061FE0060E003 /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 162FBBC3174061FE0060E003 /* libicucore.dylib */; };
+		162FBBC5174065C90060E003 /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1624A7131644D8AC004AA351 /* libicucore.dylib */; };
+		162FBBC717406D5B0060E003 /* libicucore.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1624A7131644D8AC004AA351 /* libicucore.dylib */; };
+		162FBBC817406DA40060E003 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 168CEBB5163186B400B721E2 /* AppKit.framework */; };
+		162FBBC917406DB50060E003 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 168CEBB6163186B400B721E2 /* CoreData.framework */; };
+		162FBBCA17406DB80060E003 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 168CEBB7163186B400B721E2 /* Foundation.framework */; };
+		162FBBCD174071FE0060E003 /* VMPTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 162FBBCC174071FB0060E003 /* VMPTest.m */; };
 		16347C1216C286C9002BE1FE /* VMPGraph.m in Sources */ = {isa = PBXBuildFile; fileRef = 16347C0F16C286C9002BE1FE /* VMPGraph.m */; };
 		16347C1316C286C9002BE1FE /* VMPGraph.m in Sources */ = {isa = PBXBuildFile; fileRef = 16347C0F16C286C9002BE1FE /* VMPGraph.m */; };
 		1636DF8916A11C5300100130 /* vsDocIcon.icns in Resources */ = {isa = PBXBuildFile; fileRef = 1624A6FB1642B76B004AA351 /* vsDocIcon.icns */; };
@@ -117,7 +113,6 @@
 		165DAC23172D541D009708B3 /* VMPAudioInfoEditorView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 165DAC20172D541D009708B3 /* VMPAudioInfoEditorView.xib */; };
 		165DAC27172D545F009708B3 /* VMPTimeRangeEditorView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 165DAC24172D545F009708B3 /* VMPTimeRangeEditorView.xib */; };
 		165DAC2C172D54CE009708B3 /* VMPTimeRangeEditorView.m in Sources */ = {isa = PBXBuildFile; fileRef = 165DAC29172D54CE009708B3 /* VMPTimeRangeEditorView.m */; };
-		16623131173C81D700F70FCB /* README.txt in Resources */ = {isa = PBXBuildFile; fileRef = 1662312E173C81D700F70FCB /* README.txt */; };
 		16623132173C81D700F70FCB /* UKSyntaxColoredTextDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 16623130173C81D700F70FCB /* UKSyntaxColoredTextDocument.m */; };
 		16623138173C823D00F70FCB /* NSArray+Color.m in Sources */ = {isa = PBXBuildFile; fileRef = 16623135173C823D00F70FCB /* NSArray+Color.m */; };
 		16623139173C823D00F70FCB /* NSScanner+SkipUpToCharset.m in Sources */ = {isa = PBXBuildFile; fileRef = 16623137173C823D00F70FCB /* NSScanner+SkipUpToCharset.m */; };
@@ -171,13 +166,11 @@
 		16A27F2F16FBE1300081C1E8 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16A27F2E16FBE1300081C1E8 /* UIKit.framework */; };
 		16A27F4616FBE8030081C1E8 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16A27F4516FBE8030081C1E8 /* AudioToolbox.framework */; };
 		16A27F4716FC14460081C1E8 /* defaultSong in Resources */ = {isa = PBXBuildFile; fileRef = 16A27F0116F9736F0081C1E8 /* defaultSong */; };
-		16A27F4916FC16CF0081C1E8 /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1624A7131644D8AC004AA351 /* libicucore.dylib */; };
 		16A27F4A16FC1DF30081C1E8 /* VMPTrackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677780B16C0D6A0007206CF /* VMPTrackView.m */; };
 		16A27F4B16FC1DF30081C1E8 /* VMPTrackStrip.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677781316C0D6A0007206CF /* VMPTrackStrip.m */; };
 		16A27F4C16FC1F720081C1E8 /* VMPCanvas.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677781516C0D6A0007206CF /* VMPCanvas.m */; };
 		16A27F4E16FC1FC70081C1E8 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16A27F4D16FC1FC60081C1E8 /* CoreGraphics.framework */; };
 		16A27F5016FC2EC90081C1E8 /* default.vms in Resources */ = {isa = PBXBuildFile; fileRef = 16A27F4F16FC2EC90081C1E8 /* default.vms */; };
-		16A27F5116FC2EC90081C1E8 /* default.vms in Resources */ = {isa = PBXBuildFile; fileRef = 16A27F4F16FC2EC90081C1E8 /* default.vms */; };
 		16A27F5216FC2EC90081C1E8 /* default.vms in Resources */ = {isa = PBXBuildFile; fileRef = 16A27F4F16FC2EC90081C1E8 /* default.vms */; };
 		16A27F5F17006E720081C1E8 /* VMPProgressWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 16A27F5C17006E720081C1E8 /* VMPProgressWindowController.m */; };
 		16A27F6117006E720081C1E8 /* VMPProgressWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 16A27F5D17006E720081C1E8 /* VMPProgressWindow.xib */; };
@@ -227,6 +220,19 @@
 			remoteInfo = TraumBaum;
 		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		162FBBC617406D2D0060E003 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 16;
+			files = (
+				162FBBC717406D5B0060E003 /* libicucore.dylib in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		160E51901732783000C3D9BB /* VMPVariablesPanelController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VMPVariablesPanelController.h; sourceTree = "<group>"; };
@@ -309,6 +315,9 @@
 		162F7B4216A0341E00420443 /* TraumBaumTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TraumBaumTests.m; sourceTree = "<group>"; };
 		162F7B6A16A1171200420443 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
 		162FBB94173CB5460060E003 /* SyntaxDefinition.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = SyntaxDefinition.plist; sourceTree = "<group>"; };
+		162FBBC3174061FE0060E003 /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = ../../../../../usr/lib/libicucore.dylib; sourceTree = "<group>"; };
+		162FBBCB174071F90060E003 /* VMPTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VMPTest.h; path = OSX/Tests/VMPTest.h; sourceTree = "<group>"; };
+		162FBBCC174071FB0060E003 /* VMPTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VMPTest.m; path = OSX/Tests/VMPTest.m; sourceTree = "<group>"; };
 		16347C0E16C286C9002BE1FE /* VMPGraph.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = VMPGraph.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		16347C0F16C286C9002BE1FE /* VMPGraph.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = VMPGraph.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		16347C1516C33509002BE1FE /* VMPlayerOSXDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = VMPlayerOSXDelegate.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -431,6 +440,12 @@
 			files = (
 				162F7B6B16A1171300420443 /* SenTestingKit.framework in Frameworks */,
 				162F7B3816A0341D00420443 /* Cocoa.framework in Frameworks */,
+				162FBBC017405A360060E003 /* CoreAudio.framework in Frameworks */,
+				162FBBC117405A410060E003 /* AudioToolbox.framework in Frameworks */,
+				162FBBC5174065C90060E003 /* libicucore.dylib in Frameworks */,
+				162FBBC817406DA40060E003 /* AppKit.framework in Frameworks */,
+				162FBBC917406DB50060E003 /* CoreData.framework in Frameworks */,
+				162FBBCA17406DB80060E003 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -443,7 +458,7 @@
 				16A27F4E16FC1FC70081C1E8 /* CoreGraphics.framework in Frameworks */,
 				16A27F4616FBE8030081C1E8 /* AudioToolbox.framework in Frameworks */,
 				16A27F2F16FBE1300081C1E8 /* UIKit.framework in Frameworks */,
-				16A27F4916FC16CF0081C1E8 /* libicucore.dylib in Frameworks */,
+				162FBBC4174061FE0060E003 /* libicucore.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -573,7 +588,7 @@
 		160ED06F173B6F6F0009D04B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				1624A7131644D8AC004AA351 /* libicucore.dylib */,
+				162FBBC3174061FE0060E003 /* libicucore.dylib */,
 				16A27F2E16FBE1300081C1E8 /* UIKit.framework */,
 				16A27F4D16FC1FC60081C1E8 /* CoreGraphics.framework */,
 				16A27F701709AD760081C1E8 /* QuartzCore.framework */,
@@ -586,6 +601,7 @@
 		1624A63C16420B4A004AA351 /* OSX Player & Editor */ = {
 			isa = PBXGroup;
 			children = (
+				162FBBCE174072060060E003 /* Tests */,
 				16347C1516C33509002BE1FE /* VMPlayerOSXDelegate.h */,
 				168CEBC5163186B400B721E2 /* VMPlayerOSXDelegate.m */,
 				1677780916C0D6A0007206CF /* Views and Controllers */,
@@ -670,6 +686,16 @@
 				160ECFFC173B517A0009D04B /* TouchJSON-master */,
 			);
 			name = Libs;
+			sourceTree = "<group>";
+		};
+		162FBBCE174072060060E003 /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				162FBBCB174071F90060E003 /* VMPTest.h */,
+				162FBBCC174071FB0060E003 /* VMPTest.m */,
+			);
+			name = Tests;
+			path = ..;
 			sourceTree = "<group>";
 		};
 		16623133173C81E100F70FCB /* UKSyntaxColoredTextDocument */ = {
@@ -775,6 +801,7 @@
 		168CEBB1163186B400B721E2 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				1624A7131644D8AC004AA351 /* libicucore.dylib */,
 				168CEBB5163186B400B721E2 /* AppKit.framework */,
 				168CEBB6163186B400B721E2 /* CoreData.framework */,
 				168CEBB7163186B400B721E2 /* Foundation.framework */,
@@ -962,6 +989,7 @@
 				162F7B3016A0341D00420443 /* Sources */,
 				162F7B3116A0341D00420443 /* Frameworks */,
 				162F7B3216A0341D00420443 /* Resources */,
+				162FBBC617406D2D0060E003 /* CopyFiles */,
 				162F7B3316A0341D00420443 /* ShellScript */,
 			);
 			buildRules = (
@@ -1039,13 +1067,7 @@
 				165DAC27172D545F009708B3 /* VMPTimeRangeEditorView.xib in Resources */,
 				162EFC41173026230000A4FB /* VMPSelectorEditorView.xib in Resources */,
 				162EFC451730CE3F0000A4FB /* VMPVariablesPanel.xib in Resources */,
-				160ED02F173B517A0009D04B /* License.html in Resources */,
-				160ED032173B517A0009D04B /* License.rtf in Resources */,
-				160ED035173B517A0009D04B /* RegexKitLite.html in Resources */,
-				160ED03B173B517A0009D04B /* .gitignore in Resources */,
 				160ED03E173B517A0009D04B /* Config.xcconfig in Resources */,
-				160ED041173B517A0009D04B /* README.markdown in Resources */,
-				16623131173C81D700F70FCB /* README.txt in Resources */,
 				162FBB95173CB5460060E003 /* SyntaxDefinition.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1054,15 +1076,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				162F7B4016A0341E00420443 /* InfoPlist.strings in Resources */,
-				16A27F5116FC2EC90081C1E8 /* default.vms in Resources */,
-				160ED030173B517A0009D04B /* License.html in Resources */,
-				160ED033173B517A0009D04B /* License.rtf in Resources */,
-				160ED036173B517A0009D04B /* RegexKitLite.html in Resources */,
-				160ED03C173B517A0009D04B /* .gitignore in Resources */,
-				160ED03F173B517A0009D04B /* Config.xcconfig in Resources */,
-				160ED042173B517A0009D04B /* README.markdown in Resources */,
-				162FBB96173CB5460060E003 /* SyntaxDefinition.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1163,6 +1176,7 @@
 				16623157173C9FA300F70FCB /* VMAudioObject.m in Sources */,
 				1662315A173C9FA300F70FCB /* VMLog.m in Sources */,
 				1662315D173C9FA300F70FCB /* VMPrimitives.m in Sources */,
+				162FBBCD174071FE0060E003 /* VMPTest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1350,7 +1364,6 @@
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				INFOPLIST_FILE = "OSX/OnTheFlyEditor-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = macosx;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -1371,7 +1384,6 @@
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				INFOPLIST_FILE = "OSX/OnTheFlyEditor-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = macosx;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -1383,8 +1395,11 @@
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/TraumBaum.app/Contents/MacOS/TraumBaum";
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
-				FRAMEWORK_SEARCH_PATHS = "$(DEVELOPER_LIBRARY_DIR)/Frameworks";
-				GCC_DYNAMIC_NO_PIC = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(DEVELOPER_LIBRARY_DIR)/Frameworks",
+					/System/Library/Frameworks,
+					/usr/lib,
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "TraumBaum/TraumBaum-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -1394,6 +1409,7 @@
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				INFOPLIST_FILE = "TraumBaumTests/TraumBaumTests-Info.plist";
+				LIBRARY_SEARCH_PATHS = /usr/lib;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = octest;
@@ -1408,12 +1424,17 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				FRAMEWORK_SEARCH_PATHS = "$(DEVELOPER_LIBRARY_DIR)/Frameworks";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(DEVELOPER_LIBRARY_DIR)/Frameworks",
+					/System/Library/Frameworks,
+					/usr/lib,
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "TraumBaum/TraumBaum-Prefix.pch";
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				INFOPLIST_FILE = "TraumBaumTests/TraumBaumTests-Info.plist";
+				LIBRARY_SEARCH_PATHS = /usr/lib;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = octest;
@@ -1432,7 +1453,6 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
@@ -1442,7 +1462,6 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "Variable Media Player OSX";
-				SDKROOT = "";
 				WARNING_CFLAGS = "";
 			};
 			name = Debug;
@@ -1456,7 +1475,6 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
@@ -1465,7 +1483,6 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				PRODUCT_NAME = "Variable Media Player OSX";
-				SDKROOT = "";
 				WARNING_CFLAGS = "";
 			};
 			name = Release;

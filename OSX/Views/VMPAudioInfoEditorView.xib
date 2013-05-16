@@ -16,8 +16,6 @@
 			<string>NSButtonCell</string>
 			<string>NSCustomObject</string>
 			<string>NSCustomView</string>
-			<string>NSImageCell</string>
-			<string>NSImageView</string>
 			<string>NSMenu</string>
 			<string>NSMenuItem</string>
 			<string>NSNumberFormatter</string>
@@ -484,40 +482,22 @@
 										<reference key="NSNextResponder" ref="44062029"/>
 										<int key="NSvFlags">274</int>
 										<array class="NSMutableArray" key="NSSubviews">
-											<object class="NSImageView" id="562941642">
+											<object class="NSCustomView" id="262915384">
 												<reference key="NSNextResponder" ref="936217547"/>
 												<int key="NSvFlags">274</int>
-												<set class="NSMutableSet" key="NSDragTypes">
-													<string>Apple PDF pasteboard type</string>
-													<string>Apple PICT pasteboard type</string>
-													<string>Apple PNG pasteboard type</string>
-													<string>NSFilenamesPboardType</string>
-													<string>NeXT Encapsulated PostScript v1.2 pasteboard type</string>
-													<string>NeXT TIFF v4.0 pasteboard type</string>
-												</set>
-												<string key="NSFrame">{{20, 0}, {610, 120}}</string>
+												<array class="NSMutableArray" key="NSSubviews"/>
+												<string key="NSFrame">{{20, 20}, {610, 120}}</string>
 												<reference key="NSSuperview" ref="936217547"/>
 												<reference key="NSWindow"/>
 												<reference key="NSNextKeyView" ref="1021530391"/>
 												<string key="NSReuseIdentifierKey">_NS:9</string>
-												<bool key="NSEnabled">YES</bool>
-												<object class="NSImageCell" key="NSCell" id="745366738">
-													<int key="NSCellFlags">134217728</int>
-													<int key="NSCellFlags2">33554432</int>
-													<string key="NSCellIdentifier">_NS:9</string>
-													<int key="NSAlign">0</int>
-													<int key="NSScale">1</int>
-													<int key="NSStyle">0</int>
-													<bool key="NSAnimates">NO</bool>
-												</object>
-												<bool key="NSAllowsLogicalLayoutDirection">NO</bool>
-												<bool key="NSEditable">YES</bool>
+												<string key="NSClassName">VMPWaveView</string>
 											</object>
 										</array>
 										<string key="NSFrameSize">{650, 140}</string>
 										<reference key="NSSuperview" ref="44062029"/>
 										<reference key="NSWindow"/>
-										<reference key="NSNextKeyView" ref="562941642"/>
+										<reference key="NSNextKeyView" ref="262915384"/>
 										<string key="NSReuseIdentifierKey">_NS:9</string>
 										<string key="NSClassName">VMPGraph</string>
 									</object>
@@ -795,19 +775,19 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
-						<string key="label">waveDisplay</string>
-						<reference key="source" ref="1001"/>
-						<reference key="destination" ref="562941642"/>
-					</object>
-					<int key="connectionID">353</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
 						<string key="label">waveAndMarkerView</string>
 						<reference key="source" ref="1001"/>
 						<reference key="destination" ref="936217547"/>
 					</object>
 					<int key="connectionID">354</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">waveView</string>
+						<reference key="source" ref="1001"/>
+						<reference key="destination" ref="262915384"/>
+					</object>
+					<int key="connectionID">356</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
@@ -917,7 +897,7 @@
 						<int key="objectID">7</int>
 						<reference key="object" ref="936217547"/>
 						<array class="NSMutableArray" key="children">
-							<reference ref="562941642"/>
+							<reference ref="262915384"/>
 						</array>
 						<reference key="parent" ref="960885002"/>
 						<string key="objectName">Wave and Marker View</string>
@@ -1113,17 +1093,10 @@
 						<reference key="parent" ref="967256279"/>
 					</object>
 					<object class="IBObjectRecord">
-						<int key="objectID">351</int>
-						<reference key="object" ref="562941642"/>
-						<array class="NSMutableArray" key="children">
-							<reference ref="745366738"/>
-						</array>
+						<int key="objectID">355</int>
+						<reference key="object" ref="262915384"/>
+						<array class="NSMutableArray" key="children"/>
 						<reference key="parent" ref="936217547"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">352</int>
-						<reference key="object" ref="745366738"/>
-						<reference key="parent" ref="562941642"/>
 					</object>
 				</array>
 			</object>
@@ -1179,8 +1152,7 @@
 				<string key="341.CustomClassName">VMPTimeRangeEditorView</string>
 				<string key="341.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="348.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="351.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="352.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<string key="355.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="4.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="5.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="6.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -1193,7 +1165,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">354</int>
+			<int key="maxID">356</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -1240,8 +1212,8 @@
 						<string key="volumeIndicator">NSTextField</string>
 						<string key="volumeSlider">NSSlider</string>
 						<string key="waveAndMarkerView">VMPGraph</string>
-						<string key="waveDisplay">NSImageView</string>
 						<string key="waveScrollView">NSScrollView</string>
+						<string key="waveView">VMPWaveView</string>
 						<string key="zoomInButton">NSButton</string>
 						<string key="zoomOutButton">NSButton</string>
 					</dictionary>
@@ -1286,13 +1258,13 @@
 							<string key="name">waveAndMarkerView</string>
 							<string key="candidateClassName">VMPGraph</string>
 						</object>
-						<object class="IBToOneOutletInfo" key="waveDisplay">
-							<string key="name">waveDisplay</string>
-							<string key="candidateClassName">NSImageView</string>
-						</object>
 						<object class="IBToOneOutletInfo" key="waveScrollView">
 							<string key="name">waveScrollView</string>
 							<string key="candidateClassName">NSScrollView</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="waveView">
+							<string key="name">waveView</string>
+							<string key="candidateClassName">VMPWaveView</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="zoomInButton">
 							<string key="name">zoomInButton</string>
@@ -1382,6 +1354,14 @@
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
 						<string key="minorKey">./Classes/VMPTimeRangeEditorView.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">VMPWaveView</string>
+					<string key="superclassName">VMPGraph</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">./Classes/VMPWaveView.h</string>
 					</object>
 				</object>
 			</array>

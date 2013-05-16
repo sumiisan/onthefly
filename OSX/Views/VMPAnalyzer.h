@@ -3,7 +3,7 @@
 //  OnTheFlyOSX
 //
 //  Created by  on 13/02/26.
-//  Copyright (c) 2013 __MyCompanyName__. All rights reserved.
+//  Copyright (c) 2013 sumiisan. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
