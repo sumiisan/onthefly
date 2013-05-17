@@ -46,29 +46,25 @@
 @interface VMPEditorWindowController : NSWindowController
 <NSOutlineViewDelegate, NSOutlineViewDataSource, NSWindowDelegate, VMPAnalyzerDelegate> {
 @private
-				BOOL	performingAutoComplete;
-				BOOL	handlingCommand;
+	BOOL		performingAutoComplete;
+	BOOL		performingSearchFilter;
+	BOOL		performingHistoryMove;
+	BOOL		handlingCommand;
 	__weak		VMHash	*_songData;
 }
 
 
 //	public methods
-- (void)findObjectById:(VMId*)dataId;	//	display object if found. does not make editor window key.
+- (BOOL)findObjectById:(VMId*)dataId;	//	display object if found. does not make editor window key.
 
-//	data structure
-@property (weak)				VMHash							*songData;
-
-//	current item
-@property (nonatomic, retain)   VMId							*lastSelectedId;
-
+//	history
+- (IBAction)historyButtonClicked:(id)sender;
+- (IBAction)moveHistoryBack:(id)sender;		//	defaults first responder
+- (IBAction)moveHistoryForward:(id)sender;	//	defaults first responder
 
 //	actions below defaults first responder
 - (IBAction)songPlay:(id)sender;
 - (IBAction)focusTextSearchField:(id)sender;
-
-//	generalized history action
-- (IBAction)moveHistoryBack:(id)sender;
-- (IBAction)moveHistoryForward:(id)sender;
 
 //	generalized zoom action
 - (IBAction)zoomIn:(id)sender;
@@ -78,6 +74,9 @@
 - (IBAction)clickOnRow:(id)sender;
 - (IBAction)updateFilter:(id)sender;
 - (void)applicationDidLaunch;			//	initial setup after app is launched
+
+//	public
+@property (nonatomic, retain)	VMId			*currentDisplayingDataId;
 
 
 //	views
@@ -94,6 +93,8 @@
 @property (nonatomic, assign)	IBOutlet NSPopUpButton			*referrerPopup;
 @property (nonatomic, assign)	IBOutlet NSMenu					*referrerMenu;
 
+//	history
+@property (nonatomic, assign)	IBOutlet NSSegmentedControl		*historyArrowButtons;
 
 
 @end

@@ -122,7 +122,7 @@ static const VMFloat kDefaultLogItemViewHeight = 14.0;
 #pragma mark -
 #pragma mark accessor
 
-- (VMHistoryLog*)itemAtRow:(NSInteger)row {
+- (VMLogRecord*)itemAtRow:(NSInteger)row {
 	return [self.filteredLog item:row];
 }
 
@@ -154,7 +154,7 @@ static const VMFloat kDefaultLogItemViewHeight = 14.0;
 	if ( index < 0 ) {
 		row = self.filteredLog.count -1;
 	} else {
-		for ( VMHistoryLog *hl in self.filteredLog ) {
+		for ( VMLogRecord *hl in self.filteredLog ) {
 			if( hl.index >= index ) break;
 			++row;
 		}
@@ -196,7 +196,7 @@ static const VMFloat kDefaultLogItemViewHeight = 14.0;
 		
 		VMInt seekCount = 100;
 		for ( VMInt row = self.logTableView.numberOfRows -1; row > 0; --row ) {
-			VMHistoryLog *hl = [self itemAtRow:row];
+			VMLogRecord *hl = [self itemAtRow:row];
 			if ( hl.VMData == ac ) {
 				[self fireAllAudioFragmentsBelowIndex:hl.index];
 				break;
@@ -213,12 +213,12 @@ static const VMFloat kDefaultLogItemViewHeight = 14.0;
 
 	VMInt i = _log.count -1;
 	for ( ; i; --i ) {
-		VMHistoryLog *hl = [_log item:i];
+		VMLogRecord *hl = [_log item:i];
 		if ( hl.index <= index ) break;
 	}
 	
 	for ( ; i; --i ) {
-		VMHistoryLog *hl = [_log item:i];
+		VMLogRecord *hl = [_log item:i];
 		if ( hl.playbackTimestamp ) break;
 		hl.playbackTimestamp = now;
 	}
@@ -264,8 +264,8 @@ static const VMFloat kDefaultLogItemViewHeight = 14.0;
 
 #pragma mark click and double click
 
-- (VMHistoryLog*)postNotification:(VMString*)notificationName {
-	VMHistoryLog *hl = [self itemAtRow:self.logTableView.selectedRow];
+- (VMLogRecord*)postNotification:(VMString*)notificationName {
+	VMLogRecord *hl = [self itemAtRow:self.logTableView.selectedRow];
 	if ( hl.type != vmObjectType_notVMObject ) {
 		id data = [self itemAtRow:self.logTableView.selectedRow].data;
 		if ( ClassMatch(data, VMData) ) data = ((VMData*)data).id;
@@ -311,7 +311,7 @@ static const VMFloat kDefaultLogItemViewHeight = 14.0;
 		if( [fs isSelectedForSegment:3] ) [typeArray push:@(vmObjectType_notVMObject)];
 		
 		self.filteredLog = [[[VMLog alloc] initWithOwner:self.currentSource managedObjectContext:nil] autorelease];
-		for ( VMHistoryLog *hl in self.log )
+		for ( VMLogRecord *hl in self.log )
 			if ( [typeArray position: @( hl.type ) ] >= 0 ) [self.filteredLog push:hl];
 		
 	} else {
@@ -336,7 +336,7 @@ static const VMFloat kDefaultLogItemViewHeight = 14.0;
 #pragma mark expand / shrink
 - (IBAction)disclosureButtonClicked:(id)sender {
 	VMInt row = [self.logTableView rowForView:((NSButton*)sender).superview];
-	VMHistoryLog *hl = [self itemAtRow:row];
+	VMLogRecord *hl = [self itemAtRow:row];
 	hl.expanded = ! hl.expanded;
 	
 	NSIndexSet *is = [NSIndexSet indexSetWithIndex:row];
@@ -358,7 +358,7 @@ static const VMFloat kDefaultLogItemViewHeight = 14.0;
 	NSTextField *tf = sender;
 	VMInt row = tf.tag;
 	
-	VMHistoryLog *hl = [self itemAtRow:row];
+	VMLogRecord *hl = [self itemAtRow:row];
 	VMHash *subInfo = hl.subInfo;
 	[subInfo setItem:tf.stringValue for:@"message"];
 	hl.subInfo = subInfo;
@@ -409,7 +409,7 @@ static const VMFloat kDefaultLogItemViewHeight = 14.0;
 			tf.font = [NSFont systemFontOfSize:10];
 			return tf;
 		}
-		VMHistoryLog *hl = [self itemAtRow:row];
+		VMLogRecord *hl = [self itemAtRow:row];
 		
 		
 		vmObjectType type = hl.type;
@@ -454,7 +454,7 @@ static const VMFloat kDefaultLogItemViewHeight = 14.0;
 			switch ( (int)hl.type ) {
 				case vmObjectType_selector: {
 					
-					if ( [action isEqualToString:@"SEL"] ) {
+					if ( [action hasPrefix:@"SEL"] ) {
 						VMHash *scoreForFragments = hl.subInfo;
 						VMArray *keys = [scoreForFragments sortedKeys];
 						VMFloat sum = [[scoreForFragments values] sum];
@@ -465,7 +465,7 @@ static const VMFloat kDefaultLogItemViewHeight = 14.0;
 							if ( [key isEqualToString:@"vmlog_selected"] ) continue;
 							VMFloat score = [scoreForFragments itemAsFloat:key];
 							VMFloat sw = score * pixPerScore;
-							NSTextField *tf = [[NSTextField alloc] initWithFrame:NSMakeRect(x, 0, sw -1, 29)];
+				/*			NSTextField *tf = [[NSTextField alloc] initWithFrame:NSMakeRect(x, 0, sw -1, 29)];
 							x += sw;
 							VMData *d = [DEFAULTSONG data:key];
 							tf.backgroundColor = [NSColor backgroundColorForDataType:d ? d.type : 0];
@@ -475,7 +475,15 @@ static const VMFloat kDefaultLogItemViewHeight = 14.0;
 							tf.font = [key isEqualToString:selectedFragment] ? [NSFont boldSystemFontOfSize:9] : [NSFont systemFontOfSize:9];
 							tf.toolTip = key;
 							[expansionView addSubview:tf];
-							[tf release];
+							[tf release];*/
+							
+							VMPFragmentCell *fc = [[VMPFragmentCell alloc] initWithFrame:NSMakeRect(x, 0, sw -1, 29)];
+							x += sw;
+							VMData *d = [DEFAULTSONG data:key];
+							[fc setData:d];
+							if ( [key isEqualToString:selectedFragment] ) fc.selected = YES;
+							[expansionView addSubview:fc];
+							[fc release];
 						}
 					}
 					break;
@@ -545,7 +553,7 @@ static const VMFloat kDefaultLogItemViewHeight = 14.0;
 }
 
 - (CGFloat)tableView:(NSTableView *)tableView heightOfRow:(NSInteger)row {
-	VMHistoryLog *hl = [self itemAtRow:row];
+	VMLogRecord *hl = [self itemAtRow:row];
 	return hl.isExpanded ? hl.expandedHeight + kDefaultLogItemViewHeight : kDefaultLogItemViewHeight;
 }
 

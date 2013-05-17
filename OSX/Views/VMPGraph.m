@@ -497,6 +497,7 @@ static 	VMHash *bgColorForType_static_ = nil;
 	button_.doubleAction=@selector(doubleClick:);
 	[button_ setTransparent:YES];
 	[self addSubview:button_];
+	self.toolTip = self.fragment.id;
 	
 	//	default bg gradient
 	self.backgroundGradient = GradientWithColors(VMPColorBy(.9, .9, .9, 1.), 

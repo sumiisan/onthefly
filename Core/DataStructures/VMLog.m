@@ -35,6 +35,49 @@
 
 @end
 
+/*---------------------------------------------------------------------------------
+ 
+ VMHistory
+ 
+ ----------------------------------------------------------------------------------*/
+
+#pragma mark -
+#pragma mark VMHistory
+
+@implementation VMHistory
+@synthesize position=position_;
+
+- (BOOL)canMove:(VMInt)steps {
+	VMInt idx = position_ + steps;
+	return ( idx >= 0 && idx < self.count );
+}
+			
+- (void)move:(VMInt)steps {
+	VMInt idx = position_ + steps;
+	if ( idx >= 0 && idx < self.count ) self.position = idx;
+}
+
+- (id)currentItem {
+	return [self item:position_];
+}
+
+- (void)push:(id)obj {	//	override
+	if ( ! [self object:obj isEqualTo:[self lastItem]] ) {
+		[self deleteItemsFrom:position_+1 to:-1];
+		if ( ! [self object:obj isEqualTo:[self lastItem]] )
+			[super push:obj];
+	}
+	position_ = self.count -1;
+	NSLog(@"%@",self.description);
+}
+
+- (NSString*)description {
+	return [NSString stringWithFormat:@"%@ (current:%@",[super description], [self currentItem]];
+}
+
+@end
+
+
 
 /*---------------------------------------------------------------------------------
  
@@ -45,23 +88,23 @@
 #pragma mark -
 #pragma mark VMHistoryLog
 
-@implementation VMHistoryLog
+@implementation VMLogRecord
 @synthesize automaticallyExpanded;
 
 //
 #pragma mark -
 #pragma mark	** one and only designated initializer: **
 //
-+ (VMHistoryLog*)historyWithAction:(VMString*)action
++ (VMLogRecord*)historyWithAction:(VMString*)action
 							  data:(id)data
 						   subInfo:(VMHash*)subInfo
 							 owner:(VMLogOwnerType)owner
 				usePersistentStore:(BOOL)usePersistentStore {
-	VMHistoryLog *log;
+	VMLogRecord *log;
 	if ( usePersistentStore ) {
-		log = [[[VMHistoryLog alloc] initWithEntity:[APPDELEGATE entityDescriptionFor:@"VMLogItem"] insertIntoManagedObjectContext:APPDELEGATE.managedObjectContext] autorelease];
+		log = [[[VMLogRecord alloc] initWithEntity:[APPDELEGATE entityDescriptionFor:@"VMLogItem"] insertIntoManagedObjectContext:APPDELEGATE.managedObjectContext] autorelease];
 	} else {
-		log = [[[VMHistoryLog alloc] initWithEntity:[APPDELEGATE entityDescriptionFor:@"VMLogItem"] insertIntoManagedObjectContext:nil] autorelease];
+		log = [[[VMLogRecord alloc] initWithEntity:[APPDELEGATE entityDescriptionFor:@"VMLogItem"] insertIntoManagedObjectContext:nil] autorelease];
 	}
 	
 	log.action		= action;
@@ -231,7 +274,7 @@
 #pragma mark accessor
 - (VMInt)indexOfItem:(VMInt)index {
 	id d = [self item:index];
-	VMHistoryLog *hs = ClassCastIfMatch(d, VMHistoryLog);
+	VMLogRecord *hs = ClassCastIfMatch(d, VMLogRecord);
 	if ( hs ) return hs.index;
 	VMHash *ha = ClassCastIfMatch(d, VMHash);
 	if ( ha ) return [ha itemAsInt:@"vmlog_index"];
@@ -261,7 +304,7 @@
  
  ----------------------------------------------------------------------------------*/
 
-- (void)update:(VMHistoryLog*)logItem {
+- (void)update:(VMLogRecord*)logItem {
 }
 
 
@@ -286,7 +329,7 @@
 	
 	//	[self setArray:array fromIndex:0];		//	if use HashedArray
 	self->array_ = [array mutableCopy];
-	index_intern = ((VMHistoryLog*)self.lastItem).index +1;
+	index_intern = ((VMLogRecord*)self.lastItem).index +1;
 	
 	NSLog(@"Load:%@ %@\nData[0]:%@",req.predicate.predicateFormat, req.sortDescriptors.description ,[self item:0]);
 	[req release];
@@ -299,7 +342,7 @@
 
 	if( self.usePersistentStore ) {
 		[self loadWithPredicateString:nil];	//	select all
-		for ( VMHistoryLog *hl in self ) {
+		for ( VMLogRecord *hl in self ) {
 			[moc_ deleteObject:hl];
 		}
 		[self save];
@@ -339,10 +382,10 @@
 		return;
 	}
 	
-	VMHistoryLog *historyLog = ClassCastIfMatch(item, VMHistoryLog);
+	VMLogRecord *historyLog = ClassCastIfMatch(item, VMLogRecord);
 	if ( !historyLog ) {
 		//	wrap item with history log
-		historyLog = [VMHistoryLog historyWithAction:@"Unknown"
+		historyLog = [VMLogRecord historyWithAction:@"Unknown"
 												data:item
 											 subInfo:nil
 											   owner:self.owner
@@ -371,13 +414,13 @@
 
 - (void)record:(VMArray*)arrayOfData filter:(BOOL)doFilter {
 	for( id data in arrayOfData ) {
-		if ( ClassMatch( data, VMHistoryLog )) {
+		if ( ClassMatch( data, VMLogRecord )) {
 			[self log:data];
 			continue;
 		}
 		
 		
-		VMHistoryLog *lastHl = self.lastItem;
+		VMLogRecord *lastHl = self.lastItem;
 		VMHash *subInfo =  nil;
 		
 		if ( ClassMatch( data, VMId )) {		//	try to convert string into object
@@ -403,7 +446,7 @@
 			[h removeItem:@"vmlog_type"];
 			
 			if ( [action isEqualToString:@"scores"] ) {
-				VMHistoryLog *hl = self.lastItem;
+				VMLogRecord *hl = self.lastItem;
 				if ( hl.type == vmObjectType_selector ) {
 					hl.subInfo = data;
 					continue;
@@ -417,7 +460,7 @@
 				continue;
 			}
 		}
-		VMHistoryLog *log = [VMHistoryLog historyWithAction:action
+		VMLogRecord *log = [VMLogRecord historyWithAction:action
 													   data:data
 													subInfo:subInfo
 													  owner:self.owner
@@ -435,7 +478,7 @@
  ----------------------------------------------------------------------------------*/
 
 - (void)addTextLog:(VMString*)action message:(VMString*)message {
-	VMHistoryLog *hl = [VMHistoryLog historyWithAction:action
+	VMLogRecord *hl = [VMLogRecord historyWithAction:action
 												  data:message
 											   subInfo:[VMHash hashWithObjectsAndKeys:message,@"message",nil]
 												 owner:self.owner
@@ -448,7 +491,7 @@
 - (void)addUserLogWithText:(VMString*)message dataId:(VMId*)dataId {
 	VMData *d = [DEFAULTSONG data:dataId];
 	if (d) {
-		VMHistoryLog *hl = [VMHistoryLog historyWithAction:@"UserLog"
+		VMLogRecord *hl = [VMLogRecord historyWithAction:@"UserLog"
 													  data:d
 												   subInfo:[VMHash hashWith:@{@"message":message,
 															@"id":dataId}]

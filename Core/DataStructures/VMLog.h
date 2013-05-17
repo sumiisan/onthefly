@@ -21,6 +21,23 @@ typedef enum {
 /*---------------------------------------------------------------------------------
  *
  *
+ *	History
+ *
+ *
+ *---------------------------------------------------------------------------------*/
+
+@interface VMHistory : VMArray
+@property (nonatomic, assign)	VMInt	position;
+
+- (BOOL)canMove:(VMInt)steps;
+- (void)move:(VMInt)steps;
+- (id)currentItem;
+
+@end
+
+/*---------------------------------------------------------------------------------
+ *
+ *
  *	Log Item
  *
  *
@@ -43,12 +60,12 @@ typedef enum {
 /*---------------------------------------------------------------------------------
  *
  *
- *	History Log
+ *	Log Record
  *
  *
  *---------------------------------------------------------------------------------*/
 
-@interface VMHistoryLog : VMLogItem {
+@interface VMLogRecord : VMLogItem {
 	CGFloat expandedHeightCache_static_;
 }
 
@@ -64,7 +81,7 @@ typedef enum {
 @property (nonatomic, getter=isAutomaticallyExpanded)	BOOL			automaticallyExpanded;
 @property (nonatomic, readonly)							VMData			*VMData;
 
-+ (VMHistoryLog*)historyWithAction:(VMString*)action
++ (VMLogRecord*)historyWithAction:(VMString*)action
 							  data:(id)data
 						   subInfo:(VMHash*)subInfo
 							 owner:(VMLogOwnerType)owner

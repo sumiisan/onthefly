@@ -260,7 +260,7 @@ VMFloat limitedSNDRand(VMFloat min, VMFloat max) {
 - (void)deleteItemsFrom:(VMInt)fromPosition to:(VMInt)toPosition {
 	if ( fromPosition >= self.count ) return;
 	if ( toPosition   <  fromPosition ) toPosition = self.count -1;
-	NSRange range = { fromPosition, toPosition - fromPosition };
+	NSRange range = { fromPosition, toPosition - fromPosition +1 };
 	[array_ removeObjectsInRange:range];
 }
 

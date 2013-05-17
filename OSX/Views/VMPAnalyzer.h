@@ -62,6 +62,8 @@ typedef enum {
 - (IBAction)clickOnRow:(id)sender;
 - (IBAction)clickOnButton:(id)sender;
 
+@property (nonatomic, assign) IBOutlet NSSegmentedControl *historyArrowButtons;
+
 //	defaults first responder
 - (IBAction)moveHistoryBack:(id)sender;
 - (IBAction)moveHistoryForward:(id)sender;
@@ -109,8 +111,7 @@ typedef enum {
 - (IBAction)performStatistics:(id)sender;
 - (IBAction)openGraphView:(id)sender;
 
-@property (nonatomic,retain)	VMArray		*history;
-@property (nonatomic,assign)	VMInt		historyPosition;
+@property (nonatomic,retain)	VMHistory	*history;
 @property (assign)				id			<VMPAnalyzerDelegate>	delegate;
 @property (retain)				VMLog		*log;
 @property (nonatomic,retain)	VMHash		*report;

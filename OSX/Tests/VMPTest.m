@@ -9,6 +9,7 @@
 #import "VMPTest.h"
 #import "VMDataTypes.h"
 #import "VMPMacros.h"
+#import "VMLog.h"
 
 #define TEST(name,status,data) if(! (status)) \
 NSLog( @"" #name " failed: " #status " %@", (data?data:@""));\
@@ -49,7 +50,24 @@ NSLog( @"" #name " OK" );
 	frag.id = @"##track";
 	parent.id = @"pirate_of_carribean_jack_sparrow;the|kid";
 	
+	VMHistory *hist = ARInstance(VMHistory);
 	
+	[hist push:@"A"];
+	[hist push:@"B"];
+	[hist push:@"B"];
+	[hist push:@"C"];
+	
+	TEST(@"History fwd 1", ![hist canMove: 1],![hist canMove: 1] ? @"YES" : @"NO" );
+	TEST(@"History back1", ![hist canMove:-3],![hist canMove:-3] ? @"YES" : @"NO" );
+	TEST(@"History back2",  [hist canMove:-2], [hist canMove:-2] ? @"YES" : @"NO" );
+	[hist move:-2];
+	TEST(@"History item1", [[hist currentItem] isEqualToString:@"A"], hist );
+	TEST(@"History fwd 2",  [hist canMove: 1],![hist canMove: 1] ? @"YES" : @"NO" );
+	[hist move: 1];
+	TEST(@"History item2", [[hist currentItem] isEqualToString:@"B"], hist );
+	[hist push:@"D"];
+	TEST(@"History item3", [[hist currentItem] isEqualToString:@"D"], hist );
+	TEST(@"History count",  [hist count] == 3, hist );
 	
 
 	NSLog(@"====================== TEST END ==========================");

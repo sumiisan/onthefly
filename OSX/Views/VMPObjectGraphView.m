@@ -565,6 +565,16 @@
 	self.typeLabel.stringValue = @"";
 }
 
+- (void)drawRect:(NSRect)dirtyRect {
+	[super drawRect:dirtyRect];
+	[[self.backgroundColor colorModifiedByHueOffset:0 saturationFactor:1.1 brightnessFactor:0.7] setStroke];
+	[NSBezierPath strokeLineFromPoint:NSMakePoint(0,1.5) toPoint:NSMakePoint(self.width, 1.5)];
+	[[self.backgroundColor colorModifiedByHueOffset:0 saturationFactor:0.7 brightnessFactor:1.2] setStroke];
+	[NSBezierPath strokeLineFromPoint:NSMakePoint(0,self.height-0.5) toPoint:NSMakePoint(self.width, self.height-0.5)];
+	
+}
+
+
 - (void)redraw {
 	if ( ! self.data ) return;
 	if ( [self.data isKindOfClass:[VMFragment class]] ) {

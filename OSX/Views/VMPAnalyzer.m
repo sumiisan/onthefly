@@ -72,12 +72,13 @@
 
 
 - (IBAction)clickOnButton:(id)sender {
-	NSButton *b = (NSButton*)sender;
-	switch (b.tag) {
-		case -100:
+	NSSegmentedControl *sc = sender;
+	
+	switch (sc.selectedSegment) {
+		case 0:
 			[DEFAULTANALYZER moveHistory:-1];
 			break;
-		case  100:
+		case 1:
 			[DEFAULTANALYZER moveHistory: 1];
 			break;
 	}
@@ -105,10 +106,10 @@
 - (BOOL)validateMenuItem:(NSMenuItem *)menuItem {
 	SEL action = menuItem.action;
 	if (action==@selector(moveHistoryBack:)) {
-		if ( DEFAULTANALYZER.historyPosition < 1 ) return NO;
+		return [DEFAULTANALYZER.history canMove:-1];
 	}
 	if (action==@selector(moveHistoryForward:)) {
-		if ( DEFAULTANALYZER.historyPosition >= DEFAULTANALYZER.history.count -1 ) return NO;
+		return [DEFAULTANALYZER.history canMove: 1];
 	}
 	return YES;
 }
@@ -122,8 +123,8 @@
 }
 
 - (void)updateButtonStates {
-	[((NSButton*)[self viewWithTag: 100]) setEnabled:( DEFAULTANALYZER.historyPosition < DEFAULTANALYZER.history.count -1 )];
-	[((NSButton*)[self viewWithTag:-100]) setEnabled:( DEFAULTANALYZER.historyPosition > 0 )];
+	[self.historyArrowButtons setEnabled:[DEFAULTANALYZER.history canMove:-1] forSegment:0];
+	[self.historyArrowButtons setEnabled:[DEFAULTANALYZER.history canMove: 1] forSegment:1];
 }
 
 @end
@@ -257,7 +258,7 @@ static const int	kLengthOfPartTraceRoute					= 10000;	//	gives up after 10000 ti
 			//
 			// part domestic route statistics
 			//
-			VMId *partId = [[VMArray arrayWithString:APPDELEGATE.editorViewController.lastSelectedId
+			VMId *partId = [[VMArray arrayWithString:APPDELEGATE.editorViewController.currentDisplayingDataId
 											 splitBy:@"_"] item:0];
 			VMFragment *entrySelector = [DEFAULTSONG data:[partId stringByAppendingString:@"_sel"]];
 			if (entrySelector) {
@@ -641,8 +642,7 @@ static const int	kLengthOfPartTraceRoute					= 10000;	//	gives up after 10000 ti
 	//
 	// history
 	//
-	self.history = ARInstance(VMArray);
-	self.historyPosition = 0;
+	self.history = ARInstance(VMHistory);
 	
 	//	log
 	[self.log save];
@@ -725,14 +725,19 @@ if ( ! referrerOfData ) {\
 [referrerOfData setItem:@(YES) for:dataId]
 
 #define addReferrerAndCheckUnresolved(targetId) \
-VMId *tid = targetId ; \
-addReferrerForId(tid); \
-unresolved = ! [DEFAULTSONG data:tid]
+VMId *tid = targetId; \
+if ( ![tid isEqualToString:@"*"] ) {\
+	addReferrerForId(tid); \
+	unresolved = ! [DEFAULTSONG data:tid];\
+}
 
 #define addRefererAndAddUnresolved(targetId) {\
-VMId *tid2 = targetId; \
-addReferrerForId(tid2); \
-if ( ! [DEFAULTSONG data:tid2] ) [self addUnresolveable:tid2]; }
+	VMId *tid2 = targetId; \
+	if ( ![tid2 isEqualToString:@"*"] ) {\
+		addReferrerForId(tid2); \
+		if ( ! [DEFAULTSONG data:tid2] ) [self addUnresolveable:tid2]; \
+	}\
+}
 
 #define addReferrerAndCheckUnresolvedForSubData(subData) {\
 if( ClassMatch(subData, VMId)) \
@@ -817,28 +822,20 @@ else if( ClassMatch(subData, VMChance )) \
 #pragma mark history
 
 - (void)addHistory:(VMId*)recordId {
-	if( [((VMId*)[self.history item:self.historyPosition]) isEqualToString:recordId] ) return;
+	if( !self.history ) self.history = ARInstance(VMHistory);
 	
-	if( !self.history ) self.history = ARInstance(VMArray);
-	[self.history deleteItemsFrom:self.historyPosition +1 to:-1];
+	if( [((VMId*)[self.history currentItem]) isEqualToString:recordId] ) return;
 	[self.history push:recordId];
-	
-	self.historyPosition = self.history.count -1;
 	[self.statisticsView updateButtonStates];
 	
 	if ( self.history.count > 1500 ) [self.history truncateFirst:1000];
 }
 
 - (void)moveHistory:(VMInt)vector {
-	self.historyPosition += vector;
-	if ( self.historyPosition < 0 )
-		self.historyPosition = 0;
-	if ( self.historyPosition >= self.history.count )
-		self.historyPosition = self.history.count -1;
-	
+	[self.history move:vector];
 	[self.statisticsView updateButtonStates];
 
-	VMId *recordId = [self.history item:self.historyPosition];
+	VMId *recordId = [self.history currentItem];
 	[self itemSelectedWithId:recordId];
 }
 
@@ -1026,7 +1023,7 @@ else if( ClassMatch(subData, VMChance )) \
 - (BOOL)tableView:(NSTableView *)tableView shouldTypeSelectForEvent:(NSEvent *)event
 withCurrentSearchString:(NSString *)searchString {
 	if ( event.type == NSKeyDown && event.keyCode == kVK_Space ) {
-		[DEFAULTSONGPLAYER startWithFragmentId:[self.history item:self.historyPosition]];
+		[DEFAULTSONGPLAYER startWithFragmentId:[self.history currentItem]];
 		return NO;
 	}
 	

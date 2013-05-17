@@ -132,7 +132,7 @@ static const CGFloat kWaveDisplayHorizontalMargin = 20;
 	[self.waveAndMarkerView addTopOverlay];
 	
 	self.waveView.foregroundColor = [NSColor colorWithCalibratedRed:.4 green:.4 blue:.4 alpha:1.];
-	self.waveView.backgroundColor = [NSColor colorWithCalibratedRed:.95 green:.95 blue:.95 alpha:1.];
+	self.waveView.backgroundColor = [NSColor colorWithCalibratedRed:.85 green:.85 blue:.85 alpha:1.];
 	[self updateFieldsAndKnobs];
 	
 	[VMPNotificationCenter addObserver:self selector:@selector(audioFragmentFired:) name:VMPNotificationAudioFragmentFired object:nil];
@@ -191,18 +191,13 @@ static const CGFloat kWaveDisplayHorizontalMargin = 20;
 
 - (void)plotWaveAndRanges {
 	CGFloat waveDisplayWidth = self.waveScrollView.frame.size.width - kWaveDisplayHorizontalMargin * 2;	
-	
+	self.waveView.y = 0;
 	CGFloat w = waveDisplayWidth * self.waveScale;
-/*	self.waveView.frame = NSMakeRect(kWaveDisplayHorizontalMargin,
-									 0,
-									 w,
-									 _waveView.frame.size.height );*/
 	self.waveAndMarkerView.frame = CGRectMake(_waveAndMarkerView.x,
 											  _waveAndMarkerView.y,
 											  w + kWaveDisplayHorizontalMargin *2,
 											  self.waveAndMarkerView.height);
 	
-	NSLog(@"rect displayW:%.2f scale:%.2f %@",waveDisplayWidth, self.waveScale ,NSStringFromRect(self.waveView.frame));
 	self.waveView.needsDisplay = YES;
 	self.waveAndMarkerView.needsDisplay = YES;
 }
@@ -290,6 +285,7 @@ static BOOL ui_lock;
 }
 
 - (void)beginDisplayPlayPositionLine {
+	[[self.waveAndMarkerView viewWithTag:'spll'] removeFromSuperview];
 	VMPGraph *vertLine = [[VMPGraph alloc] initWithFrame:NSMakeRect(-1000, 0, 1, self.waveView.height)];
 	vertLine.backgroundColor = [NSColor redColor];
 	vertLine.tag = 'spll';
