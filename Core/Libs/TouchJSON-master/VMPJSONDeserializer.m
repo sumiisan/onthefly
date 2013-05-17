@@ -4,15 +4,16 @@
 
 #import "VMPJSONDeserializer.h"
 #import "VMPJSONScanner.h"
+#import "VMPMacros.h"
 
 @implementation VMPJSONDeserializer
 
 - (void)dealloc
     {
-    [scanner release];
+    Release(scanner);
     scanner = NULL;
     //
-    [super dealloc];
+    Dealloc( super );;
     }
 
 #pragma mark -

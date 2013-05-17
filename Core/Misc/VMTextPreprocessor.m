@@ -8,6 +8,7 @@
 
 #import "VMTextPreprocessor.h"
 #import "RegexKitLite.h"
+#import "VMPMacros.h"
 
 @implementation VMTextPreprocessor
 
@@ -52,7 +53,7 @@
 
 - (void)dealloc
 {
-    [super dealloc];
+    Dealloc( super );
 }
 
 @end

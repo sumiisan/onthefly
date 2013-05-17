@@ -4,7 +4,9 @@
 
 #import "CDataScanner.h"
 #import "CJSONScanner.h"
+#import "VMARC.h"
+
 
 @interface VMPJSONScanner : CJSONScanner
-@property (nonatomic, retain) NSString *lastKey;
+@property (nonatomic, VMStrong) NSString *lastKey;
 @end

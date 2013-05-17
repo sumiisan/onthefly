@@ -37,7 +37,7 @@
 			
 			
 			[self addSubview:t];
-			[t release];
+			Release( t );
 		}
 		
 		NSButton *b = [[NSButton alloc] initWithFrame:NSMakeRect(0, 0, frame.size.width, frame.size.height)];
@@ -52,9 +52,9 @@
 }
 
 - (void)dealloc {
-	self.data = nil;
-	[_title release];
-	[super dealloc];
+	VMNullify(data);
+	Release( _title );
+	Dealloc( super );;
 }
 
 - (void)setData:(VMArray *)data numberOfBins:(VMInt)numberOfBins {
@@ -74,8 +74,8 @@
 
 - (void)setTitle:(NSString *)title {
 	if( title != _title ) {	//	because we call this function internally
-		[_title release];
-		_title = [title retain];
+		Release( _title );
+		_title = Retain( title );
 	}
 	if ( ! title ) title = @"";
 	NSTextField *titleField = [self viewWithTag:'txf3'];

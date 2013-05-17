@@ -23,7 +23,7 @@
  *---------------------------------------------------------------------------------*/
 @interface VMPPlayTimeAccumulator : VMHash
 @property (nonatomic, assign)				VMTime				playingTimeOfCurrentPart;
-@property (nonatomic, retain)				VMId				*currentPartId;
+@property (nonatomic, VMStrong)				VMId				*currentPartId;
 
 - (void)addAudioFragment:(VMAudioFragment*)audioFragent;
 @end
@@ -72,7 +72,7 @@
 
 	//	view
 	UInt64				frameCounter;
-	__weak VMSong		*song_;
+	__unsafe_unretained VMSong		*song_;
 }
 
 @property (weak)							VMSong 				*song;				//	the Variable Music Data
@@ -81,11 +81,11 @@
 @property (readonly,getter = isWarmedUp)	BOOL				engineIsWarm;		//
 
 //	for calculating playing time of part
-@property (nonatomic, retain)				VMPPlayTimeAccumulator	*playTimeAccumulator;
+@property (nonatomic, VMStrong)				VMPPlayTimeAccumulator	*playTimeAccumulator;
 
 
 //	displaying
-@property (assign)							VMPTrackView 		*trackView;			//	tracks view
+@property (VMWeak)							VMPTrackView 		*trackView;			//	tracks view
 
 + (VMPSongPlayer*)defaultPlayer;
 

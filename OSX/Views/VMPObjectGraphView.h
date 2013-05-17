@@ -33,8 +33,8 @@
 #pragma mark VMPObjectGraphView
 //------------------------ VMPObjectGraphView ----------------------------
 @interface VMPObjectGraphView : VMPGraph
-@property (nonatomic,retain) NSViewController	*editorViewController;
-@property (nonatomic, assign) VMData *data;
+@property (nonatomic, VMStrong) NSViewController	*editorViewController;
+@property (nonatomic, VMStrong) VMData *data;
 
 - (void)drawGraphWith:(VMData*)data;
 - (void)drawReportGraph:(VMHash*)report;
@@ -47,10 +47,11 @@
 #pragma mark VMPObjectInfoView
 //------------------------ VMPObjectInfoView ----------------------------
 @interface VMPObjectInfoView : VMPGraph
-@property (nonatomic, assign) VMData *data;
-@property (assign) IBOutlet NSTextField *userGeneratedIdField;
-@property (assign) IBOutlet NSTextField *vmpModifierField;
-@property (assign) IBOutlet NSTextField *typeLabel;
+
+@property (nonatomic, VMStrong) VMData *data;
+@property (nonatomic, VMWeak) IBOutlet NSTextField *userGeneratedIdField;
+@property (nonatomic, VMWeak) IBOutlet NSTextField *vmpModifierField;
+@property (nonatomic, VMWeak) IBOutlet NSTextField *typeLabel;
 
 - (void)drawInfoWith:(VMData*)data;
 

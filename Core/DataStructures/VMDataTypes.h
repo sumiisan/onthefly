@@ -86,8 +86,8 @@ typedef enum {
 } VMActionType;
 
 @interface VMTimeRangeDescriptor : NSObject <NSCoding, NSCopying>
-@property (nonatomic, retain) VMString *locationDescriptor;
-@property (nonatomic, retain) VMString *lengthDescriptor;
+@property (nonatomic, VMStrong) VMString *locationDescriptor;
+@property (nonatomic, VMStrong) VMString *lengthDescriptor;
 
 - (VMTime)location;
 - (VMTime)length;
@@ -180,8 +180,8 @@ typedef enum {
 @interface VMFunction : VMData {
 	SEL		processor_;
 }
-@property	(VMNonatomic retain)	VMId			*functionName;
-@property	(VMNonatomic retain)	VMHash			*parameter;
+@property	(VMNonatomic VMStrong)	VMId			*functionName;
+@property	(VMNonatomic VMStrong)	VMHash			*parameter;
 @end
 
 //------------------------- MetaFragment -----------------------------
@@ -189,7 +189,7 @@ typedef enum {
  a fragment with instruction
  */
 @interface VMMetaFragment : VMFragment 
-@property	(VMNonatomic retain)	VMArray			*instructionList;
+@property	(VMNonatomic VMStrong)	VMArray			*instructionList;
 @end
 
 //------------------------ AudioInfo -----------------------------
@@ -201,8 +201,8 @@ typedef enum {
 }
 @property	(VMNonatomic copy)		VMId						*fileId;
 @property	(VMNonatomic)			VMVolume					volume;
-@property	(VMNonatomic retain)	VMTimeRangeDescriptor		*cuePoints;
-@property	(VMNonatomic retain)	VMTimeRangeDescriptor		*regionRange;
+@property	(VMNonatomic VMStrong)	VMTimeRangeDescriptor		*cuePoints;
+@property	(VMNonatomic VMStrong)	VMTimeRangeDescriptor		*regionRange;
 @end
 
 //------------------------ AudioModifier ------------------------
@@ -267,16 +267,14 @@ typedef enum {
 /*
  fragment with audio
  */
-@interface VMAudioFragment : VMMetaFragment {
-	__weak VMAudioInfo	*audioInfoRef_;
-}
+@interface VMAudioFragment : VMMetaFragment
 @property	(nonatomic, copy)		VMId			*audioInfoId;
 
 //	audioInfoReference 
 //	note: 	this is defined here just for runtime convenience, 
 //			actually not a part of static song stucture.
 //			set by the preprocessor, but not copied with setWithData: or setWithProto:
-@property 	(weak)					VMAudioInfo		*audioInfoRef;
+@property 	(unsafe_unretained)		VMAudioInfo		*audioInfoRef;
 @end
 
 //------------------------ AudioFragmentPlayer -----------------------------
@@ -311,8 +309,8 @@ typedef enum {
  generic collection of fragments (abstract)
  */
 @interface VMCollection : VMMetaFragment 
-@property	(VMNonatomic retain)	VMArray			*fragments;
-@property	(VMNonatomic readonly)	VMInt			length;		
+@property	(VMNonatomic VMStrong)	VMArray			*fragments;
+@property	(VMNonatomic readonly)	VMInt			length;
 @end
 
 //------------------------ LiveData -----------------------------
@@ -322,10 +320,10 @@ typedef enum {
 @interface VMLiveData : VMCollection
 @property	(VMNonatomic assign)	VMInt			counter;
 @property 	(VMNonatomic assign)	VMInt			fragPosition;
-@property	(VMNonatomic retain)	VMArray			*history;
+@property	(VMNonatomic VMStrong)	VMArray			*history;
 //	accessor
-@property 	(VMNonatomic readonly)	VMFragment		*currentFragment;	
-@property	(VMNonatomic readonly)	VMFragment		*nextFragment;
+@property 	(VMNonatomic VMReadonly)	VMFragment		*currentFragment;	
+@property	(VMNonatomic VMReadonly)	VMFragment		*nextFragment;
 @end
 
 
@@ -339,7 +337,7 @@ typedef enum {
 	VMChance		*selectedChance_;			//	for internal temporaly use
 }
 - (VMChance*)chanceAtIndex:(VMInt)pos;
-@property	(VMNonatomic retain)	VMLiveData	*liveData;
+@property	(VMNonatomic VMStrong)	VMLiveData	*liveData;
 @end
 
 
@@ -348,7 +346,7 @@ typedef enum {
  generic player
  */
 @interface VMPlayer : VMLiveData
-@property	(VMNonatomic retain)	VMFragment	 	*nextPlayer;
+@property	(VMNonatomic VMStrong)	VMFragment	 	*nextPlayer;
 @property	(VMNonatomic copy)		VMId		*staticDataId;
 @end
 
@@ -367,7 +365,7 @@ typedef enum {
 @interface VMSequence : VMCollection
 //	the fragment which should be set after finishing sequence.
 //	only used if sequence has no parent sequence
-@property 	(VMNonatomic retain)	VMSelector		*subsequent;	
+@property 	(VMNonatomic VMStrong)	VMSelector		*subsequent;	
 @end
 
 
@@ -407,7 +405,7 @@ typedef enum {
 //------------------------ Fragment -----------------------------
 @interface VMFragment(publicMethods)
 //	dataId components accessor
-@property	(VMNonatomic retain)	VMId		*fragId;
+@property	(VMNonatomic VMStrong)	VMId		*fragId;
 @property 	(VMNonatomic assign)	VMId		*partId;
 @property 	(VMNonatomic assign)	VMId		*sectionId;
 @property 	(VMNonatomic assign)	VMId		*trackId;
@@ -446,7 +444,7 @@ typedef enum {
  */
 @interface VMAudioFragment(publicMethods)
 //	audioInfoWrapper
-@property	(VMNonatomic readonly)	VMId			*fileId;
+@property	(VMNonatomic VMReadonly)	VMId			*fileId;
 @property	(VMNonatomic readonly)	VMTime			duration;
 @property	(VMNonatomic readonly)	VMTime			offset;
 @property	(VMNonatomic readonly)	VMVolume		volume;

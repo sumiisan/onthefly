@@ -50,6 +50,7 @@ static const BOOL kUseNotification = NO;
 #define VMPSetAlpha setAlpha
 #define RemoveAllSubViews [[self subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)]
 
+
 #elif TARGET_OS_MAC
 //-------------------------------------------------------------
 //
@@ -88,6 +89,7 @@ static const BOOL kUseNotification = YES;
 #define RemoveAllSubViews  [self setSubviews:[NSArray array]];
 
 
+
 #else
 
 #error OS TARGET NOT SUPPORTED
@@ -105,5 +107,6 @@ static NSString *kDefaultVMDirectory __unused = @"defaultSong";
 
 #endif //_multiplatformh_
 
+#import "VMARC.h"
 
 

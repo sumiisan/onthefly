@@ -39,8 +39,8 @@ static const VMFloat kDefaultLogItemViewHeight = 14.0;
 }
 
 - (void)dealloc {
-	self.backgroundColor = nil;
-	[super dealloc];
+	VMNullify(backgroundColor);
+	Dealloc( super );;
 }
 
 
@@ -103,10 +103,10 @@ static const VMFloat kDefaultLogItemViewHeight = 14.0;
 }
 
 - (void)dealloc {
-	self.log = nil;
-	self.filteredLog = nil;
+	VMNullify(log);
+	VMNullify(filteredLog);
 	if (kUseNotification) [VMPNotificationCenter removeObserver:self];
-	[super dealloc];
+	Dealloc( super );;
 }
 
 - (void)awakeFromNib {
@@ -249,13 +249,13 @@ static const VMFloat kDefaultLogItemViewHeight = 14.0;
 			
 		case VMLogOwner_System:
 			self.log = APPDELEGATE.systemLog;
-			self.filteredLog = [[self.log copy] autorelease];
+			self.filteredLog = AutoRelease([self.log copy]);
 			[self.logTableView reloadData];
 			break;
 			
 		case VMLogOwner_User:
 			self.log = APPDELEGATE.userLog;
-			self.filteredLog = [[self.log copy] autorelease];
+			self.filteredLog = AutoRelease([self.log copy]);
 			[self makeFilteredLog];
 			break;
 	}
@@ -310,7 +310,7 @@ static const VMFloat kDefaultLogItemViewHeight = 14.0;
 		if( [fs isSelectedForSegment:2] ) [typeArray push:@(vmObjectType_audioFragment)];
 		if( [fs isSelectedForSegment:3] ) [typeArray push:@(vmObjectType_notVMObject)];
 		
-		self.filteredLog = [[[VMLog alloc] initWithOwner:self.currentSource managedObjectContext:nil] autorelease];
+		self.filteredLog = AutoRelease([[VMLog alloc] initWithOwner:self.currentSource managedObjectContext:nil] );
 		for ( VMLogRecord *hl in self.log )
 			if ( [typeArray position: @( hl.type ) ] >= 0 ) [self.filteredLog push:hl];
 		
@@ -323,8 +323,8 @@ static const VMFloat kDefaultLogItemViewHeight = 14.0;
 		if( [fs isSelectedForSegment:2] ) [typeArray push:[NSString stringWithFormat:@"type_obj = %d",vmObjectType_audioFragment]];
 		if( [fs isSelectedForSegment:3] ) [typeArray push:[NSString stringWithFormat:@"type_obj = %d",vmObjectType_notVMObject]];
 		
-		self.filteredLog = [[[VMLog alloc] initWithOwner:self.currentSource
-									managedObjectContext:[APPDELEGATE managedObjectContext]] autorelease];
+		self.filteredLog = AutoRelease([[VMLog alloc] initWithOwner:self.currentSource
+									managedObjectContext:[APPDELEGATE managedObjectContext]] );
 		if ( typeArray.count > 0 )
 			[self.filteredLog loadWithPredicateString:[NSString stringWithFormat:@"(%@)", [typeArray join:@" or "]]];
 		else
@@ -401,7 +401,7 @@ static const VMFloat kDefaultLogItemViewHeight = 14.0;
 		
 		if ( self.filteredLog.count <= row ) {
 			//	last row is always empty:
-			NSTextField *tf = [[[NSTextField alloc] initWithFrame:NSMakeRect(0, 0, width, 14)] autorelease];
+			NSTextField *tf = AutoRelease([[NSTextField alloc] initWithFrame:NSMakeRect(0, 0, width, 14)] );
 			tf.backgroundColor = [NSColor lightGrayColor];
 			tf.alignment = NSCenterTextAlignment;
 			tf.stringValue = @"*";
@@ -443,10 +443,8 @@ static const VMFloat kDefaultLogItemViewHeight = 14.0;
 		
 		if ( hl.isExpanded )  {
 			//	logview is expanded:
-			VMPGraph *expansionView = [[[VMPGraph alloc]
-										 initWithFrame:NSMakeRect(0, 0, width, hl.expandedHeight )]
-										autorelease];
-			expansionView.backgroundColor = [NSColor whiteColor];
+			VMPGraph *expansionView = AutoRelease([[VMPGraph alloc]
+												   initWithFrame:NSMakeRect(0, 0, width, hl.expandedHeight )] );			expansionView.backgroundColor = [NSColor whiteColor];
 			expansionView.tag = 'expv';
 			
 			[[logView viewWithTag:'expv'] removeFromSuperview];
@@ -475,7 +473,7 @@ static const VMFloat kDefaultLogItemViewHeight = 14.0;
 							tf.font = [key isEqualToString:selectedFragment] ? [NSFont boldSystemFontOfSize:9] : [NSFont systemFontOfSize:9];
 							tf.toolTip = key;
 							[expansionView addSubview:tf];
-							[tf release];*/
+							Release(tf);*/
 							
 							VMPFragmentCell *fc = [[VMPFragmentCell alloc] initWithFrame:NSMakeRect(x, 0, sw -1, 29)];
 							x += sw;
@@ -483,7 +481,7 @@ static const VMFloat kDefaultLogItemViewHeight = 14.0;
 							[fc setData:d];
 							if ( [key isEqualToString:selectedFragment] ) fc.selected = YES;
 							[expansionView addSubview:fc];
-							[fc release];
+							Release(fc);
 						}
 					}
 					break;
@@ -503,7 +501,7 @@ static const VMFloat kDefaultLogItemViewHeight = 14.0;
 								tf.font = [NSFont systemFontOfSize:10];
 								tf.drawsBackground = YES;
 								[expansionView addSubview:tf];
-								[tf release];
+								Release( tf );
 								y -= 15;
 							}
 						}
@@ -531,7 +529,7 @@ static const VMFloat kDefaultLogItemViewHeight = 14.0;
 					[expansionView addSubview:tf];
 					if ( selected )
 						[tf becomeFirstResponder];
-					[tf release];
+					Release( tf );
 				}
 			}
 			
@@ -547,7 +545,7 @@ static const VMFloat kDefaultLogItemViewHeight = 14.0;
 	}
 
 	//	fallback
-	NSTextField *tf = [[[NSTextField alloc] initWithFrame:NSMakeRect(0, 0, 250, 14)] autorelease];
+	NSTextField *tf = AutoRelease( [[NSTextField alloc] initWithFrame:NSMakeRect(0, 0, 250, 14)] );
 	tf.stringValue = @"logItem not created";
 	return tf;
 }

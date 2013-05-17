@@ -27,7 +27,7 @@
 #define parseMessageFromArg(containerDeclaration) \
 va_list args;\
 va_start(args, format);\
-containerDeclaration = [[[NSString alloc] initWithFormat:format arguments:args] autorelease];\
+containerDeclaration = AutoRelease([[NSString alloc] initWithFormat:format arguments:args]);\
 va_end(args)
 
 

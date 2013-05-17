@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #include <stdlib.h>
+#import "VMARC.h"
 
 
 //	make properties nonatomic on iOS devices.	//	implicit and can be thread unsafe. : remove in future
@@ -139,7 +140,7 @@ typedef enum {
 @public
 	NSMutableArray *array_;
 }
-@property (readonly) NSMutableArray *array;
+@property (VMReadonly) NSMutableArray *array;
 //	get (advanced)
 - (VMHash*)itemAsHash:(VMInt)pos;
 
@@ -195,7 +196,7 @@ typedef enum {
 
 
 @interface VMStack : VMArray
-@property (nonatomic,retain) id current;
+@property (nonatomic,VMStrong) id current;
 - (void)restore;
 @end
 
@@ -217,7 +218,7 @@ typedef enum {
 @public
 	NSMutableDictionary *hash_;
 }
-@property (readonly) NSDictionary *hash;
+@property (VMReadonly) NSDictionary *hash;
 
 //	get
 - (id)item:(VMHashKeyType)key;

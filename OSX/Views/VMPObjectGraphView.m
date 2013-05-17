@@ -38,9 +38,9 @@
 }
 
 - (void)dealloc {
-	[branchViewTemporary release];
-	[line release];
-	[super dealloc];
+	Release(branchViewTemporary);
+	Release(line);
+	Dealloc( super );;
 }
 
 /*---------------------------------------------------------------------------------
@@ -71,7 +71,7 @@
 	if ( parentType == vmObjectType_sequence ) frag = ((VMSequence*)frag).subsequent;
 	if ( frag.type == vmObjectType_selector ) {
 		VMSelector *sel				= (VMSelector*)frag;
-		VMLiveData *saved_liveData	= [[sel.liveData copy] autorelease];
+		VMLiveData *saved_liveData	= AutoRelease([sel.liveData copy]);
 		[sel prepareSelection];
 		if ( sel.sumOfInnerScores == 0 ) return;
 		for( VMChance *ch in sel.fragments ) {
@@ -208,7 +208,7 @@
 	if ( self.fragment.type != vmObjectType_selector ) return;
 	VMSelector *selector = ((VMSelector*)self.fragment);
 	
-	VMLiveData *saved_livedata = [[selector.liveData copy] autorelease];
+	VMLiveData *saved_livedata = AutoRelease([selector.liveData copy]);
 	
 	int base = 0;
 	int num = self.frame.size.width / (vmpCellWidth+vmpCellMargin);
@@ -246,7 +246,7 @@
 					  fragIdsInLastFrame:fragIdsInLastFrame
 								   rect:CGRectMake(x, labelHeight,
 												   vmpCellWidth, contentHeight)];
-		fragIdsInLastFrame = [[scoreForFragmentIds copy] autorelease];
+		fragIdsInLastFrame = AutoRelease([scoreForFragmentIds copy]);
 		
 	}
 	
@@ -264,6 +264,8 @@
 	//	TODO: level 0 = the frag before = @F{}
 	
 	[super setFragment:frag];
+	if ( ! frag ) return;
+	
 	if ( self.frameGraphMode )
 		[self drawFrameGraph];
 	else {
@@ -337,7 +339,7 @@
 				[self drawSelectorGraph:((VMSelector*)fragmentAtPosition)
 								   rect:CGRectMake(x, labelHeight, vmpCellWidth, contentHeight)];
 			} else {
-				VMPFragmentCell * fragCell = [[[VMPFragmentCell alloc]initWithFrame:CGRectMake(x, labelHeight + vmpShadowBlurRadius, vmpCellWidth, contentHeight )] autorelease];
+				VMPFragmentCell * fragCell = AutoRelease([[VMPFragmentCell alloc]initWithFrame:CGRectMake(x, labelHeight + vmpShadowBlurRadius, vmpCellWidth, contentHeight )] );
 				fragCell.fragment = fragmentAtPosition;
 				fragCell.delegate = self;
 				[self addSubview:fragCell];
@@ -381,17 +383,17 @@
 #pragma mark -
 
 @implementation VMPObjectGraphView
-//@synthesize data=data_;
 
 - (void)dealloc {
 	[self removeAllSubviews];
-	self.editorViewController = nil;
-	[super dealloc];
+	VMNullify(data);
+	VMNullify(editorViewController);
+	Dealloc( super );;
 }
 
 - (void)redraw {
 	
-	if ( ! self.data || self.data.type == vmObjectType_chance ) return;
+	if ( self.data.type == vmObjectType_chance ) return;
 	
 	[self removeAllSubviews];
 	
@@ -405,7 +407,7 @@
 			if( ClassMatch( self.editorViewController, VMPSelectorEditorViewController )) {
 				sle = (VMPSelectorEditorViewController*)self.editorViewController;
 			} else {
-				sle = [[[VMPSelectorEditorViewController alloc] initWithNibName:@"VMPSelectorEditorView" bundle:nil] autorelease];
+				sle = AutoRelease([[VMPSelectorEditorViewController alloc] initWithNibName:@"VMPSelectorEditorView" bundle:nil] );
 			}
 			[self addSubview:sle.view];
 			sle.view.frame = self.frame;
@@ -426,7 +428,7 @@
 											  CGPointMiddleOfRect(CGRectZeroOrigin(self.frame)))];
 			[fragCell setData: self.data];
 			[self addSubview: [fragCell taggedWith:vmpg_background]];
-			[fragCell release];
+			Release(fragCell);
 			break;
 		}
 			
@@ -439,7 +441,7 @@
 			if( ClassMatch( self.editorViewController, VMPAudioInfoEditorViewController )) {
 				aie = (VMPAudioInfoEditorViewController*)self.editorViewController;
 			} else {
-				aie = [[[VMPAudioInfoEditorViewController alloc] initWithNibName:@"VMPAudioInfoEditorView" bundle:nil] autorelease];
+				aie = AutoRelease([[VMPAudioInfoEditorViewController alloc] initWithNibName:@"VMPAudioInfoEditorView" bundle:nil] );
 			}
 			[self addSubview:aie.view];
 			aie.view.frame = self.frame;
@@ -462,7 +464,7 @@
 											  CGPointMiddleOfRect(CGRectZeroOrigin(self.frame)))];
 			[fragCell setData: self.data];
 			[self addSubview: [fragCell taggedWith:vmpg_background]];
-			[fragCell release];
+			Release(fragCell);
 			break;
 		}
 	}
@@ -505,11 +507,11 @@
 									 vmpCellWidth,
 									 percent * pixPerPercent
 									 )];
-		cc.fragment = [[[VMFragment alloc] init] autorelease];
+		cc.fragment = ARInstance(VMFragment);
 		cc.fragment.id = data.ident;
 		percentsDisplayed += percent;
 		[self addSubview:cc];
-		[cc release];
+		Release(cc);
 	}
 	
 	pixPerPercent = self.frame.size.height / percentPerRow * 0.7;
@@ -526,10 +528,10 @@
 										 vmpCellWidth,
 										 percent * pixPerPercent
 										 )];
-			cc.fragment = [[[VMAudioFragment alloc] init] autorelease];
+			cc.fragment = AutoRelease([[VMAudioFragment alloc] init] );
 			cc.fragment.id = data.ident;
 			[self addSubview:cc];
-			[cc release];
+			Release(cc);
 			++dataIndex;
 			if ( dataIndex >= frags.count ) break;
 			
@@ -555,7 +557,6 @@
 #pragma mark -
 
 @implementation VMPObjectInfoView
-@synthesize data=data_;
 @synthesize userGeneratedIdField=tf1_,vmpModifierField=tf2_,typeLabel=tf3_;
 
 - (void)awakeFromNib {
@@ -602,6 +603,12 @@
 - (void)drawInfoWith:(VMData*)data {
 	self.data = data;
 	[self redraw];
+}
+
+
+- (void)dealloc {
+	VMNullify(data);
+	[super dealloc];
 }
 
 @end

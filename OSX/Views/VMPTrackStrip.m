@@ -34,9 +34,9 @@
 }
 
 - (void)dealloc {
-	self.audioFragmentId = nil;
-	self.caption = nil;
-   [super dealloc];
+	VMNullify(audioFragmentId);
+	VMNullify(caption);
+   Dealloc( super );
 }
 
 - (void)setInfoString:(NSString *)infoString {

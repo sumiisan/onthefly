@@ -114,8 +114,8 @@ VMFloat limitedSNDRand(VMFloat min, VMFloat max) {
 }
 
 - (void)dealloc {
-	[array_ release];
-	[super dealloc];
+	Release(array_);
+	Dealloc( super );;
 }
 
 - (void)clear {
@@ -123,8 +123,8 @@ VMFloat limitedSNDRand(VMFloat min, VMFloat max) {
 }
 
 //	NSFastEnumarator
-- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state objects:(id *)stackbuf count:(NSUInteger)len {
-	return [array_ countByEnumeratingWithState:state objects:stackbuf count:len];
+- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state objects:(id __unsafe_unretained [])buffer count:(NSUInteger)len {
+	return [array_ countByEnumeratingWithState:state objects:buffer count:len];
 }
 
 - (NSMutableArray*)array {
@@ -144,7 +144,7 @@ VMFloat limitedSNDRand(VMFloat min, VMFloat max) {
 }
 
 + (id)arrayWithArray:(id)arr {
-	return [[[VMArray alloc] initWithArray:arr] autorelease];
+	return AutoRelease([[VMArray alloc] initWithArray:arr] );
 }
 
 + (id)arrayWithObject:(id)obj {
@@ -170,7 +170,7 @@ VMFloat limitedSNDRand(VMFloat min, VMFloat max) {
 }
 
 + (VMArray*)arrayWithString:(VMString*)string splitBy:(VMString*)separator {
-	return [[[VMArray alloc] initWithArray:[string componentsSeparatedByString:separator]] autorelease];
+	return AutoRelease([[VMArray alloc] initWithArray:[string componentsSeparatedByString:separator]] );
 }
 
 + (id)nullFilledArrayWithSize:(VMInt)size {
@@ -232,7 +232,7 @@ VMFloat limitedSNDRand(VMFloat min, VMFloat max) {
 	VMArray *subArr = [arr copy];
 	[subArr append:self];
 	[array_ setArray:subArr->array_];
-	[subArr release];
+	Release(subArr);
 }
 
 - (id)pop {
@@ -390,16 +390,18 @@ VMFloat limitedSNDRand(VMFloat min, VMFloat max) {
 //
 - (void)sort:(VMSortDirection)direction {
 	switch (direction) {
-		case VMSortDirection_ascending:
+		case VMSortDirection_ascending: {
 			[array_ sortUsingComparator:^NSComparisonResult(id obj1, id obj2) {
 				return [self object:obj1 compare:obj2];
 			}];
 			break;
-		case VMSortDirection_descending:
+		}
+		case VMSortDirection_descending: {
 			[array_ sortUsingComparator:^NSComparisonResult(id obj1, id obj2) {
 				return [self object:obj2 compare:obj1];
 			}];
 			break;
+		}
 	}
 }
 
@@ -433,7 +435,7 @@ VMFloat limitedSNDRand(VMFloat min, VMFloat max) {
 	VMArray *tempArray = [self copy];
 	[tempArray sort:VMSortDirection_ascending];
 	VMFloat median = [tempArray itemAsFloat:tempArray.count / 2];
-	[tempArray release];
+	Release(tempArray);
 	return median;
 }
 
@@ -493,7 +495,7 @@ VMFloat limitedSNDRand(VMFloat min, VMFloat max) {
 //
 - (id)initWithCoder:(NSCoder *)aDecoder {
 	if((self=[super init])) {
-		array_ = [[aDecoder decodeObjectForKey:@"array"] retain];
+		array_ = Retain([aDecoder decodeObjectForKey:@"array"]);
 	}
 	return self;
 }
@@ -579,11 +581,11 @@ VMFloat limitedSNDRand(VMFloat min, VMFloat max) {
 }
 
 + (id)hashWith:(NSDictionary*)dict {
-	return [[[VMHash alloc] initWithHash:dict] autorelease];
+	return AutoRelease([[VMHash alloc] initWithHash:dict] );
 }
 
 + (id)hashWithDictionary:(id)dict {
-	return [[[VMHash alloc] initWithHash:dict] autorelease];
+	return AutoRelease([[VMHash alloc] initWithHash:dict] );
 }
 
 - (void)renameKey:(VMHashKeyType)oldKey to:(VMHashKeyType)newKey {
@@ -613,8 +615,8 @@ VMFloat limitedSNDRand(VMFloat min, VMFloat max) {
 
 
 - (void)dealloc {
-	[hash_ release];
-	[super dealloc];
+	Release(hash_);
+	Dealloc( super );;
 }
 
 - (id)item:(VMHashKeyType)key {
@@ -648,7 +650,7 @@ VMFloat limitedSNDRand(VMFloat min, VMFloat max) {
 
 
 - (void)setItem:(id)obj for:(VMHashKeyType)key {
-	[hash_ setObject:NSNullIfNil(obj)  forKey:key];
+	[hash_ setObject:NSNullIfNil(obj) forKey:key];
 }
 
 - (void)removeItem:(VMHashKeyType)key {
@@ -702,7 +704,7 @@ VMFloat limitedSNDRand(VMFloat min, VMFloat max) {
 				else 
 					[(VMArray*)obj1 push:obj2];
 			} else if ( ClassMatch( obj2, VMArray )) {
-				VMArray *cpy = [[obj2 copy] autorelease];
+				VMArray *cpy = AutoRelease([obj2 copy]);
 				[cpy shift:obj1];
 				obj1 = cpy;
 				[self setItem:obj1 for:key];
@@ -763,7 +765,7 @@ VMFloat limitedSNDRand(VMFloat min, VMFloat max) {
 		[lines push:[NSString stringWithFormat:@"%@=%@",key,val]];
 	}
 	NSString *desc = [NSString stringWithFormat:@"{ %@ }",[lines join:@",\n"]];
-	[lines release];
+	Release(lines);
 	return desc;
 }
 
@@ -776,7 +778,7 @@ VMFloat limitedSNDRand(VMFloat min, VMFloat max) {
 //
 - (id)initWithCoder:(NSCoder *)aDecoder {
 	if((self=[super init])) {
-		hash_ = [[aDecoder decodeObjectForKey:@"hash"] retain];
+		hash_ = Retain([aDecoder decodeObjectForKey:@"hash"]);
 	}
 	return self;
 }
@@ -833,7 +835,7 @@ if ( lastIndex == 0 ) {\
 			[self setArray:values fromIndex:0];
 		}
 		if (ClassMatch(values, NSDictionary))
-			values_ = [((NSDictionary*)values) mutableCopy];	//retained
+			values_ = [((NSDictionary*)values) mutableCopy];	//VMStronged
 		
 		VMHashedArraySetLastIndex;
 	}
@@ -847,7 +849,7 @@ if ( lastIndex == 0 ) {\
 - (void)setKeys {//internal
 	if (keysUpToDate) return;
 	NSArray *unsortedKeys = [values_ allKeys];
-	[keys_ release];
+	Release(keys_);
 	keys_ = [[unsortedKeys sortedArrayUsingComparator:^(id obj1, id obj2) {
 		//	there is a potential BUG which sets VMArray as key.	i couldn't solve. ss121211
 		if( ClassMatch(obj1, VMArray) || ClassMatch(obj2, VMArray) )
@@ -983,7 +985,8 @@ if ( lastIndex == 0 ) {\
 }
 
 //	NSFastEnumarator
-- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state objects:(id *)stackbuf count:(NSUInteger)len {
+- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state objects:(id __unsafe_unretained [])buffer count:(NSUInteger)len{
+//- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state objects:(id VMUnsafe *)stackbuf count:(NSUInteger)len {
 	NSUInteger count = 0;
 	if(state->state == 0) {
 		//	init
@@ -992,10 +995,10 @@ if ( lastIndex == 0 ) {\
 	}
 	if(state->state < values_.count ) {
         // Set state->itemsPtr to the provided buffer.
-        state->itemsPtr = stackbuf;
+        state->itemsPtr = buffer;
         // Fill in the stack array, either until we've provided all items from the list
         while(( state->state < values_.count ) && (count < len )) {
-            stackbuf[count] = [values_ objectForKey:[keys_ objectAtIndex:state->state]];
+            buffer[count] = [values_ objectForKey:[keys_ objectAtIndex:state->state]];
             state->state++;
             count++;
         }
@@ -1007,9 +1010,9 @@ if ( lastIndex == 0 ) {\
 }
 
 - (void)dealloc {
-	[values_ release];
-	[keys_ release];
-	[super dealloc];
+	Release(values_);
+	Release(keys_);
+	Dealloc( super );
 }
 
 //	NSCoding, NSCopying
@@ -1020,7 +1023,7 @@ if ( lastIndex == 0 ) {\
 //
 - (id)initWithCoder:(NSCoder *)aDecoder {
 	if((self=[super init])) {
-		values_ = [[aDecoder decodeObjectForKey:@"hash"] retain];
+		values_ = Retain([aDecoder decodeObjectForKey:@"hash"]);
 		VMHashedArraySetLastIndex;
 	}
 	return self;

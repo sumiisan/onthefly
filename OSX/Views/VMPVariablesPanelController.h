@@ -15,14 +15,14 @@
 }
 
 
-@property (nonatomic, assign) IBOutlet NSSegmentedControl	*typeSelector;
-@property (nonatomic, assign) IBOutlet NSTableView			*tableView;
-@property (nonatomic, assign) IBOutlet NSTextField			*expressionInputField;
-@property (nonatomic, assign) IBOutlet NSTextField			*resultField;
+@property (nonatomic, VMWeak) IBOutlet NSSegmentedControl	*typeSelector;
+@property (nonatomic, VMWeak) IBOutlet NSTableView			*tableView;
+@property (nonatomic, VMWeak) IBOutlet NSTextField			*expressionInputField;
+@property (nonatomic, VMWeak) IBOutlet NSTextField			*resultField;
 
 
-@property (nonatomic, retain)			VMArray				*itemsInTable;
-@property (nonatomic, retain)			VMId				*selectedFragmentId;
+@property (nonatomic, VMStrong)			VMArray				*itemsInTable;
+@property (nonatomic, VMStrong)			VMId				*selectedFragmentId;
 
 - (IBAction)typeSelected:(id)sender;
 - (IBAction)expressionEntered:(id)sender;

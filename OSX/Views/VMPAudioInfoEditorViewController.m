@@ -73,6 +73,12 @@
 	}
 }
 
+- (void)dealloc {
+    VMNullify(audioObject);
+	[super dealloc];
+}
+
+
 @end
 
 
@@ -106,9 +112,10 @@ static const CGFloat kWaveDisplayHorizontalMargin = 20;
 
 - (void)dealloc {
 	[VMPNotificationCenter removeObserver:self];
-	self.audioInfo = nil;
-	self.audioObject = nil;
-	[super dealloc];
+	VMNullify(audioPlayer);
+	VMNullify(audioInfo);
+	VMNullify(audioObject);
+	Dealloc( super );;
 }
 
 - (void)awakeFromNib {
@@ -149,9 +156,9 @@ static const CGFloat kWaveDisplayHorizontalMargin = 20;
 	self.fileIdField.stringValue = (self.audioInfo.hasExplicitlySpecifiedFileId ? self.audioInfo.fileId : @"" );
 	if( self.audioInfo.fileId )
 		[self.fileIdField.cell setPlaceholderAttributedString:
-		 [[[NSAttributedString alloc] initWithString: self.audioInfo.fileId attributes:@{
+		 AutoRelease([[NSAttributedString alloc] initWithString: self.audioInfo.fileId attributes:@{
 					  NSForegroundColorAttributeName:[NSColor disabledControlTextColor]
-		   }] autorelease]];
+		   }] )];
 }
 
 
@@ -159,8 +166,8 @@ static const CGFloat kWaveDisplayHorizontalMargin = 20;
 #pragma mark accessor
 
 - (void)setAudioInfo:(VMAudioInfo *)audioInfo {
-	[_audioInfo release];
-	_audioInfo = [audioInfo retain];
+	Release( _audioInfo );
+	_audioInfo = Retain( audioInfo );
 	[self updateFieldsAndKnobs];
 	
 	[self loadAudioObject:_audioInfo.fileId];
@@ -175,7 +182,7 @@ static const CGFloat kWaveDisplayHorizontalMargin = 20;
 - (void)loadAudioObject:(VMString*)fileId {
 	NSString *path = [DEFAULTSONGPLAYER filePathForFileId:fileId];
 	if (path) {
-		self.audioObject = [[[VMAudioObject alloc] init] autorelease];
+		self.audioObject = AutoRelease( [[VMAudioObject alloc] init] );
 		OSErr err = [self.audioObject load:path];
 		if (err)
 			NSLog(@"AudioObject load error:%d",err);
@@ -280,7 +287,7 @@ static BOOL ui_lock;
 		self.audioPlayer = [notification.userInfo objectForKey:@"player"];
 		[self beginDisplayPlayPositionLine];
 	} else {
-		self.audioPlayer = nil;
+		VMNullify(audioPlayer);
 	}
 }
 
@@ -301,15 +308,16 @@ static BOOL ui_lock;
 	if ( self.audioPlayer &&  self.audioPlayer.isPlaying ) {
 		VMFloat dur = _audioObject.numberOfFrames / (VMFloat)_audioObject.framesPerSecond;
 		VMFloat p = ( self.audioPlayer.currentTime / dur );
-		if ( p > 1 ) self.audioPlayer = nil;
-		else {
+		if ( p > 1 ) {
+			VMNullify(audioPlayer);
+		} else {
 			lineObj.x = p * _waveView.width + kWaveDisplayHorizontalMargin;
 			[self performSelector:@selector(drawPlayPositionLine:) withObject:lineObj afterDelay:.03];
 		}
 	}
 	if ( ! self.audioPlayer ) {
 		[lineObj removeFromSuperview];
-		[lineObj release];
+		Release(lineObj);
 	}
 }
 

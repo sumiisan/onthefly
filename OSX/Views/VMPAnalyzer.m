@@ -41,11 +41,11 @@
 }
 
 - (void)dealloc {
-	self.ident = nil;
-	self.count = nil;
-	self.percent = nil;
-	self.duration = nil;
-	[super dealloc];
+	VMNullify(ident);
+	VMNullify(count);
+	VMNullify(percent);
+	VMNullify(duration);
+	Dealloc( super );
 }
 
 @end
@@ -147,21 +147,21 @@
  
  ----------------------------------------------------------------------------------*/
 
-@property (retain)						VMHash						*countForFragmentId;
-@property (retain)						VMHash						*routesForId;
-@property (retain)						VMHash						*countForPart;
-@property (retain)						VMHash						*sojournDataForPart;
-@property (retain)						VMHash						*histograms;
-@property (retain)						VMArray						*unresolveables;
+@property (VMStrong)						VMHash						*countForFragmentId;
+@property (VMStrong)						VMHash						*routesForId;
+@property (VMStrong)						VMHash						*countForPart;
+@property (VMStrong)						VMHash						*sojournDataForPart;
+@property (VMStrong)						VMHash						*histograms;
+@property (VMStrong)						VMArray						*unresolveables;
 
 @property (readonly, getter=isBusy)		BOOL						busy;
-@property (retain)						VMFragment					*entryPoint;
-@property (retain)						VMId						*currentPartId;
+@property (VMStrong)						VMFragment					*entryPoint;
+@property (VMStrong)						VMId						*currentPartId;
 
-@property (retain)						VMArray						*dataIdToProcess;
+@property (VMStrong)						VMArray						*dataIdToProcess;
 @property (assign)						VMInt						currentPositionInDataIdList;
 
-@property (retain)						VMString					*lastFragmentId;
+@property (VMStrong)						VMString					*lastFragmentId;
 
 @end
 
@@ -199,9 +199,9 @@ static const int	kLengthOfPartTraceRoute					= 10000;	//	gives up after 10000 ti
 		[recordCell_defaultCell_static_ setAlignment:NSRightTextAlignment ];
 	}
 	if ( ! oliveColor ) {
-		oliveColor		= [[NSColor colorWithCalibratedRed:0.3 green:0.7 blue:0.4 alpha:0.9] retain];
-		teaColor		= [[NSColor colorWithCalibratedRed:0.4 green:0.9 blue:0.6 alpha:0.9] retain];
-		mandarineColor	= [[NSColor colorWithCalibratedRed:1.0 green:0.7 blue:0.3 alpha:0.9] retain];
+		oliveColor		= Retain([NSColor colorWithCalibratedRed:0.3 green:0.7 blue:0.4 alpha:0.9] );
+		teaColor		= Retain([NSColor colorWithCalibratedRed:0.4 green:0.9 blue:0.6 alpha:0.9] );
+		mandarineColor	= Retain([NSColor colorWithCalibratedRed:1.0 green:0.7 blue:0.3 alpha:0.9] );
 	}
 	
 	return analyzer_singleton_static_;
@@ -211,7 +211,7 @@ static const int	kLengthOfPartTraceRoute					= 10000;	//	gives up after 10000 ti
 	self=[super init];
 	if (self) {
 		analyzer_singleton_static_ = self;
-		self.progressWC = [[[VMPProgressWindowController alloc] initWithWindow:nil] autorelease];
+		self.progressWC = AutoRelease([[VMPProgressWindowController alloc] initWithWindow:nil] );
 		[NSBundle loadNibNamed: @"VMPProgressWindow" owner: self.progressWC];
 		self.progressWC.delegate = self;
 	}
@@ -219,21 +219,21 @@ static const int	kLengthOfPartTraceRoute					= 10000;	//	gives up after 10000 ti
 }
 
 - (void)dealloc {
-	self.dataIdToProcess = nil;
-	self.lastFragmentId = nil;
+	VMNullify(dataIdToProcess);
+	VMNullify(lastFragmentId);
 	//
-	self.entryPoint = nil;
-	self.report = nil;
-	self.progressWC = nil;
-	self.currentPartId = nil;
-	self.unresolveables = nil;
-	self.history = nil;
-	self.countForFragmentId = nil;
-	self.countForPart = nil;
-	self.sojournDataForPart = nil;
-	self.routesForId = nil;
-	self.histograms = nil;	
-    [super dealloc];
+	VMNullify(entryPoint);
+	VMNullify(report);
+	VMNullify(progressWC);
+	VMNullify(currentPartId);
+	VMNullify(unresolveables);
+	VMNullify(history);
+	VMNullify(countForFragmentId);
+	VMNullify(countForPart);
+	VMNullify(sojournDataForPart);
+	VMNullify(routesForId);
+	VMNullify(histograms);	
+    Dealloc( super );;
 }
 
 #pragma mark -
@@ -258,7 +258,7 @@ static const int	kLengthOfPartTraceRoute					= 10000;	//	gives up after 10000 ti
 			//
 			// part domestic route statistics
 			//
-			VMId *partId = [[VMArray arrayWithString:APPDELEGATE.editorViewController.currentDisplayingDataId
+			VMId *partId = [[VMArray arrayWithString:APPDELEGATE.editorWindowController.currentDisplayingDataId
 											 splitBy:@"_"] item:0];
 			VMFragment *entrySelector = [DEFAULTSONG data:[partId stringByAppendingString:@"_sel"]];
 			if (entrySelector) {
@@ -325,10 +325,10 @@ static const int	kLengthOfPartTraceRoute					= 10000;	//	gives up after 10000 ti
 	if ( self.isBusy ) return NO;
 	
     _busy = YES;
-	self.report = nil;
+	VMNullify(report);
 	self.entryPoint = inEntryPoint;
-	self.log = [[[VMLog alloc] initWithOwner:VMLogOwner_Statistics
-						managedObjectContext:nil] autorelease];
+	self.log = AutoRelease([[VMLog alloc] initWithOwner:VMLogOwner_Statistics
+						managedObjectContext:nil] );
 	[DEFAULTSONG.log save];
 	DEFAULTSONG.log = self.log;
 	
@@ -458,7 +458,7 @@ static const int	kLengthOfPartTraceRoute					= 10000;	//	gives up after 10000 ti
 
 - (void)reset_proc {
 	[DEFAULTSONG setFragmentId:self.entryPoint.id];
-	self.lastFragmentId = nil;
+	VMNullify(lastFragmentId);
 }
 
 - (void)analyze_proc {
@@ -467,7 +467,7 @@ static const int	kLengthOfPartTraceRoute					= 10000;	//	gives up after 10000 ti
     }
 	[self.progressWC setProgress:(double)(numberOfIterations - iterationsLeft)
 						 ofTotal:(double)numberOfIterations message:@"Analyzing:"
-						  window:[VMPlayerOSXDelegate singleton].editorViewController.window];
+						  window:[VMPlayerOSXDelegate singleton].editorWindowController.window];
 	if ( --iterationsLeft > 0 ) {
 		[self performSelector:@selector(analyze_proc) withObject:nil afterDelay:0.005];
 	} else {
@@ -498,11 +498,11 @@ static const int	kLengthOfPartTraceRoute					= 10000;	//	gives up after 10000 ti
 		maxFragmentPercent	= MAX( percent,		maxFragmentPercent );
 		maxFragmentDuration	= MAX( duration,	maxFragmentDuration );
 		
-		[fragArray push:[[[VMPReportRecord alloc] initWithType:vmpReportRecordType_frag
+		[fragArray push:AutoRelease([[VMPReportRecord alloc] initWithType:vmpReportRecordType_frag
 														   id:dataId
 														count:count
 													  percent:percent
-													 duration:duration  ] autorelease]];
+													 duration:duration  ] )];
 		
 		if ( ac ) {
 			VMId	*partId			= ac.partId;
@@ -535,11 +535,11 @@ static const int	kLengthOfPartTraceRoute					= 10000;	//	gives up after 10000 ti
 		maxPartPercent	= MAX( percent,		maxPartPercent );
 		maxPartDuration	= MAX( duration,	maxPartDuration );
 		
-		VMPReportRecord *r = [[[VMPReportRecord alloc] initWithType:VMPReportRecordType_part
+		VMPReportRecord *r = AutoRelease([[VMPReportRecord alloc] initWithType:VMPReportRecordType_part
 																 id:dataId
 															  count:count
 															percent:percent
-														   duration:duration] autorelease];
+														   duration:duration]);
 		if ( !exitWhenPartChanged ) {
 			//	calculate mean for sojourn length
 			VMFloat sum = 0;
@@ -568,7 +568,7 @@ static const int	kLengthOfPartTraceRoute					= 10000;	//	gives up after 10000 ti
 - (void)finishAnalysis {
 	VMHash *durationForPart = ARInstance(VMHash);
 	VMHash *numberOfFragmentsForPart = ARInstance(VMHash);
-	[self.progressWC setProgress:0 ofTotal:0 message:nil window:[VMPlayerOSXDelegate singleton].editorViewController.window];
+	[self.progressWC setProgress:0 ofTotal:0 message:nil window:[VMPlayerOSXDelegate singleton].editorWindowController.window];
 
 	totalDuration=maxPartCount=maxPartPercent=maxPartDuration=maxFragmentCount=maxFragmentPercent=maxFragmentDuration=maxVariety=0;
 	
@@ -646,7 +646,7 @@ static const int	kLengthOfPartTraceRoute					= 10000;	//	gives up after 10000 ti
 	
 	//	log
 	[self.log save];
-	DEFAULTSONG.log = [[[VMLog alloc] initWithOwner:VMLogOwner_Player managedObjectContext:nil] autorelease];
+	DEFAULTSONG.log = AutoRelease([[VMLog alloc] initWithOwner:VMLogOwner_Player managedObjectContext:nil] );
 
 						
 
@@ -694,7 +694,7 @@ static const int	kLengthOfPartTraceRoute					= 10000;	//	gives up after 10000 ti
 	
 	[self.progressWC setProgress:(double)self.currentPositionInDataIdList
 						 ofTotal:(double)dataCount message:@"Checking File:"
-						  window:APPDELEGATE.editorViewController.window];
+						  window:APPDELEGATE.editorWindowController.window];
 	
 	if ( ++self.currentPositionInDataIdList < dataCount ) {
 		[self performSelector:@selector(checkFiles_proc) withObject:nil afterDelay:0.005];
@@ -707,11 +707,11 @@ static const int	kLengthOfPartTraceRoute					= 10000;	//	gives up after 10000 ti
 			[APPDELEGATE.systemLog record:self.unresolveables filter:NO];
 		}
 		
-		[self.progressWC setProgress:0 ofTotal:0 message:nil window:[VMPlayerOSXDelegate singleton].editorViewController.window];
+		[self.progressWC setProgress:0 ofTotal:0 message:nil window:[VMPlayerOSXDelegate singleton].editorWindowController.window];
 		[VMPNotificationCenter postNotificationName:VMPNotificationLogAdded
 											 object:self
 										   userInfo:@{@"owner":@(VMLogOwner_System)}];
-		self.dataIdToProcess = nil;
+		VMNullify(dataIdToProcess);
 		_busy =NO;
 	}
 }
@@ -953,9 +953,9 @@ else if( ClassMatch(subData, VMChance )) \
 			break;
 	}
 	/*
-	 oliveColor		= [[NSColor colorWithCalibratedRed:0.3 green:0.7 blue:0.4 alpha:0.9] retain];
-	 teaColor		= [[NSColor colorWithCalibratedRed:0.4 green:0.9 blue:0.6 alpha:0.9] retain];
-	 mandarineColor	= [[NSColor colorWithCalibratedRed:1.0 green:0.7 blue:0.3 alpha:0.9] retain];
+	 oliveColor		= [[NSColor colorWithCalibratedRed:0.3 green:0.7 blue:0.4 alpha:0.9] VMStrong];
+	 teaColor		= [[NSColor colorWithCalibratedRed:0.4 green:0.9 blue:0.6 alpha:0.9] VMStrong];
+	 mandarineColor	= [[NSColor colorWithCalibratedRed:1.0 green:0.7 blue:0.3 alpha:0.9] VMStrong];
 	 */
 	
 	return cell;

@@ -14,10 +14,8 @@
 
 //--------------------- VMPWaveView -----------------------------
 
-@interface VMPWaveView : VMPGraph {
-	__weak	VMAudioObject	*_audioObject;
-}
-@property (weak)				VMAudioObject					*audioObject;
+@interface VMPWaveView : VMPGraph
+@property (nonatomic, VMStrong)		VMAudioObject					*audioObject;
 @end
 
 /*---------------------------------------------------------------------------------
@@ -28,32 +26,30 @@
  *
  *---------------------------------------------------------------------------------*/
 
-@interface VMPAudioInfoEditorViewController : NSViewController <VMPDataGraphObject, VMPGraphDelegate> {
-	__weak	VMPAudioPlayer	*_audioPlayer;
-}
+@interface VMPAudioInfoEditorViewController : NSViewController <VMPDataGraphObject, VMPGraphDelegate>
 
-@property (nonatomic, retain)	VMAudioInfo						*audioInfo;
-@property (nonatomic, retain)	VMAudioObject					*audioObject;
+@property (nonatomic, VMStrong)	VMAudioInfo						*audioInfo;
+@property (nonatomic, VMStrong)	VMAudioObject					*audioObject;
 @property (nonatomic)			VMFloat							waveScale;
-@property (weak)				VMPAudioPlayer					*audioPlayer;
+@property (nonatomic, VMStrong)	VMPAudioPlayer					*audioPlayer;
 
 
-@property (nonatomic, assign) IBOutlet VMPTimeRangeEditorView	*cueRangeEditor;
-@property (nonatomic, assign) IBOutlet VMPTimeRangeEditorView	*regionRangeEditor;
-@property (nonatomic, assign) IBOutlet NSView					*cueRangeEditorViewPlaceHolder;
-@property (nonatomic, assign) IBOutlet NSView					*regionRangeEditorViewPlaceHolder;
-@property (nonatomic, assign) IBOutlet NSPopUpButton			*regionSelector;
-@property (nonatomic, assign) IBOutlet NSSlider					*volumeSlider;
-@property (nonatomic, assign) IBOutlet NSTextField				*volumeIndicator;
-@property (nonatomic, assign) IBOutlet NSButton					*zoomInButton;
-@property (nonatomic, assign) IBOutlet NSButton					*zoomOutButton;
-@property (nonatomic, assign) IBOutlet NSScrollView				*waveScrollView;
+@property (nonatomic, VMWeak) IBOutlet VMPTimeRangeEditorView	*cueRangeEditor;
+@property (nonatomic, VMWeak) IBOutlet VMPTimeRangeEditorView	*regionRangeEditor;
+@property (nonatomic, VMWeak) IBOutlet NSView					*cueRangeEditorViewPlaceHolder;
+@property (nonatomic, VMWeak) IBOutlet NSView					*regionRangeEditorViewPlaceHolder;
+@property (nonatomic, VMWeak) IBOutlet NSPopUpButton			*regionSelector;
+@property (nonatomic, VMWeak) IBOutlet NSSlider					*volumeSlider;
+@property (nonatomic, VMWeak) IBOutlet NSTextField				*volumeIndicator;
+@property (nonatomic, VMWeak) IBOutlet NSButton					*zoomInButton;
+@property (nonatomic, VMWeak) IBOutlet NSButton					*zoomOutButton;
+@property (nonatomic, VMWeak) IBOutlet NSScrollView				*waveScrollView;
 //@property (nonatomic, assign) IBOutlet NSImageView				*waveDisplay;
-@property (nonatomic, assign) IBOutlet VMPWaveView				*waveView;
-@property (nonatomic, assign) IBOutlet VMPGraph					*waveAndMarkerView;
+@property (nonatomic, VMWeak) IBOutlet VMPWaveView				*waveView;
+@property (nonatomic, VMWeak) IBOutlet VMPGraph					*waveAndMarkerView;
 
-@property (nonatomic, assign) IBOutlet NSTextField				*fileIdField;
-@property (nonatomic, assign) IBOutlet NSButton					*openFileButton;
+@property (nonatomic, VMWeak) IBOutlet NSTextField				*fileIdField;
+@property (nonatomic, VMWeak) IBOutlet NSButton					*openFileButton;
 
 - (IBAction)openFileButtonClicked:(id)sender;
 - (IBAction)zoomButtonClicked:(id)sender;

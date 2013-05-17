@@ -6,6 +6,9 @@
 //  Copyright (c) 2012 sumiisan (aframasda.com). All rights reserved.
 //
 
+#import "VMARC.h"
+
+
 #ifndef OnTheFly_VMPreprocessorMacros_h
 #define OnTheFly_VMPreprocessorMacros_h
 
@@ -36,10 +39,10 @@
 
 //	alloc instances
 #define NewInstance(cls) [[cls alloc]init]
-#define ARInstance(cls) [NewInstance(cls) autorelease]
+#define ARInstance(cls) AutoRelease( NewInstance(cls) )
 #define NewInstanceIfNil(var,cls) if(!var)var=NewInstance(cls)
-#define ReleaseAndNewInstance(var,cls) [var release];var=NewInstance(cls)
-#define ReleaseAndNil(var) [var release];var=nil
+#define ReleaseAndNewInstance(var,cls) Release(var);var=NewInstance(cls)
+#define ReleaseAndNil(var) Release(var);var=nil
 
 //	class macro
 #define ClassMatch(var,cls) [var isKindOfClass:[cls class]]

@@ -7,6 +7,7 @@
 //
 
 #import "VMPAnalyzer.h"
+#import "VMPGraph.h"
 
 @class VMPCodeEditorView;
 
@@ -19,6 +20,10 @@
 @interface VMPObjectCell : NSTextFieldCell
 @end
 
+
+//--------------------- split view with custom horiz. divider -----------------------------
+@interface VMPEditorWindowSplitter : NSSplitView
+@end
 
 
 /*---------------------------------------------------------------------------------
@@ -44,13 +49,13 @@
 @class VMPObjectGraphView, VMPObjectInfoView;
 
 @interface VMPEditorWindowController : NSWindowController
-<NSOutlineViewDelegate, NSOutlineViewDataSource, NSWindowDelegate, VMPAnalyzerDelegate> {
+<NSOutlineViewDelegate, NSOutlineViewDataSource, NSWindowDelegate, VMPAnalyzerDelegate, NSSplitViewDelegate> {
 @private
-	BOOL		performingAutoComplete;
-	BOOL		performingSearchFilter;
-	BOOL		performingHistoryMove;
-	BOOL		handlingCommand;
-	__weak		VMHash	*_songData;
+	BOOL					performingAutoComplete;
+	BOOL					performingSearchFilter;
+	BOOL					performingHistoryMove;
+	BOOL					handlingCommand;
+	__unsafe_unretained		VMHash	*_songData;
 }
 
 
@@ -76,25 +81,30 @@
 - (void)applicationDidLaunch;			//	initial setup after app is launched
 
 //	public
-@property (nonatomic, retain)	VMId			*currentDisplayingDataId;
+@property (nonatomic, VMStrong)	VMId			*currentDisplayingDataId;
 
 
 //	views
-@property (nonatomic, assign)	IBOutlet NSWindow				*editorWindow;
-@property (nonatomic, assign)	IBOutlet VMPObjectGraphView		*graphView;
-@property (nonatomic, assign)	IBOutlet VMPObjectInfoView		*infoView;
+@property (nonatomic, VMWeak)	IBOutlet NSWindow				*editorWindow;
+@property (nonatomic, VMWeak)	IBOutlet VMPObjectGraphView		*graphView;
+@property (nonatomic, VMWeak)	IBOutlet VMPObjectInfoView		*infoView;
 
 //	browser
-@property (nonatomic, assign)	IBOutlet VMPOutlineView			*objectTreeView;
-@property (nonatomic, assign)	IBOutlet NSSearchField			*searchField;
-@property (nonatomic, assign)	IBOutlet VMPCodeEditorView		*codeEditorView;
+@property (nonatomic, VMWeak)	IBOutlet VMPOutlineView			*objectTreeView;
+@property (nonatomic, VMWeak)	IBOutlet NSSearchField			*searchField;
+@property (nonatomic, VMWeak)	IBOutlet VMPCodeEditorView		*codeEditorView;
 
 //	referrer
-@property (nonatomic, assign)	IBOutlet NSPopUpButton			*referrerPopup;
-@property (nonatomic, assign)	IBOutlet NSMenu					*referrerMenu;
+@property (nonatomic, VMWeak)	IBOutlet NSPopUpButton			*referrerPopup;
+@property (nonatomic, VMWeak)	IBOutlet NSMenu					*referrerMenu;
 
 //	history
-@property (nonatomic, assign)	IBOutlet NSSegmentedControl		*historyArrowButtons;
+@property (nonatomic, VMWeak)	IBOutlet NSSegmentedControl		*historyArrowButtons;
+
+//	splitter
+@property (nonatomic, VMWeak)	IBOutlet VMPGraph		*editorSplitterView;
+@property (nonatomic, VMWeak)	IBOutlet NSButton		*playButton;
+@property (nonatomic, VMWeak)	IBOutlet NSTextField	*timeIndicator;
 
 
 @end

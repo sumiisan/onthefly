@@ -8,6 +8,7 @@
 
 #import "VMPTrackView.h"
 #import "MultiPlatform.h"
+#import "VMPMacros.h"
 
 @implementation VMPTrackView
 
@@ -16,8 +17,8 @@
         // Initialization code
 		CGFloat h = (int)( self.frame.size.height / kNumberOfAudioPlayers );
         for( int i = 0; i < kNumberOfAudioPlayers; ++i ) {
-            tracks[i] = [[[VMPTrackStrip alloc] initWithFrame:
-						  VMPMakeRect(1, i * h + 1, self.frame.size.width-2, h-1)] retain];
+            tracks[i] = Retain([[VMPTrackStrip alloc] initWithFrame:
+						  VMPMakeRect(1, i * h + 1, self.frame.size.width-2, h-1)]);
             [self addSubview:tracks[i]];
 #ifdef VMP_OSX
             [tracks[i] setAutoresizingMask:NSViewWidthSizable];
@@ -64,9 +65,9 @@
 
 - (void)dealloc {
 	for( int i = 0; i < kNumberOfAudioPlayers; ++i ) {
-		[tracks[i] release];
+		Release( tracks[i] );
     }
-    [super dealloc];
+    Dealloc( super );;
 }
 
 - (void)redraw: (int)idx player:(VMPAudioPlayer*)audioPlayer {

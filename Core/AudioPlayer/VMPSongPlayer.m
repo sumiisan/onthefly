@@ -50,8 +50,8 @@
 }
 
 - (void)dealloc {
-    self.currentPartId = nil;
-	[super dealloc];
+    VMNullify(currentPartId);
+	Dealloc( super );;
 }
 
 
@@ -673,11 +673,11 @@ static VMPSongPlayer 	*songPlayer_singleton_static_ = nil;
 	}
 	
 	VMPQueuedFragment *frag = [self queue:af at:0];
-	if( audioPlayerList ) [audioPlayerList release];
+	if( audioPlayerList ) Release(audioPlayerList);
 	audioPlayerList = NewInstance(VMArray);
 	
     for( int i = 0; i < [self numberOfAudioPlayers]; ++i )
-		[audioPlayerList push:[[[VMPAudioPlayer alloc] initWithId: i] autorelease]];
+		[audioPlayerList push:AutoRelease([[VMPAudioPlayer alloc] initWithId: i] )];
     
 	[self startTimer:@selector(timerCall:)];
     
@@ -736,11 +736,11 @@ static VMPSongPlayer 	*songPlayer_singleton_static_ = nil;
 }
 
 - (void)dealloc {
-	self.playTimeAccumulator = nil;
-	[audioPlayerList release];
-	[fragQueue release];
-	self.song = nil;
-	[super dealloc];
+	VMNullify(playTimeAccumulator);
+	Release(audioPlayerList);
+	Release(fragQueue);
+	VMNullify(song);
+	Dealloc( super );;
 }
 
 + (VMPSongPlayer*)defaultPlayer {

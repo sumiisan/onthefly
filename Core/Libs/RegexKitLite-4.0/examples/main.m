@@ -21,6 +21,6 @@ int main(int argc, char *argv[]) {
     NSLog(@"%lu: %lu '%@'", (u_long)++line, (u_long)[matchedString length], matchedString);
   }
 
-  [pool release];
+  Release(pool);
   return(0);
 }

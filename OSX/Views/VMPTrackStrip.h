@@ -18,8 +18,8 @@
     NSTimeInterval  offset;
 }
 
-@property (nonatomic, retain) NSTextField *caption;
-@property (nonatomic, retain) NSString *audioFragmentId;
+@property (nonatomic, VMStrong) NSTextField *caption;
+@property (nonatomic, VMStrong) NSString *audioFragmentId;
 
 - (void)setInfoString:(NSString *)infoString;
 

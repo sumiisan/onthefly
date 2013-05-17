@@ -39,7 +39,7 @@ CGPoint CGPointMiddleOfRect( CGRect rect ) {
 //	private macros and funcs
 
 #define GradientWithColors(c1,c2) \
-[[[NSGradient alloc] initWithStartingColor:c1 endingColor:c2] autorelease]
+AutoRelease([[NSGradient alloc] initWithStartingColor:c1 endingColor:c2])
 
 #define BeginGC \
 	NSGraphicsContext* context = [NSGraphicsContext currentContext];
@@ -169,15 +169,16 @@ static 	VMHash *bgColorForType_static_ = nil;
 
 + (NSColor*)colorForDataType:(vmObjectType)type {
 	if ( ! bgColorForType_static_ )
-		bgColorForType_static_ = [[VMHash hashWithObjectsAndKeys:
-							 colorForType( fragment,		0.3, 0.3, 0.45 )
-							 colorForType( selector,		0.2, 0.5, 0.0 )
-							 colorForType( sequence,		0.1, 0.3, 0.7 )
-							 colorForType( audioFragment, 	0.5, 0.0, 0.5 )
-							 colorForType( audioInfo,		0.5, 0.1, 0.0 )
-							 colorForType( chance,			0.5, 0.5, 0.0 )
-							 colorForType( reference,		0.4, 0.4, 0.4 )
-							 nil] retain];
+		bgColorForType_static_ = Retain([VMHash hashWithObjectsAndKeys:
+								   colorForType( fragment,		0.3, 0.3, 0.45 )
+								   colorForType( selector,		0.2, 0.5, 0.0 )
+								   colorForType( sequence,		0.1, 0.3, 0.7 )
+								   colorForType( audioFragment, 0.5, 0.0, 0.5 )
+								   colorForType( audioInfo,		0.5, 0.1, 0.0 )
+								   colorForType( chance,		0.5, 0.5, 0.0 )
+								   colorForType( reference,		0.4, 0.4, 0.4 )
+								   colorForType( unknown,		0.8, 0.8, 0.8 )
+							 nil]);
 	[bgColorForType_static_ setItem:[NSColor colorWithCalibratedRed:0.9 green:0.9 blue:0.9 alpha:1.] for:@(0)];
 	NSColor *c = (NSColor*)[bgColorForType_static_ item:@(type)];
 
@@ -194,7 +195,7 @@ static 	VMHash *bgColorForType_static_ = nil;
 
 @implementation  NSTextField (VMPExtension)
 + (NSTextField*)labelWithText:(NSString *)text frame:(CGRect)frame {
-	NSTextField *tf = [[[NSTextField alloc] initWithFrame:frame] autorelease];
+	NSTextField *tf = AutoRelease([[NSTextField alloc] initWithFrame:frame]);
 	tf.stringValue = text;
 	[tf setEditable:NO];
 	[tf setBordered:NO];
@@ -213,7 +214,8 @@ static 	VMHash *bgColorForType_static_ = nil;
 #pragma mark *** Graph Base ***
 #pragma mark -
 
-@implementation VMPGraph 
+@implementation VMPGraph
+@synthesize graphDelegate = _graphDelegate;
 
 - (id)init {
 	self = [super init];
@@ -232,10 +234,10 @@ static 	VMHash *bgColorForType_static_ = nil;
 }
 
 - (void)dealloc {
-	self.topOverlay = nil;
-	self.backgroundColor = nil;
-	self.foregroundColor = nil;
-	[super dealloc];
+	VMNullify(topOverlay);
+	VMNullify(backgroundColor);
+	VMNullify(foregroundColor);
+	Dealloc( super );;
 }
 
 - (id)taggedWith:(NSInteger)aTag {
@@ -244,7 +246,7 @@ static 	VMHash *bgColorForType_static_ = nil;
 }
 
 - (NSShadow*)defaultShadow {
-	NSShadow* aShadow = [[[NSShadow alloc] init] autorelease];
+	NSShadow* aShadow = ARInstance(NSShadow);
 	[aShadow setShadowOffset:NSMakeSize(vmpShadowOffset, -vmpShadowOffset)];
 	[aShadow setShadowBlurRadius:vmpShadowBlurRadius];	
 	[aShadow setShadowColor:[[NSColor blackColor] colorWithAlphaComponent:0.5]];
@@ -280,7 +282,7 @@ static 	VMHash *bgColorForType_static_ = nil;
 }
 
 - (void)addTopOverlay {
-	self.topOverlay = [[[VMPGraph alloc] initWithFrame:CGRectZeroOrigin(self.frame)] autorelease];
+	self.topOverlay = AutoRelease([[VMPGraph alloc] initWithFrame:CGRectZeroOrigin(self.frame)] );
 	self.topOverlay.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
 	[self addSubview:self.topOverlay];
 	if ( _graphDelegate) self.topOverlay.graphDelegate = _graphDelegate;
@@ -338,7 +340,7 @@ static 	VMHash *bgColorForType_static_ = nil;
 	//
 	// we're not using <NSCopying> because NSView doesn't support it.
 	//
-	id g = [[[[self class]  alloc] initWithFrame:self.frame] autorelease];
+	id g = AutoRelease([[[self class]  alloc] initWithFrame:self.frame] );
 	//	autorelease because method name doesn't start with copy (or alloc)
 	((VMPGraph*)g).flippedYCoordinate = self.flippedYCoordinate;
 	((VMPGraph*)g).tag =self.tag;
@@ -446,18 +448,18 @@ static 	VMHash *bgColorForType_static_ = nil;
 #pragma mark -
 #pragma mark *** Fragment Cell ***
 #pragma mark -
+@interface VMPFragmentCell ()
+	@property (nonatomic, VMStrong) VMPButton *button;
+@end
 
 @implementation VMPFragmentCell
+@synthesize fragment = _fragment;
 
 + (VMPFragmentCell*)fragmentCellWithFragment:(VMFragment*)frag frame:(NSRect)frame delegate:(id<VMPFragmentCellDelegate>)delegate {
-	VMPFragmentCell *cc = [[[VMPFragmentCell alloc] initWithFrame:frame] autorelease];
+	VMPFragmentCell *cc = AutoRelease([[VMPFragmentCell alloc] initWithFrame:frame]);
 	cc.fragment = frag;
 	cc.delegate = delegate;
 	return cc;
-}
-
-- (void)setDelegate:(id<VMPFragmentCellDelegate>)delegate {
-	delegate_ = delegate;
 }
 
 - (void)setData:(id)data {
@@ -469,19 +471,17 @@ static 	VMHash *bgColorForType_static_ = nil;
 	_selected = selected;
 }
 
-- (id<VMPFragmentCellDelegate>)delegate {
-	return delegate_;
+- (VMFragment*)fragment {
+	return _fragment;
 }
 
 - (void)setFragment:(VMFragment *)frag {
-	[_fragment release];
-	
+	Release( _fragment );
+	_fragment = Retain( frag );
 	if (!frag) {
-		_fragment = nil;
 		return;
 	}
 	
-	_fragment = [frag retain];
 	NSColor *c0 = [NSColor backgroundColorForDataType:frag.type];
 	NSColor *c1 = [c0 colorModifiedByHueOffset:-.05 saturationFactor:1. brightnessFactor:1.];
 	NSColor *c2 = [c0 colorModifiedByHueOffset: .05 saturationFactor:1. brightnessFactor:1.];
@@ -490,13 +490,12 @@ static 	VMHash *bgColorForType_static_ = nil;
 
 #pragma mark private
 - (void)initCell {
-	[button_ release];
-	button_ = [[VMPButton alloc] initWithFrame:self.cellRect];
-	button_.target=self;
-	button_.action=@selector(click:);
-	button_.doubleAction=@selector(doubleClick:);
-	[button_ setTransparent:YES];
-	[self addSubview:button_];
+	self.button = AutoRelease( [[VMPButton alloc] initWithFrame:self.cellRect] );
+	_button.target=self;
+	_button.action=@selector(click:);
+	_button.doubleAction=@selector(doubleClick:);
+	[_button setTransparent:YES];
+	[self addSubview:_button];
 	self.toolTip = self.fragment.id;
 	
 	//	default bg gradient
@@ -549,10 +548,10 @@ static 	VMHash *bgColorForType_static_ = nil;
 }
 
 - (void)dealloc {
-	[button_ release];
-	[_fragment release];
-	self.backgroundGradient = nil;
-	[super dealloc];
+	VMNullify( button );
+	VMNullify( fragment );
+	VMNullify(backgroundGradient);
+	Dealloc( super );;
 }
 
 
@@ -564,7 +563,7 @@ static 	VMHash *bgColorForType_static_ = nil;
 						   frameRect.size.width + vmpShadowOffset + vmpShadowBlurRadius *2, 
 						   frameRect.size.height + vmpShadowOffset + vmpShadowBlurRadius *2 );
 	[super setFrame:frameRect];
-	[button_ setFrame:self.cellRect];
+	[_button setFrame:self.cellRect];
 }
 
 #pragma mark public
@@ -572,6 +571,7 @@ static 	VMHash *bgColorForType_static_ = nil;
 #pragma mark drawing
 - (void)drawRect:(NSRect)rect {
 	if ( self.cellRect.size.width == 0 || self.cellRect.size.height == 0 ) return;
+	if ( self.fragment == nil ) return;
 	
 	BeginGC
 	
@@ -606,7 +606,7 @@ static 	VMHash *bgColorForType_static_ = nil;
 											   self.cellRect.size.height - verticalOffset )
 					 withAttributes:attr];
 			
-			[str release];
+			Release( str );
 			
 		} RestoreGC
 	}

@@ -35,13 +35,13 @@ typedef enum {
  
  */
 @interface VMPReportRecord : NSObject
-@property (nonatomic,retain) NSString	*ident;
-@property (nonatomic,retain) NSString	*title;
-@property (nonatomic,retain) NSNumber	*count;
-@property (nonatomic,retain) NSNumber	*percent;
-@property (nonatomic,retain) NSNumber	*duration;
-@property (nonatomic,retain) NSNumber	*variety;
-@property (nonatomic,retain) NSNumber	*sojourn;
+@property (nonatomic,VMStrong) NSString	*ident;
+@property (nonatomic,VMStrong) NSString	*title;
+@property (nonatomic,VMStrong) NSNumber	*count;
+@property (nonatomic,VMStrong) NSNumber	*percent;
+@property (nonatomic,VMStrong) NSNumber	*duration;
+@property (nonatomic,VMStrong) NSNumber	*variety;
+@property (nonatomic,VMStrong) NSNumber	*sojourn;
 
 @property (nonatomic)		 VMPReportRecordType type;
 - (id)initWithType:(VMPReportRecordType)type id:(VMId*)inId count:(int)inCount percent:(double)inPercent duration:(double)inDuration;
@@ -62,13 +62,13 @@ typedef enum {
 - (IBAction)clickOnRow:(id)sender;
 - (IBAction)clickOnButton:(id)sender;
 
-@property (nonatomic, assign) IBOutlet NSSegmentedControl *historyArrowButtons;
+@property (nonatomic, VMWeak) IBOutlet NSSegmentedControl *historyArrowButtons;
 
 //	defaults first responder
 - (IBAction)moveHistoryBack:(id)sender;
 - (IBAction)moveHistoryForward:(id)sender;
 
-@property (assign)	IBOutlet	NSTableView *reportView;
+@property (nonatomic, VMWeak) IBOutlet	NSTableView *reportView;
 
 @end
 
@@ -111,10 +111,10 @@ typedef enum {
 - (IBAction)performStatistics:(id)sender;
 - (IBAction)openGraphView:(id)sender;
 
-@property (nonatomic,retain)	VMHistory	*history;
-@property (assign)				id			<VMPAnalyzerDelegate>	delegate;
-@property (retain)				VMLog		*log;
-@property (nonatomic,retain)	VMHash		*report;
+@property (nonatomic, VMStrong)	VMHistory	*history;
+@property (unsafe_unretained)	id			<VMPAnalyzerDelegate>	delegate;
+@property (nonatomic, VMStrong)	VMLog		*log;
+@property (nonatomic, VMStrong)	VMHash		*report;
 
 
 /*---------------------------------------------------------------------------------
@@ -124,20 +124,20 @@ typedef enum {
  ----------------------------------------------------------------------------------*/
 
 //	statistics window
-@property (assign)	IBOutlet	NSWindow					*reportWindow;
-@property (assign)	IBOutlet	VMPStatisticsView			*statisticsView;
+@property (VMWeak)	IBOutlet	NSWindow					*reportWindow;
+@property (VMWeak)	IBOutlet	VMPStatisticsView			*statisticsView;
 
 //	record detail popover
-@property (assign)	IBOutlet	VMPRecordDetailPopover		*recordDetailPopover;
+@property (VMWeak)	IBOutlet	VMPRecordDetailPopover		*recordDetailPopover;
 
 //	statistics graph
-@property (assign)	IBOutlet	NSPanel						*statGraphPane;
-@property (assign)	IBOutlet	VMPHistogramView			*countHistogramView;
-@property (assign)	IBOutlet	VMPHistogramView			*durationHistogramView;
-@property (assign)	IBOutlet	VMPHistogramView			*varietyHistogramView;
-@property (assign)	IBOutlet	NSTextView					*reportTextView;
+@property (VMWeak)	IBOutlet	NSPanel						*statGraphPane;
+@property (VMWeak)	IBOutlet	VMPHistogramView			*countHistogramView;
+@property (VMWeak)	IBOutlet	VMPHistogramView			*durationHistogramView;
+@property (VMWeak)	IBOutlet	VMPHistogramView			*varietyHistogramView;
+@property (unsafe_unretained)	IBOutlet	NSTextView					*reportTextView;
 
 //	progress bar
-@property (nonatomic, retain)	VMPProgressWindowController *progressWC;
+@property (nonatomic, VMStrong)	VMPProgressWindowController *progressWC;
 
 @end

@@ -45,15 +45,15 @@ typedef enum {
 
 @interface VMLogItem : NSManagedObject
 
-@property (nonatomic, retain) NSNumber * index_obj;
-@property (nonatomic, retain) NSNumber * owner_obj;
-@property (nonatomic, retain) NSNumber * type_obj;
-@property (nonatomic, retain) id data;
-@property (nonatomic, retain) NSString * action;
-@property (nonatomic, retain) NSNumber * timestamp_obj;
-@property (nonatomic, retain) NSNumber * playbackTimestamp_obj;
-@property (nonatomic, retain) id subInfo_obj;
-@property (nonatomic, retain) NSNumber * expanded_obj;
+@property (nonatomic, VMStrong) NSNumber * index_obj;
+@property (nonatomic, VMStrong) NSNumber * owner_obj;
+@property (nonatomic, VMStrong) NSNumber * type_obj;
+@property (nonatomic, VMStrong) id data;
+@property (nonatomic, VMStrong) NSString * action;
+@property (nonatomic, VMStrong) NSNumber * timestamp_obj;
+@property (nonatomic, VMStrong) NSNumber * playbackTimestamp_obj;
+@property (nonatomic, VMStrong) id subInfo_obj;
+@property (nonatomic, VMStrong) NSNumber * expanded_obj;
 
 @end
 
@@ -73,13 +73,13 @@ typedef enum {
 @property (nonatomic, readonly)							vmObjectType	type;
 @property (nonatomic)									VMTime			timestamp;
 @property (nonatomic)									VMTime			playbackTimestamp;
-@property (nonatomic, retain)							VMHash			*subInfo;
+@property (nonatomic, VMStrong)							VMHash			*subInfo;
 
 //	VMPLogView vars & flags
 @property (nonatomic, getter=isExpanded)				BOOL			expanded;
 @property (nonatomic)									CGFloat			expandedHeight;
 @property (nonatomic, getter=isAutomaticallyExpanded)	BOOL			automaticallyExpanded;
-@property (nonatomic, readonly)							VMData			*VMData;
+@property (nonatomic, VMReadonly)							VMData			*VMData;
 
 + (VMLogRecord*)historyWithAction:(VMString*)action
 							  data:(id)data
@@ -100,9 +100,8 @@ typedef enum {
 
 @interface VMLog : VMArray {
 @protected
-	VMInt	index_intern;
-	__weak	NSManagedObjectContext		*moc_;
-
+	VMInt				index_intern;
+	__unsafe_unretained	NSManagedObjectContext		*moc_;
 }
 
 @property (nonatomic)			VMInt			maximumNumberOfLog;

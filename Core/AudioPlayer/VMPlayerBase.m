@@ -21,7 +21,7 @@
 }
 
 - (void)dealloc {
-    [super dealloc];
+    Dealloc( super );;
 }
 
 - (void)initTime {

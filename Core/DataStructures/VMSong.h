@@ -16,28 +16,28 @@
 
 @interface VMSong : NSObject
 
-@property (nonatomic, retain)	NSURL	*fileURL;
+@property (nonatomic, VMStrong)	NSURL	*fileURL;
 
 //	song data structure
-@property (nonatomic, retain)	VMHash	 *songData;
-@property (nonatomic, retain)	VMString *vmsData;
+@property (nonatomic, VMStrong)		VMHash	 *songData;
+@property (nonatomic, VMStrong)		VMString *vmsData;
 
 //	static song properties
-@property (nonatomic, readonly)	VMString *songName;
-@property (nonatomic, retain)	VMString *audioFileExtension;
-@property (nonatomic, retain)	VMString *vsFilePath;
-@property (nonatomic, retain)	VMString *audioFileDirectory;
-@property (nonatomic, retain)	VMArray	 *entryPoints;
-@property (nonatomic, readonly)	VMString *defaultFragmentId;
+@property (nonatomic, VMStrong)		VMString *songName;
+@property (nonatomic, VMStrong)		VMString *audioFileExtension;
+@property (nonatomic, VMStrong)		VMString *vsFilePath;
+@property (nonatomic, VMStrong)		VMString *audioFileDirectory;
+@property (nonatomic, VMStrong)		VMArray	 *entryPoints;
+@property (nonatomic, VMStrong)		VMString *defaultFragmentId;
 
 //	runtime properties
-@property (VMNonatomic retain)	VMPlayer *player;
-@property (VMNonatomic retain)	VMArray	 *history;
-@property (nonatomic, retain)	VMStack	 *showReport;
+@property (VMNonatomic VMStrong)	VMPlayer *player;
+@property (VMNonatomic VMStrong)	VMArray	 *history;
+@property (nonatomic, VMStrong)		VMStack	 *showReport;
 
 //	log
 #if VMP_LOGGING
-@property (VMNonatomic retain)	VMLog	 *log;
+@property (VMNonatomic VMStrong)	VMLog	 *log;
 #endif
 
 

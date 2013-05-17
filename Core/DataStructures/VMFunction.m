@@ -80,7 +80,7 @@ static VMArray 	*fragOrderChangingFunctions_static_ = nil;
 
 - (void)initProcessorTable {
 	if ( ! ProcessorTable_static_ ) {
-		ProcessorTable_static_ = [[VMHash hashWithObjectsAndKeys:		//	valid target		evaluated at action:
+		ProcessorTable_static_ = Retain([VMHash hashWithObjectsAndKeys:		//	valid target		evaluated at action:
 							 ProcessorEntry(random)				//	fragments collection		vmAction_prepare
 							 ProcessorEntry(shuffle)			//	fragments collection		vmAction_prepare
 							 ProcessorEntry(reverse)			//	fragments collection		vmAction_prepare
@@ -88,16 +88,17 @@ static VMArray 	*fragOrderChangingFunctions_static_ = nil;
 							 ProcessorEntry(flattenScore)		//	selector			vmAction_prepare
 //							 ProcessorEntry(fluctuate)			//	audioInfo			get duration, offset etc
 							 ProcessorEntry(set)				//	meta				vmAction_play
-							 nil] retain];
+							 nil] );
 	}
 	
 	if ( ! fragOrderChangingFunctions_static_ ) {
-		fragOrderChangingFunctions_static_ = [[VMArray arrayWithObjects:
+		fragOrderChangingFunctions_static_ = [VMArray arrayWithObjects:
 									   @"random",
 									   @"shuffle",
 									   @"reverse",
 									   @"schedule",
-									   nil ] retain];
+									   nil ];
+		Retain(fragOrderChangingFunctions_static_);
 	}
 }
 
@@ -241,7 +242,7 @@ ProcessorDefinition(schedule) {
 		NSLog(@"---------------- phase: 1 / frame: %d -----------------",framePosition);
 #endif
 		VMHash *scoreForFragment = [selector collectScoresOfFragments:0. frameOffset:framePosition normalize:YES];
-		[scoreForFrame push:[[scoreForFragment copy] autorelease]];
+		[scoreForFrame push:AutoRelease([scoreForFragment copy])];
 		VMArray *fragIds = [scoreForFragment keys];
 		for ( VMId *fragId in fragIds )
 			[totalScoreOfFragments add:[scoreForFragment itemAsFloat:fragId] ontoItem:fragId];
@@ -341,9 +342,9 @@ VMOBLIGATORY_setWithData
  )
 
 - (void)dealloc {
-	self.functionName = nil;
-	self.parameter = nil;
-    [super dealloc];
+	VMNullify(functionName);
+	VMNullify(parameter);
+    Dealloc( super );;
 }
 
 - (NSString*)description {

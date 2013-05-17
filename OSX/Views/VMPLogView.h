@@ -19,10 +19,10 @@
  *---------------------------------------------------------------------------------*/
 
 @interface VMPLogItemView : NSTableCellView
-@property (nonatomic, assign) IBOutlet	NSTextField			*idField;
-@property (nonatomic, assign) IBOutlet	NSTextField			*timeStampField;
-@property (nonatomic, assign) IBOutlet	NSButton			*discosureButton;
-@property (nonatomic, retain)			NSColor				*backgroundColor;
+@property (nonatomic, VMWeak) IBOutlet	NSTextField			*idField;
+@property (nonatomic, VMWeak) IBOutlet	NSTextField			*timeStampField;
+@property (nonatomic, VMWeak) IBOutlet	NSButton			*discosureButton;
+@property (nonatomic, VMStrong)			NSColor				*backgroundColor;
 @property (nonatomic, assign)			BOOL				fired;
 
 @end
@@ -39,15 +39,15 @@
 @interface VMPLogView : NSView <NSTableViewDataSource, NSTableViewDelegate>
 
 
-@property (nonatomic, assign)	IBOutlet	NSSegmentedControl  *sourceChooser;
-@property (nonatomic, assign)	IBOutlet	NSSegmentedControl  *filterSelector;
-@property (nonatomic, assign)	IBOutlet	NSTableView			*logTableView;
-@property (nonatomic, assign)	IBOutlet	NSScrollView		*logScrollView;
+@property (nonatomic, VMWeak)	IBOutlet	NSSegmentedControl  *sourceChooser;
+@property (nonatomic, VMWeak)	IBOutlet	NSSegmentedControl  *filterSelector;
+@property (nonatomic, VMWeak)	IBOutlet	NSTableView			*logTableView;
+@property (nonatomic, VMWeak)	IBOutlet	NSScrollView		*logScrollView;
 
 @property (nonatomic, assign)				VMLogOwnerType		currentSource;
 
-@property (nonatomic, retain)				VMLog				*log;
-@property (nonatomic, retain)				VMLog				*filteredLog;
+@property (nonatomic, VMStrong)				VMLog				*log;
+@property (nonatomic, VMStrong)				VMLog				*filteredLog;
 
 //- (void)noteNewLogAdded;
 - (void)locateLogWithIndex:(VMInt)index ofSource:(VMLogOwnerType)source;

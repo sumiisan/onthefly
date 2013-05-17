@@ -44,8 +44,8 @@ static NSColor *limeColor = nil, *skyColor = nil, *limeColor2 = nil, *skyColor2 
 }
 
 - (void)dealloc {
-	self.barColor = nil;
-	[super dealloc];
+	VMNullify(barColor);
+	Dealloc( super );;
 }
 @end
 
@@ -72,14 +72,16 @@ static VMArray *indicatorForCategory = nil;
 	if (self) {
 		recordCell_defaultCell__ = [[VMPRecordCell alloc] initTextCell:@""];
 		if( ! limeColor ) {
-			skyColor2		= [[NSColor colorWithCalibratedRed:0.5 green:0.4 blue:0.9 alpha:0.9] retain];
-			skyColor		= [[NSColor colorWithCalibratedRed:0.3 green:0.6 blue:0.9 alpha:0.9] retain];
-			limeColor		= [[NSColor colorWithCalibratedRed:0.7 green:0.6 blue:0.1 alpha:0.9] retain];
-			limeColor2		= [[NSColor colorWithCalibratedRed:0.9 green:0.4 blue:0.1 alpha:0.9] retain];
-			colorForCategory = [[VMArray arrayWithObjects:skyColor2,skyColor,limeColor,limeColor2,nil] retain];
+			skyColor2		 = Retain([NSColor colorWithCalibratedRed:0.5 green:0.4 blue:0.9 alpha:0.9] );
+			skyColor		 = Retain([NSColor colorWithCalibratedRed:0.3 green:0.6 blue:0.9 alpha:0.9] );
+			limeColor		 = Retain([NSColor colorWithCalibratedRed:0.7 green:0.6 blue:0.1 alpha:0.9] );
+			limeColor2		 = Retain([NSColor colorWithCalibratedRed:0.9 green:0.4 blue:0.1 alpha:0.9] );
+			colorForCategory = [VMArray arrayWithObjects:skyColor2,skyColor,limeColor,limeColor2,nil];
+			Retain(colorForCategory);
 		}
 		if ( ! indicatorForCategory ) {
-			indicatorForCategory = [[VMArray arrayWithObjects:@"⇉⦿",@"→⦿",@"⦿→",@"⦿⇉"] retain];
+			indicatorForCategory = [VMArray arrayWithObjects:@"⇉⦿",@"→⦿",@"⦿→",@"⦿⇉"];
+			Retain(indicatorForCategory);
 		}
 	}
 
@@ -91,10 +93,10 @@ static VMArray *indicatorForCategory = nil;
 }
 
 - (void)dealloc {
-	self.currentRouteList = nil;
-	self.routeListByCategory = nil;
-	self.sojournData = nil;
-	[super dealloc];
+	VMNullify(currentRouteList);
+	VMNullify(routeListByCategory);
+	VMNullify(sojournData);
+	Dealloc( super );;
 }
 
 - (void)awakeFromNib {

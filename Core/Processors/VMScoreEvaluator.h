@@ -102,13 +102,13 @@ internal
 - (id)resolveDataWithTracking:(VMData*)data toType:(int)type;
 - (void)trackObjectOnResolvePath:(id)data;
 
-@property	(nonatomic,	retain)		NSNumberFormatter	*numberFormatter;
-@property	(VMNonatomic retain)	VMHash				*variables;
-@property	(VMNonatomic retain)	VMArray				*pathTrackerArray;
+@property	(nonatomic,	VMStrong)		NSNumberFormatter	*numberFormatter;
+@property	(VMNonatomic VMStrong)	VMHash				*variables;
+@property	(VMNonatomic VMStrong)	VMArray				*pathTrackerArray;
 
 
-@property	(VMNonatomic retain)	VMArray				*objectsWaitingToBeProcessed;
-@property	(retain)				VMArray				*objectsWaitingToBeLogged;
+@property	(VMNonatomic VMStrong)	VMArray				*objectsWaitingToBeProcessed;
+@property	(VMStrong)				VMArray				*objectsWaitingToBeLogged;
 
 
 @property	(nonatomic, getter = isTestMode)	BOOL	testMode;

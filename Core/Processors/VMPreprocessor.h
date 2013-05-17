@@ -62,9 +62,12 @@
 	//
 	int			fatalErrors;
 	int 		debugCounter;
+	
+@private
+	__unsafe_unretained VMSong *_song;
 }
 
-@property (nonatomic,assign)	VMSong	*song;
+@property (nonatomic,VMWeak)	VMSong	*song;
 
 //	singleton
 + (VMPreprocessor*)defaultPreprocessor;

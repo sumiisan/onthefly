@@ -23,10 +23,10 @@
     NSManagedObjectContext *__managedObjectContext;
 }
 
-@property (nonatomic, retain)	NSURL				*currentDocumentURL;
-@property (nonatomic, retain)	VMLog				*systemLog;
-@property (nonatomic, retain)	VMLog				*userLog;
-@property (nonatomic, retain)	VMId				*lastSelectedDataId;
+@property (nonatomic, VMStrong)	NSURL				*currentDocumentURL;
+@property (nonatomic, VMStrong)	VMLog				*systemLog;
+@property (nonatomic, VMStrong)	VMLog				*userLog;
+@property (nonatomic, VMStrong)	VMId				*lastSelectedDataId;
 
 /*---------------------------------------------------------------------------------
  *
@@ -37,23 +37,23 @@
  *---------------------------------------------------------------------------------*/
 
 //	transport panel
-@property (assign) IBOutlet NSPanel							*transportPanel;
-@property (assign) IBOutlet NSButton						*playStopButton;
-@property (assign) IBOutlet NSTextField						*timeIndicator;
+@property (nonatomic, VMWeak) IBOutlet NSPanel							*transportPanel;
+@property (nonatomic, VMWeak) IBOutlet NSButton						*playStopButton;
+@property (nonatomic, VMWeak) IBOutlet NSTextField						*timeIndicator;
 
 //	object browser
-@property (assign) IBOutlet VMPEditorWindowController		*editorViewController;
+@property (nonatomic, VMWeak) IBOutlet VMPEditorWindowController		*editorWindowController;
 
 //	audioplayer track view
-@property (assign) IBOutlet NSPanel							*trackPanel;
-@property (assign) IBOutlet VMPTrackView					*trackView;
+@property (nonatomic, VMWeak) IBOutlet NSPanel							*trackPanel;
+@property (nonatomic, VMWeak) IBOutlet VMPTrackView					*trackView;
 
 //	log panel
-@property (assign) IBOutlet NSPanel							*logPanel;
-@property (assign) IBOutlet VMPLogView						*logView;
+@property (nonatomic, VMWeak) IBOutlet NSPanel							*logPanel;
+@property (nonatomic, VMWeak) IBOutlet VMPLogView						*logView;
 
 //	variables panel
-@property (nonatomic, retain) VMPVariablesPanelController	*variablesPanelController;
+@property (nonatomic, VMStrong) VMPVariablesPanelController	*variablesPanelController;
 
 /*---------------------------------------------------------------------------------
  
@@ -97,9 +97,9 @@
  persistent store
  
  ----------------------------------------------------------------------------------*/
-@property (nonatomic, retain, readonly) NSPersistentStoreCoordinator *persistentStoreCoordinator;
-@property (nonatomic, retain, readonly) NSManagedObjectModel *managedObjectModel;
-@property (nonatomic, retain, readonly) NSManagedObjectContext *managedObjectContext;
+@property (nonatomic, VMStrong, readonly) NSPersistentStoreCoordinator *persistentStoreCoordinator;
+@property (nonatomic, VMStrong, readonly) NSManagedObjectModel *managedObjectModel;
+@property (nonatomic, VMStrong, readonly) NSManagedObjectContext *managedObjectContext;
 
 - (NSEntityDescription*)entityDescriptionFor:(NSString*)entityName;
 - (void)saveManagedObjectContext;

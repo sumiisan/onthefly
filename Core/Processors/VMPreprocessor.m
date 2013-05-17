@@ -103,7 +103,6 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 @end
 
 @implementation VMPreprocessor
-@synthesize song=song_;
 #pragma mark singleton
 
 + (VMPreprocessor*)defaultPreprocessor {
@@ -221,7 +220,7 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 				VMData *d = [VMPP dataWithType:typ];
 				[d setWithProto:data];		//	copy original data (with wrong type) into d
 				[d setWithData:hash];		//	then override with new given hash.
-				[song_.songData removeItem:dataId];
+				[_song.songData removeItem:dataId];
 				if( d.shouldRegister ) {
 					[self registerData:d];
 					data = [self rawData:dataId]; 
@@ -318,7 +317,7 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 	
 	if ( ! self->vmReservedCharacterSet ) {
 		self->vmReservedCharacterSet 
-		= [[NSCharacterSet characterSetWithCharactersInString:@""
+		= Retain([NSCharacterSet characterSetWithCharactersInString:@""
 			//
 			//		".()@&+-~!^"						characters explicitly admitted to use.
 			
@@ -355,7 +354,7 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 			"="								//	character used for delimiting id and score descriptor. also used inside the score descriptor.
 			"%><"							//	characters which appears in score descriptor but not allowed in id.
 		    ",$[]{}'"						//	reserved for future use.
-			] retain];
+			] );
 	}
 	
 	if ( [fragmentId hasPrefix: @"#"] )	//	can not complete #
@@ -413,11 +412,11 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 #pragma mark database accessor
 
 - (id)data:(VMId*)dataId {
-	return [song_ data:dataId];
+	return [_song data:dataId];
 }
 
 - (id)rawData:(VMId*)dataId {
-	return [song_.songData item:dataId];
+	return [_song.songData item:dataId];
 }
 
 - (void)setData:(id)data withId:(VMId*)dataId {
@@ -426,14 +425,14 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 		[VMException raise:@"Attempted to set data with un-purified id into songData." 
 					format:@"id: %@ (should be %@)", dataId, purifiedId ];
 	}
-	[song_.songData setItem:data for:dataId];
+	[_song.songData setItem:data for:dataId];
 }
 
 - (void)renameData:(VMData*)data newId:(VMId*)newId {
 	VMId *oldId = [data.id copy];
-	[song_.songData renameKey:oldId to:newId];
+	[_song.songData renameKey:oldId to:newId];
 	data.id = newId;
-	[oldId release];
+	Release(oldId);
 }
 
 //--------------------------------------------------------------------------
@@ -475,7 +474,7 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 	//
 	//	(2.90)	scan song properties
 	//
-	[song_ setByHash:vmsHash];
+	[_song setByHash:vmsHash];
 	
 	[self preprocessPhase3:dataArray];
 	
@@ -512,7 +511,7 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 }
 
 - (void)unRegister:(NSString *)dataId {
-	[song_.songData removeItem:dataId];
+	[_song.songData removeItem:dataId];
 }
 
 - (void)registerAliasOfFragment:(VMData*)d as:(VMId*)aliasId {
@@ -531,7 +530,7 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 	VMId *oldId = [data.id copy];
 	[self renameData:data newId:newId];
 	[self registerAliasOfFragment:data as:oldId];
-	[oldId release];
+	Release(oldId);
 }
 
 - (void)markUnresolved:(NSString*)key {
@@ -646,7 +645,7 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 		if( val ) [lines push:[NSString stringWithFormat:@"%@",val]];
 	}
 	NSLog( @"\n%@", [lines join:@",\n"] );
-	[lines release];	
+	Release(lines);	
 }
 
 #pragma mark -
@@ -655,7 +654,7 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 //------ text-file formatting phase (1) ------------------------------------
 - (VMHash*)preprocessPhase1:(NSString*)data error:(NSError**)outError {
 	
-	NSMutableString *mutableString = [[data mutableCopy] autorelease];
+	NSMutableString *mutableString = AutoRelease([data mutableCopy]);
 	
 	//
 	//	(1.01)	shorten key-names like selector: or sequence: to sel: and seq:
@@ -671,7 +670,7 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 - (VMHash*)scanJSON:(NSString*)data error:(NSError**)outError {
     VMPJSONDeserializer *decoder = [[VMPJSONDeserializer alloc] init];
     NSDictionary *dict = [decoder deserializeAsDictionary:[data dataUsingEncoding:vmFileEncoding] error:outError];
-	[decoder release];
+	Release(decoder);
 	
 	if( outError && *outError ) {
 		//	handle error if needed
@@ -1174,7 +1173,7 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 		if(! fragIdsToConvert ) return;
 		
 		for ( id idObj in fragIdsToConvert ) {
-			VMFragment			*frag 	= [self data:ReadAsVMId(idObj)];
+			VMFragment			*__autoreleasing frag 	= [self data:ReadAsVMId(idObj)];
 			
 			if( [frag.id isEqualToString:@"x3_t003_SEL1"] )
 				NSLog(@"debug!");
@@ -1366,7 +1365,7 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 		
 		chance.targetId = frag.id;
 		[sel addFragmentsWithData:chance];	//	add frag
-		[chance release];
+		Release(chance);
 	}
 	if ( needToAddMyself ) {
 		chance = ARInstance(VMChance);
@@ -1404,7 +1403,7 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 
 //	(3.90)	register entrypoints
 - (void)registerEntryPoint:(VMFragment*)frag {
-	[song_.entryPoints pushUnique:frag.id];
+	[_song.entryPoints pushUnique:frag.id];
 }
 
 
@@ -1415,7 +1414,7 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 
 - (void)preprocessPhase4 {
 	
-	VMArray *keys = [song_.songData keys];
+	VMArray *keys = [_song.songData keys];
 	for ( VMId *did in keys ) {
 		if ( [[did substringToIndex:4] isEqualToString: @"VMP|"] ) continue;	//	no VMData
 		VMData *c = [self data:did];
@@ -1517,7 +1516,7 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 
 - (void)initShortKeyword {
 	shortKeyword
-	= [[VMHash hashWithObjectsAndKeys:
+	= [VMHash hashWithObjectsAndKeys:
 		@"ref",			@"referenceId",
 		@"ref",			@"reference",
 		@"alt",			@"alternatives",
@@ -1534,17 +1533,19 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 		@"subseq",		@"subsequence",
 		@"original",	@"originalAudioInfoId",
 		@"original",	@"originalId",
-		nil] retain];
+		nil];
+	Retain(shortKeyword);
 }
 
 - (void)initDialects {
 	dialects
-	= [[VMHash hashWithObjectsAndKeys:
+	= [VMHash hashWithObjectsAndKeys:
 		@"frag", 		@"sel",
 		@"frag",	 	@"layer",
 		@"frag",		@"seq",
 		@"instruction",	@"instructions",
-		nil] retain];
+		nil];
+	Retain(dialects);
 }
 
 - (void)initConversionTables {
@@ -1565,19 +1566,19 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 }
 
 - (void)releaseConversionTables {
-	[self->classForType release];
-	[self->stringForType release];
-	[self->typeForTypeString release];
-	[self->shortTypeStringForType release];
-	[self->compatibilityOrder release];
-	[self->dialects release];
-	[self->shortKeyword release];
+	Release(self->classForType);
+	Release(self->stringForType);
+	Release(self->typeForTypeString);
+	Release(self->shortTypeStringForType);
+	Release(self->compatibilityOrder);
+	Release(self->dialects);
+	Release(self->shortKeyword);
 }
 
 - (void)dealloc {
 	[self releaseConversionTables];
-	[self->vmReservedCharacterSet release];
-	[super dealloc];
+	Release(self->vmReservedCharacterSet);
+	Dealloc( super );;
 }
 
 @end

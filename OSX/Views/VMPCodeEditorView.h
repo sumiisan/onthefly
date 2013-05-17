@@ -32,12 +32,12 @@
  *---------------------------------------------------------------------------------*/
 @interface VMPCodeEditorView : VMPGraph
 
-@property (nonatomic, assign)	IBOutlet NSTextView /* VMPHighlightTextView */ *textView;
-@property (nonatomic, assign)	IBOutlet NSScrollView *scrollView;
-@property (nonatomic, retain)	VMString *sourceCode;
-@property (nonatomic, retain)	VMPSyntaxColoredtextDocument	*vmsDocument;
-@property (nonatomic, retain)	NSTextFinder *textFinder;
-@property (nonatomic, retain)	NSScanner *scanner;
+@property (nonatomic, VMWeak)	IBOutlet NSTextView *textView;
+@property (nonatomic, VMWeak)	IBOutlet NSScrollView *scrollView;
+@property (nonatomic, VMStrong)	VMString *sourceCode;
+@property (nonatomic, VMStrong)	VMPSyntaxColoredtextDocument	*vmsDocument;
+@property (nonatomic, VMStrong)	NSTextFinder *textFinder;
+@property (nonatomic, VMStrong)	NSScanner *scanner;
 
 - (void)selectBlockWithId:(VMId*)fragId scrollVisible:(BOOL)scrollVisible;
 - (void)markBlockUsingHintsBefore:(NSString*)before

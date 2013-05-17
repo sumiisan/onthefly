@@ -49,12 +49,12 @@ VMPlayerOSXDelegate *OnTheFly_singleton_static_ = nil;
 	if(! self )return nil;
     
     OnTheFly_singleton_static_ = self;
-	self.systemLog	= [[[VMLog alloc] initWithOwner:VMLogOwner_System managedObjectContext:nil] autorelease];
-	self.userLog	= [[[VMLog alloc] initWithOwner:VMLogOwner_User managedObjectContext:[self managedObjectContext]] autorelease];
+	self.systemLog	= AutoRelease([[VMLog alloc] initWithOwner:VMLogOwner_System managedObjectContext:nil] );
+	self.userLog	= AutoRelease([[VMLog alloc] initWithOwner:VMLogOwner_User managedObjectContext:[self managedObjectContext]] );
 	
 	NSString *urlString = [[NSUserDefaults standardUserDefaults] stringForKey:VMPUserDefaultsKey_LastDocumentURL];
 	if ( urlString )
-		self.currentDocumentURL = [[[NSURL alloc] initFileURLWithPath:urlString] autorelease];
+		self.currentDocumentURL = AutoRelease([[NSURL alloc] initFileURLWithPath:urlString] );
 	
 	/*[[[NSURL alloc] initFileURLWithPath:[NSString stringWithFormat:@"%@/%@/%@",
 																   [[NSBundle mainBundle] resourcePath],
@@ -74,24 +74,28 @@ VMPlayerOSXDelegate *OnTheFly_singleton_static_ = nil;
 
 - (void)dealloc {
 	[DEFAULTSONGPLAYER coolDown];
-	self.editorViewController = nil;
-	self.variablesPanelController = nil;
-	self.systemLog = nil;
-	self.userLog = nil;
-	self.currentDocumentURL = nil;
-	self.lastSelectedDataId = nil;
-    [__managedObjectContext release];
-    [__persistentStoreCoordinator release];
-    [__managedObjectModel release];
-    [super dealloc];
+	VMNullify(editorWindowController);
+	VMNullify(variablesPanelController);
+	VMNullify(systemLog);
+	VMNullify(userLog);
+	VMNullify(currentDocumentURL);
+	VMNullify(lastSelectedDataId);
+    Release( __managedObjectContext );
+    Release( __persistentStoreCoordinator );
+    Release( __managedObjectModel );
+    Dealloc( super );;
 }
 
 - (void)mainRunLoop {
 	if ( DEFAULTSONGPLAYER.isRunning ) {
 		_playStopButton.state = 1;
 		VMTime t = DEFAULTSONGPLAYER.currentTime;
-		_timeIndicator.stringValue = [NSString stringWithFormat:@"%02d:%02d'%02d\"%02d",
-									  (int)(t/3600),((int)t/60)%60,(int)t%60,((int)(t*100))%100 ];
+		VMString *timeString = [NSString stringWithFormat:@"%02d:%02d'%02d\"%02d",
+								(int)(t/3600),((int)t/60)%60,(int)t%60,((int)(t*100))%100 ];
+		if ( _trackPanel.isVisible )
+			_timeIndicator.stringValue = timeString;
+		if ( _editorWindowController.window.isVisible )
+			_editorWindowController.timeIndicator.stringValue = timeString;
 	} else {
 		_playStopButton.state = 0;
 	}
@@ -154,7 +158,7 @@ VMPlayerOSXDelegate *OnTheFly_singleton_static_ = nil;
 		[_transportPanel makeKeyAndOrderFront:self ];
 	}
 	if ( [name isEqualToString:@"Object Browser"] ) {
-		[_editorViewController.window makeKeyAndOrderFront:self ];
+		[_editorWindowController.window makeKeyAndOrderFront:self ];
 	}
 	if ( [name isEqualToString:@"Statistics"] ) {
 		[DEFAULTANALYZER.reportWindow makeKeyAndOrderFront:self ];
@@ -164,8 +168,8 @@ VMPlayerOSXDelegate *OnTheFly_singleton_static_ = nil;
 	}
 	if ( [name isEqualToString:@"Variables"] ) {
 		if ( ! self.variablesPanelController )
-			self.variablesPanelController = [[[VMPVariablesPanelController alloc]
-											  initWithWindowNibName:@"VMPVariablesPanel"] autorelease];
+			self.variablesPanelController = AutoRelease([[VMPVariablesPanelController alloc]
+											  initWithWindowNibName:@"VMPVariablesPanel"] );
 		[self.variablesPanelController.window makeKeyAndOrderFront:self];
 	}
 	if ( [name isEqualToString:@"Log"] ) {
@@ -182,7 +186,7 @@ VMPlayerOSXDelegate *OnTheFly_singleton_static_ = nil;
 - (NSString*)nameOfWindow:(NSWindow*)window {
 	NSDictionary *windowNames = @{
 		  (_transportPanel ? _transportPanel.identifier: @"dummy1"):@"Transport",
-		  (_editorViewController.window ? _editorViewController.window.identifier : @"dummy2" ):@"Object Browser",
+		  (_editorWindowController.window ? _editorWindowController.window.identifier : @"dummy2" ):@"Object Browser",
 		  ( DEFAULTANALYZER.reportWindow ? DEFAULTANALYZER.reportWindow.identifier : @"dummy3" ) :@"Statistics",
 		  (_trackPanel ? _trackPanel.identifier : @"dummy4" ) :@"Tracks",
 		  (_variablesPanelController.window ? _variablesPanelController.window.identifier : @"dummy5" ):@"Variables",
@@ -225,13 +229,13 @@ VMPlayerOSXDelegate *OnTheFly_singleton_static_ = nil;
 - (IBAction)revertDocument:(id)sender {
     [self openVMSDocumentFromURL:self.currentDocumentURL];
     DEFAULTSONGPLAYER.song = DEFAULTSONG;
-	[self.editorViewController.objectTreeView reloadData];
+	[self.editorWindowController.objectTreeView reloadData];
 	[DEFAULTANALYZER.statisticsView.reportView reloadData];
 }
 
 - (IBAction)reloadDataFromEditor:(id)sender {
 	NSError *error = nil;
-	if ( [DEFAULTSONG readFromString:self.editorViewController.codeEditorView.textView.string error:&error] )
+	if ( [DEFAULTSONG readFromString:self.editorWindowController.codeEditorView.textView.string error:&error] )
 		[VMPNotificationCenter postNotificationName:VMPNotificationVMSDataLoaded object:self userInfo:nil];
 	else
 		[VMPNotificationCenter postNotificationName:VMPNotificationLogAdded object:self userInfo:@{@"owner":@(VMLogOwner_System)}];
@@ -239,7 +243,7 @@ VMPlayerOSXDelegate *OnTheFly_singleton_static_ = nil;
 
 - (IBAction)saveDocument:(id)sender {
 	NSError *error = nil;
-	if( [DEFAULTSONG readFromString:self.editorViewController.codeEditorView.textView.string error:&error] )
+	if( [DEFAULTSONG readFromString:self.editorWindowController.codeEditorView.textView.string error:&error] )
 		[self saveVMSDocumentToURL:self.currentDocumentURL];
 }
 
@@ -273,7 +277,7 @@ VMPlayerOSXDelegate *OnTheFly_singleton_static_ = nil;
 		NSError *err = [self openVMSDocumentFromURL:url];
 		if( !err ) {
 			DEFAULTSONGPLAYER.song = DEFAULTSONG;
-			[self.editorViewController.objectTreeView reloadData];
+			[self.editorWindowController.objectTreeView reloadData];
 			[DEFAULTANALYZER.statisticsView.reportView reloadData];
 			
 			self.currentDocumentURL = url;
@@ -330,7 +334,7 @@ VMPlayerOSXDelegate *OnTheFly_singleton_static_ = nil;
 		[self revertDocument:self];	//	load
 	//
 	[DEFAULTSONGPLAYER warmUp];
-	[_editorViewController applicationDidLaunch];
+	[_editorWindowController applicationDidLaunch];
 	DEFAULTSONG.showReport.current = [NSNumber numberWithBool:YES];
 	[self performSelector:@selector(mainRunLoop) withObject:nil afterDelay:0.5];
 	
@@ -389,7 +393,7 @@ VMPlayerOSXDelegate *OnTheFly_singleton_static_ = nil;
         [alert addButtonWithTitle:cancelButton];
 		
         NSInteger answer = [alert runModal];
-        [alert release];
+        Release(alert);
         alert = nil;
         
         if (answer == NSAlertAlternateReturn) {
@@ -434,7 +438,7 @@ VMPlayerOSXDelegate *OnTheFly_singleton_static_ = nil;
 	
 	if ( action == @selector(reloadDataFromEditor:)) {
 		if ( ! self.currentDocumentURL ) return NO;
-		if ( self.editorViewController.codeEditorView.textView.string.length == 0 ) return NO;
+		if ( self.editorWindowController.codeEditorView.textView.string.length == 0 ) return NO;
 	}
 	
 	if ( action == @selector(saveDocument:)
@@ -528,7 +532,8 @@ VMPlayerOSXDelegate *OnTheFly_singleton_static_ = nil;
     __persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:mom];
     if (![__persistentStoreCoordinator addPersistentStoreWithType:NSXMLStoreType configuration:nil URL:url options:nil error:&error]) {
         [[NSApplication sharedApplication] presentError:error];
-        [__persistentStoreCoordinator release], __persistentStoreCoordinator = nil;
+        Release(__persistentStoreCoordinator);
+		__persistentStoreCoordinator = nil;
         return nil;
     }
 	

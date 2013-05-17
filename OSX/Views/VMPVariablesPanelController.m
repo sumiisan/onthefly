@@ -38,9 +38,9 @@
 
 - (void)dealloc {
     [VMPNotificationCenter removeObserver:self];
-	self.selectedFragmentId = nil;
-	self.itemsInTable = nil;
-	[super dealloc];
+	VMNullify(selectedFragmentId);
+	VMNullify(itemsInTable);
+	Dealloc( super );;
 }
 
 - (void)fragSelectionChanged:(NSNotification*)notification {

@@ -27,7 +27,7 @@ typedef enum {
 - (void)setData:(VMArray *)data numberOfBins:(VMInt)numberOfBins;
 - (void)setTitle:(NSString *)title;
 
-@property (nonatomic, retain)	VMArray			*data;
-@property (nonatomic, retain)	VMString		*title;
+@property (nonatomic, VMStrong)	VMArray			*data;
+@property (nonatomic, VMStrong)	VMString		*title;
 @property (nonatomic)			VMPHistogramType histogramType;
 @end

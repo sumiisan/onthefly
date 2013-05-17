@@ -68,7 +68,6 @@
 			[super push:obj];
 	}
 	position_ = self.count -1;
-	NSLog(@"%@",self.description);
 }
 
 - (NSString*)description {
@@ -102,9 +101,9 @@
 				usePersistentStore:(BOOL)usePersistentStore {
 	VMLogRecord *log;
 	if ( usePersistentStore ) {
-		log = [[[VMLogRecord alloc] initWithEntity:[APPDELEGATE entityDescriptionFor:@"VMLogItem"] insertIntoManagedObjectContext:APPDELEGATE.managedObjectContext] autorelease];
+		log = AutoRelease([[VMLogRecord alloc] initWithEntity:[APPDELEGATE entityDescriptionFor:@"VMLogItem"] insertIntoManagedObjectContext:APPDELEGATE.managedObjectContext] );
 	} else {
-		log = [[[VMLogRecord alloc] initWithEntity:[APPDELEGATE entityDescriptionFor:@"VMLogItem"] insertIntoManagedObjectContext:nil] autorelease];
+		log = AutoRelease([[VMLogRecord alloc] initWithEntity:[APPDELEGATE entityDescriptionFor:@"VMLogItem"] insertIntoManagedObjectContext:nil] );
 	}
 	
 	log.action		= action;
@@ -201,9 +200,9 @@
  https://developer.apple.com/library/mac/#documentation/Cocoa/Conceptual/TextLayout/Tasks/StringHeight.html#//apple_ref/doc/uid/20001809-CJBGBIBB
  */
 - (CGFloat)heightForStringDrawing:(NSString*)myString font:(NSFont*)myFont width:(float)myWidth {
-	NSTextStorage *textStorage = [[[NSTextStorage alloc] initWithString:myString] autorelease];
-	NSTextContainer *textContainer = [[[NSTextContainer alloc] initWithContainerSize: NSMakeSize(myWidth, FLT_MAX)] autorelease];
-	NSLayoutManager *layoutManager = [[[NSLayoutManager alloc] init] autorelease];
+	NSTextStorage *textStorage = AutoRelease([[NSTextStorage alloc] initWithString:myString] );
+	NSTextContainer *textContainer = AutoRelease([[NSTextContainer alloc] initWithContainerSize: NSMakeSize(myWidth, FLT_MAX)] );
+	NSLayoutManager *layoutManager = AutoRelease([[NSLayoutManager alloc] init]);
 	[layoutManager addTextContainer:textContainer];
 	[textStorage addLayoutManager:layoutManager];
 	[textStorage addAttribute:NSFontAttributeName value:myFont range:NSMakeRange(0, [textStorage length])];
@@ -231,10 +230,10 @@
 
 
 - (void)dealloc {
-	self.action = nil;
-	self.data = nil;
-	self.subInfo = nil;
-	[super dealloc];
+	VMNullify(action);
+	VMNullify(data);
+	VMNullify(subInfo);
+	Dealloc( super );;
 }
 
 @end
@@ -331,8 +330,7 @@
 	self->array_ = [array mutableCopy];
 	index_intern = ((VMLogRecord*)self.lastItem).index +1;
 	
-	NSLog(@"Load:%@ %@\nData[0]:%@",req.predicate.predicateFormat, req.sortDescriptors.description ,[self item:0]);
-	[req release];
+	Release(req);
 }
 
 - (void)clear {	//	override
@@ -354,9 +352,6 @@
 - (void)save {
 	if ( self.usePersistentStore ) {
 		NSError *err = nil;
-		NSLog ( @"updated Objects: %@", [moc_ updatedObjects].description );
-		NSLog ( @"inserted Objects: %@", [moc_ insertedObjects].description );
-		NSLog ( @"deleted Objects: %@", [moc_ deletedObjects].description );
 		[moc_ save:&err];
 		if (err) {
 			[VMException raise:@"Failed to store log" format:@"error: %@", err.localizedDescription ];
@@ -413,7 +408,7 @@
  ----------------------------------------------------------------------------------*/
 
 - (void)record:(VMArray*)arrayOfData filter:(BOOL)doFilter {
-	for( id data in arrayOfData ) {
+	for( id __strong data in arrayOfData ) {
 		if ( ClassMatch( data, VMLogRecord )) {
 			[self log:data];
 			continue;

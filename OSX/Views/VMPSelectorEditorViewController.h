@@ -18,15 +18,15 @@ typedef enum {
 @interface VMPSelectorEditorViewController : NSViewController
 <NSTableViewDataSource,NSTableViewDelegate,VMPDataGraphObject,NSTabViewDelegate>
 
-@property (nonatomic, assign) IBOutlet NSTabView	*tabView;
-@property (nonatomic, assign) IBOutlet NSTableView	*chanceTableView;
-@property (nonatomic, assign) IBOutlet VMPGraph		*frameView;
-@property (nonatomic, assign) IBOutlet NSScrollView	*frameViewScroller;
-@property (nonatomic, assign) IBOutlet VMPGraph		*branchView;
-@property (nonatomic, assign) IBOutlet NSScrollView	*branchViewScroller;
+@property (nonatomic, VMWeak) IBOutlet NSTabView	*tabView;
+@property (nonatomic, VMWeak) IBOutlet NSTableView	*chanceTableView;
+@property (nonatomic, VMWeak) IBOutlet VMPGraph		*frameView;
+@property (nonatomic, VMWeak) IBOutlet NSScrollView	*frameViewScroller;
+@property (nonatomic, VMWeak) IBOutlet VMPGraph		*branchView;
+@property (nonatomic, VMWeak) IBOutlet NSScrollView	*branchViewScroller;
 
 
-@property (nonatomic, retain)			VMSelector	*selector;
+@property (nonatomic, VMStrong)			VMSelector	*selector;
 
 
 - (IBAction)clickOnRow:(id)sender;

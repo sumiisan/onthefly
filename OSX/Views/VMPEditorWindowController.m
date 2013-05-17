@@ -77,9 +77,42 @@
 }
 */
 - (void)dealloc {
-	[super dealloc];
+	Dealloc( super );;
 }
 @end
+
+
+/*---------------------------------------------------------------------------------
+ 
+ VMPEditorWindowSplitter
+ 
+ ----------------------------------------------------------------------------------*/
+
+#pragma mark -
+#pragma mark VMPEditorWindowSplitter
+
+@implementation VMPEditorWindowSplitter
+
+- (void)drawDividerInRect:(NSRect)rect {
+	NSGradient *gr = [[NSGradient alloc] initWithColorsAndLocations:
+					  [NSColor colorWithCalibratedWhite:0.6  alpha:1.], 0.0,
+					  [NSColor colorWithCalibratedWhite:0.9  alpha:1.], 0.1,
+					  [NSColor colorWithCalibratedWhite:0.75 alpha:1.], 1.,
+					  nil
+					  ];
+	
+	[gr drawInRect:rect angle:90];
+	Release(gr);
+}
+
+
+- (CGFloat)dividerThickness {
+	return 20.0;
+}
+
+
+@end
+
 
 /*---------------------------------------------------------------------------------
  
@@ -105,20 +138,20 @@
 @interface VMPEditorWindowController()
 
 //	cache
-@property (nonatomic, retain)	NSTreeNode						*objectRoot;
-@property (nonatomic, retain)	VMArray							*dataIdList;
-@property (nonatomic, retain)	VMHash							*referrerList;
+@property (nonatomic, VMStrong)	NSTreeNode						*objectRoot;
+@property (nonatomic, VMStrong)	VMArray							*dataIdList;
+@property (nonatomic, VMStrong)	VMHash							*referrerList;
 
 //	incremental search
-@property (nonatomic, retain)	VMPFieldEditor					*fieldEditor;		//	custom field editor for searchField
-@property (nonatomic, retain)	NSString						*currentNonCompletedSearchString;
-@property (nonatomic, retain)	NSString						*currentFilterString;
+@property (nonatomic, VMStrong)	VMPFieldEditor					*fieldEditor;		//	custom field editor for searchField
+@property (nonatomic, VMStrong)	NSString						*currentNonCompletedSearchString;
+@property (nonatomic, VMStrong)	NSString						*currentFilterString;
 
 //	data structure
 @property (weak)				VMHash			*songData;
 
 //	current item
-@property (nonatomic, retain)	VMHistory		*history;
+@property (nonatomic, VMStrong)	VMHistory		*history;
 
 @end
 
@@ -173,6 +206,16 @@ static VMPObjectCell		*typeColumnCell = nil;
 - (void)applicationDidLaunch {
 	self.objectTreeView.doubleAction = @selector(doubleClickOnRow:);
 	self.history = ARInstance(VMHistory);
+	
+	self.editorSplitterView.flippedYCoordinate = NO;
+	[self.window.contentView addSubview:self.editorSplitterView];
+	self.editorSplitterView.x = 0;
+	self.editorSplitterView.width = self.window.frame.size.width;
+	[self splitViewDidResizeSubviews:nil];	//adjust editorSplitterView position
+
+	self.infoView.backgroundColor = [NSColor colorForDataType:vmObjectType_unknown];
+	self.infoView.needsDisplay = YES;
+	
 	[self.codeEditorView setup];
 	[self reloadData:self];
 }
@@ -180,15 +223,15 @@ static VMPObjectCell		*typeColumnCell = nil;
 
 - (void)dealloc {
 	[VMPNotificationCenter removeObserver:self];
-	self.currentDisplayingDataId = nil;
-	self.referrerList = nil;
-	self.objectRoot = nil;
-    self.history = nil;
-	self.dataIdList = nil;
-	self.fieldEditor = nil;
-	self.currentNonCompletedSearchString = nil;
-	self.currentFilterString = nil;
-	[super dealloc];
+	VMNullify(currentDisplayingDataId);
+	VMNullify(referrerList);
+	VMNullify(objectRoot);
+    VMNullify(history);
+	VMNullify(dataIdList);
+	VMNullify(fieldEditor);
+	VMNullify(currentNonCompletedSearchString);
+	VMNullify(currentFilterString);
+	Dealloc( super );;
 }
 
 #pragma mark -
@@ -223,14 +266,14 @@ static VMPObjectCell		*typeColumnCell = nil;
 }
 
 - (void)setSongData:(VMHash *)inSongData {
-	_songData = inSongData;	//	weak ref
+	_songData = inSongData;	//	unsafe_unretained
 	[self reloadData:self];
 }
 
 - (void)vmsDataLoaded:(id)sender {
 	[self reloadData:self];
-	if( [self.history currentItem] )
-		[self findObjectById:[self.history currentItem]];
+	if( ![self findObjectById:[self.history currentItem]] )
+		[self selectRowAndRedrawViews:-1];
 }
 
 - (void)reloadData:(id)sender {
@@ -434,7 +477,7 @@ static VMPObjectCell		*typeColumnCell = nil;
 	[self.objectTreeView scrollRowToVisible:row];
 	[self.objectTreeView reloadItem:item];
 
-	if( ClassMatch(item, NSTreeNode)) item = ((NSTreeNode*)item).representedObject;
+	//if( ClassMatch(item, NSTreeNode)) item = ((NSTreeNode*)item).representedObject;
 }
 
 - (void)updateButtonStates {
@@ -503,7 +546,7 @@ static VMPObjectCell		*typeColumnCell = nil;
 	
 	BOOL		part_matchedExact = NO, section_matchedExact = NO, whole_matchedExact = NO, matchedExact = NO;
 	VMId		*partId, *sectionId;
-	NSTreeNode	*partNode = nil;
+	NSTreeNode	*partNode = nil, *branchNode = nil;
 	id			sectionNode = nil, leafData = nil;
 	
 	//
@@ -548,7 +591,7 @@ static VMPObjectCell		*typeColumnCell = nil;
 	if ( section_matchedExact )
 		[self expandOrSelect:sectionNode];
 	
-	NSTreeNode *branchNode = sectionNode;
+	branchNode = sectionNode;
 	doForever {
 		leafData	= [self seekId:searchString inNode:branchNode matchedExact:&whole_matchedExact];
 		if ( ! leafData )
@@ -706,10 +749,27 @@ filterStringNotFound:
 											splitBy:@">"];
 			return [arr item:1];
 		}
-	}
-	
+	}	
 	return @"";
 	
+}
+
+#pragma mark -
+#pragma mark splitter delegate
+
+- (BOOL)splitView:(NSSplitView *)splitView canCollapseSubview:(NSView *)subview {
+	//if ( subview == self.graphView ) return YES;
+	return YES;
+}
+
+- (BOOL)splitView:(NSSplitView *)splitView shouldCollapseSubview:(NSView *)subview
+forDoubleClickOnDividerAtIndex:(NSInteger)dividerIndex  {
+	if ( subview == self.graphView ) return YES;
+	return NO;
+}
+
+- (void)splitViewDidResizeSubviews:(NSNotification *)notification {
+	self.editorSplitterView.y = ((NSView*)self.window.contentView).frame.size.height - self.graphView.frame.size.height - 47;
 }
 
 
@@ -867,8 +927,9 @@ filterStringNotFound:
  ----------------------------------------------------------------------------------*/
 
 - (void)selectRowAndRedrawViews:(VMInt)row {
-	VMData *d = [self dataOfRow:row];
-	if (d) {
+
+	VMData *d = ( row >= 0 ? [self dataOfRow:row] : nil );
+	if ( d || row < 0 ) {
 		//
 		// row with VMData was selected.
 		//
@@ -917,16 +978,16 @@ filterStringNotFound:
 	//	referrer pulldown
 	//
 	[self.referrerMenu removeAllItems];
-	NSMenuItem *menuItem = [[[NSMenuItem alloc] initWithTitle:@"-- referrer --"
+	NSMenuItem *menuItem = AutoRelease([[NSMenuItem alloc] initWithTitle:@"-- referrer --"
 													   action:@selector(referrerSelected:)
-												keyEquivalent:@""] autorelease];
+												keyEquivalent:@""] );
 	[self.referrerMenu addItem:menuItem];
 	VMArray *keys = [[self.referrerList itemAsHash:dataId] sortedKeys];
 	int p = 0;
 	for( VMId *fid in keys ) {
-		menuItem = [[[NSMenuItem alloc] initWithTitle:fid
+		menuItem = AutoRelease([[NSMenuItem alloc] initWithTitle:fid
 											   action:@selector(referrerSelected:)
-										keyEquivalent:@""] autorelease];
+										keyEquivalent:@""] );
 		menuItem.target = self;
 		menuItem.tag = ++p;
 		[self.referrerMenu addItem:menuItem];

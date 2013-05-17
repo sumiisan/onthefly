@@ -51,7 +51,7 @@ if ([self scanFunc] == NO) {\
 	if (outError) \
 		*outError = [self error:kJSONScannerErrorCode_##errorCode \
 						description:descriptionString withInfo:theDictionary];\
-	[theDictionary release];\
+	Release( theDictionary );\
 	return(NO);\
 }
 
@@ -66,8 +66,8 @@ if ([self scanFunc] == NO) {\
 
 
 - (void)dealloc {
-	self.lastKey = nil;
-	[super dealloc];
+	VMNullify(lastKey);
+	Dealloc( super );;
 }
 
 - (BOOL)scanJSONDictionary:(NSDictionary **)outDictionary error:(NSError **)outError {		//	override: customized error out
@@ -92,7 +92,7 @@ if ([self scanFunc] == NO) {\
 		NSString *theKey = NULL;
 		
 		ScanInst(scanJSONStringConstant:&theKey error:outError, DictionaryKeyScanFailed, @"Could not scan dictionary. Failed to scan a key.")
-		self.lastKey = [[theKey copy] autorelease];
+		self.lastKey = AutoRelease([theKey copy]);
 		
         [self skipWhitespace];
 		
@@ -107,7 +107,7 @@ if ([self scanFunc] == NO) {\
 		} else {
             [theDictionary setValue:theValue forKey:theKey];
 		}
-		self.lastKey = nil;
+		VMNullify(lastKey);
 		
         [self skipWhitespace];
 		
@@ -119,7 +119,7 @@ if ([self scanFunc] == NO) {\
 								description:@"Could not scan dictionary close delimiter."
 								 withInfo:theDictionary];
 				}
-                [theDictionary release];
+                Release(theDictionary);
                 return(NO);
 			}
             break;
@@ -134,13 +134,13 @@ if ([self scanFunc] == NO) {\
 	
     if (outDictionary != NULL) {
         if (self.options & kJSONScannerOptions_MutableContainers) {
-            *outDictionary = [theDictionary autorelease];
+            *outDictionary = AutoRelease( theDictionary );
 		} else {
-            *outDictionary = [[theDictionary copy] autorelease];
-            [theDictionary release];
+            *outDictionary = AutoRelease([theDictionary copy]);
+            Release(theDictionary);
 		}
 	} else {
-        [theDictionary release];
+        Release(theDictionary);
 	}
     return(YES);
 }
@@ -223,7 +223,7 @@ if ([self scanFunc] == NO) {\
 								{
 									*outError = [self error:kJSONScannerErrorCode_StringUnicodeNotDecoded description:@"Could not scan string constant. Unicode character could not be decoded."];
 								}
-								[theString release];
+								Release(theString);
 								return(NO);
 							}
 							theCharacter |= (theDigit << theShift);
@@ -239,7 +239,7 @@ if ([self scanFunc] == NO) {\
 							{
 								*outError = [self error:kJSONScannerErrorCode_StringUnknownEscapeCode description:@"Could not scan string constant. Unknown escape code."];
 							}
-							[theString release];
+							Release(theString);
 							return(NO);
 						}
 					}
@@ -253,7 +253,7 @@ if ([self scanFunc] == NO) {\
 				{
 					*outError = [self error:kJSONScannerErrorCode_StringNotTerminated description:@"Could not scan string constant. No terminating double quote character."];
 				}
-				[theString release];
+				Release(theString);
 				return(NO);
 			}
 		}
@@ -262,17 +262,17 @@ if ([self scanFunc] == NO) {\
 	{
         if (self.options & kJSONScannerOptions_MutableLeaves)
 		{
-            *outStringConstant = [theString autorelease];
+            *outStringConstant = AutoRelease( theString );
 		}
         else
 		{
-            *outStringConstant = [[theString copy] autorelease];
-            [theString release];
+            *outStringConstant = AutoRelease([theString copy]);
+            Release(theString);
 		}
 	}
     else
 	{
-        [theString release];
+        Release(theString);
 	}
 	
 	if ( doubleQuoteWasLeftOut ) --current;	//	because we want scan ":" again.	ss121210
@@ -307,7 +307,7 @@ if ([self scanFunc] == NO) {\
 	
     if (outValue)
 	{
-        *outValue = [[[NSString alloc] initWithBytes:current length:P - current encoding:NSUTF8StringEncoding] autorelease];
+        *outValue = AutoRelease([[NSString alloc] initWithBytes:current length:P - current encoding:NSUTF8StringEncoding] );
 	}
 	
     current = P;
@@ -331,7 +331,7 @@ if ([self scanFunc] == NO) {\
 	
 	if (outValue)
 	{
-		*outValue = [[[NSString alloc] initWithBytes:current length:P - current encoding:NSUTF8StringEncoding] autorelease];
+		*outValue = AutoRelease([[NSString alloc] initWithBytes:current length:P - current encoding:NSUTF8StringEncoding] );
 	}
 	
 	current = P;
@@ -378,10 +378,10 @@ if ([self scanFunc] == NO) {\
 											   });
 	
 	
-    NSString *beforeSnip = [[[NSString alloc] initWithData:[self.data subdataWithRange:beforeRange]
-												  encoding:NSUTF8StringEncoding] autorelease];
-	NSString *afterSnip  = [[[NSString alloc] initWithData:[self.data subdataWithRange:afterRange]
-												  encoding:NSUTF8StringEncoding] autorelease];
+    NSString *beforeSnip = AutoRelease([[NSString alloc] initWithData:[self.data subdataWithRange:beforeRange]
+												  encoding:NSUTF8StringEncoding] );
+	NSString *afterSnip  = AutoRelease([[NSString alloc] initWithData:[self.data subdataWithRange:afterRange]
+												  encoding:NSUTF8StringEncoding] );
 	
     NSDictionary *theUserInfo = [NSDictionary dictionaryWithObjectsAndKeys:
 								 [NSNumber numberWithUnsignedInteger:theLine], @"line",
@@ -425,7 +425,7 @@ if ([self scanFunc] == NO) {\
 				
 		didThrownError__ = YES;
 		//	highlight error in editor.
-		[APPDELEGATE.editorViewController.codeEditorView
+		[APPDELEGATE.editorWindowController.codeEditorView
 		 markBlockUsingHintsBefore:[theUserInfo objectForKey:@"beforeSnip"] after:[theUserInfo objectForKey:@"afterSnip"]];
 	}
 

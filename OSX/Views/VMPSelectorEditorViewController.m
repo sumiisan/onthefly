@@ -26,8 +26,8 @@ static VMPSelectorEditorTab defaultTab__ = VMPSelectorEditor_BranchTab;
 }
 
 - (void)dealloc {
-	self.selector = nil;
-	[super dealloc];
+	VMNullify(selector);
+	Dealloc( super );;
 }
 
 - (void)setData:(id)data {
@@ -118,7 +118,7 @@ static VMPSelectorEditorTab defaultTab__ = VMPSelectorEditor_BranchTab;
 			[baseView removeAllSubviews];
 			baseView.frame = baseViewRect;
 			[baseView addSubview:selectorGraph];
-			[selectorGraph release];
+			Release(selectorGraph);
 			
 			[self.branchViewScroller scrollPoint:NSMakePoint(0, 0)];
 			[self.frameViewScroller scrollPoint:NSMakePoint(0, 0)];

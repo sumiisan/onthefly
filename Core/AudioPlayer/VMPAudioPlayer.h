@@ -64,7 +64,7 @@ typedef enum {
 //	double							waveformSampleInterval;
 }
 
-@property (nonatomic,   retain)				NSString *fragId;
+@property (nonatomic,   VMStrong)				NSString *fragId;
 @property (readonly)						int playerId;
 @property (readonly)						NSTimeInterval fileDuration;
 @property (nonatomic)						NSTimeInterval fragDuration;

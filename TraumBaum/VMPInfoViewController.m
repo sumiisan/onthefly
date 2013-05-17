@@ -196,7 +196,7 @@ static const int kNumberOfSkins = 4;
 	//	[self.layer addSublayer:hole];
 		[self.scrollContentView addSubview:hole];
 		[self addSubview:self.scrollContentView];
-		[hole release];
+		Release(hole);
 */
     }
 	return self;

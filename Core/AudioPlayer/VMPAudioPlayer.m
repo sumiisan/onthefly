@@ -53,7 +53,7 @@ static VMHash *processPhaseNames_static_ = nil;
 - (void)initInternal {
     processPhase = pp_idle;
 	if (! processPhaseNames_static_) {
-		processPhaseNames_static_ = [[VMHash hashWithObjectsAndKeys:
+		processPhaseNames_static_ = Retain([VMHash hashWithObjectsAndKeys:
 								processPhaseEntry( idle )
 								processPhaseEntry( warmUp )
 								processPhaseEntry( fileOpened )
@@ -61,7 +61,7 @@ static VMHash *processPhaseNames_static_ = nil;
 								processPhaseEntry( waitCue )
 								processPhaseEntry( play )
 								processPhaseEntry( locked )
-								nil] retain];
+								nil] );
 	}
 	[self startTimer:@selector(timerCall:)];	
     shiftTime = 0;
@@ -95,12 +95,12 @@ static VMHash *processPhaseNames_static_ = nil;
 }
 
 - (void)dealloc {
-	[timer release];
+	Release(timer);
 	timer = nil;	
 	[self close];
 	if( packetDescs )   free( packetDescs );
     if( channelLayout ) free( channelLayout );
-	[super dealloc];
+	Dealloc( super );;
 }
 
 - (void) reallocBuffer {
@@ -154,7 +154,7 @@ static VMHash *processPhaseNames_static_ = nil;
 	AudioQueueNewOutput(
                         &dataFormat, 
                         BufferCallback, 
-                        self, 
+                        (VMBridge void *)(self),
                         CFRunLoopGetCurrent(), 
                         kCFRunLoopCommonModes, 
                         0, 
@@ -187,7 +187,7 @@ static VMHash *processPhaseNames_static_ = nil;
 	// try to open up the file using the specified path
 	NSURL		*url = [NSURL URLWithString:path];
 	OSStatus	status;
-	status =	AudioFileOpenURL( (CFURLRef)url, 0x01, 0, &audioFile );
+	status =	AudioFileOpenURL( (VMBridge CFURLRef)url, 0x01, 0, &audioFile );
 	if ( noErr != status ) {
 		[VMException alert:@"Failed to open audio file." format:@"Audio file at path %@ status=%d", url, status];
 	}
@@ -209,8 +209,8 @@ static VMHash *processPhaseNames_static_ = nil;
     
 	if( queue && audioFile ) [self close];
 	processPhase = pp_warmUp;
-	[filePathToRead release];
-	filePathToRead = [[NSString stringWithString:path] retain];
+	Release(filePathToRead);
+	filePathToRead = Retain([NSString stringWithString:path]);
 	packetIndex = 0;
 	trackClosed = NO;
 	self.currentTime = inTime;
@@ -394,7 +394,7 @@ static VMHash *processPhaseNames_static_ = nil;
 */
 static void BufferCallback(void *inUserData, AudioQueueRef inAQ, AudioQueueBufferRef inBuffer) {
 	// redirect back to the class to handle it there instead, so we have direct access to the instance variables
-	[(VMPAudioPlayer *)inUserData readPacketsIntoBuffer:inBuffer queue:inAQ];
+	[(VMBridge VMPAudioPlayer *)inUserData readPacketsIntoBuffer:inBuffer queue:inAQ];
 }
 
 

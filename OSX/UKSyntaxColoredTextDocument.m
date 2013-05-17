@@ -8,12 +8,13 @@
 	REVISIONS:
 		2003-05-31	UK	Created.
 		2013-05-08  sumiisan <at-gmail> fixed some variable-types to fit OS10.7 
+		2013-05-17	ARC introduced.
  ========================================================================== */
 
 #import "UKSyntaxColoredTextDocument.h"
 #import "NSArray+Color.h"
 #import "NSScanner+SkipUpToCharset.h"
-
+#import "MultiPlatform.h"
 
 static BOOL			sSyntaxColoredTextDocPrefsInited = NO;
 
@@ -45,15 +46,15 @@ static BOOL			sSyntaxColoredTextDocPrefsInited = NO;
 -(void)	dealloc
 {
 	[[NSNotificationCenter defaultCenter] removeObserver: self];
-	[sourceCode release];
+	Release(sourceCode);
 	sourceCode = nil;
 	[recolorTimer invalidate];
-	[recolorTimer release];
+	Release(recolorTimer);
 	recolorTimer = nil;
-	[replacementString release];
+	Release(replacementString);
 	replacementString = nil;
 	
-	[super dealloc];
+	Dealloc( super );;
 }
 
 
@@ -99,7 +100,7 @@ static BOOL			sSyntaxColoredTextDocPrefsInited = NO;
 	if( sourceCode != nil )
 	{
 		[textView setString: sourceCode];
-		[sourceCode release];
+		Release(sourceCode);
 		sourceCode = nil;
 	}
 	
@@ -150,7 +151,7 @@ static BOOL			sSyntaxColoredTextDocPrefsInited = NO;
 	// sourceCode is a member variable:
 	if( sourceCode )
 	{
-		[sourceCode release];   // Release any old text.
+		Release(sourceCode);   // Release any old text.
 		sourceCode = nil;
 	}
 	sourceCode = [[NSString alloc] initWithData:data encoding: NSMacOSRomanStringEncoding]; // Load the new text.
@@ -283,10 +284,10 @@ static BOOL			sSyntaxColoredTextDocPrefsInited = NO;
 		affectedCharRange = afcr;
 		if( replacementString )
 		{
-			[replacementString release];
+			Release(replacementString);
 			replacementString = nil;
 		}
-		replacementString = [rps retain];
+		replacementString = Retain(rps);
 		
 		[self performSelector: @selector(didChangeText) withObject: nil afterDelay: 0.0];	// Queue this up on the event loop. If we change the text here, we only confuse the undo stack.
 	}
@@ -678,7 +679,7 @@ static BOOL			sSyntaxColoredTextDocPrefsInited = NO;
 	if( sourceCode != nil && textView )
 	{
 		[textView setString: sourceCode]; // Causes recoloring notification.
-		[sourceCode release];
+		Release(sourceCode);
 		sourceCode = nil;
 	}
 	else
@@ -729,8 +730,7 @@ static BOOL			sSyntaxColoredTextDocPrefsInited = NO;
 		
 		// Get the text we'll be working with:
 		NSRange						vOldSelection __unused = [textView selectedRange];
-		NSMutableAttributedString*	vString = [[NSMutableAttributedString alloc] initWithString: [[[textView textStorage] string] substringWithRange: range]];
-		[vString autorelease];
+		NSMutableAttributedString*	vString = AutoRelease([[NSMutableAttributedString alloc] initWithString: [[[textView textStorage] string] substringWithRange: range]]);
 		
 		// Load colors and fonts to use from preferences:
 		
@@ -861,8 +861,7 @@ static BOOL			sSyntaxColoredTextDocPrefsInited = NO;
 		
 		// Get the text we'll be working with:
 		NSRange						vOldSelection = [textView selectedRange];
-		NSMutableAttributedString*	vString = [[NSMutableAttributedString alloc] initWithString: [[[textView textStorage] string] substringWithRange: range]];
-		[vString autorelease];
+		NSMutableAttributedString*	vString = AutoRelease([[NSMutableAttributedString alloc] initWithString: [[[textView textStorage] string] substringWithRange: range]]);
 		
 		// The following should probably be loaded from a dictionary in some file, to allow adaptation to various languages:
 		NSDictionary*				vSyntaxDefinition = [self syntaxDefinitionDictionary];

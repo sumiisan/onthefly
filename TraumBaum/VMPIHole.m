@@ -37,7 +37,7 @@
 
 - (void)dealloc {
 	CGGradientRelease(gradient);
-	[super dealloc];
+	Dealloc( super );;
 }
 
 //- (void)drawInContext:(CGContextRef)context {

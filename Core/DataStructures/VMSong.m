@@ -85,7 +85,7 @@ BOOL verbose = NO;
  ----------------------------------------------------------------------------------*/
 
 - (void)setFragmentId:(VMId*)fragId {
-	self.player = nil;		//	disable returning to parent player.
+	VMNullify(player);		//	disable returning to parent player.
 	self.player = [self playerFrom:fragId];
 }
 
@@ -419,7 +419,7 @@ BOOL verbose = NO;
 	VerboseLog(@"  MSP : ---- push player and make sub player from %@ ---",frag.id);
 	
 	if ( seq ) {
-		newPlayer = [[[VMPlayer alloc] initWithProto:seq] autorelease];		//	rule #1
+		newPlayer = AutoRelease([[VMPlayer alloc] initWithProto:seq] );		//	rule #1
 		if ( self.player
 			&& (( ![self.player finished] ) || ( ! newPlayer.nextPlayer ))	//
 			&& [self currentPlayerHasSubseq] )
@@ -470,15 +470,15 @@ BOOL verbose = NO;
 //	returns YES on success, NO if failed.
 - (BOOL)readFromData:(NSData *)data error:(NSError **)outError {
 	if ( data ) {
-		return [self readFromString:[[[NSString alloc] initWithData:data encoding:vmFileEncoding] autorelease]
+		return [self readFromString:AutoRelease([[NSString alloc] initWithData:data encoding:vmFileEncoding])
 							  error:outError ];
 	}
 	return NO;
 }
 
 - (void)clear {
-	self.fileURL = nil;
-	[songName_ release];
+	VMNullify(fileURL);
+	Release(songName_);
 	songName_ = nil;
 	[self reset];
 	[self.songData clear];
@@ -543,7 +543,7 @@ BOOL verbose = NO;
 		self.history				= ARInstance(VMArray);
 		self.showReport				= ARInstance(VMStack);
 #if VMP_LOGGING
-		self.log				= [[[VMLog alloc] initWithOwner:VMLogOwner_Player managedObjectContext:nil] autorelease];
+		self.log				= AutoRelease([[VMLog alloc] initWithOwner:VMLogOwner_Player managedObjectContext:nil] );
 #endif
 		if (!vmsong_singleton_static_) {
 			vmsong_singleton_static_ = self;
@@ -553,31 +553,29 @@ BOOL verbose = NO;
 }
 
 - (void)dealloc {
-	self.fileURL = nil;
-	self.songData = nil;
-	self.entryPoints
-	= self.history
-	= self.showReport
-	= nil;
-	self.vsFilePath 
-	= self.audioFileDirectory 
-	= self.audioFileExtension
-	= self.vmsData
-	= nil;
+	VMNullify(fileURL);
+	VMNullify(songData);
+	VMNullify(defaultFragmentId);
+	VMNullify(songName);
+	VMNullify(entryPoints);
+	VMNullify(history);
+	VMNullify(showReport);
+	VMNullify(vsFilePath);
+	VMNullify(audioFileDirectory);
+	VMNullify(audioFileExtension);
+	VMNullify(vmsData);
 	
 #if VMP_LOGGING
-	self.log = nil;
+	VMNullify(log);
 #endif
 	
-	[defaultFragmentId_ release];
-	[songName_ release];
-    [super dealloc];
+    Dealloc( super );
 }
 
 -(void)setByHash:(VMHash *)hash {
 	//self->songName = hash->hash_.songName;
-	songName_				= 	[HashItem(songName) retain];
-    defaultFragmentId_		=	[HashItem(defaultFragmentId) retain];
+	songName_				= 	Retain( HashItem(songName));
+    defaultFragmentId_		=	Retain( HashItem(defaultFragmentId) );
     self.audioFileExtension =    HashItem(audioFileExtension);
     self.audioFileDirectory =    HashItem(audioFileDirectory);
 	if ( [self.audioFileDirectory isEqualToString:@"./"] ) self.audioFileDirectory = @"";
@@ -606,7 +604,7 @@ BOOL verbose = NO;
 		[descs push:[[self.songData item:cid] description]]; 
 	
 	NSString *descStr = [descs join:@"\n"];
-	[descs release];
+	Release(descs);
 	return [NSString stringWithFormat:@"%@\n%@",self.songName,descStr]; 
 }
 

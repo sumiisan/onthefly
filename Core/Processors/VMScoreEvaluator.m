@@ -55,11 +55,11 @@ static VMScoreEvaluator *se_singleton_static_ = nil;
 
 - (id)init {
 	if (( self = [super init] )) {
-		self.numberFormatter = [[[NSNumberFormatter alloc] init] autorelease];
-		self.numberFormatter.locale	= [[[NSLocale alloc] initWithLocaleIdentifier:@"ja_JA"] autorelease];
+		self.numberFormatter = ARInstance(NSNumberFormatter);
+		self.numberFormatter.locale	= AutoRelease([[NSLocale alloc] initWithLocaleIdentifier:@"ja_JA"] );
 		
 		if ( ! operatorTable_static_ )
-			operatorTable_static_ = [[VMHash hashWithObjectsAndKeys:
+			operatorTable_static_ = Retain([VMHash hashWithObjectsAndKeys:
 								SetTypeForOp( equal, "=" )
 								SetTypeForOp( notequal, "!=" )
 								SetTypeForOp( add, "+" )
@@ -76,16 +76,16 @@ static VMScoreEvaluator *se_singleton_static_ = nil;
 								SetTypeForOp( and, "&" )
 								SetTypeForOp( or, "|" )					  
 								SetTypeForOp( not, "!" )					  
-								nil] retain];
+								nil] );
 		
 		if ( ! seFunctionTable_static_ )
-			seFunctionTable_static_ = [[VMHash hashWithObjectsAndKeys:
+			seFunctionTable_static_ = Retain([VMHash hashWithObjectsAndKeys:
 										SEFunctionEntry( LC )
 										SEFunctionEntry( LS )
 										SEFunctionEntry( F )
 										SEFunctionEntry( D )
 										SEFunctionEntry( PT )
-										nil] retain];
+										nil] );
 		
 		[self reset];
 	}
@@ -102,14 +102,14 @@ static VMScoreEvaluator *se_singleton_static_ = nil;
 }
 
 - (void)dealloc {
-	self.variables = nil;
-	self.numberFormatter = nil;
-	self.pathTrackerArray = nil;
+	VMNullify(variables);
+	VMNullify(numberFormatter);
+	VMNullify(pathTrackerArray);
 	
-	self.objectsWaitingToBeProcessed = nil;
-	self.objectsWaitingToBeLogged = nil;
+	VMNullify(objectsWaitingToBeProcessed);
+	VMNullify(objectsWaitingToBeLogged);
 
-	[super dealloc];
+	Dealloc( super );;
 }
 
 #pragma mark -
@@ -324,7 +324,7 @@ if (kUseNotification && shouldNotify_)
 		__block BOOL matched = NO;
 		expression = [expression stringByReplacingOccurrencesOfRegex:@"(\\([^(]*?\\))" 
 											 usingBlock:
-		 ^NSString *(NSInteger capCount, NSString *const *capStrings, const NSRange *capRanges, volatile BOOL *const stop) {
+		 ^NSString *(NSInteger capCount, NSString *const VMUnsafe *capStrings, const NSRange *capRanges, volatile BOOL *const stop) {
 			 matched = YES;
 			 return	[NSString stringWithFormat:@"%f",
 					 [self evaluate:[capStrings[1] substringWithRange: NSMakeRange(1, [capStrings[1] length]-2)]]
@@ -496,7 +496,7 @@ if (kUseNotification && shouldNotify_)
 			}
 		}
 	}
-	self.objectsWaitingToBeProcessed = nil;
+	VMNullify(objectsWaitingToBeProcessed);
 
 	VMArray *objectIds = ARInstance(VMArray);
 	
@@ -515,7 +515,7 @@ if (kUseNotification && shouldNotify_)
 		if ( shouldLog_ )
 			[DEFAULTSONG.log record:objectsWaitingToBeLogged_ filter:YES];
 	#endif
-		self.objectsWaitingToBeLogged = nil;
+		VMNullify(objectsWaitingToBeLogged);
 	}
 }
 

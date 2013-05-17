@@ -7,7 +7,6 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "VMPEditorWindowController.h"
 #import "VMDataTypes.h"
 
 
@@ -121,16 +120,14 @@ enum {
 @end
 
 //------------------------- VMGraph (base) -----------------------------
-@interface VMPGraph : NSView {
-	__weak id <VMPGraphDelegate> _graphDelegate;
-}
+@interface VMPGraph : NSView
 
 @property (nonatomic, assign)	BOOL					flippedYCoordinate;
 @property (nonatomic, assign)	NSInteger				tag;
-@property (nonatomic, retain)	NSColor					*backgroundColor;
-@property (nonatomic, retain)	NSColor					*foregroundColor;	//	unused, subclass may use it
-@property (nonatomic, retain)	VMPGraph				*topOverlay;
-@property (weak)				id <VMPGraphDelegate>	graphDelegate;
+@property (nonatomic, VMStrong)	NSColor					*backgroundColor;
+@property (nonatomic, VMStrong)	NSColor					*foregroundColor;	//	unused, subclass may use it
+@property (nonatomic, VMStrong)	VMPGraph				*topOverlay;
+@property (nonatomic, assign)	id <VMPGraphDelegate>	graphDelegate;
 @property (nonatomic, assign)	CGFloat					x;
 @property (nonatomic, assign)	CGFloat					y;
 @property (nonatomic, assign)	CGFloat					width;
@@ -162,17 +159,13 @@ enum {
 #pragma mark -
 #pragma mark VMPFragmentCell
 //---------------------------- VMPFragmentCell -------------------------------
-@interface VMPFragmentCell : VMPGraph <VMPDataGraphObject> {
-@private
-	VMPButton	*button_;
-	__weak id <VMPFragmentCellDelegate> delegate_;
-}
+@interface VMPFragmentCell : VMPGraph <VMPDataGraphObject>
 @property (nonatomic)							CGRect					cellRect;
-@property (nonatomic,retain)					VMFragment 				*fragment;
+@property (nonatomic, VMStrong)					VMFragment 				*fragment;
 @property (nonatomic)							VMFloat 				score;				//	not used internally
-@property (nonatomic,retain)					NSGradient				*backgroundGradient;
-@property (nonatomic,getter = isSelected)		BOOL					selected;
-@property (nonatomic,weak)						id <VMPFragmentCellDelegate>	delegate;
+@property (nonatomic, VMStrong)					NSGradient				*backgroundGradient;
+@property (nonatomic, getter = isSelected)		BOOL					selected;
+@property (nonatomic, unsafe_unretained)		id <VMPFragmentCellDelegate>	delegate;
 
 - (void)selectIfIdDoesMatch:(VMId*)fragId exclusive:(BOOL)exclusive;
 + (VMPFragmentCell*)fragmentCellWithFragment:(VMFragment*)frag frame:(NSRect)frame delegate:(id<VMPFragmentCellDelegate>)delegate;

@@ -21,11 +21,6 @@
     return self;
 }
 
-- (void)dealloc
-{
-    [super dealloc];
-}
-
 -(void)StartNMP:(NSScriptCommand *)command {
     [DEFAULTSONGPLAYER start];
 

@@ -10,5 +10,5 @@
 
 @interface VMPScrollViewClipper : UIView
 
-@property (nonatomic,assign) UIScrollView *scrollView;
+@property (nonatomic,VMWeak) UIScrollView *scrollView;
 @end

@@ -28,7 +28,7 @@
 }
 
 -(NSDictionary*)	defaultTextAttributes {
-	NSMutableParagraphStyle *style = [[[NSMutableParagraphStyle alloc] init] autorelease];
+	NSMutableParagraphStyle *style = AutoRelease([[NSMutableParagraphStyle alloc] init] );
 	[style setDefaultTabInterval:31.3];
 	[style setTabStops:[NSArray array]];
 	return @{
@@ -43,7 +43,7 @@
 	//	we don't want unnecessary re-coloring
 	if ( textView == inTextView && [textView.string isEqualToString:inSourceCode] ) return;
 	
-	textView = inTextView;		//	try just assign
+	textView = inTextView;		//	try just VMWeak
 	textView.string = inSourceCode;
 	
 	// Set up some sensible defaults for syntax coloring:
@@ -98,17 +98,17 @@
 
 - (void)setup {	//	extra method, because it must be called after editorViewController was inited.
 	[VMPNotificationCenter addObserver:self selector:@selector(fragmentSelectedInBrowser:)
-								  name:VMPNotificationFragmentSelected object:APPDELEGATE.editorViewController];
+								  name:VMPNotificationFragmentSelected object:APPDELEGATE.editorWindowController];
 	[VMPNotificationCenter addObserver:self selector:@selector(reloadData:)
 								  name:VMPNotificationVMSDataLoaded object:nil];
 }
 
 - (void)dealloc {
 	[VMPNotificationCenter removeObserver:self];
-	self.textFinder = nil;
-	self.scanner = nil;
-	self.vmsDocument = nil;
-	[super dealloc];
+	VMNullify(textFinder);
+	VMNullify(scanner);
+	VMNullify(vmsDocument);
+	Dealloc( super );;
 }
 
 #pragma mark -
@@ -119,7 +119,7 @@
 //	return;	//test
 	
 	if ( ! self.vmsDocument )
-		self.vmsDocument = [[[VMPSyntaxColoredtextDocument alloc] init] autorelease];
+		self.vmsDocument = AutoRelease([[VMPSyntaxColoredtextDocument alloc] init] );
 	[self.vmsDocument setTextView:self.textView sourceCode:sourceCode];
 }
 
@@ -132,7 +132,7 @@
 }
 
 - (void)fragmentSelectedInBrowser:(NSNotification*)notification {
-	if ( notification.object != APPDELEGATE.editorViewController ) return;
+	if ( notification.object != APPDELEGATE.editorWindowController ) return;
 	//	actually, we added a observer with this object..
 	if ( self.sourceCode.length == 0 )
 		[self setSourceCode:DEFAULTSONG.vmsData];
@@ -153,7 +153,7 @@
  *---------------------------------------------------------------------------------*/
 
 - (NSString*)escapeFragIdForICURegex:(NSString*)string {
-	NSMutableString *escaped = [[string mutableCopy] autorelease];
+	NSMutableString *escaped = AutoRelease([string mutableCopy]);
 	[escaped replaceOccurrencesOfString:@"([|\\+()\\~])" withString:@"\\\\$1"
 								options:NSRegularExpressionSearch
 								  range:NSMakeRange(0, escaped.length)];
@@ -186,8 +186,8 @@
 	VMFragment *fr = ARInstance(VMFragment);
 	fr.id = fragId;
 	VMArray *components = [VMArray arrayWithString:fr.userGeneratedId splitBy:@"_"];
-	VMArray *tempComp = [[components copy] autorelease];
-	self.scanner = nil;
+	VMArray *tempComp = AutoRelease([components copy]);
+	VMNullify(scanner);
 
 	self.textView.selectedRange = NSMakeRange( self.textView.selectedRange.location , 0 );
 
@@ -210,7 +210,7 @@
 		//
 		//	try find # abbreviated id
 		//
-		tempComp = [[components copy] autorelease];
+		tempComp = AutoRelease([components copy]);
 		[tempComp unshift];
 		NSString *abbreviationSign = @"#";
 		NSRange result;

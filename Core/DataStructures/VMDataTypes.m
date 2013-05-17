@@ -44,9 +44,9 @@ VMId *tid __unused = ( arr.count > 2 )\
 @synthesize lengthDescriptor=lengthDescriptor_, locationDescriptor=locationDescriptor_;
 
 - (void)dealloc {
-	self.locationDescriptor = nil;
-	self.lengthDescriptor = nil;
-	[super dealloc];
+	VMNullify(locationDescriptor);
+	VMNullify(lengthDescriptor);
+	Dealloc( super );;
 }
 
 - (VMTime)location {
@@ -71,14 +71,14 @@ VMId *tid __unused = ( arr.count > 2 )\
 
 - (void)setLengthDescriptor:(NSString *)lengthDescriptor {
 	if ( ClassMatch(lengthDescriptor, NSNumber ) ) lengthDescriptor = ((NSNumber*)lengthDescriptor).stringValue;
-	[lengthDescriptor_ release];
-	lengthDescriptor_ = [lengthDescriptor retain];
+	Release(lengthDescriptor_);
+	lengthDescriptor_ = Retain(lengthDescriptor);
 }
 
 - (void)setLocationDescriptor:(NSString *)locationDescriptor {
 	if ( ClassMatch(locationDescriptor, NSNumber ) ) locationDescriptor = ((NSNumber*)locationDescriptor).stringValue;
-	[locationDescriptor_ release];
-	locationDescriptor_ = [locationDescriptor retain];
+	Release(locationDescriptor_);
+	locationDescriptor_ = Retain(locationDescriptor);
 }
 
 #pragma mark utils
@@ -162,7 +162,7 @@ VMId *tid __unused = ( arr.count > 2 )\
 }
 
 - (void)setId:(VMId *)inId {
-	[id_ release];
+	Release(id_);
 	id_ = [inId copy];
 	if( [id_ hasPrefix:@"#" ] ) {
 		[VMException raise:@"UnCompleted Id set" format:@"at %@", [self description]];
@@ -246,9 +246,9 @@ VMObligatory_encodeWithCoder(
 }
 
 - (void)dealloc {
-	self.id = nil;
-	self.comment = nil;
-    [super dealloc];
+	VMNullify(id);
+	VMNullify(comment);
+    Dealloc( super );;
 }
 
 - (NSString*)description {
@@ -464,7 +464,7 @@ VMOBLIGATORY_setWithData(
 						 
 )
 
-- (void)dealloc {    [super dealloc];
+- (void)dealloc {    Dealloc( super );;
 }
 
 - (NSString*)description {
@@ -559,8 +559,8 @@ VMObligatory_encodeWithCoder(
 )
 
 - (void)dealloc {
-	self.instructionList = nil;
-	[super dealloc];
+	VMNullify(instructionList);
+	Dealloc( super );;
 }
 
 - (NSString*)description {
@@ -603,7 +603,7 @@ VMObligatory_encodeWithCoder(
 }
 
 - (void)setFileId:(NSString *)inFileId {
-	[fileId_ release];
+	Release(fileId_);
 	fileId_ = [inFileId copy];
 }
 
@@ -691,10 +691,10 @@ VMObligatory_encodeWithCoder(
 
 
 - (void)dealloc {
-	self.fileId = nil;
-	self.cuePoints = nil;
-	self.regionRange = nil;
-    [super dealloc];
+	VMNullify(fileId);
+	VMNullify(cuePoints);
+	VMNullify(regionRange);
+    Dealloc( super );;
 }
 
 - (NSString*)description {
@@ -776,8 +776,8 @@ VMOBLIGATORY_setWithData(
  }
 )
 - (void)dealloc {
-	self.scoreDescriptor = nil;
-	[super dealloc];
+	VMNullify(scoreDescriptor);
+	Dealloc( super );;
 }
 
 - (VMFloat)currentValue {
@@ -812,8 +812,8 @@ VMOBLIGATORY_setWithData(
 	// not implemented yet
 )
 - (void)dealloc {
-	self.source = nil;
-	[super dealloc];
+	VMNullify(source);
+	Dealloc( super );;
 }
 
 - (VMFloat)currentValue {
@@ -883,8 +883,8 @@ VMObligatory_encodeWithCoder
 }
 
 - (void)dealloc {
-	self.audioInfoId = nil;
-    [super dealloc];
+	VMNullify(audioInfoId);
+    Dealloc( super );;
 }
 
 - (NSString*)description {
@@ -929,7 +929,7 @@ RedirectPropSetterToObject(VMFloat,	setVolume, 	volume,  self.audioInfoRef)
 #pragma mark accessor
 
 - (void)setScoreDescriptor:(NSString *)inScoreDescriptor {
-	[scoreDescriptor_ release];
+	Release(scoreDescriptor_);
 	scoreDescriptor_ = [inScoreDescriptor copy];
 }
 
@@ -996,9 +996,9 @@ VMOBLIGATORY_setWithProto(
 }
 
 - (void)dealloc {
-	self.scoreDescriptor = nil;
-	self.targetId = nil;	
-    [super dealloc];
+	VMNullify(scoreDescriptor);
+	VMNullify(targetId);	
+    Dealloc( super );;
 }
 
 - (NSString*)description {
@@ -1110,7 +1110,7 @@ if ( ClassMatch(data, NSString)) {
 	
 	if( ! self.fragments ) self.fragments = ARInstance(VMArray);
 	
-    for ( id obj in arr ) {
+    for ( id __strong obj in arr ) {
 		if( ClassMatch(obj, NSString)) {
 			//
 			//	create VMChance if i'm a VMSelector
@@ -1181,8 +1181,8 @@ VMObligatory_encodeWithCoder
  )
 
 - (void)dealloc {
-	self.fragments = nil;
-	[super dealloc];
+	VMNullify(fragments);
+	Dealloc( super );;
 }
 
 - (NSString*)description {
@@ -1267,7 +1267,7 @@ static VMHash *scoreForFragment_static_ = nil;
 			[ch setByString:d];
 			[self.frags setItem:ch at:i];
 			d = ch;
-			[ch release];*/
+			Release(ch);*/
 		}
 		
 		sumOfInnerScores_cache_ += ((VMChance*)d).evaluatedScore;	// just evaluate.
@@ -1280,7 +1280,7 @@ static VMHash *scoreForFragment_static_ = nil;
 	}
 #if prepareSelection_verbose
 	NSLog(@"*prepare selection(%@):[ %@ ] sum:%.2f",self.id,[log join:@", "],sumOfInnerScores_cache_);
-	[log release];
+	Release(log);
 #endif
 }
 
@@ -1456,7 +1456,7 @@ static VMHash *scoreForFragment_static_ = nil;
 		frag = self.liveData.currentFragment;
 		[self.liveData advance];
 		if( [self.liveData finished] ) {
-			self.liveData.fragments = [[self.fragments copy] autorelease];
+			self.liveData.fragments = AutoRelease([self.fragments copy]);
 			[self.liveData interpreteInstructionsWithAction:vmAction_prepare];
 		}
 	}
@@ -1485,7 +1485,7 @@ VMOBLIGATORY_setWithProto()
 VMOBLIGATORY_setWithData()
 
 - (void)dealloc {
-    [super dealloc];
+    Dealloc( super );;
 }
 
 @end
@@ -1501,14 +1501,14 @@ VMOBLIGATORY_setWithData()
 
 #pragma mark obligatory
 VMObligatory_resolveUntilType(
-  return [[[[VMLayerList alloc] initWithProto:self] autorelease] resolveUntilType:mask];
+  return [AutoRelease([[VMLayerList alloc] initWithProto:self]) resolveUntilType:mask];
 )
 VMOBLIGATORY_init(vmObjectType_layerList, YES,)
 VMOBLIGATORY_setWithProto()
 VMOBLIGATORY_setWithData()
 
 - (void)dealloc {
-    [super dealloc];
+    Dealloc( super );;
 }
 
 @end
@@ -1538,7 +1538,7 @@ VMOBLIGATORY_setWithData()
 
 #pragma mark obligatory
 VMObligatory_resolveUntilType(
-	return [[[[VMPlayer alloc] initWithProto:self] autorelease] resolveUntilType:mask]; 
+	return [AutoRelease([[VMPlayer alloc] initWithProto:self]) resolveUntilType:mask];
 )
 VMOBLIGATORY_init(vmObjectType_sequence, YES,)
 VMOBLIGATORY_setWithProto(
@@ -1570,8 +1570,8 @@ VMObligatory_encodeWithCoder
 )
 
 - (void)dealloc {
-	self.subsequent = nil;
-    [super dealloc];
+	VMNullify(subsequent);
+    Dealloc( super );;
 }
 
 - (NSString*)description {
@@ -1623,7 +1623,7 @@ return [NSString stringWithFormat:@"%@\n   next:%@",
 - (void)reset {
 	self.fragPosition = 0;
 	self.counter = 0;
-	self.history = nil;
+	VMNullify(history);
 }
 
 #pragma mark instruction
@@ -1712,8 +1712,8 @@ VMObligatory_encodeWithCoder
  )
 
 - (void)dealloc {
-	self.history = nil;
-    [super dealloc];
+	VMNullify(history);
+    Dealloc( super );;
 }
 
 - (NSString*)description {
@@ -1831,9 +1831,9 @@ VMObligatory_encodeWithCoder
 )
 
 - (void)dealloc {
-	self.nextPlayer = nil;
-	self.staticDataId = nil;
-    [super dealloc];
+	VMNullify(nextPlayer);
+	VMNullify(staticDataId);
+    Dealloc( super );;
 }
 
 - (NSString*)description {

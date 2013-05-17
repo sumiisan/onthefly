@@ -23,7 +23,7 @@ enum {
 @interface VMPRecordCell : NSTextFieldCell
 
 @property (nonatomic)			VMFloat		ratio;
-@property (nonatomic, retain)	NSColor		*barColor;
+@property (nonatomic, VMStrong)	NSColor		*barColor;
 @end
 
 
@@ -41,15 +41,15 @@ enum {
 	VMInt		maxCount;
 	VMInt		total;
 }
-@property (assign) IBOutlet NSTableView			*detailTable;
-@property (assign) IBOutlet NSScrollView		*detailScrollView;
-@property (assign) IBOutlet NSSegmentedControl	*filterChooser;
-@property (assign) IBOutlet	VMPHistogramView	*histogramView;
+@property (nonatomic, VMWeak) IBOutlet NSTableView			*detailTable;
+@property (nonatomic, VMWeak) IBOutlet NSScrollView		*detailScrollView;
+@property (nonatomic, VMWeak) IBOutlet NSSegmentedControl	*filterChooser;
+@property (nonatomic, VMWeak) IBOutlet	VMPHistogramView	*histogramView;
 
-@property (nonatomic,retain)	VMArray *currentRouteList;
-@property (nonatomic,retain)	VMHash  *routeListByCategory;
-@property (nonatomic,retain)	VMArray *sojournData;
-@property (nonatomic,assign)	id <VMPRecordDetailPopoverDelegate> popoverDelegate;
+@property (nonatomic, VMStrong)	VMArray *currentRouteList;
+@property (nonatomic, VMStrong)	VMHash  *routeListByCategory;
+@property (nonatomic, VMStrong)	VMArray *sojournData;
+@property (nonatomic, unsafe_unretained)	id <VMPRecordDetailPopoverDelegate> popoverDelegate;
 
 - (void)setRecordId:(VMId*)recordId routeData:(VMHash*)routeData;
 - (void)setSojourn:(VMArray*)sojournArray;

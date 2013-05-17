@@ -31,6 +31,6 @@
 - (void)fillCircle_x:(float)x y:(float)y w:(float)w h:(float)h;
 
 @property (nonatomic, assign) NSInteger tag;		//	override
-@property (nonatomic, retain) NSColor	*backgroundColor;
+@property (nonatomic, VMStrong) NSColor	*backgroundColor;
 
 @end

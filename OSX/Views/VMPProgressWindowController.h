@@ -7,6 +7,7 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import "VMARC.h"
 
 @protocol VMPProgressWindowControllerDelegate <NSObject>
 - (void)progressCancelled;
@@ -17,10 +18,10 @@
 /*
  progress bar
  */
-@property (assign) IBOutlet NSProgressIndicator     *progressBar;
-@property (assign) IBOutlet NSTextField             *progressLabel;
-@property (assign)   id <VMPProgressWindowControllerDelegate>	delegate;
-@property (assign) NSWindow *parentWindow;
+@property (nonatomic, VMWeak) IBOutlet NSProgressIndicator     *progressBar;
+@property (nonatomic, VMWeak) IBOutlet NSTextField             *progressLabel;
+@property (nonatomic, VMWeak) NSWindow *parentWindow;
+@property (unsafe_unretained) id <VMPProgressWindowControllerDelegate>	delegate;
 
 - (IBAction)cancelClicked:(id)sender;
 - (void)setProgress:(double)current ofTotal:(double)total message:(NSString*)message window:(NSWindow*)inParentWindow;

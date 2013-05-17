@@ -9,6 +9,7 @@
 #import "VMAudioObject.h"
 #import "VMPrimitives.h"
 #import "VMException.h"
+#import "VMPMacros.h"
 #import <AudioToolbox/AudioToolbox.h>
 
 @implementation VMAudioObject
@@ -16,7 +17,7 @@
 - (void)dealloc {
 	if ( audioFile ) ExtAudioFileDispose( audioFile );
     if ( _waveData ) free( _waveData );
-	[super dealloc];
+	Dealloc( super );;
 }
 
 /*
@@ -34,7 +35,7 @@
     NSURL *inUrl = [NSURL fileURLWithPath:path];
 	
 	if ( audioFile ) ExtAudioFileDispose( audioFile );
-    err = ExtAudioFileOpenURL((CFURLRef)inUrl, &audioFile);
+    err = ExtAudioFileOpenURL((VMBridge CFURLRef)inUrl, &audioFile);
 	if (err) return err;
 	
 	//	read format
@@ -113,7 +114,7 @@
 //	note: this method draws the entire wave-form at once. use VMPWaveView to draw only the visible rect
 //
 - (NSImage*)drawWaveImageWithSize:(NSSize)size foreColor:(NSColor*)foreColor backColor:(NSColor*)backColor {
-	NSImage *image = [[[NSImage alloc] initWithSize:size] autorelease];
+	NSImage *image = AutoRelease([[NSImage alloc] initWithSize:size]);
 	if ( size.height > 0 && size.width > 0 ) {
 		VMFloat pixelPerFrame =  size.width / _numberOfFrames;
 		VMFloat currentX = 0;

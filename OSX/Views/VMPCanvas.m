@@ -20,8 +20,8 @@
 }
 
 - (void)dealloc {
-	self.backgroundColor = nil;
-	[super dealloc];	
+	VMNullify(backgroundColor);
+	Dealloc( super );;	
 }
 
 - (NSInteger)tag {

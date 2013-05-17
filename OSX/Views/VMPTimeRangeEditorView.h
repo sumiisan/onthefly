@@ -29,15 +29,15 @@ typedef enum {
 
 - (IBAction)unitSelected:(id)sender;
 
-@property (nonatomic, assign) IBOutlet NSTextField			*titleLabel;
-@property (nonatomic, assign) IBOutlet NSTextField			*time1Label;
-@property (nonatomic, assign) IBOutlet NSTextField			*time2Label;
-@property (nonatomic, assign) IBOutlet NSTextField			*bpmLabel;
+@property (nonatomic, VMWeak) IBOutlet NSTextField			*titleLabel;
+@property (nonatomic, VMWeak) IBOutlet NSTextField			*time1Label;
+@property (nonatomic, VMWeak) IBOutlet NSTextField			*time2Label;
+@property (nonatomic, VMWeak) IBOutlet NSTextField			*bpmLabel;
 
-@property (nonatomic, assign) IBOutlet NSTextField			*time1Field;
-@property (nonatomic, assign) IBOutlet NSTextField			*time2Field;
-@property (nonatomic, assign) IBOutlet NSTextField			*bpmField;
-@property (nonatomic, assign) IBOutlet NSPopUpButton		*unitSelector1;
-@property (nonatomic, assign) IBOutlet NSPopUpButton		*unitSelector2;
+@property (nonatomic, VMWeak) IBOutlet NSTextField			*time1Field;
+@property (nonatomic, VMWeak) IBOutlet NSTextField			*time2Field;
+@property (nonatomic, VMWeak) IBOutlet NSTextField			*bpmField;
+@property (nonatomic, VMWeak) IBOutlet NSPopUpButton		*unitSelector1;
+@property (nonatomic, VMWeak) IBOutlet NSPopUpButton		*unitSelector2;
 
 @end
