@@ -34,7 +34,8 @@ enum  {
 	vmSEFunction_LC,
 	vmSEFunction_LS,
 	vmSEFunction_F,
-	vmSEFunction_D
+	vmSEFunction_D,
+	vmSEFunction_PT
 };
 
 #define DEFAULTEVALUATOR [VMScoreEvaluator defaultEvaluator]
@@ -75,6 +76,7 @@ name		description											responsible setter		implemented
  @MAX(x,y)																				NO
  @MIN(x,y)																				NO
  @NEG(x)	(0-x)																		NO
+ @PT		current part's playing time (sec)											YES
  @RCP(x)	(1/x)																		NO
  @RU		uniform random value 0..1							scoreEvaluator			NO
  @RS		uniform random value 0 or 1							scoreEvaluator			NO

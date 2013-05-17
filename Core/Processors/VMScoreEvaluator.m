@@ -14,14 +14,14 @@
  	4:	eval &,|
  */
 
+#import "MultiPlatform.h"
+#import "VMPMacros.h"
+#import "RegexKitLite.h"
 
 #import "VMScoreEvaluator.h"
 #import "VMSong.h"
-#import "VMPMacros.h"
-#import "RegexKitLite.h"
+#import "VMPSongPlayer.h"
 #import "VMException.h"
-#import "VMDataTypes.h"
-#import "MultiPlatform.h"
 #import "VMPNotification.h"
 
 @implementation VMScoreEvaluator
@@ -80,11 +80,12 @@ static VMScoreEvaluator *se_singleton_static_ = nil;
 		
 		if ( ! seFunctionTable_static_ )
 			seFunctionTable_static_ = [[VMHash hashWithObjectsAndKeys:
-								  SEFunctionEntry( LC )
-								  SEFunctionEntry( LS )
-								  SEFunctionEntry( F )
-								  SEFunctionEntry( D )
-								  nil] retain];
+										SEFunctionEntry( LC )
+										SEFunctionEntry( LS )
+										SEFunctionEntry( F )
+										SEFunctionEntry( D )
+										SEFunctionEntry( PT )
+										nil] retain];
 		
 		[self reset];
 	}
@@ -260,6 +261,16 @@ SEFunctionDefinition( LC ) {
 	 
 	 */
 	return VMFloatObj( recip );
+}
+
+//
+//	PT			playing time of part
+//
+SEFunctionDefinition( PT ) {
+	vmObjectType type = [variables_ itemAsFloat:@"@TYPE"];
+	if ( type != vmObjectType_selector )
+		return nil;
+	return VMFloatObj( DEFAULTSONGPLAYER.playTimeAccumulator.playingTimeOfCurrentPart );
 }
 
 #pragma mark -

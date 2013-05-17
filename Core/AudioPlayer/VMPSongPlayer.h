@@ -17,6 +17,20 @@
 /*---------------------------------------------------------------------------------
  *
  *
+ *	Play time accumulator
+ *
+ *
+ *---------------------------------------------------------------------------------*/
+@interface VMPPlayTimeAccumulator : VMHash
+@property (nonatomic, assign)				VMTime				playingTimeOfCurrentPart;
+@property (nonatomic, retain)				VMId				*currentPartId;
+
+- (void)addAudioFragment:(VMAudioFragment*)audioFragent;
+@end
+
+/*---------------------------------------------------------------------------------
+ *
+ *
  *	Queued Cue
  *
  *
@@ -61,11 +75,17 @@
 	__weak VMSong		*song_;
 }
 
-@property (nonatomic, weak)					VMSong 				*song;				//	the Variable Music Data
-@property (assign)							VMPTrackView 		*trackView;			//	tracks view
-@property (atomic)							VMTime				nextCueTime;
-@property (nonatomic, getter = isDimmed)	BOOL				dimmed;
+@property (weak)							VMSong 				*song;				//	the Variable Music Data
+@property (atomic, assign)					VMTime				nextCueTime;
+@property (nonatomic, getter = isDimmed)	BOOL				dimmed;				//	volume dimmer
 @property (readonly,getter = isWarmedUp)	BOOL				engineIsWarm;		//
+
+//	for calculating playing time of part
+@property (nonatomic, retain)				VMPPlayTimeAccumulator	*playTimeAccumulator;
+
+
+//	displaying
+@property (assign)							VMPTrackView 		*trackView;			//	tracks view
 
 + (VMPSongPlayer*)defaultPlayer;
 

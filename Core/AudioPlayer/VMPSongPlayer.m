@@ -19,10 +19,57 @@
 
 //#include <math.h>
 
-#pragma mark -
-#pragma mark VMPQueue
+/*---------------------------------------------------------------------------------
+ 
+ VMPPlayTimeAccumulator
+ 
+ ----------------------------------------------------------------------------------*/
 
-//	VMPqueuedFragment
+#pragma mark -
+#pragma mark VMPPlayTimeAccumulator
+
+@implementation VMPPlayTimeAccumulator
+
+- (void)startNewPart:(VMId*)partId {
+	self.playingTimeOfCurrentPart = 0;
+	self.currentPartId = partId;
+}
+
+- (void)addAudioFragment:(VMAudioFragment*)audioFragent {
+	VMId *partId = audioFragent.partId;
+	
+	if ( ! [self.currentPartId isEqualToString:partId] )
+		[self startNewPart:partId];
+	self.playingTimeOfCurrentPart += audioFragent.duration;
+	[self add:audioFragent.duration ontoItem:partId];
+}
+
+- (void)clear { // override	
+	[super clear];
+	[self startNewPart:nil];
+}
+
+- (void)dealloc {
+    self.currentPartId = nil;
+	[super dealloc];
+}
+
+
+@end
+
+
+
+#pragma mark -
+#pragma mark VMPQueuedFragment
+
+/*---------------------------------------------------------------------------------
+ *
+ *
+ *	Queued Fragment (container obj)
+ *
+ *
+ *---------------------------------------------------------------------------------*/
+
 @implementation VMPQueuedFragment
 - (NSString*)description {
 	return [NSString stringWithFormat:@"QC<%@> %.2f-%.2f (%@)", 
@@ -348,10 +395,13 @@ static VMPSongPlayer 	*songPlayer_singleton_static_ = nil;
 		return;
 	}
 	
-	[queuedFragment->audioFragment interpreteInstructionsWithData:queuedFragment->audioFragment action:vmAction_play];
+	VMAudioFragment *af = queuedFragment->audioFragment;
+	[af interpreteInstructionsWithData:queuedFragment->audioFragment action:vmAction_play];
 	
 	[player setVolume:[self currentVolume]];
 	[player play];
+	
+	[self.playTimeAccumulator addAudioFragment:af];
 	
 	if(kUseNotification)
 		[VMPNotificationCenter postNotificationName:VMPNotificationAudioFragmentFired
@@ -520,6 +570,7 @@ static VMPSongPlayer 	*songPlayer_singleton_static_ = nil;
 	[self stopAllPlayers];
 	[DEFAULTSONG reset];
 	[DEFAULTEVALUATOR reset];
+	[self.playTimeAccumulator clear];
     [self setFragmentId:song_.defaultFragmentId fadeOut:NO restartAfterFadeOut:YES];
 }
 
@@ -671,6 +722,7 @@ static VMPSongPlayer 	*songPlayer_singleton_static_ = nil;
 - (id)init {
     self = [super init];
 	if( self ) {
+		self.playTimeAccumulator = ARInstance(VMPPlayTimeAccumulator);
 		engineIsWarm_	= NO;
 		fragQueue 		= NewInstance(VMArray);
 		dimmed_			= NO;
@@ -684,6 +736,7 @@ static VMPSongPlayer 	*songPlayer_singleton_static_ = nil;
 }
 
 - (void)dealloc {
+	self.playTimeAccumulator = nil;
 	[audioPlayerList release];
 	[fragQueue release];
 	self.song = nil;
