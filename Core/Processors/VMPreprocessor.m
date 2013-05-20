@@ -1511,7 +1511,9 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 	//	dynamic song object
 	SetClassTable( VMLiveData,		liveData,		LD,		7.0 )
 	//	runtime
-	SetClassTable( VMPlayer,		player,			PLY,	8.0 )
+	SetClassTable( VMAudioFragmentPlayer,	audioFragmentPlayer,
+													AFP,	8.1 )
+	SetClassTable( VMPlayer,		player,			PLY,	8.2 )
 }
 
 - (void)initShortKeyword {

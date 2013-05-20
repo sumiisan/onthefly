@@ -14,12 +14,20 @@
 #import "VMScoreEvaluator.h"
 #import "VMPMacros.h"
 #import "VMPreprocessor.h"
+#import "VMPlayerOSXDelegate.h"
+
+
+
+
+
 
 /*---------------------------------------------------------------------------------
- 
- selector graph
- 
- ----------------------------------------------------------------------------------*/
+ *
+ *
+ *	selector graph
+ *
+ *
+ *---------------------------------------------------------------------------------*/
 
 #pragma mark -
 #pragma mark *** Selector Graph ***
@@ -49,10 +57,13 @@
  
  ----------------------------------------------------------------------------------*/
 #pragma mark branch graph
+//	TODO: vms data mode /	reset @LC, @LS, ignore @C, @D, @PT, @F (denote)
+//	TODO: statistics mode / use statistical scores
 
 - (CGFloat)gapBetweenTypes:(int)type1 and:(int)type2 {
-	if( type1 == vmObjectType_selector && type2 == vmObjectType_selector ) return 10.;
-	return 55.;
+	//if( type1 == vmObjectType_selector && type2 == vmObjectType_selector ) return 10.;
+	//return 55.;
+	return 50;
 }
 
 - (void)collectBranchData:(VMFragment*)frag x:(CGFloat)x gapX:(CGFloat)gapX height:(VMFloat)height {
@@ -66,9 +77,10 @@
 		[branchViewTemporary setItem:hashAtX for:@( x )];
 	}
 	[hashAtX add:height ontoItem:frag.id];
-	if ( frag.type == vmObjectType_reference ) frag = [DEFAULTSONG data:((VMReference*)frag).referenceId];
-	int parentType = frag.type;
-	if ( parentType == vmObjectType_sequence ) frag = ((VMSequence*)frag).subsequent;
+
+	vmObjectType parentType = frag.type;
+	frag = [self selectSubsequentFragmentOf:frag];
+
 	if ( frag.type == vmObjectType_selector ) {
 		VMSelector *sel				= (VMSelector*)frag;
 		VMLiveData *saved_liveData	= AutoRelease([sel.liveData copy]);
@@ -87,8 +99,9 @@
 	}
 }
 
-// TODO:handle sequences with subseq = *
+
 - (void)drawBranchGraph:(VMFragment*)frag
+		   parentPartId:(VMId*)parentPartId
 					  x:(CGFloat)x
 					  y:(CGFloat)y
 				   gapX:(CGFloat)gapX
@@ -97,13 +110,11 @@
 	x += gapX + vmpCellWidth;
 	if ( x >= (self.frame.size.width - vmpCellWidth) ) return;
 
-//	NSLog(@"%@ %.2f %.2f", frag.id, x, y);
-	VMHash *hashAtX = [branchViewTemporary item:@( x )];
-	VMString *yPositionKey = [frag.id stringByAppendingString:@"_y"];
-	CGFloat yAlreadyDrawn = [hashAtX itemAsFloat:yPositionKey];
-	BOOL drawChildren = NO;
+	VMHash		*hashAtX = [branchViewTemporary item:@( x )];
+	VMString	*yPositionKey = [frag.id stringByAppendingString:@"_y"];
+	CGFloat		yAlreadyDrawn = [hashAtX itemAsFloat:yPositionKey];
+	BOOL		drawChildren = NO;
 
-	//VMFloat summedHeight = [hashAtX itemAsFloat:frag.id];
 	if ( yAlreadyDrawn == 0 ) {
 		if ( summedHeight < 3 ) return;
 		CGFloat moddedYBase = [hashAtX itemAsFloat:@"moddedYBase"];
@@ -113,35 +124,36 @@
 			yAlreadyDrawn = moddedYBase + 0.01;
 		
 		[hashAtX setItem:VMFloatObj(yAlreadyDrawn + summedHeight) for:@"moddedYBase"];
-	//	[[branchViewTemporary itemAsHash:@(x+55)] setItem:VMFloatObj(yAlreadyDrawn + summedHeight) for:@"moddedBase"];
 		[hashAtX setItem:VMFloatObj(yAlreadyDrawn) for:[frag.id stringByAppendingString:@"_y"]];
 	
-		VMPFragmentCell *cc = [VMPFragmentCell fragmentCellWithFragment:frag
-											  frame:CGRectMake(x, yAlreadyDrawn, vmpCellWidth, summedHeight)
-										   delegate:self];
-		[self addSubview:cc];
+		[self addSubview:[VMPFragmentCell fragmentCellWithFragment:frag
+															  frame:CGRectMake(x, yAlreadyDrawn, vmpCellWidth, summedHeight)
+														   delegate:self]];
 		drawChildren = YES;
 	}
 	
 	CGFloat myCenterY = yAlreadyDrawn + summedHeight * 0.5;
-	line.point1 = NSMakePoint(x - gapX, parentCenterY );//myCenterY - ( (myCenterY - parentCenterY) * 0.5 ) );
+	line.point1 = NSMakePoint(x - gapX, parentCenterY );
 	line.point2 = NSMakePoint(x, myCenterY);
+	line.foregroundColor = [frag.partId isEqualToString:parentPartId] ? [NSColor darkGrayColor] : [NSColor redColor];
 	[self addSubview:[line clone]];
 	
-	if ( ! drawChildren ) return;	//	do not draw children
-	if ( frag.type == vmObjectType_reference ) frag = [DEFAULTSONG data:((VMReference*)frag).referenceId];
-	int parentType = frag.type;
-	if ( parentType == vmObjectType_sequence ) frag = ((VMSequence*)frag).subsequent;
+	if ( ! drawChildren ) return;
+	
+	vmObjectType parentType = frag.type;
+	frag = [self selectSubsequentFragmentOf:frag];
+	
 	if ( frag.type == vmObjectType_selector ) {
 		VMSelector *sel = (VMSelector*)frag;
 		CGFloat currentY = y;
 		for( VMChance *ch in sel.fragments ) {
-			VMFragment *c = [DEFAULTSONG data:ch.targetId];
-			VMFloat nextGapX = [self gapBetweenTypes:c.type and:parentType];
+			VMFragment *fr = [DEFAULTSONG data:ch.targetId];
+			VMFloat nextGapX = [self gapBetweenTypes:fr.type and:parentType];
 			VMHash *hashAtNextX = [branchViewTemporary item:@( x + nextGapX + vmpCellWidth )];
-			summedHeight = [hashAtNextX itemAsFloat:ch.targetId];
+			summedHeight = [hashAtNextX itemAsFloat:fr.id];
 			
-			[self drawBranchGraph:c
+			[self drawBranchGraph:fr
+					 parentPartId:frag.partId
 								x:x
 								y:currentY
 							 gapX:nextGapX
@@ -152,23 +164,91 @@
 	}
 }
 
+- (VMFragment*)selectSubsequentFragmentOf:(VMFragment*)frag {
+	VMFragment *subseq = nil;
+	if ( frag.type == vmObjectType_reference )
+		frag = [DEFAULTSONG data:((VMReference*)frag).referenceId];
+	if ( frag.type == vmObjectType_sequence ) {
+		subseq = ((VMSequence*)frag).subsequent;
+		if ( ((VMSelector*)subseq).isDeadEnd ) {
+			//	search sel inside seq
+			for( VMId *fragId in ((VMSequence*)frag).fragments ) {
+				VMFragment *subsubseq = [self selectSubsequentFragmentOf:[DEFAULTSONG data:fragId]];
+				if ( subsubseq && (![self checkDeadEnd:subsubseq]) )
+					return subsubseq;
+			}
+		}
+	}
+	
+	if ( frag.type == vmObjectType_selector ) 
+		subseq = frag;
+	
+	return subseq;
+}
+
+- (BOOL)checkDeadEnd:(VMFragment*)frag {
+	switch ((int)frag.type) {
+		case vmObjectType_selector:
+			return ((VMSelector*)frag).isDeadEnd;
+			break;
+		case vmObjectType_sequence:
+			if ( ! ((VMSequence*)frag).subsequent.isDeadEnd ) return NO;
+			for ( VMId *fragId in ((VMSequence*)frag).fragments ) {
+				if (! [self checkDeadEnd:[DEFAULTSONG data:fragId]] ) return NO;
+			}
+			break;
+		case vmObjectType_reference:
+			return [self checkDeadEnd:[DEFAULTSONG data:((VMReference*)frag).referenceId]];
+			break;
+	}
+	return YES;
+}
+
 /*---------------------------------------------------------------------------------
  
- single selector graph
+ single selector graph with header
  
  ----------------------------------------------------------------------------------*/
 #pragma mark single selector graph
-- (void)drawSelectorGraph:(VMSelector*)selector rect:(NSRect)rect {
-	VMHash *scoreForFragmentIds = [selector collectScoresOfFragments:0 frameOffset:0 normalize:NO];
+- (void)drawSelectorGraph:(VMSelector*)selector rect:(NSRect)rect position:(int)position {
+	VMHash *scoreForFragmentIds;
+	
+	if ( VMPSelectorGraphType_Single_noLevels ) {
+		scoreForFragmentIds = ARInstance(VMHash);
+		[selector prepareSelection];
+		for ( VMChance *ch in selector.fragments ) {
+			[scoreForFragmentIds setItem:VMFloatObj(ch.cachedScore) for:ch.targetId];
+		}
+	} else {
+		scoreForFragmentIds = [selector collectScoresOfFragments:0 frameOffset:0 normalize:NO];
+	}
+	
 	[self buildSelectorCellForFrame:0
-					 scoreForFragmentIds:scoreForFragmentIds
+				scoreForFragmentIds:scoreForFragmentIds
 				   sumOfInnerScores:selector.sumOfInnerScores
-					 highlightFragmentId:nil
-				  fragIdsInLastFrame:nil
-						  rect:rect];
-
+				highlightFragmentId:nil
+				 fragIdsInLastFrame:nil
+							   rect:NSMakeRect(rect.origin.x   + vmpHeaderThickness + vmpCellMargin, rect.origin.y,
+											   rect.size.width - vmpHeaderThickness - vmpCellMargin, rect.size.height)];
+	
+	if ( selector.id ) {
+		VMPFragmentHeader *head = [[VMPFragmentHeader alloc]
+								   initWithFrame:NSMakeRect(rect.origin.x,
+															rect.origin.y + vmpShadowBlurRadius /*dunno why it needs offset*/,
+															vmpHeaderThickness,
+															rect.size.height)];
+		[head setData:selector];
+		head.position = position;
+		head.delegate = self;
+		[self addSubview:head];
+		Release(head);
+	}
 }
 
+
+//
+//	stack options vertically
+//
 - (void)buildSelectorCellForFrame:(int)offset
 				   scoreForFragmentIds:(VMHash*)scoreForFragmentIds
 				 sumOfInnerScores:(VMFloat)sumOfInnerScores
@@ -178,7 +258,7 @@
 	
     VMArray *fragIds = [scoreForFragmentIds sortedKeys];
     CGFloat pixPerScore = rect.size.height / sumOfInnerScores;
-    CGFloat currentY = self.cellRect.origin.y + rect.origin.y;
+    CGFloat currentY = self.contentRect.origin.y + rect.origin.y;
     
     for ( VMId *fragId in fragIds ) {
         VMFloat score 		= [[scoreForFragmentIds item:fragId] floatValue];
@@ -262,33 +342,44 @@
 
 - (void)setFragment:(VMFragment *)frag {	//	override
 	//	TODO: level 0 = the frag before = @F{}
+	if ( [ frag.id isEqualToString:self.fragment.id ]) return;
 	
 	[super setFragment:frag];
-	if ( ! frag ) return;
 	
-	if ( self.frameGraphMode )
-		[self drawFrameGraph];
-	else {
-		ReleaseAndNewInstance( branchViewTemporary, VMHash );
-		DEFAULTEVALUATOR.shouldNotify = NO;
-		[self collectBranchData:self.fragment x:vmpCellWidth gapX:0 height:self.frame.size.height-10];
-		DEFAULTEVALUATOR.shouldNotify = YES;
-		
-		[self drawBranchGraph:self.fragment
-							x:vmpCellWidth
-							y:5.
-						 gapX:0.
-				parentCenterY:self.frame.size.height * 0.5 - 5
-					   height:self.frame.size.height-10];
-		ReleaseAndNil( branchViewTemporary );
+	if ( !frag || frag.type != vmObjectType_selector ) return;		//	because this method gets called from it's heirs.
+	
+	switch (self.graphType) {
+		case VMPSelectorGraphType_Single:
+		case VMPSelectorGraphType_Single_noLevels:
+			[self drawSelectorGraph:(VMSelector*)self.fragment rect:self.bounds position:0];
+			break;
+		case VMPSelectorGraphType_Frame:
+			[self drawFrameGraph];
+			break;
+		case VMPSelectorGraphType_Branch: {
+			ReleaseAndNewInstance( branchViewTemporary, VMHash );
+			DEFAULTEVALUATOR.shouldNotify = NO;
+			[self collectBranchData:self.fragment x:vmpCellWidth gapX:0 height:self.frame.size.height-10];
+			DEFAULTEVALUATOR.shouldNotify = YES;
+			
+			[self drawBranchGraph:self.fragment
+					 parentPartId:nil
+								x:vmpCellWidth
+								y:5.
+							 gapX:0.
+					parentCenterY:self.frame.size.height * 0.5 - 5
+						   height:self.frame.size.height-10];
+			ReleaseAndNil( branchViewTemporary );
+		}
 	}
 }
 
-
+#pragma mark -
+#pragma mark fragment graph delegate
 //	delegate
-- (void)fragmentCellClicked:(VMPFragmentCell *)fragCell {
+- (void)fragmentCellClicked:(VMPFragmentGraphBase *)fragCell {
 	for( NSView *v in self.subviews ) {
-		if( ClassMatch(v, VMPFragmentCell ) && fragCell != v ) ((VMPFragmentCell*)v).selected = NO;
+		if( ClassMatch(v, VMPFragmentGraphBase ) && fragCell != v ) ((VMPFragmentGraphBase*)v).selected = NO;
 	}
 	[VMPNotificationCenter postNotificationName:VMPNotificationFragmentSelected object:self userInfo:@{@"id":fragCell.fragment.id}];
 }
@@ -302,11 +393,45 @@
 
 
 
+
+
+
 /*---------------------------------------------------------------------------------
- 
- sequence graph
- 
- ----------------------------------------------------------------------------------*/
+ *
+ *
+ *	referrer graph
+ *
+ *
+ *---------------------------------------------------------------------------------*/
+
+#pragma mark -
+#pragma mark *** Referrer Graph ***
+#pragma mark -
+
+@implementation VMPReferrerGraph
+- (void)setData:(id)data {
+	VMData *d = ClassCastIfMatch(data, VMData);
+	if ( !d ) return;
+	VMArray *idList = [APPDELEGATE.editorWindowController referrerListForId:d.id];
+	VMSelector *sel = ARInstance(VMSelector);
+	sel.id = @"Referrer";
+	[sel setWithData:idList];
+	self.graphType = VMPSelectorGraphType_Single_noLevels;
+	self.fragment = sel;
+}
+
+@end
+
+
+
+
+/*---------------------------------------------------------------------------------
+ *
+ *
+ *	sequence graph
+ *
+ *
+ *---------------------------------------------------------------------------------*/
 
 #pragma mark -
 #pragma mark *** Sequence Graph ***
@@ -314,44 +439,80 @@
 
 @implementation VMPSequenceGraph
 
-- (void)redrawLocal {
+- (void)drawSequenceGraphInRect:(CGRect)rect {
+	CGFloat x = rect.origin.x + 5;
+	//
+	//	sequence content
+	//
+	CGFloat y = rect.origin.y + 5 + vmpHeaderThickness + vmpCellMargin * 0.5;
 	[self removeAllSubviews];
-	if (self.fragment.type == vmObjectType_sequence) {
-		VMSequence *sequence = ((VMSequence*)self.fragment);
+	
+	if ( self.fragment.type != vmObjectType_sequence ) return;
+
+	VMSequence *sequence = ((VMSequence*)self.fragment);
+	
+	VMInt num = sequence.length;
+	
+	CGFloat contentHeight 	= self.contentRect.size.height - y;
+	
+	for ( int position = 0; position < num; ++position ) {
 		
-		VMInt num = sequence.length + 1;
+		CGFloat graphWidth = vmpCellWidth;
 		
-		CGFloat labelHeight		= 20;
-		CGFloat contentHeight 	= self.cellRect.size.height - labelHeight;
-		
-		for ( int position = 0; position < num; ++position ) {
-			
-			CGFloat x = position * ( vmpCellWidth + vmpCellMargin ) + vmpShadowBlurRadius;
-			
-			NSTextField *tf = [NSTextField labelWithText: (position < sequence.length
-                                                           ? [NSString stringWithFormat:@"position: %d", position +1]
-                                                           : @"subsequent")
-												   frame:CGRectMake(x, 0, vmpCellWidth, labelHeight )];
-			[self addSubview:tf];
-			
-			VMFragment *fragmentAtPosition = [sequence fragmentAtIndex:position];
-			if ( fragmentAtPosition.type == vmObjectType_selector ) {
-				[self drawSelectorGraph:((VMSelector*)fragmentAtPosition)
-								   rect:CGRectMake(x, labelHeight, vmpCellWidth, contentHeight)];
-			} else {
-				VMPFragmentCell * fragCell = AutoRelease([[VMPFragmentCell alloc]initWithFrame:CGRectMake(x, labelHeight + vmpShadowBlurRadius, vmpCellWidth, contentHeight )] );
-				fragCell.fragment = fragmentAtPosition;
-				fragCell.delegate = self;
-				[self addSubview:fragCell];
-			}
+		VMFragment *fragmentAtPosition = [sequence fragmentAtIndex:position];
+		if ( fragmentAtPosition.type == vmObjectType_selector ) {
+			//
+			//	draw selector cell
+			//
+			graphWidth += vmpHeaderThickness + vmpCellMargin;
+			[self drawSelectorGraph:((VMSelector*)fragmentAtPosition)
+							   rect:CGRectMake(x, y, graphWidth, contentHeight)
+						   position:position+1];
+		} else {
+			//
+			//	draw plain fragment cell
+			//
+			VMPFragmentCell * fragCell = AutoRelease([[VMPFragmentCell alloc]
+													  initWithFrame:CGRectMake(x, y + vmpShadowBlurRadius,
+																			   graphWidth, contentHeight )] );
+			fragCell.fragment = fragmentAtPosition;
+			fragCell.position = position+1;
+			fragCell.delegate = self;
+			[self addSubview:fragCell];
 		}
+		x += graphWidth + vmpCellMargin + vmpShadowBlurRadius;
 	}
 	
+	CGFloat sequenceWidth = x - vmpCellMargin;
+	
+	//
+	//	header
+	//
+	VMPFragmentHeader *head = [[VMPFragmentHeader alloc]
+							   initWithFrame:NSMakeRect(rect.origin.x, rect.origin.y + 5,
+														sequenceWidth, vmpHeaderThickness)];
+	[head setData:self.fragment];
+	head.delegate = self;
+	[self addSubview:head];
+	
+	//
+	//	subseq
+	//
+	//
+	//	draw selector cell
+	//
+	CGFloat subseqWidth = vmpCellWidth + vmpHeaderThickness + vmpCellMargin;
+	[self drawSelectorGraph:sequence.subsequent
+					   rect:CGRectMake(x, rect.origin.y +5, subseqWidth, rect.size.height - vmpCellMargin )
+				   position:-1 /*-1 indicates subseq*/];
+
+	
+	self.width = sequenceWidth + subseqWidth;
 }
 
 - (void)setFragment:(VMFragment *)frag {	//	override
 	[super setFragment:frag];
-	[self redrawLocal];
+	[self drawSequenceGraphInRect:self.bounds];
 }
 
 #pragma mark drawing
@@ -371,12 +532,13 @@
 
 
 
-
 /*---------------------------------------------------------------------------------
- 
- object graph view
- 
- ----------------------------------------------------------------------------------*/
+ *
+ *
+ *	Object Graph View (the top level view of object graphs)
+ *
+ *
+ *---------------------------------------------------------------------------------*/
 
 #pragma mark -
 #pragma mark *** Object Graph View ***
@@ -413,22 +575,48 @@
 			sle.view.frame = self.frame;
 			[sle setData: self.data];
 			self.editorViewController = sle;
+			break;
 		}
-			
+			//
 			//
 			//	sequence view
 			//
+			//
 		case vmObjectType_sequence: {
-			int width = ( vmpCellWidth + vmpCellMargin ) * (((VMSequence*)self.data).length +1 ) - vmpCellMargin;
-			VMPFragmentCell *fragCell = [[VMPSequenceGraph alloc]initWithFrame:
-					   CGRectPlaceInTheMiddle(CGRectMake(0,
-														 0,
-														 width,
-														 self.frame.size.height - 10),
-											  CGPointMiddleOfRect(CGRectZeroOrigin(self.frame)))];
-			[fragCell setData: self.data];
-			[self addSubview: [fragCell taggedWith:vmpg_background]];
-			Release(fragCell);
+			CGFloat referrerGraphWidth = vmpCellWidth*2;
+			CGFloat sequenceGraphWidth = self.width = referrerGraphWidth;
+			//
+			//	referrer graph
+			//
+			VMPReferrerGraph *refGraph = [[VMPReferrerGraph alloc]
+										  initWithFrame:CGRectMake(10, 10,
+																   vmpCellWidth + vmpHeaderThickness,
+																   self.height -20 )];
+			[refGraph setData: self.data];
+			VMPGraph *refGraphBG = [[VMPGraph alloc] initWithFrame:CGRectMake(0, 1, refGraph.width + 20, self.height-1)];
+			refGraphBG.backgroundColor = VMPColorBy(.7, .7, .7, 1.);
+			
+			//
+			//	sequence graph
+			//
+			VMPSequenceGraph *seqGraph = [[VMPSequenceGraph alloc]
+										  initWithFrame:CGRectMake(referrerGraphWidth, 10,
+																   sequenceGraphWidth, self.height -15 )];
+			[seqGraph setData: self.data];
+			
+			if( seqGraph.width <= sequenceGraphWidth ) {	//	seqGraph resizes itself after setData:
+				seqGraph.x = ( sequenceGraphWidth - seqGraph.width ) *0.5 + referrerGraphWidth;
+			} else {
+				//TODO: we need a scroll view.
+				
+			}
+			
+			[self addSubview: refGraphBG];
+			[self addSubview: refGraph];
+			[self addSubview: seqGraph];
+			Release(refGraphBG);
+			Release(refGraph);
+			Release(seqGraph);
 			break;
 		}
 			
@@ -436,6 +624,7 @@
 			//	audio info editor
 			//
 		case vmObjectType_audioFragment:
+		case vmObjectType_audioFragmentPlayer:
 		case vmObjectType_audioInfo: {
 			VMPAudioInfoEditorViewController *aie;
 			if( ClassMatch( self.editorViewController, VMPAudioInfoEditorViewController )) {
@@ -463,7 +652,7 @@
 					   CGRectPlaceInTheMiddle(CGRectMake(0, 0, vmpCellWidth, MIN(self.frame.size.height - 10, 100)),
 											  CGPointMiddleOfRect(CGRectZeroOrigin(self.frame)))];
 			[fragCell setData: self.data];
-			[self addSubview: [fragCell taggedWith:vmpg_background]];
+			[self addSubview: fragCell];
 			Release(fragCell);
 			break;
 		}
@@ -472,17 +661,37 @@
 
 }
 
+//	TODO:	make SEL compatible with SEQ-SUBSEQ
+//	TODO:	animated transition
+- (void)chaseSequence:(VMAudioFragmentPlayer*)audioFragmentPlayer {
+	VMLog *log = DEFAULTSONG.log;
+	VMInt p = log.count -1;
+	VMLogRecord *lr;
+	for ( ;p > 0; --p) {
+		lr = [log item:p];
+		if ( lr.type != vmObjectType_audioFragmentPlayer ) continue;
+		if ( ((VMAudioFragmentPlayer*)lr.data).firedTimestamp == audioFragmentPlayer.firedTimestamp )
+			break;
+	}
+	for ( ;p > 0; --p ) {
+		lr = [log item:p];
+		if ( lr.type == self.data.type ) break;
+	}
+	self.data = lr.VMData;
+	[self redraw];
+}
+
 - (void)drawGraphWith:(VMData*)data {
 	self.data = data;
 	[self redraw];
 }
 
-/*---------------------------------------------------------------------------------
- 
- report graph
- 
- ----------------------------------------------------------------------------------*/
 
+/*---------------------------------------------------------------------------------
+
+	report graph
+ 
+ *---------------------------------------------------------------------------------*/
 - (void)drawReportGraph:(VMHash*)report {
 	[self removeAllSubviews];
 	int frameWidth = (vmpCellWidth+vmpCellMargin);
@@ -545,12 +754,14 @@
 @end
 
 
-
 /*---------------------------------------------------------------------------------
- 
- object info view
- 
- ----------------------------------------------------------------------------------*/
+ *
+ *
+ *	object info view
+ *
+ *		actually, this should be moved into VMPEditorWindowController related files
+ *
+ *---------------------------------------------------------------------------------*/
 
 #pragma mark -
 #pragma mark *** Object Info View ***
@@ -567,12 +778,15 @@
 }
 
 - (void)drawRect:(NSRect)dirtyRect {
-	[super drawRect:dirtyRect];
-	[[self.backgroundColor colorModifiedByHueOffset:0 saturationFactor:1.1 brightnessFactor:0.7] setStroke];
-	[NSBezierPath strokeLineFromPoint:NSMakePoint(0,1.5) toPoint:NSMakePoint(self.width, 1.5)];
-	[[self.backgroundColor colorModifiedByHueOffset:0 saturationFactor:0.7 brightnessFactor:1.2] setStroke];
-	[NSBezierPath strokeLineFromPoint:NSMakePoint(0,self.height-0.5) toPoint:NSMakePoint(self.width, self.height-0.5)];
-	
+	NSGradient *gr = AutoRelease([[NSGradient alloc]
+								  initWithStartingColor:[self.backgroundColor colorModifiedByHueOffset:0.01
+																					  saturationFactor:1.1
+																					  brightnessFactor:0.8]
+								  endingColor:[self.backgroundColor colorModifiedByHueOffset:-0.01
+																			saturationFactor:0.9
+																			brightnessFactor:1.0] ]);
+
+	[gr drawInRect:dirtyRect angle:90];
 }
 
 

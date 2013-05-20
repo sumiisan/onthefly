@@ -9,15 +9,26 @@
 #import <Foundation/Foundation.h>
 #import "VMDataTypes.h"
 
+#ifndef VMPGraphMacros
+#define VMPGraphMacros
 
+#define GradientWithColors(c1,c2) \
+AutoRelease([[NSGradient alloc] initWithStartingColor:c1 endingColor:c2])
 
-//--------------------- constants -----------------------------
+#define BeginGC \
+NSGraphicsContext* context = [NSGraphicsContext currentContext];
+#define SaveGC \
+[context saveGraphicsState];
+#define RestoreGC \
+[context restoreGraphicsState];
 
-static const CGFloat	vmpCellWidth		= 100.;
-static const CGFloat	vmpCellMargin		= 10.;
-static const CGFloat	vmpShadowOffset 	= 2.;
-static const CGFloat	vmpShadowBlurRadius = 3.;
+#define LogColor(col) NSLog(@"R:%.2f G:%.2f B:%.2f H:%.2f S:%.2f B:%.2f",\
+col.redComponent,col.greenComponent,col.blueComponent,col.hueComponent,col.saturationComponent,col.brightnessComponent);
 
+#define LogRect(rect) NSLog(@"origin(%.2f,%.2f) size:(%.2f,%.2f)",\
+rect.origin.x, rect.origin.y, rect.size.width, rect.size.height );
+
+#endif
 
 //-------------------------	CGGeometry extension -------------------------
 #ifndef CGGEOMETRY_EXTENSION_
@@ -28,6 +39,8 @@ CGRect CGRectZeroOrigin( CGRect rect );
 CGRect CGRectOffsetByPoint( CGRect rect, CGPoint offset );
 CGRect CGRectPlaceInTheMiddle( CGRect rect, CGPoint offset );
 CGPoint CGPointMiddleOfRect( CGRect rect );
+
+
 #endif
 
 
@@ -41,19 +54,10 @@ enum {
 } vmpg_conventional_tags;
 
 
-
 #pragma mark -
-#pragma mark NSView (VMPExtension)
-//------------------------- NSView (VMPExtension) -----------------------------
-@interface NSView (VMPExtension)
-@end
-
-
-
-#pragma mark -
-#pragma mark NSColor (VMPExtension)
-//------------------------- NSColor (VMPExtension) -----------------------------
-@interface NSColor (VMPExtension)
+#pragma mark NSColor (VMPDataColors)
+//------------------------- NSColor (VMPDataColors) -----------------------------
+@interface NSColor (VMPDataColors)
 - (NSColor*)colorModifiedByRedFactor:(const CGFloat)red 
 						 greenFactor:(const CGFloat)green 
 						  blueFactor:(const CGFloat)blue;
@@ -65,11 +69,21 @@ enum {
 @end
 
 
+#pragma mark -
+#pragma mark NSString (VMPRotate)
+//--------------------- NSString (VMPRotate) -----------------------------
+@interface NSString (VMPRotate)
+- (void)drawVerticalInRect:(CGRect)rect withAttributes:(NSDictionary*)attributes;
+/*
+- (void)drawInRect:(CGRect)rect
+			 withAngle:(CGFloat)angle
+		attributes:(NSDictionary*)attributes;*/
+@end
 
 #pragma mark -
-#pragma mark NSTextField (VMPExtension)
-//--------------------- NSTextField (VMPExtension) -------------------------
-@interface NSTextField (VMPExtension)
+#pragma mark NSTextField (LabelCreation)
+//--------------------- NSTextField (LabelCreation) -------------------------
+@interface NSTextField (VMPLabelCreation)
 + (NSTextField*)labelWithText:(NSString*)text frame:(CGRect)frame;
 @end
 
@@ -99,17 +113,6 @@ enum {
 @required
 - (void)setData:(id)data;
 @end
-
-
-@class VMPFragmentCell;
-
-#pragma mark -
-#pragma mark VMPFragmentCellDelegate
-//------------------- protocol VMPFragmentCellDelegate -----------------------
-@protocol VMPFragmentCellDelegate <NSObject>
-- (void)fragmentCellClicked:(VMPFragmentCell*)fragCell;
-@end
-
 
 
 #pragma mark -
@@ -152,26 +155,6 @@ enum {
 @property (nonatomic)			NSPoint					point2;
 
 @end
-
-
-
-
-#pragma mark -
-#pragma mark VMPFragmentCell
-//---------------------------- VMPFragmentCell -------------------------------
-@interface VMPFragmentCell : VMPGraph <VMPDataGraphObject>
-@property (nonatomic)							CGRect					cellRect;
-@property (nonatomic, VMStrong)					VMFragment 				*fragment;
-@property (nonatomic)							VMFloat 				score;				//	not used internally
-@property (nonatomic, VMStrong)					NSGradient				*backgroundGradient;
-@property (nonatomic, getter = isSelected)		BOOL					selected;
-@property (nonatomic, unsafe_unretained)		id <VMPFragmentCellDelegate>	delegate;
-
-- (void)selectIfIdDoesMatch:(VMId*)fragId exclusive:(BOOL)exclusive;
-+ (VMPFragmentCell*)fragmentCellWithFragment:(VMFragment*)frag frame:(NSRect)frame delegate:(id<VMPFragmentCellDelegate>)delegate;
-@end
-
-
 
 
 

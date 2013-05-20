@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-#define RESET_TIME (-[[NSDate date] timeIntervalSince1970])
+#define RESET_TIME 0	//([[NSDate date] timeIntervalSince1970])
 #define INFINITE_TIME INFINITY
 
 @interface VMPlayerBase : NSObject {

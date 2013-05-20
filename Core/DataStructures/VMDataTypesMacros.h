@@ -47,6 +47,15 @@ _code_\
 }\
 }
 
+#define VMObligatory_containsId(_code_) \
+- (BOOL)containsId:(VMId *)dataId {\
+	if ( [self.id isEqualToString:dataId] ) return YES;\
+	_code_ \
+	return NO;\
+}
+
+
+
 #define VMObligatory_resolveUntilType(_code_) \
 -(id)resolveUntilType:(int)mask {\
 ReturnValueIfNotNil( [self matchMask:mask] );\

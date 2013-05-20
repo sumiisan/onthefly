@@ -57,6 +57,7 @@
 							<object class="NSBox" id="184754963">
 								<reference key="NSNextResponder" ref="556918407"/>
 								<int key="NSvFlags">33</int>
+								<array class="NSMutableArray" key="NSSubviews"/>
 								<string key="NSFrame">{{416, 5}, {5, 68}}</string>
 								<reference key="NSSuperview" ref="556918407"/>
 								<reference key="NSWindow"/>
@@ -94,6 +95,7 @@
 							<object class="NSBox" id="981936700">
 								<reference key="NSNextResponder" ref="556918407"/>
 								<int key="NSvFlags">33</int>
+								<array class="NSMutableArray" key="NSSubviews"/>
 								<string key="NSFrame">{{361, 5}, {5, 68}}</string>
 								<reference key="NSSuperview" ref="556918407"/>
 								<reference key="NSWindow"/>
@@ -236,6 +238,7 @@
 							<object class="NSBox" id="1010250152">
 								<reference key="NSNextResponder" ref="556918407"/>
 								<int key="NSvFlags">33</int>
+								<array class="NSMutableArray" key="NSSubviews"/>
 								<string key="NSFrame">{{179, 5}, {5, 68}}</string>
 								<reference key="NSSuperview" ref="556918407"/>
 								<reference key="NSWindow"/>
@@ -261,6 +264,7 @@
 							<object class="NSButton" id="362376997">
 								<reference key="NSNextResponder" ref="556918407"/>
 								<int key="NSvFlags">289</int>
+								<array class="NSMutableArray" key="NSSubviews"/>
 								<string key="NSFrame">{{103, 46}, {77, 28}}</string>
 								<reference key="NSSuperview" ref="556918407"/>
 								<reference key="NSWindow"/>
@@ -421,7 +425,6 @@
 						<string key="NSFrame">{{620, 8}, {30, 33}}</string>
 						<reference key="NSSuperview" ref="952425949"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<int key="NSTag">1</int>
 						<bool key="NSEnabled">YES</bool>
@@ -497,7 +500,7 @@
 										<string key="NSFrameSize">{650, 140}</string>
 										<reference key="NSSuperview" ref="44062029"/>
 										<reference key="NSWindow"/>
-										<reference key="NSNextKeyView" ref="262915384"/>
+										<reference key="NSNextKeyView" ref="106300776"/>
 										<string key="NSReuseIdentifierKey">_NS:9</string>
 										<string key="NSClassName">VMPGraph</string>
 									</object>
@@ -548,7 +551,7 @@
 						<string key="NSFrame">{{0, 80}, {650, 140}}</string>
 						<reference key="NSSuperview" ref="952425949"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView" ref="106300776"/>
+						<reference key="NSNextKeyView" ref="44062029"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<int key="NSsFlags">133152</int>
 						<reference key="NSVScroller" ref="106300776"/>
@@ -563,6 +566,7 @@
 				<reference key="NSSuperview"/>
 				<reference key="NSWindow"/>
 				<reference key="NSNextKeyView" ref="960885002"/>
+				<bool key="NSViewIsLayerTreeHost">YES</bool>
 				<string key="NSReuseIdentifierKey">_NS:9</string>
 				<string key="NSClassName">NSView</string>
 			</object>

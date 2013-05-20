@@ -30,7 +30,7 @@
 -(NSDictionary*)	defaultTextAttributes {
 	NSMutableParagraphStyle *style = AutoRelease([[NSMutableParagraphStyle alloc] init] );
 	[style setDefaultTabInterval:31.3];
-	[style setTabStops:[NSArray array]];
+	[style setTabStops:@[]];
 	return @{
 			NSFontAttributeName:[NSFont fontWithName:@"Menlo Regular" size:13],
 			NSParagraphStyleAttributeName:style
@@ -136,7 +136,7 @@
 	//	actually, we added a observer with this object..
 	if ( self.sourceCode.length == 0 )
 		[self setSourceCode:DEFAULTSONG.vmsData];
-	VMId *fragId = [notification.userInfo objectForKey:@"id"];
+	VMId *fragId = (notification.userInfo)[@"id"];
 	if(fragId);
 		[self selectBlockWithId:fragId scrollVisible:YES];
 }

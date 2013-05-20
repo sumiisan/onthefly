@@ -33,7 +33,7 @@
 			t.bordered = NO;	
 			t.font = [NSFont systemFontOfSize:9];
 			t.textColor = [NSColor colorWithCalibratedWhite:0.1 alpha:1.];
-			t.alignment = [[align objectAtIndex:i] intValue];
+			t.alignment = [align[i] intValue];
 			
 			
 			[self addSubview:t];

@@ -188,6 +188,14 @@ static VMPObjectCell		*typeColumnCell = nil;
 								  selector:@selector(vmsDataLoaded:)
 									  name:VMPNotificationVMSDataLoaded
 									object:nil];
+		[VMPNotificationCenter addObserver:self
+								selector:@selector(updateCurrentFragmentId:)
+									  name:VMPNotificationAudioFragmentFired
+									object:nil];
+		[VMPNotificationCenter addObserver:self
+								  selector:@selector(audioFragmentFired:)
+									  name:VMPNotificationAudioFragmentFired
+									object:nil];
 		// Initialization code
 		genericCell = [[VMPObjectCell alloc] init];
 		genericCell.drawsBackground	= YES;
@@ -204,6 +212,7 @@ static VMPObjectCell		*typeColumnCell = nil;
 }
 
 - (void)applicationDidLaunch {
+	((NSView*)self.window.contentView).wantsLayer = kUseCoreAnimationLayerForEditor;
 	self.objectTreeView.doubleAction = @selector(doubleClickOnRow:);
 	self.history = ARInstance(VMHistory);
 	
@@ -350,7 +359,7 @@ static VMPObjectCell		*typeColumnCell = nil;
 }
 
 - (void)controlTextDidChange:(NSNotification *)obj {
-	NSTextView* searchFieldEditor = [[obj userInfo] objectForKey:@"NSFieldEditor"];
+	NSTextView* searchFieldEditor = [obj userInfo][@"NSFieldEditor"];
 
     if ( !performingAutoComplete && !handlingCommand) {	// prevent calling "complete" too often
 		[self updateFilterWithString:self.currentNonCompletedSearchString];
@@ -393,7 +402,7 @@ static VMPObjectCell		*typeColumnCell = nil;
 	
     // find any match in our keyword array against what was typed -
 	for (i=0; i< count; i++) {
-        string = [keywords objectAtIndex:i];
+        string = keywords[i];
         if ([string rangeOfString:searchString
 						  options:NSAnchoredSearch | NSCaseInsensitiveSearch
 							range:NSMakeRange(0, [string length])].location != NSNotFound)
@@ -526,7 +535,7 @@ static VMPObjectCell		*typeColumnCell = nil;
 }
 
 - (void)doubleClickOnFragment:(NSNotification*)notification {
-	[self findObjectById:[ notification.userInfo objectForKey:@"id"]];
+	[self findObjectById:(notification.userInfo)[@"id"]];
 	[self.window makeKeyAndOrderFront:self];
 }
 
@@ -755,7 +764,14 @@ filterStringNotFound:
 }
 
 #pragma mark -
-#pragma mark splitter delegate
+#pragma mark chase sequence
+- (void)audioFragmentFired:(NSNotification*)notification {
+	if( ! self.chaseSequence ) return;
+	[self.graphView chaseSequence:(notification.userInfo)[@"audioFragment"]];
+}
+
+#pragma mark -
+#pragma mark splitter view
 
 - (BOOL)splitView:(NSSplitView *)splitView canCollapseSubview:(NSView *)subview {
 	//if ( subview == self.graphView ) return YES;
@@ -764,14 +780,36 @@ filterStringNotFound:
 
 - (BOOL)splitView:(NSSplitView *)splitView shouldCollapseSubview:(NSView *)subview
 forDoubleClickOnDividerAtIndex:(NSInteger)dividerIndex  {
-	if ( subview == self.graphView ) return YES;
-	return NO;
+//	if ( subview == self.graphView ) return YES;
+	return YES;
 }
 
 - (void)splitViewDidResizeSubviews:(NSNotification *)notification {
-	self.editorSplitterView.y = ((NSView*)self.window.contentView).frame.size.height - self.graphView.frame.size.height - 47;
+	CGFloat graphViewHeight = ([((VMPEditorWindowSplitter*)notification.object) isSubviewCollapsed:self.graphView ]
+							   ? 0
+							   : self.graphView.height );
+	self.editorSplitterView.y = ((NSView*)self.window.contentView).frame.size.height - graphViewHeight - 47;
 }
 
+- (void)updateCurrentFragmentId:(NSNotification*)notification {
+	self.currentFragmentIdButton.title = ((VMAudioFragment*)(notification.userInfo)[@"audioFragment"]).id;
+}
+
+- (IBAction)buttonClicked:(id)sender {
+	if ( sender == self.currentFragmentIdButton ) {
+		[self findObjectById:((NSButton*)sender).title];
+	}
+	
+	if ( sender == self.chaseToggleButton ) {
+		self.chaseSequence = ( self.chaseToggleButton.state == 1 );
+		if ( self.chaseSequence && DEFAULTSONGPLAYER.lastFiredFragment ) {
+			[VMPNotificationCenter postNotificationName:VMPNotificationStartChaseSequence
+												 object:self
+											   userInfo:@{@"audioFragment":DEFAULTSONGPLAYER.lastFiredFragment  } ];
+		}
+	}
+	
+}
 
 
 #pragma mark -
@@ -794,7 +832,7 @@ forDoubleClickOnDividerAtIndex:(NSInteger)dividerIndex  {
 		NSTreeNode *node = ClassCastIfMatch(item, NSTreeNode);
 		if (node) {
 			[self addChildNodesToNode:node children:children];
-			childObj = [node.childNodes objectAtIndex:index];
+			childObj = (node.childNodes)[index];
 		} else {
 			//	no parent node : return bare VMData			//	should not happen: just a fallback // remove in future
 			if ( ClassMatch( childObj, VMId ))
@@ -804,7 +842,6 @@ forDoubleClickOnDividerAtIndex:(NSInteger)dividerIndex  {
 	
 	return childObj;
 }
-
 
 - (BOOL)outlineView:(NSOutlineView *)outlineView isItemExpandable:(id)item {
 	return ( [self childrenOfItem:item] != nil );
@@ -902,7 +939,10 @@ forDoubleClickOnDividerAtIndex:(NSInteger)dividerIndex  {
 	if ( action == @selector(zoomIn:) || action == @selector(zoomOut:) ) {
 		VMData *selectedFrag = [DEFAULTSONG data:[self.history currentItem]];
 		if ( !selectedFrag ) return NO;
-		if ( selectedFrag.type != vmObjectType_audioFragment && selectedFrag.type != vmObjectType_audioInfo ) return NO;
+		if (   selectedFrag.type != vmObjectType_audioFragment
+			&& selectedFrag.type != vmObjectType_audioFragmentPlayer
+			&& selectedFrag.type != vmObjectType_audioInfo
+			) return NO;
 	}
 	
 	if ( action == @selector(moveHistoryBack:)) {
@@ -982,7 +1022,7 @@ forDoubleClickOnDividerAtIndex:(NSInteger)dividerIndex  {
 													   action:@selector(referrerSelected:)
 												keyEquivalent:@""] );
 	[self.referrerMenu addItem:menuItem];
-	VMArray *keys = [[self.referrerList itemAsHash:dataId] sortedKeys];
+	VMArray *keys = [self referrerListForId:dataId];
 	int p = 0;
 	for( VMId *fid in keys ) {
 		menuItem = AutoRelease([[NSMenuItem alloc] initWithTitle:fid
@@ -994,6 +1034,9 @@ forDoubleClickOnDividerAtIndex:(NSInteger)dividerIndex  {
 	}
 }
 
+- (VMArray*)referrerListForId:(VMId*)dataId {	
+	return [[self.referrerList itemAsHash:dataId] sortedKeys];
+}
 
 - (IBAction)clickOnRow:(id)sender {
 	[self selectRowAndRedrawViews:self.objectTreeView.clickedRow];
@@ -1012,7 +1055,6 @@ forDoubleClickOnDividerAtIndex:(NSInteger)dividerIndex  {
 }
 
 
-//	unimplemented
 - (IBAction)historyButtonClicked:(id)sender {
 	NSSegmentedCell *sc = sender;
 	if ( sc.selectedSegment == 0 )
@@ -1064,7 +1106,11 @@ forDoubleClickOnDividerAtIndex:(NSInteger)dividerIndex  {
 	if (sender != self)
 		NSLog(@"just wanted to know");
 	VMData *d = [DEFAULTSONG data:[self.history currentItem]];
-	if ( d.type == vmObjectType_sequence || d.type == vmObjectType_selector || d.type == vmObjectType_audioFragment ) {
+	if (d.type == vmObjectType_sequence ||
+		d.type == vmObjectType_selector ||
+		d.type == vmObjectType_audioFragment ||
+		d.type == vmObjectType_audioFragmentPlayer
+		) {
 		[DEFAULTSONGPLAYER startWithFragmentId:d.id];
 	}
 

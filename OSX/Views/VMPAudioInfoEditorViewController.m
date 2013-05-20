@@ -282,9 +282,9 @@ static BOOL ui_lock;
 #pragma mark notification
 
 - (void)audioFragmentFired:(NSNotification*)notification {
-	VMAudioFragment *fr = [notification.userInfo objectForKey:@"audioFragment"];
+	VMAudioFragment *fr = (notification.userInfo)[@"audioFragment"];
 	if ( fr.audioInfoId == self.audioInfo.id ) {
-		self.audioPlayer = [notification.userInfo objectForKey:@"player"];
+		self.audioPlayer = (notification.userInfo)[@"player"];
 		[self beginDisplayPlayPositionLine];
 	} else {
 		VMNullify(audioPlayer);

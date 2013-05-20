@@ -152,6 +152,8 @@
 		1693CBD9171665DA005846E6 /* appicon.png in Resources */ = {isa = PBXBuildFile; fileRef = 1693CBD8171665D9005846E6 /* appicon.png */; };
 		1693CBDB171665EA005846E6 /* appicon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1693CBDA171665EA005846E6 /* appicon@2x.png */; };
 		1696ADD6172E7344008362E5 /* VMPAudioInfoEditorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1696ADD3172E7344008362E5 /* VMPAudioInfoEditorViewController.m */; };
+		16A2030D17474F4700CD2A57 /* VMPFragmentCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 16A2030C17474F4600CD2A57 /* VMPFragmentCell.m */; };
+		16A2030E17474F4700CD2A57 /* VMPFragmentCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 16A2030C17474F4600CD2A57 /* VMPFragmentCell.m */; };
 		16A27F0016F9730F0081C1E8 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16A27EFF16F9730F0081C1E8 /* AudioToolbox.framework */; };
 		16A27F0216F9736F0081C1E8 /* defaultSong in Resources */ = {isa = PBXBuildFile; fileRef = 16A27F0116F9736F0081C1E8 /* defaultSong */; };
 		16A27F1316FBB1A70081C1E8 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 16A27F1116FBB1A70081C1E8 /* InfoPlist.strings */; };
@@ -386,6 +388,8 @@
 		1696ADD2172E7344008362E5 /* VMPAudioInfoEditorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = VMPAudioInfoEditorViewController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		1696ADD3172E7344008362E5 /* VMPAudioInfoEditorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = VMPAudioInfoEditorViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		16A2030A174632B700CD2A57 /* VMARC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VMARC.h; path = Core/Misc/VMARC.h; sourceTree = SOURCE_ROOT; };
+		16A2030B17474F4500CD2A57 /* VMPFragmentCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VMPFragmentCell.h; sourceTree = "<group>"; };
+		16A2030C17474F4600CD2A57 /* VMPFragmentCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VMPFragmentCell.m; sourceTree = "<group>"; };
 		16A27EFF16F9730F0081C1E8 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		16A27F0116F9736F0081C1E8 /* defaultSong */ = {isa = PBXFileReference; lastKnownFileType = folder; name = defaultSong; path = ../../defaultSong; sourceTree = "<group>"; };
 		16A27F0716FBB1A70081C1E8 /* Traumbaum_iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Traumbaum_iOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -730,9 +734,9 @@
 		16623161173CA05C00F70FCB /* VMS Models */ = {
 			isa = PBXGroup;
 			children = (
+				16623140173C9F1A00F70FCB /* VMDataTypesMacros.h */,
 				1662313E173C9F1A00F70FCB /* VMDataTypes.h */,
 				1662313F173C9F1A00F70FCB /* VMDataTypes.m */,
-				16623140173C9F1A00F70FCB /* VMDataTypesMacros.h */,
 				16623141173C9F1A00F70FCB /* VMFunction.m */,
 				16623142173C9F1A00F70FCB /* VMSong.h */,
 				16623143173C9F1A00F70FCB /* VMSong.m */,
@@ -846,21 +850,8 @@
 		1696ADCC172E67FD008362E5 /* Editor */ = {
 			isa = PBXGroup;
 			children = (
-				165DAC24172D545F009708B3 /* VMPTimeRangeEditorView.xib */,
-				165DAC28172D54CE009708B3 /* VMPTimeRangeEditorView.h */,
-				165DAC29172D54CE009708B3 /* VMPTimeRangeEditorView.m */,
-				165DAC20172D541D009708B3 /* VMPAudioInfoEditorView.xib */,
-				1696ADD2172E7344008362E5 /* VMPAudioInfoEditorViewController.h */,
-				1696ADD3172E7344008362E5 /* VMPAudioInfoEditorViewController.m */,
-				162EFC3E173026230000A4FB /* VMPSelectorEditorView.xib */,
-				160E51A01735390B00C3D9BB /* VMPSelectorEditorViewController.h */,
-				160E51A11735390C00C3D9BB /* VMPSelectorEditorViewController.m */,
-				160E519617338EA500C3D9BB /* VMPObjectGraphView.h */,
-				160E519717338EA500C3D9BB /* VMPObjectGraphView.m */,
-				1662313A173C8A4A00F70FCB /* VMPCodeEditorView.h */,
-				1662313B173C8A4A00F70FCB /* VMPCodeEditorView.m */,
-				1677780C16C0D6A0007206CF /* VMPEditorWindowController.h */,
-				1677780D16C0D6A0007206CF /* VMPEditorWindowController.m */,
+				16A203101747511500CD2A57 /* Cell and Graph */,
+				16A2030F174750EA00CD2A57 /* View Controller */,
 			);
 			name = Editor;
 			sourceTree = "<group>";
@@ -909,6 +900,37 @@
 				162F7B1B16A0341900420443 /* TraumBaum_VMP */,
 			);
 			name = Projects;
+			sourceTree = "<group>";
+		};
+		16A2030F174750EA00CD2A57 /* View Controller */ = {
+			isa = PBXGroup;
+			children = (
+				165DAC24172D545F009708B3 /* VMPTimeRangeEditorView.xib */,
+				165DAC28172D54CE009708B3 /* VMPTimeRangeEditorView.h */,
+				165DAC29172D54CE009708B3 /* VMPTimeRangeEditorView.m */,
+				165DAC20172D541D009708B3 /* VMPAudioInfoEditorView.xib */,
+				1696ADD2172E7344008362E5 /* VMPAudioInfoEditorViewController.h */,
+				1696ADD3172E7344008362E5 /* VMPAudioInfoEditorViewController.m */,
+				162EFC3E173026230000A4FB /* VMPSelectorEditorView.xib */,
+				160E51A01735390B00C3D9BB /* VMPSelectorEditorViewController.h */,
+				160E51A11735390C00C3D9BB /* VMPSelectorEditorViewController.m */,
+				1662313A173C8A4A00F70FCB /* VMPCodeEditorView.h */,
+				1662313B173C8A4A00F70FCB /* VMPCodeEditorView.m */,
+				1677780C16C0D6A0007206CF /* VMPEditorWindowController.h */,
+				1677780D16C0D6A0007206CF /* VMPEditorWindowController.m */,
+			);
+			name = "View Controller";
+			sourceTree = "<group>";
+		};
+		16A203101747511500CD2A57 /* Cell and Graph */ = {
+			isa = PBXGroup;
+			children = (
+				16A2030B17474F4500CD2A57 /* VMPFragmentCell.h */,
+				16A2030C17474F4600CD2A57 /* VMPFragmentCell.m */,
+				160E519617338EA500C3D9BB /* VMPObjectGraphView.h */,
+				160E519717338EA500C3D9BB /* VMPObjectGraphView.m */,
+			);
+			name = "Cell and Graph";
 			sourceTree = "<group>";
 		};
 		16A27F0E16FBB1A70081C1E8 /* Traumbaum iOS */ = {
@@ -1179,6 +1201,7 @@
 				1662315A173C9FA300F70FCB /* VMLog.m in Sources */,
 				1662315D173C9FA300F70FCB /* VMPrimitives.m in Sources */,
 				162FBBCD174071FE0060E003 /* VMPTest.m in Sources */,
+				16A2030D17474F4700CD2A57 /* VMPFragmentCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1223,6 +1246,7 @@
 				16623158173C9FA300F70FCB /* VMAudioObject.m in Sources */,
 				1662315B173C9FA300F70FCB /* VMLog.m in Sources */,
 				1662315E173C9FA300F70FCB /* VMPrimitives.m in Sources */,
+				16A2030E17474F4700CD2A57 /* VMPFragmentCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

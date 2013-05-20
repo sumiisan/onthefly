@@ -64,8 +64,10 @@ static const float kTimerInterval = 0.005;			//  1/2000 sec interruption for aud
 static const int kTrackViewRedrawInterval = 6;		//  0.005 * 6   = 0.03sec
 static const int kAudioPlayer_BufferSize =  0x20000;//  128k buffer
 static const int kNumberOfQueueBuffers = 3;			//  this is for CoreAudio's AudioQueueAllocateBuffer
-static const int kNumberOfAudioPlayers = 10;         //  number of sound players
+static const int kNumberOfAudioPlayers = 10;        //  number of sound players
 static const int kWaveFormCacheFrames = 0x1000;		//	4k
+
+static const BOOL kUseCoreAnimationLayerForEditor = YES;	//TESTING
 //
 //  128k(buffer) x 3(buffer per player) x 6(players total) = 2.25M (x 2 (stereo??) not sure.. )
 //

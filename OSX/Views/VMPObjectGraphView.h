@@ -7,24 +7,38 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import "VMPGraph.h"
+#import "VMPFragmentCell.h"
 #import "VMPEditorWindowController.h"
+
+typedef enum {
+	VMPSelectorGraphType_Single = 0,
+	VMPSelectorGraphType_Branch,
+	VMPSelectorGraphType_Frame,
+	VMPSelectorGraphType_Single_noLevels		//	do not resolve child selectors.
+} VMPSelectorGraphType;
 
 #pragma mark -
 #pragma mark VMPSelectorGraph
 //------------------------- VMPSelectorGraph -----------------------------
-@interface VMPSelectorGraph : VMPFragmentCell <VMPFragmentCellDelegate> {
+@interface VMPSelectorGraph : VMPFragmentCell <VMPFragmentGraphDelegate, VMPDataGraphObject> {
 	VMPStraightLine		*line;
 	VMHash				*branchViewTemporary;
 }
-@property (nonatomic)			BOOL frameGraphMode;
+@property (nonatomic)	VMPSelectorGraphType graphType;
+@end
+
+
+#pragma mark -
+#pragma mark VMPReferrerGraph
+//------------------------- VMPReferrerGraph -----------------------------
+@interface VMPReferrerGraph : VMPSelectorGraph <VMPFragmentGraphDelegate, VMPDataGraphObject>
 @end
 
 
 #pragma mark -
 #pragma mark VMPSequenceGraph
 //------------------------- VMPSequenceGraph -----------------------------
-@interface VMPSequenceGraph : VMPSelectorGraph <VMPFragmentCellDelegate>
+@interface VMPSequenceGraph : VMPSelectorGraph <VMPFragmentGraphDelegate, VMPDataGraphObject>
 @end
 
 
@@ -38,6 +52,7 @@
 
 - (void)drawGraphWith:(VMData*)data;
 - (void)drawReportGraph:(VMHash*)report;
+- (void)chaseSequence:(VMAudioFragment*)audioFragment;
 
 @end
 

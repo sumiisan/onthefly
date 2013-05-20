@@ -174,16 +174,16 @@ VMId *tid __unused = ( arr.count > 2 )\
 - (id)matchMask:(int)mask {
 	[DEFAULTEVALUATOR trackObjectOnResolvePath:self];
 	if( mask & vmObjectMatch_type ) {	//	type match
-		if ( self.type == mask ) return self;
+		if ( type_ == mask ) return self;
 	} else { 							//	category match
-		if ( self.type &  mask ) return self;
+		if ( type_ &  mask ) return self;
 	}
 	return nil;
 }
 
 - (void)feedEvaluator {	//	base
 	[DEFAULTEVALUATOR setValue:id_ forVariable:@"@ID"];
-	[DEFAULTEVALUATOR setValue:VMIntObj(self.type) forVariable:@"@TYPE"];
+	[DEFAULTEVALUATOR setValue:VMIntObj(type_) forVariable:@"@TYPE"];
 }
 
 - (VMString*)stringExpression {
@@ -191,6 +191,8 @@ VMId *tid __unused = ( arr.count > 2 )\
 }
 
 #pragma mark obligatory
+
+VMObligatory_containsId()
 
 VMObligatory_resolveUntilType()
 
@@ -270,6 +272,12 @@ VMObligatory_encodeWithCoder(
 
 @implementation VMReference
 @synthesize referenceId=referenceId_;
+
+VMObligatory_containsId(
+	if( [referenceId_ isEqualToString:dataId ] ) return YES;
+	return [[DEFAULTSONG data:referenceId_] containsId:dataId];
+)
+
 
 VMObligatory_resolveUntilType(
 	if(self.referenceId)
@@ -646,6 +654,10 @@ VMObligatory_encodeWithCoder(
 
 
 #pragma mark obligatory
+
+VMObligatory_containsId(
+	//	do not match fileId.
+)
 VMObligatory_resolveUntilType()
 VMOBLIGATORY_init(vmObjectType_audioInfo, YES,
 				  self.cuePoints=ARInstance(VMTimeRangeDescriptor);
@@ -850,6 +862,10 @@ VMObligatory_encodeWithCoder(
 }
 
 #pragma mark obligatory
+VMObligatory_containsId(
+	if( [self.audioInfoId isEqualToString:dataId] ) return YES;
+)
+
 VMObligatory_resolveUntilType(
 if(self.audioInfoRef) return [self.audioInfoRef resolveUntilType:mask];
 if(self.audioInfoId) return [[DEFAULTPREPROCESSOR rawData:self.audioInfoId] resolveUntilType:mask];
@@ -902,17 +918,67 @@ RedirectPropGetterToObject(VMId*,	fileId, 			self.audioInfoRef)
 RedirectPropGetterToObject(VMTime, 	duration, 			self.audioInfoRef)
 RedirectPropGetterToObject(VMTime, 	offset, 			self.audioInfoRef)
 RedirectPropGetterToObject(VMVolume,volume, 			self.audioInfoRef)
-RedirectPropGetterToObject(VMTime, 	modulatedDuration, 	self.audioInfoRef)
-RedirectPropGetterToObject(VMTime, 	modulatedOffset, 	self.audioInfoRef)
 
 RedirectPropSetterToObject(VMId*,	setFileId, 	fileId,	 self.audioInfoRef)
 RedirectPropSetterToObject(VMFloat,	setVolume, 	volume,  self.audioInfoRef)
+RedirectPropGetterToObject(VMTime, 	modulatedDuration, 	self.audioInfoRef)
+RedirectPropGetterToObject(VMTime, 	modulatedOffset, 	self.audioInfoRef)
 
 - (VMTime)durationBetweenCuePoints {
 	return self.duration - self.offset;
 }
 
 @end
+
+
+
+//------------------------ AudioFragmentPlayer -----------------------------
+/*
+ dynamic data of audio fragment
+ */
+#pragma mark -
+#pragma mark *** VMAudioFragmentPlayer ***
+
+@implementation VMAudioFragmentPlayer
+@synthesize firedTimestamp=firedTimestamp_;
+
+
+
+
+#pragma mark obligatory
+VMOBLIGATORY_init(vmObjectType_audioFragmentPlayer, NO,)
+VMOBLIGATORY_setWithProto(
+  CopyPropertyIfExist(firedTimestamp);
+  CopyPropertyIfExist(audioInfoRef);		//	not copied by the super class.
+)
+VMOBLIGATORY_setWithData(
+ if ( ClassMatch(data, VMHash)) {
+	 MakeHashFromData
+	 SetPropertyIfKeyExist( firedTimestamp, itemAsFloat );
+ }
+)
+
+VMObligatory_initWithCoder
+(
+ Deserialize( firedTimestamp, Float )
+)
+
+VMObligatory_encodeWithCoder
+(
+ Serialize( firedTimestamp, Float )
+)
+
+- (NSString*)description {
+	return [NSString stringWithFormat:@"%@ %@",
+			[super description],
+			PropertyDescriptionString(audioInfoId, @" audioInfoId:%@")
+			];
+}
+
+@end
+
+
+
 
 //------------------------ Chance -----------------------------
 /*
@@ -1148,6 +1214,16 @@ if ( ClassMatch(data, NSString)) {
 }
 
 #pragma mark obligatory
+VMObligatory_containsId(
+	for( id data in frags_ ) {
+		VMData *vmdata = nil;
+		if ( ClassMatch(data, VMId ))
+			vmdata = [DEFAULTSONG data:data];
+		if ( ClassMatch(data, VMData ))
+			vmdata = data;
+		return vmdata ? [vmdata containsId:dataId] : NO;
+	}
+)
 VMObligatory_resolveUntilType(
 #ifdef DEBUG
 	[VMException raise:@"Unable to resolve fragment." 
@@ -1476,6 +1552,21 @@ static VMHash *scoreForFragment_static_ = nil;
 	return fragIds;
 }
 
+- (BOOL)isDeadEnd {
+	if ( self.fragments.count == 0 ) return YES;
+	if ( [[self chanceAtIndex:0].targetId isEqualToString: @"*"] ) return YES;
+	for( VMChance *ch in self.fragments ) {
+		VMFragment *data = [DEFAULTSONG data:ch.targetId];
+		if ( ! data ) continue;
+		if ( data.type == vmObjectType_sequence ) return NO;	//	assume sequence has valid subseqs.
+																//	DISCUSSION: shall we inspect deeper ? if yes, how deep ?
+		if ( data.type == vmObjectType_selector )
+			if (! ((VMSelector*)data).isDeadEnd ) return NO;
+		
+	}
+	return YES;
+}
+
 #pragma mark obligatory
 VMObligatory_resolveUntilType(
 	return [[self selectOne] resolveUntilType:mask];
@@ -1761,22 +1852,6 @@ VMObligatory_encodeWithCoder
 	}
 	return c;
 }
-
-/*
-- (VMFragment*)resolveAudioFragmentOrPlayer {
-	id frag = self.currentFragment;
-	if (! [self finished] ) {
-		//	is current member in sequence a sequenceObj? try to resolve
-		id seq = [frag resolveUntilType:vmObjectType_sequence];
-		if ( ! seq ) {
-			//	no: no sequence. try resolve an audioFragment
-			frag = [frag resolveUntilType:vmObjectType_audioFragment];
-			return frag;
-		}
-	}
-	//	return new sequencePlayer
-	return [frag resolveUntilType:vmObjectType_player];
-}*/
 
 - (BOOL)finished {
 	return self.fragPosition >= self.length;

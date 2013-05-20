@@ -13,18 +13,19 @@
 //	loading
 static NSString *VMPNotificationVMSDataLoaded __unused			= @"VMSDataLoaded";
 
-//	log was added
+//	log
 static NSString *VMPNotificationLogAdded __unused				= @"LogAdded";
 
-//	song player / log
+//	song player
 
 static NSString *VMPNotificationAudioFragmentQueued __unused	= @"AudioFragmentQueued";
 static NSString *VMPNotificationAudioFragmentFired  __unused	= @"AudioFragmentFired";
+static NSString *VMPNotificationStartChaseSequence __unused		= @"StartChaseSequence";
 
 //	score evaluator
 static NSString *VMPNotificationVariableValueChanged __unused	= @"VariableValueChanged";
 
-//	editor
+//	editor and various windows
 static NSString *VMPNotificationFragmentDoubleClicked  __unused	= @"FragmentDoubleClicked";
 static NSString *VMPNotificationFragmentSelected __unused		= @"FragmentSelected";
 

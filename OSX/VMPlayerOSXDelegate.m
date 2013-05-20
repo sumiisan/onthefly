@@ -16,14 +16,18 @@
 #import "VMPUserDefaults.h"
 #import "VMException.h"
 #import "VMPCodeEditorView.h"
+#import "VMPMacros.h"
 #ifdef TEST
 #import "VMPTest.h"
 #endif
-VMPlayerOSXDelegate *OnTheFly_singleton_static_ = nil;
+
 
 #pragma mark VMPlayer OSX Delegate
 
 @implementation VMPlayerOSXDelegate
+
+VMPlayerOSXDelegate *OnTheFly_singleton_static_ = nil;
+NSDictionary		*windowNames_static_ = nil;
 
 /*
  app launch sequence:
@@ -56,12 +60,6 @@ VMPlayerOSXDelegate *OnTheFly_singleton_static_ = nil;
 	if ( urlString )
 		self.currentDocumentURL = AutoRelease([[NSURL alloc] initFileURLWithPath:urlString] );
 	
-	/*[[[NSURL alloc] initFileURLWithPath:[NSString stringWithFormat:@"%@/%@/%@",
-																   [[NSBundle mainBundle] resourcePath],
-																   kDefaultVMDirectory,
-																   kDefaultVMSFileName]
-													  isDirectory:NO] autorelease];
-	 */
 	return self;
 }
 
@@ -88,16 +86,20 @@ VMPlayerOSXDelegate *OnTheFly_singleton_static_ = nil;
 
 - (void)mainRunLoop {
 	if ( DEFAULTSONGPLAYER.isRunning ) {
-		_playStopButton.state = 1;
 		VMTime t = DEFAULTSONGPLAYER.currentTime;
 		VMString *timeString = [NSString stringWithFormat:@"%02d:%02d'%02d\"%02d",
 								(int)(t/3600),((int)t/60)%60,(int)t%60,((int)(t*100))%100 ];
-		if ( _trackPanel.isVisible )
+		if ( _transportPanel.isVisible ) {
+			_playStopButton.state = 1;
 			_timeIndicator.stringValue = timeString;
-		if ( _editorWindowController.window.isVisible )
+		}
+		if ( _editorWindowController.window.isVisible ) {
 			_editorWindowController.timeIndicator.stringValue = timeString;
+			_editorWindowController.playButton.state = 1;
+		}
 	} else {
 		_playStopButton.state = 0;
+		_editorWindowController.playButton.state = 0;
 	}
 	[self performSelector:@selector(mainRunLoop) withObject:nil afterDelay:0.01];
 }
@@ -106,7 +108,7 @@ VMPlayerOSXDelegate *OnTheFly_singleton_static_ = nil;
 #pragma mark notification - selection
 
 - (void)dataSelected:(NSNotification*)notification {
-	self.lastSelectedDataId = [notification.userInfo objectForKey:@"id"];
+	self.lastSelectedDataId = (notification.userInfo)[@"id"];
 }
 
 
@@ -118,7 +120,7 @@ VMPlayerOSXDelegate *OnTheFly_singleton_static_ = nil;
 - (IBAction)songPlay:(id)sender {
 	[DEFAULTSONGPLAYER stop];
     [DEFAULTSONGPLAYER start];
-	[self.logView locateLogWithIndex:-1 ofSource:VMLogOwner_Player];
+	[self.logView locateLogWithIndex:-1 ofSource:VMLogOwner_MediaPlayer];
 }
 
 - (IBAction)songStop:(id)sender {
@@ -140,7 +142,7 @@ VMPlayerOSXDelegate *OnTheFly_singleton_static_ = nil;
 			break;
 		case NO:
 			[DEFAULTSONGPLAYER start];
-			[self.logView locateLogWithIndex:-1 ofSource:VMLogOwner_Player];
+			[self.logView locateLogWithIndex:-1 ofSource:VMLogOwner_MediaPlayer];
 			break;
 	}
 }
@@ -154,45 +156,54 @@ VMPlayerOSXDelegate *OnTheFly_singleton_static_ = nil;
 }
 
 - (void)showWindowByName:(NSString*)name {
-	if ( [name isEqualToString:@"Transport"] ) {
-		[_transportPanel makeKeyAndOrderFront:self ];
-	}
-	if ( [name isEqualToString:@"Object Browser"] ) {
-		[_editorWindowController.window makeKeyAndOrderFront:self ];
-	}
-	if ( [name isEqualToString:@"Statistics"] ) {
-		[DEFAULTANALYZER.reportWindow makeKeyAndOrderFront:self ];
-	}
-	if ( [name isEqualToString:@"Tracks"] ) {
-		[_trackPanel makeKeyAndOrderFront:self ];
-	}
+	if ( [name isEqualToString:@"Transport"] )			[_transportPanel makeKeyAndOrderFront:self ];
+	if ( [name isEqualToString:@"Object Browser"] )		[_editorWindowController.window makeKeyAndOrderFront:self ];
+	if ( [name isEqualToString:@"Statistics"] )			[DEFAULTANALYZER.reportWindow makeKeyAndOrderFront:self ];
+	if ( [name isEqualToString:@"Tracks"] )				[_trackPanel makeKeyAndOrderFront:self ];
+	if ( [name isEqualToString:@"Log"] )				[_logPanel makeKeyAndOrderFront:self ];
+
 	if ( [name isEqualToString:@"Variables"] ) {
 		if ( ! self.variablesPanelController )
 			self.variablesPanelController = AutoRelease([[VMPVariablesPanelController alloc]
 											  initWithWindowNibName:@"VMPVariablesPanel"] );
 		[self.variablesPanelController.window makeKeyAndOrderFront:self];
 	}
-	if ( [name isEqualToString:@"Log"] ) {
-		[_logPanel makeKeyAndOrderFront:self ];
-	}
-	
+
 	VMArray *openedWindows = [VMArray arrayWithArray:
 							  [[NSUserDefaults standardUserDefaults] stringArrayForKey:VMPUserDefaultsKey_OpenedWindows]];
 	[openedWindows pushUnique:name];
-	//NSLog(@"Open %@ : opened windows %@", name, openedWindows);
 	[[NSUserDefaults standardUserDefaults] setObject:openedWindows.array forKey:VMPUserDefaultsKey_OpenedWindows];
 }
 
+- (void)hideWindowByName:(VMString*)name {
+	if ( [name isEqualToString:@"Transport"] )			[_transportPanel close];
+	if ( [name isEqualToString:@"Object Browser"] )		[_editorWindowController.window close];
+	if ( [name isEqualToString:@"Statistics"] )			[DEFAULTANALYZER.reportWindow close ];
+	if ( [name isEqualToString:@"Tracks"] )				[_trackPanel  close];
+	if ( [name isEqualToString:@"Log"] )				[_logPanel close];
+	if ( [name isEqualToString:@"Variables"] ) if ( self.variablesPanelController ) [self.variablesPanelController.window close];
+	VMArray *openedWindows = [VMArray arrayWithArray:
+							  [[NSUserDefaults standardUserDefaults] stringArrayForKey:VMPUserDefaultsKey_OpenedWindows]];
+	[openedWindows deleteItemWithValue:name];
+	[[NSUserDefaults standardUserDefaults] setObject:openedWindows.array forKey:VMPUserDefaultsKey_OpenedWindows];
+
+}
+
+- (void)setWindowNames {
+	Release(windowNames_static_);
+	windowNames_static_ = @{
+						 (_transportPanel ? _transportPanel.identifier: @"dummy1"):@"Transport",
+	   (_editorWindowController.window ? _editorWindowController.window.identifier : @"dummy2" ):@"Object Browser",
+	   ( DEFAULTANALYZER.reportWindow ? DEFAULTANALYZER.reportWindow.identifier : @"dummy3" ) :@"Statistics",
+	   (_trackPanel ? _trackPanel.identifier : @"dummy4" ) :@"Tracks",
+	   (_variablesPanelController.window ? _variablesPanelController.window.identifier : @"dummy5" ):@"Variables",
+	   (_logPanel ? _logPanel.identifier : @"dummy6" ) :@"Log" };
+	Retain( windowNames_static_ );
+}
+
 - (NSString*)nameOfWindow:(NSWindow*)window {
-	NSDictionary *windowNames = @{
-		  (_transportPanel ? _transportPanel.identifier: @"dummy1"):@"Transport",
-		  (_editorWindowController.window ? _editorWindowController.window.identifier : @"dummy2" ):@"Object Browser",
-		  ( DEFAULTANALYZER.reportWindow ? DEFAULTANALYZER.reportWindow.identifier : @"dummy3" ) :@"Statistics",
-		  (_trackPanel ? _trackPanel.identifier : @"dummy4" ) :@"Tracks",
-		  (_variablesPanelController.window ? _variablesPanelController.window.identifier : @"dummy5" ):@"Variables",
-		  (_logPanel ? _logPanel.identifier : @"dummy6" ) :@"Log" };
-	
-	return [windowNames objectForKey:window.identifier];
+	[self setWindowNames];
+	return windowNames_static_[window.identifier];
 }
 
 - (IBAction)showWindow:(id)sender {
@@ -201,11 +212,22 @@ VMPlayerOSXDelegate *OnTheFly_singleton_static_ = nil;
 		[VMException alert:@"No help available yet. Maybe you have more luck at https://github.com/sumiisan/onthefly/wiki"];
 //		[self showWindowByName:@"Help"];
 	}
+
+	VMString *windowName = ClassMatch(sender, NSMenuItem) ? ClassCast(sender, NSMenuItem).title : ClassCast(sender, NSButton).title;
+	[self showWindowByName:windowName];
+}
+
+- (IBAction)togglePanel:(id)sender {
+	VMString *windowName = ClassMatch(sender, NSMenuItem) ? ClassCast(sender, NSMenuItem).title : ClassCast(sender, NSButton).title;
+	VMArray *openedWindows = [VMArray arrayWithArray:
+							  [[NSUserDefaults standardUserDefaults] stringArrayForKey:VMPUserDefaultsKey_OpenedWindows]];
+	if([openedWindows position:windowName] >= 0) {
+		[self hideWindowByName:windowName];
+	} else {
+		[self showWindowByName:windowName];
+	}
 	
-	if ( [sender isKindOfClass:[NSMenuItem class]] )
-		[self showWindowByName: ((NSMenuItem*)sender).title ];
-	if ( [sender isKindOfClass:[NSButton class]] )
-		[self showWindowByName: ((NSButton*)sender).title ];
+	
 }
 
 #pragma mark action - log
@@ -227,6 +249,7 @@ VMPlayerOSXDelegate *OnTheFly_singleton_static_ = nil;
 #pragma mark action - load, reload(from editor), revert and save vms
 
 - (IBAction)revertDocument:(id)sender {
+	[DEFAULTSONGPLAYER stopAndDisposeQueue];
     [self openVMSDocumentFromURL:self.currentDocumentURL];
     DEFAULTSONGPLAYER.song = DEFAULTSONG;
 	[self.editorWindowController.objectTreeView reloadData];
@@ -234,6 +257,7 @@ VMPlayerOSXDelegate *OnTheFly_singleton_static_ = nil;
 }
 
 - (IBAction)reloadDataFromEditor:(id)sender {
+	[DEFAULTSONGPLAYER stopAndDisposeQueue];
 	NSError *error = nil;
 	if ( [DEFAULTSONG readFromString:self.editorWindowController.codeEditorView.textView.string error:&error] )
 		[VMPNotificationCenter postNotificationName:VMPNotificationVMSDataLoaded object:self userInfo:nil];
@@ -254,6 +278,7 @@ VMPlayerOSXDelegate *OnTheFly_singleton_static_ = nil;
 
 - (IBAction)closeDocument:(id)sender {
 	//	TODO: check for unsaved changes
+	[DEFAULTSONGPLAYER stopAndDisposeQueue];
 	[DEFAULTSONG clear];
 }
 
@@ -263,16 +288,15 @@ VMPlayerOSXDelegate *OnTheFly_singleton_static_ = nil;
 	//	TODO: we might use a document controller to populate 'recent files' menu.
 //	NSDocumentController *dc = [NSDocumentController sharedDocumentController];
 	
-	
 	NSOpenPanel *op = [NSOpenPanel openPanel];
 	op.canChooseFiles = YES;
 	op.canCreateDirectories = NO;
 	op.canChooseDirectories = YES;
 	op.allowsMultipleSelection = NO;
-	op.allowedFileTypes = [NSArray arrayWithObject:@"vms"];
+	op.allowedFileTypes = @[@"vms"];
 	
 	if( [op runModal] == NSOKButton ) {
-		NSURL *url = [op.URLs objectAtIndex:0];
+		NSURL *url = (op.URLs)[0];
 		
 		NSError *err = [self openVMSDocumentFromURL:url];
 		if( !err ) {
@@ -335,7 +359,7 @@ VMPlayerOSXDelegate *OnTheFly_singleton_static_ = nil;
 	//
 	[DEFAULTSONGPLAYER warmUp];
 	[_editorWindowController applicationDidLaunch];
-	DEFAULTSONG.showReport.current = [NSNumber numberWithBool:YES];
+	DEFAULTSONG.showReport.current = @YES;
 	[self performSelector:@selector(mainRunLoop) withObject:nil afterDelay:0.5];
 	
 	[VMPNotificationCenter postNotificationName:VMPNotificationLogAdded
@@ -502,7 +526,7 @@ VMPlayerOSXDelegate *OnTheFly_singleton_static_ = nil;
     NSURL *applicationFilesDirectory = [self applicationFilesDirectory];
     NSError *error = nil;
     
-    NSDictionary *properties = [applicationFilesDirectory resourceValuesForKeys:[NSArray arrayWithObject:NSURLIsDirectoryKey] error:&error];
+    NSDictionary *properties = [applicationFilesDirectory resourceValuesForKeys:@[NSURLIsDirectoryKey] error:&error];
 	
     if (!properties) {
         BOOL ok = NO;
@@ -515,7 +539,7 @@ VMPlayerOSXDelegate *OnTheFly_singleton_static_ = nil;
         }
     }
     else {
-        if ([[properties objectForKey:NSURLIsDirectoryKey] boolValue] != YES) {
+        if ([properties[NSURLIsDirectoryKey] boolValue] != YES) {
             // Customize and localize this error.
             NSString *failureDescription = [NSString stringWithFormat:@"Expected a folder to store application data, found a file (%@).", [applicationFilesDirectory path]];
             
@@ -573,7 +597,7 @@ VMPlayerOSXDelegate *OnTheFly_singleton_static_ = nil;
 
 
 - (NSEntityDescription*)entityDescriptionFor:(NSString*)entityName {
-	return [[[self managedObjectModel] entitiesByName] objectForKey:entityName];
+	return [[self managedObjectModel] entitiesByName][entityName];
 }
 
 /**

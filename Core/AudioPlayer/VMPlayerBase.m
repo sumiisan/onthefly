@@ -21,7 +21,7 @@
 }
 
 - (void)dealloc {
-    Dealloc( super );;
+    Dealloc( super );
 }
 
 - (void)initTime {
@@ -41,7 +41,7 @@
 
 -(NSTimeInterval)currentTime {
 	if ( timePaused ) return timePaused;
-   return [[NSDate date] timeIntervalSince1970]-timerOffset;
+	return [[NSDate date] timeIntervalSince1970]-timerOffset;
 }
 
 -(void)setCurrentTime:(NSTimeInterval)t {

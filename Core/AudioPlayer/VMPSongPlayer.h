@@ -22,8 +22,8 @@
  *
  *---------------------------------------------------------------------------------*/
 @interface VMPPlayTimeAccumulator : VMHash
-@property (nonatomic, assign)				VMTime				playingTimeOfCurrentPart;
-@property (nonatomic, VMStrong)				VMId				*currentPartId;
+@property (nonatomic, assign)			VMTime				playingTimeOfCurrentPart;
+@property (nonatomic, VMStrong)			VMId				*currentPartId;
 
 - (void)addAudioFragment:(VMAudioFragment*)audioFragent;
 @end
@@ -39,10 +39,10 @@
 
 @interface VMPQueuedFragment : NSObject {
 @public
-	VMAudioFragment		*audioFragment;
-	VMTime				cueTime;
-	VMTimeRange			cuePoints;		//	store modulated dur / offs
-	VMPAudioPlayer		*player;
+	__strong	VMAudioFragmentPlayer	*audioFragmentPlayer;
+				VMTime					cueTime;
+				VMTimeRange				cuePoints;		//	store modulated dur / offs
+	__weak		VMPAudioPlayer			*player;
 }
 @end
 
@@ -51,34 +51,37 @@
  *
  *	Song Player
  *
+ *	Media player for audio.
  *
  *---------------------------------------------------------------------------------*/
 
 @interface VMPSongPlayer : VMPlayerBase {	
 	//	audio players
-	VMArray				*audioPlayerList;
+	VMArray					*audioPlayerList;
 	//	cue queueing
-	VMArray				*fragQueue;
+	VMArray					*fragQueue;
+	VMAudioFragmentPlayer	*lastFiredFragment_;
 	
 	//	volume
-    VMVolume         	globalVolume;
+    VMVolume				globalVolume;
 
 	//	fade
-    VMTime  			fadeDuration;
-    VMTime			  	fadeStartPoint;
-	VMFloat				fadeStartVolume;
-	VMFloat				fadeEndVolume;
-	BOOL				startPlayAfterSetFragment;
+    VMTime					fadeDuration;
+    VMTime					fadeStartPoint;
+	VMFloat					fadeStartVolume;
+	VMFloat					fadeEndVolume;
+	BOOL					startPlayAfterSetFragment;
 
 	//	view
-	UInt64				frameCounter;
-	__unsafe_unretained VMSong		*song_;
+	UInt64					frameCounter;
+	__unsafe_unretained		VMSong		*song_;
 }
 
 @property (weak)							VMSong 				*song;				//	the Variable Music Data
 @property (atomic, assign)					VMTime				nextCueTime;
 @property (nonatomic, getter = isDimmed)	BOOL				dimmed;				//	volume dimmer
-@property (readonly,getter = isWarmedUp)	BOOL				engineIsWarm;		//
+@property (readonly, getter = isWarmedUp)	BOOL				engineIsWarm;		//
+@property (nonatomic, VMReadonly)			VMAudioFragment		*lastFiredFragment;
 
 //	for calculating playing time of part
 @property (nonatomic, VMStrong)				VMPPlayTimeAccumulator	*playTimeAccumulator;
@@ -100,6 +103,7 @@
 - (void)start;
 - (void)startWithFragmentId:(VMId*)fragId;
 - (void)stop;
+- (void)stopAndDisposeQueue;
 - (void)reset;
 - (void)fadeoutAndStop:(VMTime)duration;
 - (void)setFadeFrom:(VMFloat)startVolume to:(VMFloat)endVolume length:(VMTime)seconds setDimmed:(BOOL)dimmerState;

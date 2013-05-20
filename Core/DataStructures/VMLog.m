@@ -80,21 +80,21 @@
 
 /*---------------------------------------------------------------------------------
  
- VMHistoryLog
+ VMLogRecord
  
  ----------------------------------------------------------------------------------*/
 
 #pragma mark -
-#pragma mark VMHistoryLog
+#pragma mark VMLogRecord
 
 @implementation VMLogRecord
-@synthesize automaticallyExpanded;
+//@synthesize automaticallyExpanded;
 
 //
 #pragma mark -
 #pragma mark	** one and only designated initializer: **
 //
-+ (VMLogRecord*)historyWithAction:(VMString*)action
++ (VMLogRecord*)recordWithAction:(VMString*)action
 							  data:(id)data
 						   subInfo:(VMHash*)subInfo
 							 owner:(VMLogOwnerType)owner
@@ -111,8 +111,14 @@
 	log.owner_obj	= @(owner);
 	
 	if ( ClassMatch( data, VMData ) ) {
-		log.type = ((VMData*) data).type;
-		log.data = ((VMData*) data).id;
+		VMData *d = data;
+		log.type = d.type;
+		if ( ! ( d.type & vmObjectCategory_runtime ) ) {
+			//	for static data types, log only the id.
+			log.data = d.id;
+		} else {
+			log.data = d;	//	BE CAREFUL! data is retained, and will remain on memory until log is cleared.
+		}
 	} else {
 		log.type = 0;
 		log.data = data;
@@ -377,22 +383,22 @@
 		return;
 	}
 	
-	VMLogRecord *historyLog = ClassCastIfMatch(item, VMLogRecord);
-	if ( !historyLog ) {
+	VMLogRecord *logRecord = ClassCastIfMatch(item, VMLogRecord);
+	if ( !logRecord ) {
 		//	wrap item with history log
-		historyLog = [VMLogRecord historyWithAction:@"Unknown"
+		logRecord = [VMLogRecord recordWithAction:@"Unknown"
 												data:item
 											 subInfo:nil
 											   owner:self.owner
 								  usePersistentStore:self.usePersistentStore];
 	}
 	
-	historyLog.index     = [self issueIndex];
-	historyLog.timestamp = [[NSDate date] timeIntervalSinceReferenceDate];
+	logRecord.index     = [self issueIndex];
+	logRecord.timestamp = [[NSDate date] timeIntervalSinceReferenceDate];
 	
-	[self push:historyLog];
+	[self push:logRecord];
 	if( moc_ )
-		[moc_ insertObject:historyLog];
+		[moc_ insertObject:logRecord];
 	
 	if (self.count > ( self.maximumNumberOfLog * 1.5 )) {
 		[self truncateFirst:self.maximumNumberOfLog];
@@ -415,7 +421,7 @@
 		}
 		
 		
-		VMLogRecord *lastHl = self.lastItem;
+		VMLogRecord *lastLogRecord = self.lastItem;
 		VMHash *subInfo =  nil;
 		
 		if ( ClassMatch( data, VMId )) {		//	try to convert string into object
@@ -427,13 +433,18 @@
 		VMString	*action;
 		if ( d ) {
 			if (d.type == vmObjectType_chance && doFilter)
+				//	no need to log chances since they are stored by the owning selector.
 				continue;
-			//	no need to log chances since they are stored by the owning selector.
+			
+			if ( d.type == vmObjectType_audioFragment && _owner == VMLogOwner_MediaPlayer )
+				//	audioFragments should logged by the MediaPlayer as audioFragmentPlayer type.
+				continue;
+	
 			
 			action = [VMPreprocessor shortTypeStringForType:d.type];
 			
-			if ( lastHl.type == vmObjectType_selector && lastHl.subInfo && doFilter ) {
-				[lastHl.subInfo setItem:d.id for:@"vmlog_selected"];
+			if ( lastLogRecord.type == vmObjectType_selector && lastLogRecord.subInfo && doFilter ) {
+				[lastLogRecord.subInfo setItem:d.id for:@"vmlog_selected"];
 			}
 		} else if ( ClassMatch( data, VMHash )) {
 			VMHash *h = (VMHash*)data;
@@ -455,11 +466,11 @@
 				continue;
 			}
 		}
-		VMLogRecord *log = [VMLogRecord historyWithAction:action
-													   data:data
-													subInfo:subInfo
-													  owner:self.owner
-										 usePersistentStore:self.usePersistentStore];
+		VMLogRecord *log = [VMLogRecord recordWithAction:action
+													 data:data
+												  subInfo:subInfo
+													owner:self.owner
+									   usePersistentStore:self.usePersistentStore];
 		[self log:log];
 	}
 }
@@ -473,7 +484,7 @@
  ----------------------------------------------------------------------------------*/
 
 - (void)addTextLog:(VMString*)action message:(VMString*)message {
-	VMLogRecord *hl = [VMLogRecord historyWithAction:action
+	VMLogRecord *hl = [VMLogRecord recordWithAction:action
 												  data:message
 											   subInfo:[VMHash hashWithObjectsAndKeys:message,@"message",nil]
 												 owner:self.owner
@@ -486,7 +497,7 @@
 - (void)addUserLogWithText:(VMString*)message dataId:(VMId*)dataId {
 	VMData *d = [DEFAULTSONG data:dataId];
 	if (d) {
-		VMLogRecord *hl = [VMLogRecord historyWithAction:@"UserLog"
+		VMLogRecord *hl = [VMLogRecord recordWithAction:@"UserLog"
 													  data:d
 												   subInfo:[VMHash hashWith:@{@"message":message,
 															@"id":dataId}]

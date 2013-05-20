@@ -61,13 +61,19 @@
 
 //	public methods
 - (BOOL)findObjectById:(VMId*)dataId;	//	display object if found. does not make editor window key.
+- (VMArray*)referrerListForId:(VMId*)dataId;
+
+
+//
+- (IBAction)buttonClicked:(id)sender;
+
 
 //	history
 - (IBAction)historyButtonClicked:(id)sender;
 - (IBAction)moveHistoryBack:(id)sender;		//	defaults first responder
 - (IBAction)moveHistoryForward:(id)sender;	//	defaults first responder
 
-//	actions below defaults first responder
+//----	actions below defaults first responder ----
 - (IBAction)songPlay:(id)sender;
 - (IBAction)focusTextSearchField:(id)sender;
 
@@ -75,14 +81,17 @@
 - (IBAction)zoomIn:(id)sender;
 - (IBAction)zoomOut:(id)sender;
 
-//	used internal
+//----	used internal ----
 - (IBAction)clickOnRow:(id)sender;
 - (IBAction)updateFilter:(id)sender;
+
+
 - (void)applicationDidLaunch;			//	initial setup after app is launched
 
-//	public
-@property (nonatomic, VMStrong)	VMId			*currentDisplayingDataId;
 
+//	public
+@property (nonatomic, VMStrong)			VMId					*currentDisplayingDataId;
+@property (nonatomic, assign)			BOOL					chaseSequence;
 
 //	views
 @property (nonatomic, VMWeak)	IBOutlet NSWindow				*editorWindow;
@@ -102,10 +111,11 @@
 @property (nonatomic, VMWeak)	IBOutlet NSSegmentedControl		*historyArrowButtons;
 
 //	splitter
-@property (nonatomic, VMWeak)	IBOutlet VMPGraph		*editorSplitterView;
-@property (nonatomic, VMWeak)	IBOutlet NSButton		*playButton;
-@property (nonatomic, VMWeak)	IBOutlet NSTextField	*timeIndicator;
-
+@property (nonatomic, VMWeak)	IBOutlet VMPGraph				*editorSplitterView;
+@property (nonatomic, VMWeak)	IBOutlet NSButton				*playButton;
+@property (nonatomic, VMWeak)	IBOutlet NSTextField			*timeIndicator;
+@property (nonatomic, VMWeak)	IBOutlet NSButton				*currentFragmentIdButton;
+@property (nonatomic, VMWeak)	IBOutlet NSButton				*chaseToggleButton;
 
 @end
 

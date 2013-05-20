@@ -71,9 +71,16 @@
  *---------------------------------------------------------------------------------*/
 
 @implementation VMPQueuedFragment
+
+- (void)dealloc {
+	Release( audioFragmentPlayer );		// it's retained since it's a dynamic data for playback.
+	Dealloc( super );
+}
+
+
 - (NSString*)description {
 	return [NSString stringWithFormat:@"QC<%@> %.2f-%.2f (%@)", 
-			audioFragment ? audioFragment.id : @"no que",
+			audioFragmentPlayer ? audioFragmentPlayer.id : @"no que",
 			cueTime - cuePoints.start,
 			cueTime - cuePoints.start + cuePoints.end,
 			player ? player.description : @"no player"
@@ -180,11 +187,17 @@ static VMPSongPlayer 	*songPlayer_singleton_static_ = nil;
 	
 	VMPQueuedFragment *c = ARInstance(VMPQueuedFragment);
 	c->cueTime 	= cueTime;
-	c->audioFragment = audioFragment;
+	
+	VMAudioFragmentPlayer *afp = [[VMAudioFragmentPlayer alloc] initWithProto:audioFragment];
+	c->audioFragmentPlayer = afp;	//	retained.
 	
 	//	copy modulated duration and offset.
-	c->cuePoints.start = audioFragment.modulatedOffset;
-	c->cuePoints.end = audioFragment.modulatedDuration;
+	c->cuePoints.start = afp.modulatedOffset;
+	c->cuePoints.end   = afp.modulatedDuration;
+	
+#if VMP_EDITOR
+	[DEFAULTSONG.log record:[VMArray arrayWithObject:afp] filter:NO];
+#endif
 	
 	[fragQueue push:c];
 	return c;
@@ -247,7 +260,7 @@ static VMPSongPlayer 	*songPlayer_singleton_static_ = nil;
 
 - (VMPAudioPlayer*)audioPlayerForFileId:(VMId*)fileId {
 	for ( VMPQueuedFragment *frag in fragQueue )
-		if ( [frag->audioFragment.fileId isEqualToString:fileId] ) return frag->player;
+		if ( [frag->audioFragmentPlayer.fileId isEqualToString:fileId] ) return frag->player;
 	return nil;
 }
 
@@ -260,7 +273,7 @@ static VMPSongPlayer 	*songPlayer_singleton_static_ = nil;
 }
 
 - (VMTime)endTimeOfLastFragment {
-	VMTime t = RESET_TIME;
+	VMTime t = 0;
 	for ( VMPQueuedFragment *frag in fragQueue ) {
 		VMTime endTime = frag->cueTime + LengthOfVMTimeRange(frag->cuePoints);
 		if ( endTime > t ) t = endTime;
@@ -322,8 +335,11 @@ static VMPSongPlayer 	*songPlayer_singleton_static_ = nil;
 	BOOL running = NO;
 	for ( VMPAudioPlayer *ap in audioPlayerList )
 		running |= [ap isPlaying];
-	
 	return running;
+}
+
+- (VMAudioFragment*)lastFiredFragment {
+	return lastFiredFragment_;
 }
 
 #pragma mark -
@@ -348,10 +364,10 @@ static VMPSongPlayer 	*songPlayer_singleton_static_ = nil;
 	
 	if ( frag ) {
 		frag->player = player;
-		player.fragId		= frag->audioFragment.fragId;
+		player.fragId		= frag->audioFragmentPlayer.fragId;
 		player.offset 		= frag->cuePoints.start;
 		player.fragDuration	= frag->cuePoints.end;
-		fileId				= frag->audioFragment.fileId;
+		fileId				= frag->audioFragmentPlayer.fileId;
 		timeOffset			= self.currentTime - frag->cueTime - frag->cuePoints.start;
 	}
 	
@@ -395,20 +411,24 @@ static VMPSongPlayer 	*songPlayer_singleton_static_ = nil;
 		return;
 	}
 	
-	VMAudioFragment *af = queuedFragment->audioFragment;
-	[af interpreteInstructionsWithData:queuedFragment->audioFragment action:vmAction_play];
+	VMAudioFragmentPlayer *af = queuedFragment->audioFragmentPlayer;
+	[af interpreteInstructionsWithAction:vmAction_play];
 	
 	[player setVolume:[self currentVolume]];
 	[player play];
 	
+	af.firedTimestamp = [NSDate timeIntervalSinceReferenceDate];
 	[self.playTimeAccumulator addAudioFragment:af];
 	
+	Release( lastFiredFragment_ );
+	lastFiredFragment_ = Retain( af );
 	if(kUseNotification)
 		[VMPNotificationCenter postNotificationName:VMPNotificationAudioFragmentFired
 											 object:self
-										   userInfo:@{ @"audioFragment":queuedFragment->audioFragment,
+										   userInfo:@{ @"audioFragment":af,
 		 @"player":NSNullIfNil( queuedFragment->player ) } ];
-//	NSLog(@"fired:%@\n%@",queuedFragment->audioFragment.id,self.description);	
+	
+
 }
 
 /*---------------------------------------------------------------------------------
@@ -450,7 +470,7 @@ static VMPSongPlayer 	*songPlayer_singleton_static_ = nil;
 	if ( self.isPaused ) return;
 	++frameCounter;
 	
-	VMTime 			endTimeOfLastFragment 	= RESET_TIME;
+	VMTime 			endTimeOfLastFragment 	= 0;
 	VMPQueuedFragment	*nextUpcomingFragment	= nil;
 		
 	for ( VMInt i = 0; i < fragQueue.count; ++i ) {
@@ -475,7 +495,6 @@ static VMPSongPlayer 	*songPlayer_singleton_static_ = nil;
 		
 		VMTime endTime = actualCueTime + frag->cuePoints.end;
 		if ( endTime > endTimeOfLastFragment ) {
-		//	NSLog(@"endTimeOfLastFragment:%@ %f", frag->audioFragment.id, endTime );	
 			endTimeOfLastFragment = endTime;
 		}
 	}
@@ -566,6 +585,11 @@ static VMPSongPlayer 	*songPlayer_singleton_static_ = nil;
     [self stopAllPlayers];
 }
 
+- (void)stopAndDisposeQueue {
+	[self stop];
+	[fragQueue clear];
+}
+
 -(void)reset {
 	[self stopAllPlayers];
 	[DEFAULTSONG reset];
@@ -629,7 +653,7 @@ static VMPSongPlayer 	*songPlayer_singleton_static_ = nil;
 	[self flushUnfiredFragments];
 		
 	VMTime etolc = [self endTimeOfLastFragment];
-	if ( etolc != RESET_TIME ) {
+	if ( etolc != 0 ) {
 		nextCueTime = ( etolc > self.currentTime ? etolc : self.currentTime + secondsPreroll );
 #ifdef DEBUG
 		[self watchNextCueTimeForDebug];
@@ -739,6 +763,7 @@ static VMPSongPlayer 	*songPlayer_singleton_static_ = nil;
 	VMNullify(playTimeAccumulator);
 	Release(audioPlayerList);
 	Release(fragQueue);
+	Release(lastFiredFragment_);
 	VMNullify(song);
 	Dealloc( super );;
 }

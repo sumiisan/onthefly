@@ -44,7 +44,7 @@
 }
 
 - (void)fragSelectionChanged:(NSNotification*)notification {
-	self.selectedFragmentId = [notification.userInfo objectForKey:@"id"];
+	self.selectedFragmentId = (notification.userInfo)[@"id"];
 	[self updateItemsInTable];
 }
 

@@ -87,6 +87,7 @@
 
 //	window
 - (IBAction)showWindow:(id)sender;
+- (IBAction)togglePanel:(id)sender;
 
 //	log
 - (IBAction)addUserLog:(id)sender;

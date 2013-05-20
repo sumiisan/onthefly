@@ -11,7 +11,7 @@
 #import "VMDataTypes.h"
 
 typedef enum {
-	VMLogOwner_Player,
+	VMLogOwner_MediaPlayer,
 	VMLogOwner_Statistics,
 	VMLogOwner_System,
 	VMLogOwner_User
@@ -78,14 +78,14 @@ typedef enum {
 //	VMPLogView vars & flags
 @property (nonatomic, getter=isExpanded)				BOOL			expanded;
 @property (nonatomic)									CGFloat			expandedHeight;
-@property (nonatomic, getter=isAutomaticallyExpanded)	BOOL			automaticallyExpanded;
-@property (nonatomic, VMReadonly)							VMData			*VMData;
+//@property (nonatomic, getter=isAutomaticallyExpanded)	BOOL			automaticallyExpanded;	re-design
+@property (nonatomic, VMReadonly)						VMData			*VMData;
 
-+ (VMLogRecord*)historyWithAction:(VMString*)action
-							  data:(id)data
-						   subInfo:(VMHash*)subInfo
-							 owner:(VMLogOwnerType)owner
-				usePersistentStore:(BOOL)usePersistentStore;
++ (VMLogRecord*)recordWithAction:(VMString*)action
+							data:(id)data
+						 subInfo:(VMHash*)subInfo
+						   owner:(VMLogOwnerType)owner
+			  usePersistentStore:(BOOL)usePersistentStore;
 
 @end
 

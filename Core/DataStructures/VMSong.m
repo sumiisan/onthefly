@@ -118,7 +118,7 @@ BOOL verbose = NO;
 	//	overriding by adding sel's is not allowed.
 	VMSelector *subseq = ClassCastIfMatch( player.nextPlayer, VMSelector );
 	if ( subseq )
-		return (! [[[subseq chanceAtIndex:0] targetId] isEqualToString: @"*"] );
+		return (! subseq.isDeadEnd );
 	
 	VMPlayer *pl = ClassCastIfMatch( player.nextPlayer, VMPlayer );
 	if ( pl )
@@ -543,7 +543,7 @@ BOOL verbose = NO;
 		self.history				= ARInstance(VMArray);
 		self.showReport				= ARInstance(VMStack);
 #if VMP_LOGGING
-		self.log				= AutoRelease([[VMLog alloc] initWithOwner:VMLogOwner_Player managedObjectContext:nil] );
+		self.log				= AutoRelease([[VMLog alloc] initWithOwner:VMLogOwner_MediaPlayer managedObjectContext:nil] );
 #endif
 		if (!vmsong_singleton_static_) {
 			vmsong_singleton_static_ = self;
@@ -576,8 +576,8 @@ BOOL verbose = NO;
 	//self->songName = hash->hash_.songName;
 	songName_				= 	Retain( HashItem(songName));
     defaultFragmentId_		=	Retain( HashItem(defaultFragmentId) );
-    self.audioFileExtension =    HashItem(audioFileExtension);
-    self.audioFileDirectory =    HashItem(audioFileDirectory);
+    self.audioFileExtension =   HashItem(audioFileExtension);
+    self.audioFileDirectory =   HashItem(audioFileDirectory);
 	if ( [self.audioFileDirectory isEqualToString:@"./"] ) self.audioFileDirectory = @"";
 }
 

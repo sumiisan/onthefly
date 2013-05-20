@@ -100,7 +100,7 @@ static VMHash *processPhaseNames_static_ = nil;
 	[self close];
 	if( packetDescs )   free( packetDescs );
     if( channelLayout ) free( channelLayout );
-	Dealloc( super );;
+	Dealloc( super );
 }
 
 - (void) reallocBuffer {

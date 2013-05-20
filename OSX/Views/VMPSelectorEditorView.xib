@@ -75,7 +75,7 @@
 															<array class="NSMutableArray" key="NSSubviews"/>
 															<string key="NSFrameSize">{648, 180}</string>
 															<reference key="NSSuperview" ref="84620778"/>
-															<reference key="NSNextKeyView" ref="218283592"/>
+															<reference key="NSNextKeyView" ref="124338059"/>
 															<string key="NSReuseIdentifierKey">_NS:13</string>
 															<bool key="NSEnabled">YES</bool>
 															<bool key="NSAllowsLogicalLayoutDirection">NO</bool>
@@ -229,7 +229,6 @@
 													<int key="NSvFlags">-2147483392</int>
 													<string key="NSFrame">{{1, 119}, {223, 15}}</string>
 													<reference key="NSSuperview" ref="860531493"/>
-													<reference key="NSNextKeyView"/>
 													<string key="NSReuseIdentifierKey">_NS:60</string>
 													<bool key="NSAllowsLogicalLayoutDirection">NO</bool>
 													<int key="NSsFlags">1</int>
@@ -254,7 +253,7 @@
 											</array>
 											<string key="NSFrame">{{0, -4}, {650, 198}}</string>
 											<reference key="NSSuperview" ref="1025962195"/>
-											<reference key="NSNextKeyView" ref="124338059"/>
+											<reference key="NSNextKeyView" ref="84620778"/>
 											<string key="NSReuseIdentifierKey">_NS:9</string>
 											<int key="NSsFlags">133682</int>
 											<reference key="NSVScroller" ref="872541753"/>
@@ -320,7 +319,6 @@
 													<string key="NSFrame">{{633, 1}, {16, 190}}</string>
 													<reference key="NSSuperview" ref="958968306"/>
 													<reference key="NSWindow"/>
-													<reference key="NSNextKeyView"/>
 													<string key="NSReuseIdentifierKey">_NS:26</string>
 													<bool key="NSAllowsLogicalLayoutDirection">NO</bool>
 													<reference key="NSTarget" ref="958968306"/>
@@ -404,7 +402,6 @@
 													<int key="NSvFlags">256</int>
 													<string key="NSFrame">{{634, 0}, {16, 192}}</string>
 													<reference key="NSSuperview" ref="74573109"/>
-													<reference key="NSNextKeyView"/>
 													<string key="NSReuseIdentifierKey">_NS:26</string>
 													<bool key="NSAllowsLogicalLayoutDirection">NO</bool>
 													<reference key="NSTarget" ref="74573109"/>
@@ -465,6 +462,7 @@
 				<reference key="NSSuperview"/>
 				<reference key="NSWindow"/>
 				<reference key="NSNextKeyView" ref="22250213"/>
+				<bool key="NSViewIsLayerTreeHost">YES</bool>
 				<string key="NSClassName">NSView</string>
 			</object>
 		</array>
@@ -947,12 +945,12 @@
 					<string key="className">VMPSelectorEditorViewController</string>
 					<string key="superclassName">NSViewController</string>
 					<dictionary class="NSMutableDictionary" key="actions">
-						<string key="clickOnCueCell:">id</string>
+						<string key="clickOnFragmentCell:">id</string>
 						<string key="clickOnRow:">id</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="actionInfosByName">
-						<object class="IBActionInfo" key="clickOnCueCell:">
-							<string key="name">clickOnCueCell:</string>
+						<object class="IBActionInfo" key="clickOnFragmentCell:">
+							<string key="name">clickOnFragmentCell:</string>
 							<string key="candidateClassName">id</string>
 						</object>
 						<object class="IBActionInfo" key="clickOnRow:">

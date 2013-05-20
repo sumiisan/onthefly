@@ -33,9 +33,9 @@
 		  duration:(double)inDuration {
 	self.type		= inType;
 	self.ident		= inId;
-	self.count		= [NSNumber numberWithInt:inCount];
-	self.percent	= [NSNumber numberWithDouble:inPercent];
-	self.duration	= [NSNumber numberWithDouble:inDuration];
+	self.count		= @(inCount);
+	self.percent	= @(inPercent);
+	self.duration	= @(inDuration);
 
 	return self;
 }
@@ -646,7 +646,7 @@ static const int	kLengthOfPartTraceRoute					= 10000;	//	gives up after 10000 ti
 	
 	//	log
 	[self.log save];
-	DEFAULTSONG.log = AutoRelease([[VMLog alloc] initWithOwner:VMLogOwner_Player managedObjectContext:nil] );
+	DEFAULTSONG.log = AutoRelease([[VMLog alloc] initWithOwner:VMLogOwner_MediaPlayer managedObjectContext:nil] );
 
 						
 

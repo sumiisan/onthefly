@@ -8,8 +8,8 @@
 
 #import "VMPGraph.h"
 #import "MultiPlatform.h"
-#import "VMPNotification.h"
 #import "VMPMacros.h"
+
 
 CGSize CGSizeAdd( CGSize size1, CGSize size2 ) {
 	return CGSizeMake( size1.width + size2.width, size1.height + size2.height );
@@ -32,27 +32,10 @@ CGRect CGRectPlaceInTheMiddle( CGRect rect, CGPoint offset ) {
 }
 
 CGPoint CGPointMiddleOfRect( CGRect rect ) {
-	return CGPointMake( rect.size.width * 0.5 + rect.origin.x, 
+	return CGPointMake( rect.size.width * 0.5 + rect.origin.x,
 					   rect.size.height * 0.5 + rect.origin.y );
 }
 
-//	private macros and funcs
-
-#define GradientWithColors(c1,c2) \
-AutoRelease([[NSGradient alloc] initWithStartingColor:c1 endingColor:c2])
-
-#define BeginGC \
-	NSGraphicsContext* context = [NSGraphicsContext currentContext];
-#define SaveGC \
-	[context saveGraphicsState];
-#define RestoreGC \
-	[context restoreGraphicsState];
-
-#define LogColor(col) NSLog(@"R:%.2f G:%.2f B:%.2f H:%.2f S:%.2f B:%.2f",\
-col.redComponent,col.greenComponent,col.blueComponent,col.hueComponent,col.saturationComponent,col.brightnessComponent);
-
-#define LogRect(rect) NSLog(@"origin(%.2f,%.2f) size:(%.2f,%.2f)",\
-rect.origin.x, rect.origin.y, rect.size.width, rect.size.height );
 
 
 #pragma mark -
@@ -86,7 +69,6 @@ rect.origin.x, rect.origin.y, rect.size.width, rect.size.height );
 	//	we can't receive mouseUp events unless we modify the mouseDown handler
 	//
     NSInteger clickCount = [event clickCount];
-	NSLog(@"click count:%ld",clickCount);
 	if ( self.doubleAction && clickCount == 2 )
 		[self.target performSelector:self.doubleAction withObject:event];
 	else
@@ -119,20 +101,51 @@ rect.origin.x, rect.origin.y, rect.size.width, rect.size.height );
 
 @end
 
-
-@implementation NSView (VMPExtension)
-
-@end
-
 /*---------------------------------------------------------------------------------
  *
  *
- *	NSColor extension
+ *	NSString + Rotation
  *
  *
  *---------------------------------------------------------------------------------*/
 
-@implementation NSColor (VMPExtension)
+@implementation NSString (VMPRotate)
+//
+//	code based on KoNEW's post on stackoverflow:
+//	http://stackoverflow.com/questions/10289898/drawing-rotated-text-with-nsstring-drawinrect
+//
+- (void)drawVerticalInRect:(CGRect)rect withAttributes:(NSDictionary*)attributes {
+
+	BeginGC
+	SaveGC {
+		CGAffineTransform t	= CGAffineTransformMakeTranslation(rect.origin.x + rect.size.width * 0.,
+															   rect.origin.y + rect.size.height* 1. );
+		CGAffineTransform r	= CGAffineTransformMakeRotation(4.71238898038/*angle/57.2957795131*/);	//290degrees
+		
+		CGContextRef cgContext = [context graphicsPort];
+		CGContextConcatCTM( cgContext, t );
+		CGContextConcatCTM( cgContext, r );
+		
+	//	[self drawAtPoint:rect.origin withAttributes:attributes];
+		[self drawInRect:CGRectMake(rect.origin.y, rect.origin.x, rect.size.height, rect.size.width) withAttributes:attributes];
+		
+		//	maybe just restore GC ?
+		CGContextConcatCTM( cgContext, CGAffineTransformInvert(r) );
+		CGContextConcatCTM( cgContext, CGAffineTransformInvert(t) );
+	}	RestoreGC
+}
+@end
+
+
+/*---------------------------------------------------------------------------------
+ *
+ *
+ *	NSColor + DataColors
+ *
+ *
+ *---------------------------------------------------------------------------------*/
+
+@implementation NSColor (VMPDataColors)
 
 #define colorForType(type,r,g,b)\
 [NSColor colorWithCalibratedRed:r green:g blue:b alpha:1],	@( vmObjectType_##type     ),\
@@ -170,15 +183,16 @@ static 	VMHash *bgColorForType_static_ = nil;
 + (NSColor*)colorForDataType:(vmObjectType)type {
 	if ( ! bgColorForType_static_ )
 		bgColorForType_static_ = Retain([VMHash hashWithObjectsAndKeys:
-								   colorForType( fragment,		0.3, 0.3, 0.45 )
-								   colorForType( selector,		0.2, 0.5, 0.0 )
-								   colorForType( sequence,		0.1, 0.3, 0.7 )
-								   colorForType( audioFragment, 0.5, 0.0, 0.5 )
-								   colorForType( audioInfo,		0.5, 0.1, 0.0 )
-								   colorForType( chance,		0.5, 0.5, 0.0 )
-								   colorForType( reference,		0.4, 0.4, 0.4 )
-								   colorForType( unknown,		0.8, 0.8, 0.8 )
-							 nil]);
+										 colorForType( fragment,			0.3, 0.3, 0.45 )
+										 colorForType( selector,			0.2, 0.5, 0.0  )
+										 colorForType( sequence,			0.1, 0.3, 0.7  )
+										 colorForType( audioFragment,		0.5, 0.0, 0.5  )
+										 colorForType( audioFragmentPlayer, 0.4, 0.0, 0.6  )	
+										 colorForType( audioInfo,			0.5, 0.1, 0.0  )
+										 colorForType( chance,				0.5, 0.5, 0.0  )
+										 colorForType( reference,			0.4, 0.4, 0.4  )
+										 colorForType( unknown,				0.8, 0.8, 0.8  )
+										 nil]);
 	[bgColorForType_static_ setItem:[NSColor colorWithCalibratedRed:0.9 green:0.9 blue:0.9 alpha:1.] for:@(0)];
 	NSColor *c = (NSColor*)[bgColorForType_static_ item:@(type)];
 
@@ -193,7 +207,15 @@ static 	VMHash *bgColorForType_static_ = nil;
 
 @end
 
-@implementation  NSTextField (VMPExtension)
+/*---------------------------------------------------------------------------------
+ *
+ *
+ *	NSTextField + Label Creation
+ *
+ *
+ *---------------------------------------------------------------------------------*/
+
+@implementation  NSTextField (VMPLabelCreation)
 + (NSTextField*)labelWithText:(NSString *)text frame:(CGRect)frame {
 	NSTextField *tf = AutoRelease([[NSTextField alloc] initWithFrame:frame]);
 	tf.stringValue = text;
@@ -217,19 +239,23 @@ static 	VMHash *bgColorForType_static_ = nil;
 @implementation VMPGraph
 @synthesize graphDelegate = _graphDelegate;
 
-- (id)init {
-	self = [super init];
+
+
+- (void)init_internal {
 #if VMP_OSX
 	self.flippedYCoordinate = YES;
 #endif
+}
+
+- (id)init {
+	self = [super init];
+	[self init_internal];
 	return self;
 }
 
 - (id)initWithFrame:(NSRect)frameRect {
 	self = [super initWithFrame:frameRect];
-#if VMP_OSX
-	self.flippedYCoordinate = YES;
-#endif
+	[self init_internal];
 	return self;
 }
 
@@ -243,14 +269,6 @@ static 	VMHash *bgColorForType_static_ = nil;
 - (id)taggedWith:(NSInteger)aTag {
 	self.tag = aTag;
 	return self;
-}
-
-- (NSShadow*)defaultShadow {
-	NSShadow* aShadow = ARInstance(NSShadow);
-	[aShadow setShadowOffset:NSMakeSize(vmpShadowOffset, -vmpShadowOffset)];
-	[aShadow setShadowBlurRadius:vmpShadowBlurRadius];	
-	[aShadow setShadowColor:[[NSColor blackColor] colorWithAlphaComponent:0.5]];
-	return aShadow;
 }
 
 - (void)removeAllSubviews {
@@ -345,6 +363,7 @@ static 	VMHash *bgColorForType_static_ = nil;
 	((VMPGraph*)g).flippedYCoordinate = self.flippedYCoordinate;
 	((VMPGraph*)g).tag =self.tag;
 	((VMPGraph*)g).backgroundColor = self.backgroundColor;
+	((VMPGraph*)g).foregroundColor = self.foregroundColor;
 	((VMPGraph*)g).topOverlay = self.topOverlay;
 	((VMPGraph*)g).graphDelegate = self.graphDelegate;
 	return g;
@@ -403,7 +422,7 @@ static 	VMHash *bgColorForType_static_ = nil;
 }
 
 - (void)drawRect:(NSRect)dirtyRect{
-	[self.foregroundColor setStroke];
+	[self.foregroundColor set];
 	CGPoint localP1 = CGPointMake( _point1.x - self.frame.origin.x, _point1.y - self.frame.origin.y );
 	CGPoint localP2 = CGPointMake( _point2.x - self.frame.origin.x, _point2.y - self.frame.origin.y );
 	
@@ -436,185 +455,6 @@ static 	VMHash *bgColorForType_static_ = nil;
 
 
 @end
-
-
-
-/*---------------------------------------------------------------------------------
- 
- Fragment Cell
- 
- ----------------------------------------------------------------------------------*/
-
-#pragma mark -
-#pragma mark *** Fragment Cell ***
-#pragma mark -
-@interface VMPFragmentCell ()
-	@property (nonatomic, VMStrong) VMPButton *button;
-@end
-
-@implementation VMPFragmentCell
-@synthesize fragment = _fragment;
-
-+ (VMPFragmentCell*)fragmentCellWithFragment:(VMFragment*)frag frame:(NSRect)frame delegate:(id<VMPFragmentCellDelegate>)delegate {
-	VMPFragmentCell *cc = AutoRelease([[VMPFragmentCell alloc] initWithFrame:frame]);
-	cc.fragment = frag;
-	cc.delegate = delegate;
-	return cc;
-}
-
-- (void)setData:(id)data {
-	self.fragment = data;
-}
-
-- (void)setSelected:(BOOL)selected {
-	self.needsDisplay = ( _selected != selected );
-	_selected = selected;
-}
-
-- (VMFragment*)fragment {
-	return _fragment;
-}
-
-- (void)setFragment:(VMFragment *)frag {
-	Release( _fragment );
-	_fragment = Retain( frag );
-	if (!frag) {
-		return;
-	}
-	
-	NSColor *c0 = [NSColor backgroundColorForDataType:frag.type];
-	NSColor *c1 = [c0 colorModifiedByHueOffset:-.05 saturationFactor:1. brightnessFactor:1.];
-	NSColor *c2 = [c0 colorModifiedByHueOffset: .05 saturationFactor:1. brightnessFactor:1.];
-	self.backgroundGradient = GradientWithColors(c1,c2);
-}
-
-#pragma mark private
-- (void)initCell {
-	self.button = AutoRelease( [[VMPButton alloc] initWithFrame:self.cellRect] );
-	_button.target=self;
-	_button.action=@selector(click:);
-	_button.doubleAction=@selector(doubleClick:);
-	[_button setTransparent:YES];
-	[self addSubview:_button];
-	self.toolTip = self.fragment.id;
-	
-	//	default bg gradient
-	self.backgroundGradient = GradientWithColors(VMPColorBy(.9, .9, .9, 1.), 
-												 VMPColorBy(.7, .7, .7, 1.));
-}
-
-- (void)click:(id)sender {
-	self.selected = !self.selected;
-	if ( self.delegate )
-		[self.delegate fragmentCellClicked:self];
-	[VMPNotificationCenter postNotificationName:VMPNotificationFragmentSelected
-										 object:self
-									   userInfo:@{@"id":self.fragment.id} ];
-	self.needsDisplay = YES;
-}
-
-- (void)doubleClick:(id)sender {
-	[VMPNotificationCenter postNotificationName:VMPNotificationFragmentDoubleClicked
-										 object:self
-									   userInfo:@{@"id":self.fragment.id}];
-}
-
-- (void)selectIfIdDoesMatch:(VMId*)fragId exclusive:(BOOL)exclusive {
-	if ( [fragId isEqualToString:self.fragment.id] ) {
-		self.needsDisplay &= ( ! self.selected );
-		self.selected = YES;
-	} else if (exclusive) {
-		self.needsDisplay &= ( self.selected );
-		self.selected = NO;
-	}
-}
-
-#pragma mark init / dealloc
-- (id)initWithFrame:(NSRect)frameRect {
-	self = [super initWithFrame:frameRect];	
-	if (self) {
-		[self initCell];
-		self.frame = frameRect;
-	}
-	return self;
-}
-
-- (id)init {
-	self = [super init];
-	if (self) {
-		[self initCell];
-	}
-	return self;
-}
-
-- (void)dealloc {
-	VMNullify( button );
-	VMNullify( fragment );
-	VMNullify(backgroundGradient);
-	Dealloc( super );;
-}
-
-
-#pragma mark accessor
-- (void)setFrame:(NSRect)frameRect {
-	self.cellRect = CGRectOffset( CGRectZeroOrigin(frameRect), vmpShadowBlurRadius, vmpShadowBlurRadius );
-	frameRect = CGRectMake(frameRect.origin.x - vmpShadowBlurRadius,
-						   frameRect.origin.y - vmpShadowBlurRadius,
-						   frameRect.size.width + vmpShadowOffset + vmpShadowBlurRadius *2, 
-						   frameRect.size.height + vmpShadowOffset + vmpShadowBlurRadius *2 );
-	[super setFrame:frameRect];
-	[_button setFrame:self.cellRect];
-}
-
-#pragma mark public
-
-#pragma mark drawing
-- (void)drawRect:(NSRect)rect {
-	if ( self.cellRect.size.width == 0 || self.cellRect.size.height == 0 ) return;
-	if ( self.fragment == nil ) return;
-	
-	BeginGC
-	
-	SaveGC {
-		[[self defaultShadow] set];
-		[VMPColorBy(.2, .2, .2, 1.) setStroke];
-		NSBezierPath* cell = 
-		[NSBezierPath bezierPathWithRoundedRect: self.cellRect xRadius:3. yRadius:3.];	
-		[cell setLineWidth:self.isSelected ? 3.0 : 0.5];
-		[cell stroke];
-		[self.backgroundGradient drawInBezierPath:cell angle:60];
-	} RestoreGC
-	
-	if ( self.cellRect.size.height > 10 && self.fragment ) {
-		SaveGC {
-			NSMutableParagraphStyle *ps = ARInstance(NSMutableParagraphStyle);
-			ps.lineBreakMode = NSLineBreakByCharWrapping;
-			NSDictionary *attr = @{	NSForegroundColorAttributeName:[NSColor blackColor],
-									NSFontAttributeName:[NSFont systemFontOfSize:10],
-						   NSParagraphStyleAttributeName:ps};
-			
-			NSAttributedString *str = [[NSAttributedString alloc] initWithString:self.fragment.id attributes:attr];
-			NSSize textFrameSize = NSMakeSize( self.cellRect.size.width - 12, CGFLOAT_MAX );
-			NSRect textFrameRect = [str boundingRectWithSize:textFrameSize options:NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading];
-			//NSLog(@"textFrameRectFor:%@ = %@", str.string, NSStringFromRect(textFrameRect));
-			CGFloat verticalOffset = ( self.cellRect.size.height - textFrameRect.size.height ) * 0.5;
-			if ( verticalOffset < 0 ) verticalOffset = 0;
-
-			[self.fragment.id drawInRect:NSMakeRect(self.cellRect.origin.x + 6.,
-											   self.cellRect.origin.y + verticalOffset,
-											   self.cellRect.size.width  - 12.,
-											   self.cellRect.size.height - verticalOffset )
-					 withAttributes:attr];
-			
-			Release( str );
-			
-		} RestoreGC
-	}
-}
-
-@end
-
-
 
 
 
