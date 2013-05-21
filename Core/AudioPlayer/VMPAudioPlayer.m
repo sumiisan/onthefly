@@ -190,6 +190,8 @@ static VMHash *processPhaseNames_static_ = nil;
 	status =	AudioFileOpenURL( (VMBridge CFURLRef)url, 0x01, 0, &audioFile );
 	if ( noErr != status ) {
 		[VMException alert:@"Failed to open audio file." format:@"Audio file at path %@ status=%d", url, status];
+		audioFile = nil;
+		return;
 	}
 	
 	// get the data format of the file

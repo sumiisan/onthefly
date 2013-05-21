@@ -111,6 +111,14 @@ NSDictionary		*windowNames_static_ = nil;
 	self.lastSelectedDataId = (notification.userInfo)[@"id"];
 }
 
+#pragma mark -
+#pragma mark accessor
+
+- (BOOL)isVMSModified {
+	//	expand here when we have temporary song data
+	return ( self.editorWindowController.codeEditorView.sourceCodeModified );
+}
+
 
 #pragma mark -
 #pragma mark * user actions *
@@ -266,18 +274,23 @@ NSDictionary		*windowNames_static_ = nil;
 }
 
 - (IBAction)saveDocument:(id)sender {
+	[DEFAULTSONGPLAYER stopAndDisposeQueue];
 	NSError *error = nil;
 	if( [DEFAULTSONG readFromString:self.editorWindowController.codeEditorView.textView.string error:&error] )
 		[self saveVMSDocumentToURL:self.currentDocumentURL];
 }
 
 - (IBAction)saveDocumentAs:(id)sender {
+	[DEFAULTSONGPLAYER stopAndDisposeQueue];
 	[VMException alert:@"Not implemented yet!"];
 }
 
 
 - (IBAction)closeDocument:(id)sender {
-	//	TODO: check for unsaved changes
+	if ( [self isVMSModified] ) {
+		if ( [VMException ensure:@"%@ has unsaved changes. Close anyway ?", DEFAULTSONG.songName] == 1 ) return;
+	}
+	
 	[DEFAULTSONGPLAYER stopAndDisposeQueue];
 	[DEFAULTSONG clear];
 }
@@ -285,6 +298,9 @@ NSDictionary		*windowNames_static_ = nil;
 - (IBAction)openDocument:(id)sender {
 	[self closeDocument:self];
 	
+	if ( [self isVMSModified] ) {
+		if ( [VMException ensure:@"%@ has unsaved changes. Close anyway ?", DEFAULTSONG.songName] == 1 ) return;
+	}
 	//	TODO: we might use a document controller to populate 'recent files' menu.
 //	NSDocumentController *dc = [NSDocumentController sharedDocumentController];
 	
@@ -381,6 +397,11 @@ NSDictionary		*windowNames_static_ = nil;
 
 
 - (NSApplicationTerminateReply)applicationShouldTerminate:(NSApplication *)sender {
+	
+	if ( [self isVMSModified] ) {
+		if ( [VMException ensure:@"%@ has unsaved changes. Quit anyway ?", DEFAULTSONG.songName] == 1 ) return NO;
+	}
+	
 	
     // Save changes in the application's managed object context before the application terminates.
 	

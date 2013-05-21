@@ -1650,7 +1650,6 @@ if ( ClassMatch(data, VMHash)) {
 
 VMObligatory_initWithCoder
 (
-// self.subsequent = [[VMSelector alloc] initWithCoder:decoder];
  Deserialize(subsequent, Object)
 )
 
@@ -1877,9 +1876,7 @@ VMOBLIGATORY_setWithProto(
 //	we can not resolve subseq here, because it will chain endlessly
 //	subseq->subseq->subseq ... 
 //
-//	if ( HasMethod(proto, subsequent) ) self.nextPlayer 
-//		= [[((VMSequence*)proto) subsequent] resolveUntilType:vmObjectType_player];
-	if ( HasMethod(proto, subsequent)) self.nextPlayer = (VMFragment*) ((VMSequence*)proto).subsequent;
+	if ( HasMethod(proto, subsequent)) self.nextPlayer = (VMFragment*)((VMSequence*)proto).subsequent;
 	if (!ClassMatch(proto, VMPlayer)) self.staticDataId = ((VMFragment*)proto).id;
 	self.type = vmObjectType_player;
 }

@@ -277,8 +277,7 @@ static BOOL			sSyntaxColoredTextDocPrefsInited = NO;
 		Perform indentation-maintaining if we're supposed to.
    -------------------------------------------------------------------------- */
 
--(BOOL) textView:(NSTextView *)tv shouldChangeTextInRange:(NSRange)afcr replacementString:(NSString *)rps
-{
+-(BOOL) textView:(NSTextView *)tv shouldChangeTextInRange:(NSRange)afcr replacementString:(NSString *)rps {
 	if( maintainIndentation )
 	{
 		affectedCharRange = afcr;

@@ -12,6 +12,10 @@
 #ifndef OnTheFly_VMPreprocessorMacros_h
 #define OnTheFly_VMPreprocessorMacros_h
 
+//	constants
+#define VMSDefault 0
+
+
 //	primitives
 //#define Default(expr,default) ((expr)?(expr):(default))
 #define Default(expr,default) ({ __typeof__( expr ) tmp_ = (expr); tmp_ ? tmp_ : (default); })

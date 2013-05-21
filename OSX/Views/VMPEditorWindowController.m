@@ -1103,9 +1103,11 @@ forDoubleClickOnDividerAtIndex:(NSInteger)dividerIndex  {
 }
 
 - (IBAction)songPlay:(id)sender {
-	if (sender != self)
-		NSLog(@"just wanted to know");
-	VMData *d = [DEFAULTSONG data:[self.history currentItem]];
+	VMId *dataId = [self.history currentItem];
+	if ( [dataId rangeOfString:@"_"].length == 0 )
+		dataId = [dataId stringByAppendingString:@"_sel"];	//	assume part id.
+
+	VMData *d = [DEFAULTSONG data:dataId];
 	if (d.type == vmObjectType_sequence ||
 		d.type == vmObjectType_selector ||
 		d.type == vmObjectType_audioFragment ||

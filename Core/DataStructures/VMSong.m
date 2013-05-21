@@ -248,10 +248,10 @@ BOOL verbose = NO;
 	}
 	
 	//
-	//	2)	after no more sequences could be resolved:
+	//	2)	after no more sequences can be resolved:
 	//
-	//	2a)	no sequence found: empty frag. cannot continue playing. (possibly an error)
-	//	2b)	found a sequence, but no audioFragment was inside. cannot continue playing. (possibly an error)
+	//	2a)	no sequence found: empty fragment. cannot continue playing. (possibly an error of vm structure)
+	//	2b)	found a sequence, but no audioFragment was inside. cannot continue playing. (possibly an error of vm structure)
 	//	2c)	did'nt find a sequence, but an audioFragment: okay, why not use it. (maybe we can find a seq at next frag in sequence)
 	//
 	if( !cc ) {
@@ -339,7 +339,13 @@ BOOL verbose = NO;
 	
 	if ( ClassMatch(someObj, VMSelector)) {
 		VerboseLog(@" PF 1b : select frag");
-		fragObj = [(VMSelector*)someObj resolveUntilType:vmObjectCategory_fragment];
+
+	//	TEST:	we want track seqence of subseq as well.
+		fragObj = [DEFAULTEVALUATOR resolveDataWithTracking:(VMSelector*)someObj toType:vmObjectCategory_fragment];
+
+		
+		//fragObj = [(VMSelector*)someObj resolveUntilType:vmObjectCategory_fragment];
+		
 	} else if ( ClassMatch(someObj, VMFragment)) {
 		VerboseLog(@" PF 1c : found frag");
 		fragObj = someObj;	//[self resolveDataWithId:((VMFragment*)someObj).id untilReachType:vmObjectCategory_fragment];

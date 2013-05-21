@@ -173,6 +173,11 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 		}
 	}
 	
+	if ( ! d.id ) {
+		[VMException alert:@"No Id Specified"];
+		assert(0);
+	}
+	
 	return d;
 }
 

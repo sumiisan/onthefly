@@ -64,9 +64,9 @@ va_end(args)
     
 #endif
 
+	LLog(@"%@",message);
 	
 #ifdef DEBUG
-	NSLog(@"%@\n%@",name,message);
 	va_start(args, format);
 	[super raise:name format:format arguments:args];
 	va_end(args);
@@ -79,6 +79,7 @@ va_end(args)
 
 + (void)alert:(NSString *)format, ...  {
 	parseMessageFromArg(NSString *message);
+	LLog(@"%@",message);
 
 	NSAlert *al = [NSAlert alertWithMessageText:@"Alert:"
 								  defaultButton:@"OK"

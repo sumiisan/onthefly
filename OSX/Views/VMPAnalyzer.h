@@ -99,6 +99,10 @@ typedef enum {
 //	accessor
 - (void)selectRow:(NSInteger)row;
 - (VMPReportRecord *)recordForRow:(NSInteger)row;
+
+- (VMSelector*)makeSelectorFromStatistics:(VMId*)selectorId;
+
+//	history
 - (void)moveHistory:(VMInt)vector;
 
 //	called back from VMSelector

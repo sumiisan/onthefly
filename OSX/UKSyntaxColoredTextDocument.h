@@ -37,7 +37,7 @@
 #define TD_SYNTAX_COLORING_MODE_ATTR		@"UKTextDocumentSyntaxColoringMode"		// Anything we colorize gets this attribute.
 
 // Syntax-colored text file viewer:
-@interface UKSyntaxColoredTextDocument : NSDocument
+@interface UKSyntaxColoredTextDocument : NSDocument <NSTextViewDelegate>
 {
 	IBOutlet NSTextView*			textView;				// The text view used for editing code.
 	IBOutlet NSProgressIndicator*	progress;				// Progress indicator while coloring syntax.
@@ -96,6 +96,9 @@
 				withColor: (NSColor*) col andMode:(NSString*)attr andEscapeChar: (NSString*)vStringEscapeCharacter;
 -(void)	colorTagFrom: (NSString*) startCh to: (NSString*)endCh inString: (NSMutableAttributedString*) s
 				withColor: (NSColor*) col andMode:(NSString*)attr exceptIfMode: (NSString*)ignoreAttr;
+
+
+-(void) processEditing: (NSNotification*)notification;	//	overrode by VMPCodeEditor
 
 
 

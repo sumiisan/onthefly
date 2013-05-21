@@ -45,6 +45,7 @@
 	
 	textView = inTextView;		//	try just VMWeak
 	textView.string = inSourceCode;
+	textView.delegate = self;
 	
 	// Set up some sensible defaults for syntax coloring:
 	[[self class] makeSurePrefsAreInited];
@@ -67,6 +68,40 @@
 	LogTimeBetweenTimestamps(begin_syntax_color, end_syntax_color);
 }
 
+//	text modified
+- (void)processEditing: (NSNotification*)notification {
+	_modified = YES;
+	[super processEditing:notification];
+}
+
+- (BOOL)textView:(NSTextView *)tv shouldChangeTextInRange:(NSRange)afcr replacementString:(NSString *)rps {	
+	if ( [rps isEqualToString:@"}"] )		[self highlightCounterPart:'}' fromLocation:afcr.location];
+	else if ( [rps isEqualToString:@"]"] )	[self highlightCounterPart:']' fromLocation:afcr.location];
+	else if ( [rps isEqualToString:@")"] )	[self highlightCounterPart:')' fromLocation:afcr.location];
+	
+	return [super textView:tv shouldChangeTextInRange:afcr replacementString:rps];
+}
+
+- (void)highlightCounterPart:(unichar)closer fromLocation:(NSUInteger)location {
+	//	TODO: check inconsistent nesting like [ { ] or { { ] .
+	NSString *text = textView.string;	
+	unichar opener  = ( closer == '}' ? '{' : ( closer == ']' ? '[' : '(' ));
+	int nest = 0;
+	
+	for( NSUInteger p = location; p > 0; --p ) {
+		unichar c = [text characterAtIndex:p];
+		if ( c == closer )
+			++nest;
+				
+		if ( c == opener ) {
+			if ( nest == 0 ) {
+				[textView showFindIndicatorForRange:NSMakeRange(p, 1)];
+				return;
+			}
+			--nest;
+		}
+	}
+}
 
 @end
 
@@ -112,12 +147,9 @@
 }
 
 #pragma mark -
-#pragma mark update editor selection
+#pragma mark accessor
 
-- (void)setSourceCode:(NSString*)sourceCode {
-//	self.textView.string = sourceCode;
-//	return;	//test
-	
+- (void)setSourceCode:(NSString*)sourceCode {	
 	if ( ! self.vmsDocument )
 		self.vmsDocument = AutoRelease([[VMPSyntaxColoredtextDocument alloc] init] );
 	[self.vmsDocument setTextView:self.textView sourceCode:sourceCode];
@@ -127,9 +159,17 @@
 	return self.textView.string;
 }
 
+- (BOOL)sourceCodeModified {
+	return self.vmsDocument.modified;
+}
+
 - (void)reloadData:(NSNotification*)notification {
 	[self setSourceCode:DEFAULTSONG.vmsData];
 }
+   
+#pragma mark -
+#pragma mark update editor selection
+
 
 - (void)fragmentSelectedInBrowser:(NSNotification*)notification {
 	if ( notification.object != APPDELEGATE.editorWindowController ) return;
@@ -270,13 +310,12 @@
 /*---------------------------------------------------------------------------------
  
  block range and id
- 
- returns the text range of the block of cursor position
- 
+  
  not the most beautiful algorithm in the world. maybe improve later.
  
  ----------------------------------------------------------------------------------*/
 
+//  returns the id of the current block
 - (VMId*)idOfBlock:(NSRange)blockRange inString:(NSString*)string {
 	if ( !string ) string = self.textView.string;
 	NSRange idKeyRange =
@@ -301,6 +340,7 @@
 	return ident;
 }
 
+// returns the start location of current block from cursor position
 - (NSInteger)startLocationOfBlockFromLocation:(NSInteger)location inString:(NSString*)string {
 	int nest = 1;
 	NSRange searchRange = NSMakeRange(0, location);
@@ -321,7 +361,7 @@
 	return 0;
 }
 
-
+// returns the text range of current block from cursor position
 - (NSRange)blockRangeFromLocation:(NSInteger)location inString:(NSString*)string {
 	//	find out block start
 	NSScanner *sc;
@@ -342,14 +382,14 @@
 	doForever {
 		[sc scanUpToCharactersFromSet:charset intoString:nil];
 		if (sc.isAtEnd) break;
-		NSString *found = [string substringWithRange:NSMakeRange(sc.scanLocation, 1)];
+		unichar found = [string characterAtIndex:sc.scanLocation];
 		
-		if ( [found isEqualToString:@"\""] )
+		if ( found == '"' )
 			insideOfString = ! insideOfString;
 		else if ( ! insideOfString ) {
-			if ( [found isEqualToString:@"{"] )
+			if ( found == '{' )
 				++nest;
-			else if ( [found isEqualToString:@"}"] ) {
+			else if ( found == '}' ) {
 				--nest;
 				if ( nest == 0 ) break;
 			}
@@ -361,8 +401,14 @@
 	return NSMakeRange(blockStartLocation, MIN( len, string.length-blockStartLocation));
 }
 
+//
+//	used for indicate the position of error occured while parsing json.
+//	we have to 'guess' the position because TouchJSON do not know anything about the textual-position.
+//	(it handles NSData instead)
+//
 - (void)markBlockUsingHintsBefore:(NSString*)before 
 							after:(NSString*)after {
+	//	after is not used
 	NSRange block = [self blockRangeFromLocation:before.length-1 inString:before];
 	VMId *fragId = [self idOfBlock:block inString:before];
 	NSLog(@"fragId:%@",fragId);

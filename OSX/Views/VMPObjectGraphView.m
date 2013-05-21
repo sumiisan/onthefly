@@ -57,7 +57,6 @@
  
  ----------------------------------------------------------------------------------*/
 #pragma mark branch graph
-//	TODO: vms data mode /	reset @LC, @LS, ignore @C, @D, @PT, @F (denote)
 //	TODO: statistics mode / use statistical scores
 
 - (CGFloat)gapBetweenTypes:(int)type1 and:(int)type2 {
@@ -82,10 +81,23 @@
 	frag = [self selectSubsequentFragmentOf:frag];
 
 	if ( frag.type == vmObjectType_selector ) {
-		VMSelector *sel				= (VMSelector*)frag;
-		VMLiveData *saved_liveData	= AutoRelease([sel.liveData copy]);
+		
+		VMLiveData *liveDataCache = nil;
+		VMSelector *sel = nil;
+		
+		if ( _dataSource == VMPSelectorDataSource_StaticVMS ) {
+			//	use static vms data
+			sel	= (VMSelector*)frag;
+			liveDataCache = AutoRelease([sel.liveData copy]);
+			sel.liveData = nil;	//	TEST	reset liveData before evaluation
+		} else {
+			//	use statistics
+			sel = [DEFAULTANALYZER makeSelectorFromStatistics:frag.id];
+		}
+		
 		[sel prepareSelection];
-		if ( sel.sumOfInnerScores == 0 ) return;
+		if ( [sel sumOfInnerScores] == 0 ) return;
+		
 		for( VMChance *ch in sel.fragments ) {
 			if ( ch.cachedScore == 0 ) continue;
 			VMFragment *c = [DEFAULTSONG data:ch.targetId];
@@ -95,9 +107,13 @@
 								   gapX:[self gapBetweenTypes:c.type and:parentType]
 								 height:height / sel.sumOfInnerScores * ch.cachedScore ];
 		}
-		sel.liveData = saved_liveData;
+		
+		if ( liveDataCache )
+			sel.liveData = liveDataCache;
 	}
 }
+
+
 
 
 - (void)drawBranchGraph:(VMFragment*)frag
@@ -132,7 +148,7 @@
 		drawChildren = YES;
 	}
 	
-	CGFloat myCenterY = yAlreadyDrawn + summedHeight * 0.5;
+	CGFloat myCenterY = (int)(yAlreadyDrawn + summedHeight * 0.5);
 	line.point1 = NSMakePoint(x - gapX, parentCenterY );
 	line.point2 = NSMakePoint(x, myCenterY);
 	line.foregroundColor = [frag.partId isEqualToString:parentPartId] ? [NSColor darkGrayColor] : [NSColor redColor];
@@ -358,8 +374,16 @@
 			break;
 		case VMPSelectorGraphType_Branch: {
 			ReleaseAndNewInstance( branchViewTemporary, VMHash );
+			VMSelector *sel = (VMSelector*)self.fragment;
+			
 			DEFAULTEVALUATOR.shouldNotify = NO;
-			[self collectBranchData:self.fragment x:vmpCellWidth gapX:0 height:self.frame.size.height-10];
+			VMLiveData *saved_liveData	= AutoRelease([sel.liveData copy]);
+			sel.liveData = nil;	//	empty livedata before eval. this does reset @LC, @LS, @C
+			//	TODO: vms data mode /	reset @D, @PT, @F (denote branch)
+
+			[self collectBranchData:sel x:vmpCellWidth gapX:0 height:self.frame.size.height-10];
+			
+			sel.liveData = saved_liveData;
 			DEFAULTEVALUATOR.shouldNotify = YES;
 			
 			[self drawBranchGraph:self.fragment

@@ -19,7 +19,8 @@
  *
  *---------------------------------------------------------------------------------*/
 
-@interface VMPSyntaxColoredtextDocument : UKSyntaxColoredTextDocument
+@interface VMPSyntaxColoredtextDocument : UKSyntaxColoredTextDocument 
+@property	(nonatomic, assign)		BOOL modified;
 - (void)setTextView:(NSTextView*)inTextView sourceCode:(NSString*)inSourceCode;
 @end
 
@@ -38,6 +39,7 @@
 @property (nonatomic, VMStrong)	VMPSyntaxColoredtextDocument	*vmsDocument;
 @property (nonatomic, VMStrong)	NSTextFinder *textFinder;
 @property (nonatomic, VMStrong)	NSScanner *scanner;
+@property (nonatomic, readonly)	BOOL sourceCodeModified;
 
 - (void)selectBlockWithId:(VMId*)fragId scrollVisible:(BOOL)scrollVisible;
 - (void)markBlockUsingHintsBefore:(NSString*)before

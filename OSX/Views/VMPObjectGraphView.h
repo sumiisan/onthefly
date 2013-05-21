@@ -17,6 +17,11 @@ typedef enum {
 	VMPSelectorGraphType_Single_noLevels		//	do not resolve child selectors.
 } VMPSelectorGraphType;
 
+typedef enum {
+	VMPSelectorDataSource_StaticVMS = 0,
+	VMPSelectorDataSource_Statistics
+} VMPSelectorDataSource;
+
 #pragma mark -
 #pragma mark VMPSelectorGraph
 //------------------------- VMPSelectorGraph -----------------------------
@@ -24,7 +29,8 @@ typedef enum {
 	VMPStraightLine		*line;
 	VMHash				*branchViewTemporary;
 }
-@property (nonatomic)	VMPSelectorGraphType graphType;
+@property (nonatomic, assign)	VMPSelectorGraphType	graphType;
+@property (nonatomic, assign)	VMPSelectorDataSource	dataSource;
 @end
 
 

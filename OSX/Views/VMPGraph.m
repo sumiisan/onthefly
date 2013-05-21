@@ -407,18 +407,18 @@ static 	VMHash *bgColorForType_static_ = nil;
 
 - (void)setPoint1:(NSPoint)point1 {
 	_point1 = point1;
-	self.frame = NSMakeRect(SMIN( _point1.x, _point2.x ),
-							SMIN( _point1.y, _point2.y ),
-							SMAX( SMAX(_point1.x, _point2.x ), 1. ),
-							SMAX( SMAX(_point1.y, _point2.y ), 1. ));
+	self.frame = NSMakeRect(MIN( _point1.x, _point2.x ),
+							MIN( _point1.y, _point2.y ),
+							MAX( fabs(_point1.x - _point2.x ), 1. ),
+							MAX( fabs(_point1.y - _point2.y ), 1. ));
 }
 
 - (void)setPoint2:(NSPoint)point2 {
 	_point2 = point2;
-	self.frame = NSMakeRect(SMIN( _point1.x, _point2.x ),
-							SMIN( _point1.y, _point2.y ),
-							SMAX( SMAX(_point1.x, _point2.x ), 1. ),
-							SMAX( SMAX(_point1.y, _point2.y ), 1. ));
+	self.frame = NSMakeRect(MIN( _point1.x, _point2.x ),
+							MIN( _point1.y, _point2.y ),
+							MAX( fabs(_point1.x - _point2.x ), 1. ),
+							MAX( fabs(_point1.y - _point2.y ), 1. ));
 }
 
 - (void)drawRect:(NSRect)dirtyRect{
