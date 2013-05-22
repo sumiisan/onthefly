@@ -39,7 +39,7 @@
 @property (nonatomic, VMStrong)	VMPSyntaxColoredtextDocument	*vmsDocument;
 @property (nonatomic, VMStrong)	NSTextFinder *textFinder;
 @property (nonatomic, VMStrong)	NSScanner *scanner;
-@property (nonatomic, readonly)	BOOL sourceCodeModified;
+@property (nonatomic, getter = isSourceCodeModidied, assign)	BOOL sourceCodeModified;
 
 - (void)selectBlockWithId:(VMId*)fragId scrollVisible:(BOOL)scrollVisible;
 - (void)markBlockUsingHintsBefore:(NSString*)before

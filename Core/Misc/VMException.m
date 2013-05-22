@@ -91,6 +91,7 @@ va_end(args)
 
 + (void)alert:(NSString *)name format:(NSString*)format, ...  {
 	parseMessageFromArg(NSString *message);
+	LLog(@"%@ %@",name, message);
 	
 	NSAlert *al = [NSAlert alertWithMessageText:name
 								  defaultButton:@"OK"

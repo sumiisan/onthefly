@@ -114,9 +114,13 @@ NSDictionary		*windowNames_static_ = nil;
 #pragma mark -
 #pragma mark accessor
 
-- (BOOL)isVMSModified {
+- (BOOL)isDocumentModified {
 	//	expand here when we have temporary song data
 	return ( self.editorWindowController.codeEditorView.sourceCodeModified );
+}
+
+- (void)setDocumentModified:(BOOL)documentModified {
+	self.editorWindowController.codeEditorView.sourceCodeModified = documentModified;
 }
 
 
@@ -166,7 +170,7 @@ NSDictionary		*windowNames_static_ = nil;
 - (void)showWindowByName:(NSString*)name {
 	if ( [name isEqualToString:@"Transport"] )			[_transportPanel makeKeyAndOrderFront:self ];
 	if ( [name isEqualToString:@"Object Browser"] )		[_editorWindowController.window makeKeyAndOrderFront:self ];
-	if ( [name isEqualToString:@"Statistics"] )			[DEFAULTANALYZER.reportWindow makeKeyAndOrderFront:self ];
+	if ( [name isEqualToString:@"Statistics"] )			[DEFAULTANALYZER.statisticsWindow makeKeyAndOrderFront:self ];
 	if ( [name isEqualToString:@"Tracks"] )				[_trackPanel makeKeyAndOrderFront:self ];
 	if ( [name isEqualToString:@"Log"] )				[_logPanel makeKeyAndOrderFront:self ];
 
@@ -186,7 +190,7 @@ NSDictionary		*windowNames_static_ = nil;
 - (void)hideWindowByName:(VMString*)name {
 	if ( [name isEqualToString:@"Transport"] )			[_transportPanel close];
 	if ( [name isEqualToString:@"Object Browser"] )		[_editorWindowController.window close];
-	if ( [name isEqualToString:@"Statistics"] )			[DEFAULTANALYZER.reportWindow close ];
+	if ( [name isEqualToString:@"Statistics"] )			[DEFAULTANALYZER.statisticsWindow close ];
 	if ( [name isEqualToString:@"Tracks"] )				[_trackPanel  close];
 	if ( [name isEqualToString:@"Log"] )				[_logPanel close];
 	if ( [name isEqualToString:@"Variables"] ) if ( self.variablesPanelController ) [self.variablesPanelController.window close];
@@ -202,7 +206,7 @@ NSDictionary		*windowNames_static_ = nil;
 	windowNames_static_ = @{
 						 (_transportPanel ? _transportPanel.identifier: @"dummy1"):@"Transport",
 	   (_editorWindowController.window ? _editorWindowController.window.identifier : @"dummy2" ):@"Object Browser",
-	   ( DEFAULTANALYZER.reportWindow ? DEFAULTANALYZER.reportWindow.identifier : @"dummy3" ) :@"Statistics",
+	   ( DEFAULTANALYZER.statisticsWindow ? DEFAULTANALYZER.statisticsWindow.identifier : @"dummy3" ) :@"Statistics",
 	   (_trackPanel ? _trackPanel.identifier : @"dummy4" ) :@"Tracks",
 	   (_variablesPanelController.window ? _variablesPanelController.window.identifier : @"dummy5" ):@"Variables",
 	   (_logPanel ? _logPanel.identifier : @"dummy6" ) :@"Log" };
@@ -260,24 +264,30 @@ NSDictionary		*windowNames_static_ = nil;
 	[DEFAULTSONGPLAYER stopAndDisposeQueue];
     [self openVMSDocumentFromURL:self.currentDocumentURL];
     DEFAULTSONGPLAYER.song = DEFAULTSONG;
-	[self.editorWindowController.objectTreeView reloadData];
-	[DEFAULTANALYZER.statisticsView.reportView reloadData];
+
+	[self resetEverythingAfterDataIsLoaded];
 }
 
 - (IBAction)reloadDataFromEditor:(id)sender {
 	[DEFAULTSONGPLAYER stopAndDisposeQueue];
 	NSError *error = nil;
-	if ( [DEFAULTSONG readFromString:self.editorWindowController.codeEditorView.textView.string error:&error] )
-		[VMPNotificationCenter postNotificationName:VMPNotificationVMSDataLoaded object:self userInfo:nil];
-	else
+	if ( ![DEFAULTSONG readFromString:self.editorWindowController.codeEditorView.textView.string error:&error] );
 		[VMPNotificationCenter postNotificationName:VMPNotificationLogAdded object:self userInfo:@{@"owner":@(VMLogOwner_System)}];
+	
+	[self resetEverythingAfterDataIsLoaded];
 }
 
 - (IBAction)saveDocument:(id)sender {
-	[DEFAULTSONGPLAYER stopAndDisposeQueue];
 	NSError *error = nil;
-	if( [DEFAULTSONG readFromString:self.editorWindowController.codeEditorView.textView.string error:&error] )
-		[self saveVMSDocumentToURL:self.currentDocumentURL];
+	DEFAULTSONG.vmsData = self.editorWindowController.codeEditorView.textView.string;
+	[self saveVMSDocumentToURL:self.currentDocumentURL];	//	FIRST! save anyway.
+	[DEFAULTSONGPLAYER stopAndDisposeQueue];				//	NEXT:  stopping audio can cause error, hang of device, etc.
+															//	LAST:  validate vms, it can produce lots of errors.
+	if( [DEFAULTSONG readFromString:nil error:&error] )
+		[VMPNotificationCenter postNotificationName:VMPNotificationLogAdded object:self userInfo:@{@"owner":@(VMLogOwner_System)}];
+	
+	self.documentModified = NO;
+	[self resetEverythingAfterDataIsLoaded];
 }
 
 - (IBAction)saveDocumentAs:(id)sender {
@@ -287,7 +297,7 @@ NSDictionary		*windowNames_static_ = nil;
 
 
 - (IBAction)closeDocument:(id)sender {
-	if ( [self isVMSModified] ) {
+	if ( self.isDocumentModified ) {
 		if ( [VMException ensure:@"%@ has unsaved changes. Close anyway ?", DEFAULTSONG.songName] == 1 ) return;
 	}
 	
@@ -298,7 +308,7 @@ NSDictionary		*windowNames_static_ = nil;
 - (IBAction)openDocument:(id)sender {
 	[self closeDocument:self];
 	
-	if ( [self isVMSModified] ) {
+	if ( self.isDocumentModified ) {
 		if ( [VMException ensure:@"%@ has unsaved changes. Close anyway ?", DEFAULTSONG.songName] == 1 ) return;
 	}
 	//	TODO: we might use a document controller to populate 'recent files' menu.
@@ -316,14 +326,16 @@ NSDictionary		*windowNames_static_ = nil;
 		
 		NSError *err = [self openVMSDocumentFromURL:url];
 		if( !err ) {
-			DEFAULTSONGPLAYER.song = DEFAULTSONG;
-			[self.editorWindowController.objectTreeView reloadData];
-			[DEFAULTANALYZER.statisticsView.reportView reloadData];
-			
+			[self resetEverythingAfterDataIsLoaded];			
 			self.currentDocumentURL = url;
 			[[NSUserDefaults standardUserDefaults] setValue:[url path] forKey:VMPUserDefaultsKey_LastDocumentURL];
 		}
 	}
+}
+
+- (void)resetEverythingAfterDataIsLoaded {
+	DEFAULTSONGPLAYER.song = DEFAULTSONG;
+	[VMPNotificationCenter postNotificationName:VMPNotificationVMSDataLoaded object:self userInfo:nil];
 }
 
 #pragma mark -
@@ -398,7 +410,7 @@ NSDictionary		*windowNames_static_ = nil;
 
 - (NSApplicationTerminateReply)applicationShouldTerminate:(NSApplication *)sender {
 	
-	if ( [self isVMSModified] ) {
+	if ( self.isDocumentModified ) {
 		if ( [VMException ensure:@"%@ has unsaved changes. Quit anyway ?", DEFAULTSONG.songName] == 1 ) return NO;
 	}
 	

@@ -492,7 +492,7 @@ BOOL verbose = NO;
 
 //	returns YES on success, NO if failed.
 - (BOOL)readFromString:(VMString *)string error:(NSError **)outError {
-	self.vmsData = string;
+	if( string ) self.vmsData = string;
 	[self.songData clear];
 	self.showReport.current = NO;
 	

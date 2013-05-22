@@ -27,6 +27,7 @@
 @property (nonatomic, VMStrong)	VMLog				*systemLog;
 @property (nonatomic, VMStrong)	VMLog				*userLog;
 @property (nonatomic, VMStrong)	VMId				*lastSelectedDataId;
+@property (nonatomic, assign, getter = isDocumentModified)	BOOL documentModified;
 
 /*---------------------------------------------------------------------------------
  *
@@ -38,7 +39,7 @@
 
 //	transport panel
 @property (nonatomic, VMWeak) IBOutlet NSPanel							*transportPanel;
-@property (nonatomic, VMWeak) IBOutlet NSButton						*playStopButton;
+@property (nonatomic, VMWeak) IBOutlet NSButton							*playStopButton;
 @property (nonatomic, VMWeak) IBOutlet NSTextField						*timeIndicator;
 
 //	object browser
@@ -46,7 +47,7 @@
 
 //	audioplayer track view
 @property (nonatomic, VMWeak) IBOutlet NSPanel							*trackPanel;
-@property (nonatomic, VMWeak) IBOutlet VMPTrackView					*trackView;
+@property (nonatomic, VMWeak) IBOutlet VMPTrackView						*trackView;
 
 //	log panel
 @property (nonatomic, VMWeak) IBOutlet NSPanel							*logPanel;

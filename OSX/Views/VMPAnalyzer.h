@@ -68,7 +68,7 @@ typedef enum {
 - (IBAction)moveHistoryBack:(id)sender;
 - (IBAction)moveHistoryForward:(id)sender;
 
-@property (nonatomic, VMWeak) IBOutlet	NSTableView *reportView;
+@property (nonatomic, VMWeak) IBOutlet	NSTableView *tableView;
 
 @end
 
@@ -128,18 +128,17 @@ typedef enum {
  ----------------------------------------------------------------------------------*/
 
 //	statistics window
-@property (VMWeak)	IBOutlet	NSWindow					*reportWindow;
+@property (VMWeak)	IBOutlet	NSWindow					*statisticsWindow;
 @property (VMWeak)	IBOutlet	VMPStatisticsView			*statisticsView;
 
 //	record detail popover
 @property (VMWeak)	IBOutlet	VMPRecordDetailPopover		*recordDetailPopover;
 
 //	statistics graph
-@property (VMWeak)	IBOutlet	NSPanel						*statGraphPane;
+@property (VMWeak)	IBOutlet	NSPanel						*statOverviewGraphPanel;
 @property (VMWeak)	IBOutlet	VMPHistogramView			*countHistogramView;
 @property (VMWeak)	IBOutlet	VMPHistogramView			*durationHistogramView;
 @property (VMWeak)	IBOutlet	VMPHistogramView			*varietyHistogramView;
-@property (unsafe_unretained)	IBOutlet	NSTextView					*reportTextView;
 
 //	progress bar
 @property (nonatomic, VMStrong)	VMPProgressWindowController *progressWC;

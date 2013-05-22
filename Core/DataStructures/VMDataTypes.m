@@ -234,7 +234,7 @@ VMObligatory_encodeWithCoder(
 	CopyPropertyIfExist( comment )
 }
 
-- (void)setWithData:(id)data {
+- (void)setWithData:(id)data {	//VMData
 	if ( ClassMatch(data, VMData))
 		[self setWithProto:data];
 	else {
@@ -1156,7 +1156,7 @@ if ( ClassMatch(data, NSString)) {
  adding frags included in data
  we allways *append* frags to make the song extensible.
  */
-- (void)addFragmentsWithData:(id)data {	
+- (void)addFragmentsWithData:(id)data {	//VMCollection
 	if ( ClassMatch( data, VMCollection )) {
 		[self setWithProto:data];
 		return;
@@ -1567,7 +1567,7 @@ static VMHash *scoreForFragment_static_ = nil;
 	return YES;
 }
 
-#pragma mark obligatory
+#pragma mark obligatory (selector)
 VMObligatory_resolveUntilType(
 	return [[self selectOne] resolveUntilType:mask];
 )
@@ -1627,7 +1627,7 @@ VMOBLIGATORY_setWithData()
     return nil;
 }
 
-#pragma mark obligatory
+#pragma mark obligatory (Sequence)
 VMObligatory_resolveUntilType(
 	return [AutoRelease([[VMPlayer alloc] initWithProto:self]) resolveUntilType:mask];
 )
@@ -1641,7 +1641,7 @@ if ( ClassMatch(data, VMHash)) {
 	IfHashItemExist(subseq, 
 		self.subsequent = ARInstance(VMSelector);
 		[self.subsequent setWithData:HASHITEM];
-		self.subsequent.id = [VMPreprocessor idWithVMPModifier:self.id 
+		self.subsequent.id = [VMPreprocessor idWithVMPModifier:self.id
 														   tag:@"subseq" 
 														  info:nil];
 	)

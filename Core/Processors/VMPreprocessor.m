@@ -301,11 +301,13 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 //	returns new id with VMPModifier attached
 //
 + (VMId*)idWithVMPModifier:(NSString*)dataId tag:(NSString*)tag info:(NSString*)info {
+	VMId *modid = nil;
 	if( info )
-		return [NSString stringWithFormat:@"%@|%@_%@", dataId, tag, info];
+		modid = [NSString stringWithFormat:@"%@|%@_%@", dataId, tag, info];
 	else {
-		return [NSString stringWithFormat:@"%@|%@",	dataId, tag];
+		modid = [NSString stringWithFormat:@"%@|%@",	dataId, tag];
 	}
+	return modid;
 }
 
 - (void)separateIdAndScoreDescriptor:(VMId*)fragId
@@ -1023,8 +1025,8 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 	for ( VMHash *hash in fragArray ) {
 		VMData *data = nil;
 		vmObjectType typ = vmObjectType_unknown;
-//		if ( [ HashItem(id) isEqualToString:@"r_sel_A" ] )
-//			NSLog(@"!!!");
+	//	if ( [ HashItem(id) isEqualToString:@"b_004" ] )
+	//		NSLog(@"!!!");
 		
 		VMId *cloneTarget = HashItem(clone);
 		if ( cloneTarget ) {

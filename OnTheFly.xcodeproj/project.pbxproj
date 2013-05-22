@@ -35,7 +35,6 @@
 		160ED039173B517A0009D04B /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ECFFB173B517A0009D04B /* RegexKitLite.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		160ED03A173B517A0009D04B /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ECFFB173B517A0009D04B /* RegexKitLite.m */; };
 		160ED03D173B517A0009D04B /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 160ECFFD173B517A0009D04B /* .gitignore */; };
-		160ED03E173B517A0009D04B /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 160ECFFE173B517A0009D04B /* Config.xcconfig */; };
 		160ED040173B517A0009D04B /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 160ECFFE173B517A0009D04B /* Config.xcconfig */; };
 		160ED043173B517A0009D04B /* README.markdown in Resources */ = {isa = PBXBuildFile; fileRef = 160ECFFF173B517A0009D04B /* README.markdown */; };
 		160ED044173B517A0009D04B /* CDataScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ED002173B517A0009D04B /* CDataScanner.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -155,7 +154,6 @@
 		16A2030D17474F4700CD2A57 /* VMPFragmentCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 16A2030C17474F4600CD2A57 /* VMPFragmentCell.m */; };
 		16A2030E17474F4700CD2A57 /* VMPFragmentCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 16A2030C17474F4600CD2A57 /* VMPFragmentCell.m */; };
 		16A27F0016F9730F0081C1E8 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16A27EFF16F9730F0081C1E8 /* AudioToolbox.framework */; };
-		16A27F0216F9736F0081C1E8 /* defaultSong in Resources */ = {isa = PBXBuildFile; fileRef = 16A27F0116F9736F0081C1E8 /* defaultSong */; };
 		16A27F1316FBB1A70081C1E8 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 16A27F1116FBB1A70081C1E8 /* InfoPlist.strings */; };
 		16A27F1516FBB1A70081C1E8 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 16A27F1416FBB1A70081C1E8 /* main.m */; };
 		16A27F1916FBB1A70081C1E8 /* VMAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 16A27F1816FBB1A70081C1E8 /* VMAppDelegate.m */; };
@@ -1076,7 +1074,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				16A27F0216F9736F0081C1E8 /* defaultSong in Resources */,
 				162F7B2016A0341C00420443 /* InfoPlist.strings in Resources */,
 				162F7B2616A0341C00420443 /* Credits.rtf in Resources */,
 				162F7B5016A1132700420443 /* vmp.sdef in Resources */,
@@ -1091,7 +1088,6 @@
 				165DAC27172D545F009708B3 /* VMPTimeRangeEditorView.xib in Resources */,
 				162EFC41173026230000A4FB /* VMPSelectorEditorView.xib in Resources */,
 				162EFC451730CE3F0000A4FB /* VMPVariablesPanel.xib in Resources */,
-				160ED03E173B517A0009D04B /* Config.xcconfig in Resources */,
 				162FBB95173CB5460060E003 /* SyntaxDefinition.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

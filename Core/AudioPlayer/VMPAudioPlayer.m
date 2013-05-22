@@ -185,7 +185,8 @@ static VMHash *processPhaseNames_static_ = nil;
 	}
 	
 	// try to open up the file using the specified path
-	NSURL		*url = [NSURL URLWithString:path];
+	
+	NSURL		*url = [NSURL URLWithString:[path stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];	//	escape
 	OSStatus	status;
 	status =	AudioFileOpenURL( (VMBridge CFURLRef)url, 0x01, 0, &audioFile );
 	if ( noErr != status ) {

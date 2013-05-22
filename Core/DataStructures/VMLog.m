@@ -420,7 +420,6 @@
 			continue;
 		}
 		
-		
 		VMLogRecord *lastLogRecord = self.lastItem;
 		VMHash *subInfo =  nil;
 		
@@ -446,6 +445,7 @@
 			if ( lastLogRecord.type == vmObjectType_selector && lastLogRecord.subInfo && doFilter ) {
 				[lastLogRecord.subInfo setItem:d.id for:@"vmlog_selected"];
 			}
+			
 		} else if ( ClassMatch( data, VMHash )) {
 			VMHash *h = (VMHash*)data;
 			action = [h item:@"vmlog_type"];

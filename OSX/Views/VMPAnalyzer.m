@@ -62,7 +62,7 @@
 @implementation VMPStatisticsView
 
 - (void)awakeFromNib {
-	self.reportView.doubleAction = @selector(doubleClickOnRow:);
+	self.tableView.doubleAction = @selector(doubleClickOnRow:);
 }
 
 
@@ -166,8 +166,6 @@
 
 @end
 
-static NSColor *oliveColor, *teaColor, *mandarineColor;
-
 /*---------------------------------------------------------------------------------
  *
  *
@@ -198,13 +196,7 @@ static const int	kLengthOfPartTraceRoute					= 10000;	//	gives up after 10000 ti
 		recordCell_defaultCell_static_ = [[VMPRecordCell alloc] initTextCell:@""];
 		[recordCell_defaultCell_static_ setFont:[NSFont systemFontOfSize:11]];
 		[recordCell_defaultCell_static_ setAlignment:NSRightTextAlignment ];
-	}
-	if ( ! oliveColor ) {
-		oliveColor		= Retain([NSColor colorWithCalibratedRed:0.3 green:0.7 blue:0.4 alpha:0.9] );
-		teaColor		= Retain([NSColor colorWithCalibratedRed:0.4 green:0.9 blue:0.6 alpha:0.9] );
-		mandarineColor	= Retain([NSColor colorWithCalibratedRed:1.0 green:0.7 blue:0.3 alpha:0.9] );
-	}
-	
+	}	
 	return analyzer_singleton_static_;
 }
 
@@ -215,11 +207,15 @@ static const int	kLengthOfPartTraceRoute					= 10000;	//	gives up after 10000 ti
 		self.progressWC = AutoRelease([[VMPProgressWindowController alloc] initWithWindow:nil] );
 		[NSBundle loadNibNamed: @"VMPProgressWindow" owner: self.progressWC];
 		self.progressWC.delegate = self;
+		
+		[VMPNotificationCenter addObserver:self selector:@selector(vmsDataLoaded:) name:VMPNotificationVMSDataLoaded object:nil];
 	}
 	return self;
 }
 
 - (void)dealloc {
+	[VMPNotificationCenter removeObserver:self];
+	//
 	VMNullify(dataIdToProcess);
 	VMNullify(lastFragmentId);
 	//
@@ -251,10 +247,17 @@ static const int	kLengthOfPartTraceRoute					= 10000;	//	gives up after 10000 ti
 }
 
 - (VMSelector*)makeSelectorFromStatistics:(VMId*)selectorId{
-	//	TODO: implement!
-	//	1. collect routesForSelectorId in analyze_proc
-	//	2. convert to VMSelector
-	return nil;
+	VMHash		*scores = [_routesForSelectorId item:selectorId];
+	VMArray		*keys	= [scores keys];
+	VMSelector	*sel	= ARInstance(VMSelector);
+	sel.fragments = ARInstance(VMArray);
+	for ( VMId *targetId in keys ) {
+		VMChance *c = ARInstance( VMChance );
+		c.targetId = targetId;
+		c.scoreDescriptor = [NSString stringWithFormat:@"%.2f", [scores itemAsFloat:targetId]];
+		[sel.fragments push:c];
+	}
+	return sel;
 }
 
 
@@ -312,13 +315,13 @@ static const int	kLengthOfPartTraceRoute					= 10000;	//	gives up after 10000 ti
 
 - (BOOL)validateMenuItem:(NSMenuItem *)menuItem {
 	if ( menuItem.action == @selector(songPlay:)) {
-		return self.statisticsView.reportView.selectedRow != -1;
+		return self.statisticsView.tableView.selectedRow != -1;
 	}
 	return ! self.busy;
 }
 
 - (IBAction)songPlay:(id)sender {
-	VMPReportRecord *rr = [self recordForRow:self.statisticsView.reportView.selectedRow];
+	VMPReportRecord *rr = [self recordForRow:self.statisticsView.tableView.selectedRow];
 	if ( rr ) {
 		if ( rr.type == VMPReportRecordType_part ) {
 			[DEFAULTSONGPLAYER startWithFragmentId:[rr.ident stringByAppendingString:@"_sel"]];
@@ -343,8 +346,8 @@ static const int	kLengthOfPartTraceRoute					= 10000;	//	gives up after 10000 ti
 
 - (IBAction)openGraphView:(id)sender {
 	[self updateGraphView];
-	[self.statGraphPane setViewsNeedDisplay:YES];
-	[self.statGraphPane makeKeyAndOrderFront:self];
+	[self.statOverviewGraphPanel setViewsNeedDisplay:YES];
+	[self.statOverviewGraphPanel makeKeyAndOrderFront:self];
 }
 
 #pragma mark -
@@ -426,17 +429,6 @@ static const int	kLengthOfPartTraceRoute					= 10000;	//	gives up after 10000 ti
 	if ( fromId ) [[d item:@"from"] add:1. ontoItem:fromId];\
 	if ( toId   ) [[d item:@"to"]   add:1. ontoItem:toId];\
 }
-/*
-- (void)incrementRouteForId:(VMId*)dataId from:(VMId*)from to:(VMId*)to {
-	VMHash *d = [_routesForFragmentId item:dataId];
-	if ( ! d ) {
-		d = [VMHash hashWith:@{ @"from":ARInstance(VMHash), @"to":ARInstance(VMHash) }];
-		[_routesForFragmentId setItem:d for:dataId];
-	}
-	if ( from ) [[d item:@"from"] add:1 ontoItem:from];
-	if ( to )	[[d item:@"to"] add:1 ontoItem:to];
-}
- */
 
 /*---------------------------------------------------------------------------------
  
@@ -505,10 +497,46 @@ static const int	kLengthOfPartTraceRoute					= 10000;	//	gives up after 10000 ti
 	VMNullify(lastFragmentId);
 }
 
+- (void)collectSelectorScores {
+	VMInt  p = self.log.count -1;
+	VMTime now = [NSDate timeIntervalSinceReferenceDate];
+	
+	while ( p >= 0 ) {
+		VMLogRecord *lr = [self.log item:p];
+		if ( lr.playbackTimestamp ) break;
+		lr.playbackTimestamp = now;
+		--p;
+
+		if ( lr.type != vmObjectType_selector ) continue;
+		
+		VMHash  *scoreForFragments = lr.subInfo;
+		VMArray *keys = [scoreForFragments keys];
+		VMFloat sum = [[scoreForFragments values] sum];
+		VMHash  *accumulatedScoreForFragments = [_routesForSelectorId item:lr.data];	//	;whereby data = id
+		if ( ! accumulatedScoreForFragments ) {
+			accumulatedScoreForFragments = ARInstance( VMHash );
+			[_routesForSelectorId setItem:accumulatedScoreForFragments for:lr.data];
+		}
+
+		for( VMId *key in keys ) {
+			if ( [key isEqualToString:@"vmlog_selected"] ) continue;
+			VMFloat score = [scoreForFragments itemAsFloat:key] / sum;	//	normalize
+			[accumulatedScoreForFragments add:score ontoItem:key];
+		}
+	}
+
+}
+
+
 - (void)analyze_proc {
-    for ( long j  = ( exitWhenPartChanged ? kLengthOfPartTraceRoute : kLengthOfGlobalTraceRoute ) ; j; --j) {
+	//	collect route data
+    for ( long j  = ( exitWhenPartChanged ? kLengthOfPartTraceRoute : kLengthOfGlobalTraceRoute ); j; --j) {
 		if ( [self analyze_step] ) break;
     }
+	
+	//	collect selector scores
+	[self collectSelectorScores];
+	
 	[self.progressWC setProgress:(double)(numberOfIterations - iterationsLeft)
 						 ofTotal:(double)numberOfIterations message:@"Analyzing:"
 						  window:[VMPlayerOSXDelegate singleton].editorWindowController.window];
@@ -540,7 +568,7 @@ static const int	kLengthOfPartTraceRoute					= 10000;	//	gives up after 10000 ti
 		VMAudioFragment	*ac			= ClassCastIfMatch( [DEFAULTSONG data:dataId], VMAudioFragment );
 		VMTime		duration	= ( ac ? ac.duration * count : 0 );
 		
-		maxFragmentCount		= MAX( count,		maxFragmentCount );
+		maxFragmentCount	= MAX( count,		maxFragmentCount );
 		maxFragmentPercent	= MAX( percent,		maxFragmentPercent );
 		maxFragmentDuration	= MAX( duration,	maxFragmentDuration );
 		
@@ -683,9 +711,9 @@ static const int	kLengthOfPartTraceRoute					= 10000;	//	gives up after 10000 ti
 	[VMPNotificationCenter postNotificationName:VMPNotificationLogAdded
 										 object:self
 									   userInfo:@{@"owner":@(VMLogOwner_System)}];
-	self.reportWindow.isVisible = YES;
-	[self.reportWindow makeKeyAndOrderFront:self];
-	[self.statisticsView.reportView reloadData];
+	self.statisticsWindow.isVisible = YES;
+	[self.statisticsWindow makeKeyAndOrderFront:self];
+	[self.statisticsView.tableView reloadData];
 	
 	//
 	// history
@@ -696,8 +724,6 @@ static const int	kLengthOfPartTraceRoute					= 10000;	//	gives up after 10000 ti
 	[self.log save];
 	DEFAULTSONG.log = AutoRelease([[VMLog alloc] initWithOwner:VMLogOwner_MediaPlayer managedObjectContext:nil] );
 
-						
-
 	//
 	// statistics view
 	//
@@ -707,7 +733,7 @@ static const int	kLengthOfPartTraceRoute					= 10000;	//	gives up after 10000 ti
 									   ]];
 
 	[self.statisticsView updateButtonStates];
-	[self.statisticsView.reportView selectColumnIndexes:[NSIndexSet indexSetWithIndex:0]
+	[self.statisticsView.tableView selectColumnIndexes:[NSIndexSet indexSetWithIndex:0]
 								   byExtendingSelection:NO];
 	
 	[self updateGraphView];
@@ -889,6 +915,14 @@ else if( ClassMatch(subData, VMChance )) \
 
 
 #pragma mark -
+#pragma mark notification
+
+- (void)vmsDataLoaded:(NSNotification*)notification {
+	[self.statisticsView.tableView reloadData];
+}
+
+
+#pragma mark -
 #pragma mark tableview related
 
 //	NSTableView delegate and dataSource
@@ -1015,9 +1049,9 @@ else if( ClassMatch(subData, VMChance )) \
 	[self.recordDetailPopover setSojourn:[_sojournDataForPart item:record.ident]];
 	self.recordDetailPopover.popoverDelegate = self;
 	
-	NSRect rect = [self.statisticsView.reportView rectOfRow:row];
+	NSRect rect = [self.statisticsView.tableView rectOfRow:row];
 	[self.recordDetailPopover showRelativeToRect:rect
-										  ofView:self.statisticsView.reportView
+										  ofView:self.statisticsView.tableView
 								   preferredEdge:NSMaxXEdge];
 	
 	if (record && record.ident.length > 2)
@@ -1042,10 +1076,10 @@ else if( ClassMatch(subData, VMChance )) \
 	}
 	
 	if ( found >=0 ) {
-		NSInteger sel = self.statisticsView.reportView.selectedRow;
+		NSInteger sel = self.statisticsView.tableView.selectedRow;
 		
-		[self.statisticsView.reportView selectRowIndexes:[NSIndexSet indexSetWithIndex:found] byExtendingSelection:NO];
-		[self.statisticsView.reportView scrollRowToVisible:found + (( sel < found ) ? 3 : -3 ) ];
+		[self.statisticsView.tableView selectRowIndexes:[NSIndexSet indexSetWithIndex:found] byExtendingSelection:NO];
+		[self.statisticsView.tableView scrollRowToVisible:found + (( sel < found ) ? 3 : -3 ) ];
 		[self selectRow:found];
 		return YES;
 	}
@@ -1065,7 +1099,7 @@ withCurrentSearchString:(NSString *)searchString {
 
 
 - (void)tableViewSelectionDidChange:(NSNotification *)notification {
-	[self selectRow:self.statisticsView.reportView.selectedRow];
+	[self selectRow:self.statisticsView.tableView.selectedRow];
 }
 
 - (void)tableView:(NSTableView *)tableView sortDescriptorsDidChange:(NSArray *)oldDescriptors {

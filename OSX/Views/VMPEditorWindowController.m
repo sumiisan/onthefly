@@ -800,6 +800,16 @@ forDoubleClickOnDividerAtIndex:(NSInteger)dividerIndex  {
 		[self findObjectById:((NSButton*)sender).title];
 	}
 	
+	if ( sender == self.scoreToggleButton ) {
+		self.useStatisticScores = ( self.scoreToggleButton.state == 1 );
+		vmObjectType type = ((VMData*)[DEFAULTSONG data:self.currentDisplayingDataId]).type;
+		if ( type == vmObjectType_selector || type == vmObjectType_sequence ) {
+			self.graphView.selectorDataSource =
+				( self.useStatisticScores ? VMPSelectorDataSource_Statistics : VMPSelectorDataSource_StaticVMS );
+			[self.graphView redraw];
+		}
+	}
+	
 	if ( sender == self.chaseToggleButton ) {
 		self.chaseSequence = ( self.chaseToggleButton.state == 1 );
 		if ( self.chaseSequence && DEFAULTSONGPLAYER.lastFiredFragment ) {

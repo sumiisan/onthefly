@@ -420,9 +420,8 @@ static const VMFloat kDefaultLogItemViewHeight = 14.0;
 		if ( ! action ) return nil;
 		
 		NSColor *bgColor = [NSColor colorWithCalibratedRed:.5 green:.5 blue:.5 alpha:1.];
-		VMData  *vmdata = rl.VMData;
 		if( type != vmObjectType_notVMObject ) {
-			action = [action stringByAppendingFormat:@"\t%@",vmdata.id];
+			action = [action stringByAppendingFormat:@"\t%@",ClassMatch(rl.data, VMId) ? rl.data : rl.VMData.id];
 			bgColor = [NSColor backgroundColorForDataType:type];
 		} else {
 			if		( [action hasPrefix:@"War"] )
@@ -468,19 +467,7 @@ static const VMFloat kDefaultLogItemViewHeight = 14.0;
 						for( VMId *key in keys ) {
 							if ( [key isEqualToString:@"vmlog_selected"] ) continue;
 							VMFloat score = [scoreForFragments itemAsFloat:key];
-							VMFloat sw = score * pixPerScore;
-				/*			NSTextField *tf = [[NSTextField alloc] initWithFrame:NSMakeRect(x, 0, sw -1, 29)];
-							x += sw;
-							VMData *d = [DEFAULTSONG data:key];
-							tf.backgroundColor = [NSColor backgroundColorForDataType:d ? d.type : 0];
-							tf.drawsBackground = YES;
-							tf.stringValue = key;
-							tf.editable = tf.bordered = NO;
-							tf.font = [key isEqualToString:selectedFragment] ? [NSFont boldSystemFontOfSize:9] : [NSFont systemFontOfSize:9];
-							tf.toolTip = key;
-							[expansionView addSubview:tf];
-							Release(tf);*/
-							
+							VMFloat sw = score * pixPerScore;							
 							VMPFragmentCell *fc = [[VMPFragmentCell alloc] initWithFrame:NSMakeRect(x, 0, sw -1, 29)];
 							x += sw;
 							VMData *d = [DEFAULTSONG data:key];

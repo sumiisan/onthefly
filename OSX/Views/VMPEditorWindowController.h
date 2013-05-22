@@ -92,6 +92,7 @@
 //	public
 @property (nonatomic, VMStrong)			VMId					*currentDisplayingDataId;
 @property (nonatomic, assign)			BOOL					chaseSequence;
+@property (nonatomic, assign)			BOOL					useStatisticScores;
 
 //	views
 @property (nonatomic, VMWeak)	IBOutlet NSWindow				*editorWindow;
@@ -116,6 +117,7 @@
 @property (nonatomic, VMWeak)	IBOutlet NSTextField			*timeIndicator;
 @property (nonatomic, VMWeak)	IBOutlet NSButton				*currentFragmentIdButton;
 @property (nonatomic, VMWeak)	IBOutlet NSButton				*chaseToggleButton;
+@property (nonatomic, VMWeak)	IBOutlet NSButton				*scoreToggleButton;
 
 @end
 

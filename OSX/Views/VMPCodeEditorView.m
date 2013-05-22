@@ -159,8 +159,12 @@
 	return self.textView.string;
 }
 
-- (BOOL)sourceCodeModified {
+- (BOOL)isSourceCodeModified {
 	return self.vmsDocument.modified;
+}
+
+- (void)setSourceCodeModified:(BOOL)sourceCodeModified {
+	self.vmsDocument.modified = sourceCodeModified;
 }
 
 - (void)reloadData:(NSNotification*)notification {

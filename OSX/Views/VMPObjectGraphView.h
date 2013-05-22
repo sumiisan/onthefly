@@ -53,8 +53,9 @@ typedef enum {
 #pragma mark VMPObjectGraphView
 //------------------------ VMPObjectGraphView ----------------------------
 @interface VMPObjectGraphView : VMPGraph
-@property (nonatomic, VMStrong) NSViewController	*editorViewController;
+@property (nonatomic, VMStrong) NSViewController		*editorViewController;
 @property (nonatomic, VMStrong) VMData *data;
+@property (nonatomic, assign)	VMPSelectorDataSource	selectorDataSource;
 
 - (void)drawGraphWith:(VMData*)data;
 - (void)drawReportGraph:(VMHash*)report;
@@ -69,7 +70,8 @@ typedef enum {
 //------------------------ VMPObjectInfoView ----------------------------
 @interface VMPObjectInfoView : VMPGraph
 
-@property (nonatomic, VMStrong) VMData *data;
+@property (nonatomic, VMStrong) VMData					*data;
+
 @property (nonatomic, VMWeak) IBOutlet NSTextField *userGeneratedIdField;
 @property (nonatomic, VMWeak) IBOutlet NSTextField *vmpModifierField;
 @property (nonatomic, VMWeak) IBOutlet NSTextField *typeLabel;

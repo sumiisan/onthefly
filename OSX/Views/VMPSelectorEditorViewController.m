@@ -111,10 +111,12 @@ static VMPSelectorEditorTab defaultTab__ = VMPSelectorEditor_BranchTab;
 			
 			baseViewRect		= CGRectMake( 0, 0, graphWidth + 10, baseView.frame.size.height	 );
 			graphRect			= CGRectMake( 5, 5, graphWidth, baseViewRect.size.height -10 );
+			
 			VMPSelectorGraph *selectorGraph = [[VMPSelectorGraph alloc] initWithFrame:graphRect];
 			selectorGraph.graphType = (tab == VMPSelectorEditor_FrameTab
 									   ? VMPSelectorGraphType_Frame
 									   : VMPSelectorGraphType_Branch );
+			selectorGraph.dataSource = self.dataSource;
 			[selectorGraph setData:self.selector];
 			
 			[baseView removeAllSubviews];

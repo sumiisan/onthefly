@@ -65,6 +65,10 @@
 	return 50;
 }
 
+- (int)indexForLevel:(int)level item:(int)itemIndex {
+	return level * 10 + itemIndex;
+}
+
 - (void)collectBranchData:(VMFragment*)frag x:(CGFloat)x gapX:(CGFloat)gapX height:(VMFloat)height {
 	//NSLog(@"%@ \tx:%.2f",frag.id,x);
 	x += gapX + vmpCellWidth;
@@ -597,6 +601,7 @@
 			}
 			[self addSubview:sle.view];
 			sle.view.frame = self.frame;
+			sle.dataSource = self.selectorDataSource;
 			[sle setData: self.data];
 			self.editorViewController = sle;
 			break;
@@ -626,6 +631,7 @@
 			VMPSequenceGraph *seqGraph = [[VMPSequenceGraph alloc]
 										  initWithFrame:CGRectMake(referrerGraphWidth, 10,
 																   sequenceGraphWidth, self.height -15 )];
+			seqGraph.dataSource = self.selectorDataSource;
 			[seqGraph setData: self.data];
 			
 			if( seqGraph.width <= sequenceGraphWidth ) {	//	seqGraph resizes itself after setData:
