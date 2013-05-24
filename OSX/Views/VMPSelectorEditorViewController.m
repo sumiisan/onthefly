@@ -27,7 +27,8 @@ static VMPSelectorEditorTab defaultTab__ = VMPSelectorEditor_BranchTab;
 
 - (void)dealloc {
 	VMNullify(selector);
-	Dealloc( super );;
+	VMNullify(selectorGraph);
+	Dealloc( super );
 }
 
 - (void)setData:(id)data {
@@ -101,7 +102,7 @@ static VMPSelectorEditorTab defaultTab__ = VMPSelectorEditor_BranchTab;
 			NSRect baseViewRect, graphRect;
 			CGFloat graphWidth;
 			
-			if (tab==VMPSelectorEditor_BranchTab) {
+			if ( tab == VMPSelectorEditor_BranchTab ) {
 				baseView			= self.branchView;
 				graphWidth			= 2000;
 			} else {
@@ -112,17 +113,19 @@ static VMPSelectorEditorTab defaultTab__ = VMPSelectorEditor_BranchTab;
 			baseViewRect		= CGRectMake( 0, 0, graphWidth + 10, baseView.frame.size.height	 );
 			graphRect			= CGRectMake( 5, 5, graphWidth, baseViewRect.size.height -10 );
 			
-			VMPSelectorGraph *selectorGraph = [[VMPSelectorGraph alloc] initWithFrame:graphRect];
-			selectorGraph.graphType = (tab == VMPSelectorEditor_FrameTab
-									   ? VMPSelectorGraphType_Frame
-									   : VMPSelectorGraphType_Branch );
-			selectorGraph.dataSource = self.dataSource;
-			[selectorGraph setData:self.selector];
+			if( ! self.selectorGraph )
+				self.selectorGraph = [[VMPSelectorGraph alloc] initWithFrame:graphRect];
+			
+			self.selectorGraph.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
+			self.selectorGraph.graphType = (tab == VMPSelectorEditor_FrameTab
+											? VMPSelectorGraphType_Frame
+											: VMPSelectorGraphType_Branch );
+			self.selectorGraph.dataSource = self.dataSource;
+			[self.selectorGraph setData:self.selector];
 			
 			[baseView removeAllSubviews];
 			baseView.frame = baseViewRect;
-			[baseView addSubview:selectorGraph];
-			Release(selectorGraph);
+			[baseView addSubview:self.selectorGraph];
 			
 			[self.branchViewScroller scrollPoint:NSMakePoint(0, 0)];
 			[self.frameViewScroller scrollPoint:NSMakePoint(0, 0)];

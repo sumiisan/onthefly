@@ -271,7 +271,7 @@ NSDictionary		*windowNames_static_ = nil;
 - (IBAction)reloadDataFromEditor:(id)sender {
 	[DEFAULTSONGPLAYER stopAndDisposeQueue];
 	NSError *error = nil;
-	if ( ![DEFAULTSONG readFromString:self.editorWindowController.codeEditorView.textView.string error:&error] );
+	if ( ![DEFAULTSONG readFromString:self.editorWindowController.codeEditorView.textView.string error:&error] )
 		[VMPNotificationCenter postNotificationName:VMPNotificationLogAdded object:self userInfo:@{@"owner":@(VMLogOwner_System)}];
 	
 	[self resetEverythingAfterDataIsLoaded];

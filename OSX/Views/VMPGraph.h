@@ -141,7 +141,7 @@ enum {
 - (void)removeAllSubviews;
 - (id)taggedWith:(NSInteger)aTag;
 - (id)clone;
-
+- (void)moveToRect:(NSRect)frameRect duration:(VMTime)duration;
 
 - (CGFloat)x;
 - (CGFloat)y;

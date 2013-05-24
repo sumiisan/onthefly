@@ -89,6 +89,9 @@ VMFloat limitedSNDRand(VMFloat min, VMFloat max) {
 	return NSOrderedSame;
 }
 
+- (id)deepCopy {
+	return nil;		//	virtual
+}
 
 @end
 
@@ -482,6 +485,16 @@ VMFloat limitedSNDRand(VMFloat min, VMFloat max) {
 	return tempArray;
 }
 
+- (id)deepCopy {
+	VMArray *arr = ARInstance(VMArray);
+	for( id i in array_ ) {
+		if ( ClassMatch(i, VMArrayBase) ) {
+			[arr push:ClassCast(i, VMArrayBase).deepCopy];
+		} else
+			[arr push:i];
+	}
+	return arr;
+}
 
 - (NSString*)description {
 	return [NSString stringWithFormat:@"(%@)", [self join:@", "]];	
@@ -682,6 +695,19 @@ VMFloat limitedSNDRand(VMFloat min, VMFloat max) {
 	num = [NSNumber numberWithDouble:[num doubleValue] + value];
 	[self setItem:num for:key];
 	
+}
+
+- (id)deepCopy {
+	VMHash *hsh = ARInstance(VMHash);
+	VMArray *keys = [self keys];
+	for( VMHashKeyType key in keys ) {
+		id i = [hash_ objectForKey:key];
+		if ( ClassMatch(i, VMArrayBase) ) {
+			[hsh setItem:ClassCast(i, VMArrayBase).deepCopy for:key];
+		} else
+			[hsh setItem:i for:key];
+	}
+	return hsh;
 }
 
 - (void)merge:(VMHash*)aHash {

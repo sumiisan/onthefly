@@ -91,7 +91,7 @@ typedef enum {
 - (BOOL)object:(id)obj1 isEqualTo:(id)obj2;
 - (NSComparisonResult)object:(id)obj1 compare:(id)obj2;
 - (VMInt)count;
-
+- (id)deepCopy;
 @end
 
 #pragma mark -
@@ -252,6 +252,7 @@ typedef enum {
 + (id)hashWith:(NSDictionary*)dict;	//shortcut for initializing with @{}
 + (id)hashWithDictionary:(id)dict;
 + (id)hashWithObjectsAndKeys:(id)firstObject, ...;
+- (id)initWithHash:(id)dict;
 
 //	keys and values;
 - (VMArray*)keys;

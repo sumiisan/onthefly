@@ -1217,12 +1217,15 @@ if ( ClassMatch(data, NSString)) {
 VMObligatory_containsId(
 	for( id data in frags_ ) {
 		VMData *vmdata = nil;
-		if ( ClassMatch(data, VMId ))
+		if ( ClassMatch(data, VMId )) {
+			if ( [((VMId*)data) isEqualToString:dataId] ) return YES;
 			vmdata = [DEFAULTSONG data:data];
+		}
 		if ( ClassMatch(data, VMData ))
 			vmdata = data;
-		return vmdata ? [vmdata containsId:dataId] : NO;
+		if( [vmdata containsId:dataId] ) return YES;
 	}
+	return NO;
 )
 VMObligatory_resolveUntilType(
 #ifdef DEBUG

@@ -422,12 +422,18 @@ static VMPSongPlayer 	*songPlayer_singleton_static_ = nil;
 	
 	Release( lastFiredFragment_ );
 	lastFiredFragment_ = Retain( af );
-	if(kUseNotification)
-		[VMPNotificationCenter postNotificationName:VMPNotificationAudioFragmentFired
-											 object:self
-										   userInfo:@{ @"audioFragment":af,
-		 @"player":NSNullIfNil( queuedFragment->player ) } ];
-	
+	if( kUseNotification )
+		[self performSelector:@selector(sendAudioFragmentFiredNotification:)
+				   withObject:queuedFragment afterDelay:0.];
+
+}
+
+- (void)sendAudioFragmentFiredNotification:(VMPQueuedFragment*)queuedFragment {
+	[VMPNotificationCenter postNotificationName:VMPNotificationAudioFragmentFired
+										 object:self
+									   userInfo:@{
+	 @"audioFragment":queuedFragment->audioFragmentPlayer,
+	 @"player":NSNullIfNil( queuedFragment->player ) } ];
 
 }
 

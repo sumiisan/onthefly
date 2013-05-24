@@ -25,8 +25,8 @@ typedef enum {
 @property (nonatomic, VMWeak) IBOutlet VMPGraph		*branchView;
 @property (nonatomic, VMWeak) IBOutlet NSScrollView	*branchViewScroller;
 
-
 @property (nonatomic, VMStrong)			VMSelector				*selector;
+@property (nonatomic, VMStrong)			VMPSelectorGraph		*selectorGraph;
 @property (nonatomic, assign)			VMPSelectorDataSource	dataSource;
 
 - (IBAction)clickOnRow:(id)sender;

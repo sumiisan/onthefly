@@ -138,7 +138,6 @@ static NSShadow		*smallShadow_static_			= nil;
 	[self.button setFrame:self.contentRect];
 }
 
-
 - (void)setPlaying:(BOOL)playing {
 	self.needsDisplay = ( _playing != playing );
 	_playing = playing;
@@ -243,6 +242,17 @@ static NSShadow		*smallShadow_static_			= nil;
  *
  *---------------------------------------------------------------------------------*/
 @implementation VMPFragmentHeader
+
++ (VMPFragmentHeader*)fragmentHeaderWithFragment:(VMFragment*)frag
+									   frame:(NSRect)frame
+									delegate:(id<VMPFragmentGraphDelegate>)delegate {
+	VMPFragmentHeader *fh = AutoRelease([[VMPFragmentHeader alloc] initWithFrame:frame]);
+	fh.fragment = frag;
+	fh.delegate = delegate;
+	
+	return fh;
+}
+
 
 - (void)setFragment:(VMFragment *)frag {	//	override
 	[super setFragment:frag];

@@ -27,7 +27,7 @@ typedef enum {
 //------------------------- VMPSelectorGraph -----------------------------
 @interface VMPSelectorGraph : VMPFragmentCell <VMPFragmentGraphDelegate, VMPDataGraphObject> {
 	VMPStraightLine		*line;
-	VMHash				*branchViewTemporary;
+	VMPGraph			*temporaryLineLayer;
 }
 @property (nonatomic, assign)	VMPSelectorGraphType	graphType;
 @property (nonatomic, assign)	VMPSelectorDataSource	dataSource;

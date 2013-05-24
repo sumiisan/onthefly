@@ -11,8 +11,9 @@
 
 //--------------------- constants -----------------------------
 
-static const CGFloat	vmpCellWidth		= 100.;
+static const CGFloat	vmpCellWidth		= 80.;
 static const CGFloat	vmpCellMargin		= 10.;
+static const CGFloat	vmpSelectorGap		= 30.;
 static const CGFloat	vmpShadowOffset 	= 2.;
 static const CGFloat	vmpShadowBlurRadius = 3.;
 static const CGFloat	vmpHeaderThickness	= 20.;
@@ -41,13 +42,15 @@ static const CGFloat	vmpCellCornerRadius	= 3.;
 @property (nonatomic, unsafe_unretained)		id <VMPFragmentGraphDelegate>	delegate;
 
 - (void)selectIfIdDoesMatch:(VMId*)fragId exclusive:(BOOL)exclusive;
-
 @end
 
 #pragma mark -
 #pragma mark VMPFragmentHeader
 //--------------------- VMPFragmentHeader -----------------------------
 @interface VMPFragmentHeader : VMPFragmentGraphBase <VMPDataGraphObject>
++ (VMPFragmentHeader*)fragmentHeaderWithFragment:(VMFragment*)frag
+										   frame:(NSRect)frame
+										delegate:(id<VMPFragmentGraphDelegate>)delegate;
 
 @end
 

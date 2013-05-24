@@ -391,6 +391,21 @@ static 	VMHash *bgColorForType_static_ = nil;
 	Serialize(topOverlay, Object);
 }
 
+- (void)moveToRect:(NSRect)frameRect duration:(VMTime)duration {
+	NSDictionary *dict = @{
+						NSViewAnimationTargetKey: self,
+	  NSViewAnimationStartFrameKey: [NSValue valueWithRect:self.frame],
+	  NSViewAnimationEndFrameKey:   [NSValue valueWithRect:frameRect],
+	  };
+	
+    NSViewAnimation *anim = [[NSViewAnimation alloc]
+                             initWithViewAnimations:[NSArray arrayWithObject:dict]];
+    [anim setDuration:duration];
+    [anim startAnimation];
+    [anim release];
+}
+
+
 @end
 
 /*---------------------------------------------------------------------------------
@@ -434,6 +449,12 @@ static 	VMHash *bgColorForType_static_ = nil;
 	((VMPStraightLine*)sl).point1 = self.point1;
 	((VMPStraightLine*)sl).point2 = self.point2;
 	return sl;
+}
+
+- (id)initWithFrame:(NSRect)frameRect {
+	self = [super initWithFrame:frameRect];
+	self.tag = 'line';
+	return self;
 }
 
 //	NSCoding
