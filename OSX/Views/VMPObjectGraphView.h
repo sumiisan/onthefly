@@ -22,29 +22,38 @@ typedef enum {
 	VMPSelectorDataSource_Statistics
 } VMPSelectorDataSource;
 
+@class VMPBranchGraphColumnList;
+
 #pragma mark -
-#pragma mark VMPSelectorGraph
-//------------------------- VMPSelectorGraph -----------------------------
-@interface VMPSelectorGraph : VMPFragmentCell <VMPFragmentGraphDelegate, VMPDataGraphObject> {
-	VMPStraightLine		*line;
-	VMPGraph			*temporaryLineLayer;
+#pragma mark VMPCollectionGraph
+//------------------------- VMPCollectionGraph -----------------------------
+@interface VMPCollectionGraph : VMPFragmentCell <VMPFragmentGraphDelegate, VMPDataGraphObject> {
+@protected
+	VMPStraightLine				*line;
+	VMPGraph					*temporaryLineLayer;
+	VMPBranchGraphColumnList	*branchGraphColumnList, *lastFrameBranchGraphColumnList;
 }
 @property (nonatomic, assign)	VMPSelectorGraphType	graphType;
 @property (nonatomic, assign)	VMPSelectorDataSource	dataSource;
+@property (nonatomic, assign)	int						animationDirection;
 @end
 
+#pragma mark -
+#pragma mark VMPSelectorGraph
+//------------------------- VMPSelectorGraph -----------------------------
+@interface VMPSelectorGraph : VMPCollectionGraph <VMPFragmentGraphDelegate, VMPDataGraphObject>
+@end
 
 #pragma mark -
 #pragma mark VMPReferrerGraph
 //------------------------- VMPReferrerGraph -----------------------------
-@interface VMPReferrerGraph : VMPSelectorGraph <VMPFragmentGraphDelegate, VMPDataGraphObject>
+@interface VMPReferrerGraph : VMPCollectionGraph <VMPFragmentGraphDelegate, VMPDataGraphObject>
 @end
-
 
 #pragma mark -
 #pragma mark VMPSequenceGraph
 //------------------------- VMPSequenceGraph -----------------------------
-@interface VMPSequenceGraph : VMPSelectorGraph <VMPFragmentGraphDelegate, VMPDataGraphObject>
+@interface VMPSequenceGraph : VMPCollectionGraph <VMPFragmentGraphDelegate, VMPDataGraphObject>
 @end
 
 
@@ -57,7 +66,7 @@ typedef enum {
 @property (nonatomic, VMStrong) VMData *data;
 @property (nonatomic, assign)	VMPSelectorDataSource	selectorDataSource;
 
-- (void)drawGraphWith:(VMData*)data;
+- (void)drawGraphWith:(VMData*)data animationDirection:(int)direction;
 - (void)drawReportGraph:(VMHash*)report;
 - (void)chaseSequence:(VMAudioFragment*)audioFragment;
 

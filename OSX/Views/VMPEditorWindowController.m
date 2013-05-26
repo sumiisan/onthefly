@@ -281,8 +281,8 @@ static VMPObjectCell		*typeColumnCell = nil;
 
 - (void)vmsDataLoaded:(id)sender {
 	[self reloadData:self];
-	if( ![self findObjectById:[self.history currentItem]] )
-		[self selectRowAndRedrawViews:-1];
+	if( ![self findObjectById:[self.history currentItem] action:vmp_action_select_on_reload] )
+		[self selectRowAndRedrawViews:-1 withAction:vmp_action_select_on_reload];
 }
 
 - (void)reloadData:(id)sender {
@@ -362,7 +362,7 @@ static VMPObjectCell		*typeColumnCell = nil;
 	NSTextView* searchFieldEditor = [obj userInfo][@"NSFieldEditor"];
 
     if ( !performingAutoComplete && !handlingCommand) {	// prevent calling "complete" too often
-		[self updateFilterWithString:self.currentNonCompletedSearchString];
+		[self updateFilterWithString:self.currentNonCompletedSearchString action:vmp_action_select_during_textSearch];
         performingAutoComplete = YES;
         [searchFieldEditor complete:nil];
         performingAutoComplete = NO;
@@ -379,7 +379,7 @@ static VMPObjectCell		*typeColumnCell = nil;
 		result = YES;
 		
 		if ( commandSelector == @selector(insertNewline:) )
-			[self updateFilterWithString:textView.string];
+			[self updateFilterWithString:textView.string action:vmp_action_select_on_textSearch];
     }
     return result;
 }
@@ -497,7 +497,7 @@ static VMPObjectCell		*typeColumnCell = nil;
 - (void)referrerSelected:(id)sender {
 	NSMenuItem *mi = sender;
 	if ( mi.tag > 0 )
-		[self findObjectById:mi.title];
+		[self findObjectById:mi.title action:vmp_action_select_on_referrerList];
 }
 
 - (BOOL)expand:(id)item {
@@ -531,21 +531,21 @@ static VMPObjectCell		*typeColumnCell = nil;
 							: [[self.searchField stringValue] substringToIndex:selection.location];
 	
 	if ( ! [searchString isEqualToString:self.currentFilterString] && searchString.length > 0 )
-		[self updateFilterWithString:searchString];
+		[self updateFilterWithString:searchString action:vmp_action_select_during_textSearch];
 }
 
 - (void)doubleClickOnFragment:(NSNotification*)notification {
-	[self findObjectById:(notification.userInfo)[@"id"]];
+	[self findObjectById:(notification.userInfo)[@"id"] action:vmp_action_select_on_graph];
 	[self.window makeKeyAndOrderFront:self];
 }
 
 //	returns YES if some matched.
-- (BOOL)findObjectById:(VMId*)dataId {	//	public
-	return [self updateFilterWithString:dataId];
+- (BOOL)findObjectById:(VMId*)dataId action:(vmp_action)action {	//	public
+	return [self updateFilterWithString:dataId action:action];
 }
 
 //	returns YES if some matched.
-- (BOOL)updateFilterWithString:(NSString*)searchString {
+- (BOOL)updateFilterWithString:(NSString*)searchString action:(vmp_action)action {
 	performingSearchFilter = YES;
 	
 	self.currentFilterString = searchString;
@@ -616,7 +616,7 @@ static VMPObjectCell		*typeColumnCell = nil;
 	}
 filterStringExit:
 	performingSearchFilter = NO;
-	if ( whole_matchedExact ) [self selectRowAndRedrawViews:self.objectTreeView.selectedRow];
+	if ( whole_matchedExact ) [self selectRowAndRedrawViews:self.objectTreeView.selectedRow withAction:action];
 	return whole_matchedExact;
 	
 filterStringNotFound:
@@ -797,7 +797,7 @@ forDoubleClickOnDividerAtIndex:(NSInteger)dividerIndex  {
 
 - (IBAction)buttonClicked:(id)sender {
 	if ( sender == self.currentFragmentIdButton ) {
-		[self findObjectById:((NSButton*)sender).title];
+		[self findObjectById:((NSButton*)sender).title action:vmp_action_select_current_fragment];
 	}
 	
 	if ( sender == self.scoreToggleButton ) {
@@ -976,7 +976,7 @@ forDoubleClickOnDividerAtIndex:(NSInteger)dividerIndex  {
  
  ----------------------------------------------------------------------------------*/
 
-- (void)selectRowAndRedrawViews:(VMInt)row {
+- (void)selectRowAndRedrawViews:(VMInt)row withAction:(vmp_action)action {
 
 	VMData *d = ( row >= 0 ? [self dataOfRow:row] : nil );
 	if ( d || row < 0 ) {
@@ -1000,9 +1000,12 @@ forDoubleClickOnDividerAtIndex:(NSInteger)dividerIndex  {
 		//
 		//	update editors
 		//
+		signed char direction = action & 0xff;
 		[_graphView drawGraphWith:((d.type != vmObjectType_chance)
-										   ? d
-										   : [DEFAULTSONG data:((VMChance*)d).targetId] )];
+								   ? d
+								   : [DEFAULTSONG data:((VMChance*)d).targetId] )
+			   animationDirection:direction
+		 ];
 		[_infoView drawInfoWith:d];
 		[self updateReferrerPullDown:d.id];
 
@@ -1049,7 +1052,7 @@ forDoubleClickOnDividerAtIndex:(NSInteger)dividerIndex  {
 }
 
 - (IBAction)clickOnRow:(id)sender {
-	[self selectRowAndRedrawViews:self.objectTreeView.clickedRow];
+	[self selectRowAndRedrawViews:self.objectTreeView.clickedRow withAction:vmp_action_select_on_browser];
 }
 
 - (IBAction)doubleClickOnRow:(id)sender {
@@ -1059,7 +1062,7 @@ forDoubleClickOnDividerAtIndex:(NSInteger)dividerIndex  {
 		if ( d.type == vmObjectType_chance) {
 			VMId *targetId = ((VMChance*)d).targetId;
 			[self.objectTreeView collapseItem:[self.objectTreeView itemAtRow:row]];
-			[self findObjectById:targetId];
+			[self findObjectById:targetId action:vmp_action_select_on_browser];
 		}
 	}
 }
@@ -1076,7 +1079,7 @@ forDoubleClickOnDividerAtIndex:(NSInteger)dividerIndex  {
 - (IBAction)moveHistoryBack:(id)sender {
 	[self.history move:-1];
 	performingHistoryMove = YES;
-	if ( ![self findObjectById:[self.history currentItem]] ) {
+	if ( ![self findObjectById:[self.history currentItem] action:vmp_action_move_back] ) {
 		[self selectItemInObjectBrowser:[self.history currentItem]];
 	}
 	performingHistoryMove = NO;
@@ -1086,7 +1089,7 @@ forDoubleClickOnDividerAtIndex:(NSInteger)dividerIndex  {
 - (IBAction)moveHistoryForward:(id)sender {
 	[self.history move: 1];
 	performingHistoryMove = YES;
-	if ( ![self findObjectById:[self.history currentItem]] ) {
+	if ( ![self findObjectById:[self.history currentItem] action:vmp_action_move_next] ) {
 		[self selectItemInObjectBrowser:[self.history currentItem]];
 	}
 	performingHistoryMove = NO;
@@ -1140,7 +1143,7 @@ forDoubleClickOnDividerAtIndex:(NSInteger)dividerIndex  {
 
 - (void)outlineViewSelectionDidChange:(NSNotification *)notification {
 	if ( ! performingSearchFilter && ! performingHistoryMove )
-		[self selectRowAndRedrawViews:self.objectTreeView.selectedRow];
+		[self selectRowAndRedrawViews:self.objectTreeView.selectedRow withAction:vmp_action_move_browser_row];
 	
 }
 

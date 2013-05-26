@@ -12,9 +12,6 @@
 #ifndef VMPGraphMacros
 #define VMPGraphMacros
 
-#define GradientWithColors(c1,c2) \
-AutoRelease([[NSGradient alloc] initWithStartingColor:c1 endingColor:c2])
-
 #define BeginGC \
 NSGraphicsContext* context = [NSGraphicsContext currentContext];
 #define SaveGC \
@@ -39,10 +36,35 @@ CGRect CGRectZeroOrigin( CGRect rect );
 CGRect CGRectOffsetByPoint( CGRect rect, CGPoint offset );
 CGRect CGRectPlaceInTheMiddle( CGRect rect, CGPoint offset );
 CGPoint CGPointMiddleOfRect( CGRect rect );
-
-
 #endif
 
+
+typedef enum {
+	vmp_actionby_user			=  1 << 16,
+	vmp_actionby_half_automated	=  2 << 16,
+	vmp_actionby_mediaPlayer	=  3 << 16,
+	vmp_actionby_analyzer		=  4 << 16,
+	vmp_actionby_system			=  8 << 16
+} vmp_actionby;
+
+typedef enum {
+	vmp_action_move_next				= vmp_actionby_user				| 0x01,
+	vmp_action_no_move					= vmp_actionby_user				| 0x00,
+	vmp_action_move_back				= vmp_actionby_user				| 0xff,
+	vmp_action_move_next_by_player		= vmp_actionby_mediaPlayer		| 0x01,
+	
+	vmp_action_select_on_browser		= vmp_actionby_user				| 0x10 << 8,
+	vmp_action_move_browser_row			= vmp_actionby_user				| 0x11 << 8,
+	vmp_action_select_during_textSearch = vmp_actionby_half_automated	| 0x18 << 8,
+	vmp_action_select_on_textSearch 	= vmp_actionby_user				| 0x19 << 8,
+	vmp_action_select_current_fragment	= vmp_actionby_user				| 0x1a << 8,
+	vmp_action_select_on_referrerList	= vmp_actionby_user				| 0x1b << 8	| 0xff,		//	usual it's backward
+	vmp_action_select_on_subWindow		= vmp_actionby_user				| 0x1c << 8,
+	vmp_action_select_on_graph			= vmp_actionby_user				| 0x20 << 8 | 0x01,		//	assume forward.
+	vmp_action_select_by_player			= vmp_actionby_mediaPlayer		| 0x30 << 8 | 0x01,		//	can only forward
+	vmp_action_select_on_error			= vmp_actionby_system			| 0x80 << 8,
+	vmp_action_select_on_reload			= vmp_actionby_system			| 0x81 << 8,
+} vmp_action;
 
 
 

@@ -112,9 +112,8 @@ static NSShadow		*smallShadow_static_			= nil;
 - (void)initCell {
 	
 	//	default bg gradient
-	self.backgroundGradient = GradientWithColors(VMPColorBy(.9, .9, .9, 1.),
-												 VMPColorBy(.7, .7, .7, 1.));
-	
+	self.backgroundGradient = AutoRelease([[NSGradient alloc] initWithStartingColor:VMPColorBy(.9, .9, .9, 1.)
+																		endingColor:VMPColorBy(.7, .7, .7, 1.)]);
 
 	VMPButton *b = AutoRelease( [[VMPButton alloc] initWithFrame:self.contentRect] );
 	b.target=self;
@@ -260,7 +259,8 @@ static NSShadow		*smallShadow_static_			= nil;
 	NSColor *c0 = [NSColor colorForDataType:frag.type];
 	NSColor *c1 = [[c0 colorModifiedByHueOffset:-.01 saturationFactor:0.9 brightnessFactor:1.1] colorWithAlphaComponent:0.5];
 	NSColor *c2 = [[c0 colorModifiedByHueOffset: .01 saturationFactor:1.0 brightnessFactor:0.9] colorWithAlphaComponent:1.0];
-	self.backgroundGradient = GradientWithColors(c2,c1);
+	self.backgroundGradient = AutoRelease([[NSGradient alloc] initWithStartingColor:c2
+																		endingColor:c1]);
 }
 
 
@@ -352,7 +352,8 @@ static NSShadow		*smallShadow_static_			= nil;
 	NSColor *c0 = [NSColor backgroundColorForDataType:frag.type];
 	NSColor *c1 = [[c0 colorModifiedByHueOffset:-.05 saturationFactor:0.9 brightnessFactor:1.1] colorWithAlphaComponent:0.5];
 	NSColor *c2 = [[c0 colorModifiedByHueOffset:+.05 saturationFactor:1.0 brightnessFactor:0.9] colorWithAlphaComponent:1.0];
-	self.backgroundGradient = GradientWithColors(c1,c2);
+	self.backgroundGradient = AutoRelease([[NSGradient alloc] initWithStartingColor:c1
+																		endingColor:c2]);
 }
 
 

@@ -100,6 +100,7 @@
 		if ( c == 1 ) {	//	center
 			VMPBranchGraphItem *bgi = [self item:[keys item:0]];
 			y = ( columnHeight - bgi->height ) * 0.5;
+			if ( y < 0 ) y = 0;
 		}
 	} else {			//	distribute
 		for( VMId *dataId in keys ) {
@@ -123,7 +124,7 @@
 @interface VMPBranchGraphColumnList : VMHash
 @property (nonatomic, VMStrong) VMArray *cachedKeys;
 - (VMPBranchGraphColumn*)column:(int)index;
-- (VMPBranchGraphColumn*)findColumnHavingFragment:(VMId*)fragmentId inColumnsAfter:(int)columnIndex;
+- (VMPBranchGraphColumn*)findColumnHavingFragment:(VMId*)fragmentId inColumns:(int)direction index:(int)columnIndex;
 - (void)cleanupViews;
 @end
 
@@ -143,12 +144,18 @@
 	return bgc;
 }
 
-- (VMPBranchGraphColumn*)findColumnHavingFragment:(VMId*)fragmentId inColumnsAfter:(int)columnIndex {
+- (VMPBranchGraphColumn*)findColumnHavingFragment:(VMId*)fragmentId inColumns:(int)direction index:(int)columnIndex {
 	if ( ! _cachedKeys ) self.cachedKeys = [self sortedKeys];
-	for ( NSNumber *pos in _cachedKeys ) {
-		if ( pos.intValue < columnIndex ) continue;
-		VMPBranchGraphColumn *bgc = [self item:pos];
+	
+	VMInt p = [_cachedKeys position:@(columnIndex)];
+	p += direction;
+	VMInt c = self.count;
+	
+	while( p >= 0 && p < c ) {
+		VMPBranchGraphColumn *bgc = [self item:[_cachedKeys item:p]];
 		if ( [bgc item:fragmentId] ) return bgc;
+		if ( direction == 0 ) break;
+		p += direction;
 	}
 	return nil;
 }
@@ -192,12 +199,7 @@
 #pragma mark *** Selector Graph ***
 #pragma mark -
 
-@interface VMPSelectorGraph () {
-	VMPBranchGraphColumnList	*branchGraphColumnList, *lastFrameBranchGraphColumnList;
-}
-@end
-
-@implementation VMPSelectorGraph
+@implementation VMPCollectionGraph
 
 - (id)initWithFrame:(NSRect)frameRect {
 	self = [super initWithFrame:frameRect];
@@ -237,7 +239,7 @@
 	
 	VMPBranchGraphColumn *bgColumn = [branchGraphColumnList column:index];
 /*	
-	pending: we should skip column is column type doesn't match
+	pending: we should skip column if column type doesn't match
  
 	while ( bgColumn.isSelectorColumn != isSelectorColumn ) {		//	column doesn't match
 		++index;
@@ -247,7 +249,9 @@
 	VMPBranchGraphItem *bgItem = [bgColumn item:fragId];
 	if ( ! bgItem ) {
 		//	look if we have a resusable bgItem in last frame
-		VMPBranchGraphColumn *lfColumn = [lastFrameBranchGraphColumnList findColumnHavingFragment:fragId inColumnsAfter:index+1];
+		VMPBranchGraphColumn *lfColumn = [lastFrameBranchGraphColumnList findColumnHavingFragment:fragId
+																						inColumns:_animationDirection
+																							index:index];
 		if ( lfColumn ) {
 			//	reuse
 			bgItem = [lfColumn item:fragId];
@@ -300,6 +304,21 @@
 
 
 
+- (void)layoutBranchGraph {
+	VMArray *keys = [branchGraphColumnList sortedKeys];
+	int x = 0;
+	
+	for ( NSNumber *p in keys ) {
+		int						index = p.intValue;
+		VMPBranchGraphColumn	*bgColumn = [branchGraphColumnList column:index];
+		bgColumn->x = x;
+		[bgColumn setItemGapForHeight:self.frame.size.height-10];
+		x += ( bgColumn->isSelectorColumn ? vmpHeaderThickness : vmpCellWidth );
+		x += vmpSelectorGap;
+	}
+}
+
+
 
 - (void)drawBranchGraph:(VMFragment*)fragment
 		   parentPartId:(VMId*)parentPartId
@@ -317,15 +336,17 @@
 		bgItem->y	=	bgColumn->y;
 		bgColumn->y +=	summedHeight + bgColumn->itemGap;
 		
+		CGFloat farX = self.width * 0.5 * _animationDirection;
+		
 		if ( ! bgItem.graph ) {	//	if we reuse a branch graph item, we already wave a graph assigned.
 			if ( fragment.type != vmObjectType_selector ) {
 				bgItem.graph = [VMPFragmentCell fragmentCellWithFragment:fragment
-																   frame:CGRectMake(bgColumn->x + 1000, bgItem->y,
+																   frame:CGRectMake(bgColumn->x + farX, bgItem->y,
 																					vmpCellWidth, 10)
 																delegate:self];
 			} else {
 				bgItem.graph = [VMPFragmentHeader fragmentHeaderWithFragment:fragment
-																	   frame:CGRectMake(bgColumn->x + 1000, bgItem->y,
+																	   frame:CGRectMake(bgColumn->x + farX, bgItem->y,
 																						vmpHeaderThickness, 10)
 																	delegate:self];
 			}
@@ -459,7 +480,7 @@
 
 
 //
-//	stack options vertically
+//	stack items vertically
 //
 - (void)buildSelectorCellForFrame:(int)offset
 			  scoreForFragmentIds:(VMHash*)scoreForFragmentIds
@@ -549,145 +570,6 @@
 	temporaryLineLayer.hidden = NO;
 }
 
-/*
-- (void)cleanupLines {
-	//	cleanup
-	VMPGraph *view;
-	do {
-		view = [self viewWithTag:'line'];
-		[view removeFromSuperview];
-	} while (view);
-}
-*/
-
-/*---------------------------------------------------------------------------------
- 
- set cue and draw graph
- 
- ----------------------------------------------------------------------------------*/
-
-- (void)setFragment:(VMFragment *)frag {	//	override
-	//	TODO: level 0 = the frag before = @F{}
-	if ( [ frag.id isEqualToString:self.fragment.id ]) return;
-	
-	[super setFragment:frag];
-	
-	if ( !frag || frag.type != vmObjectType_selector ) return;		//	because this method gets called from it's heirs.
-	
-	switch (self.graphType) {
-		case VMPSelectorGraphType_Single:
-		case VMPSelectorGraphType_Single_noLevels:
-			[self drawSelectorGraph:(VMSelector*)self.fragment rect:self.bounds position:0];
-			break;
-		case VMPSelectorGraphType_Frame:
-			[self drawFrameGraph];
-			break;
-		case VMPSelectorGraphType_Branch: {
-			//	prepare layer
-			temporaryLineLayer = [self viewWithTag:'linL'];
-			if ( ! temporaryLineLayer ) {
-				temporaryLineLayer = [[[VMPGraph alloc] initWithFrame:self.frame] taggedWith:'linL'];
-				[self addSubview:AutoRelease(temporaryLineLayer)];
-			}
-			[temporaryLineLayer removeAllSubviews];
-			temporaryLineLayer.hidden = YES;
-			//
-			Release( lastFrameBranchGraphColumnList );
-			lastFrameBranchGraphColumnList = [branchGraphColumnList copy];
-			Release( branchGraphColumnList );
-			branchGraphColumnList = NewInstance( VMPBranchGraphColumnList );
-			
-			//
-			VMSelector *sel = (VMSelector*)self.fragment;
-			
-			DEFAULTEVALUATOR.shouldNotify = NO;
-			VMLiveData *saved_liveData	= AutoRelease([sel.liveData copy]);
-			sel.liveData = nil;	//	empty livedata before eval. this does reset @LC, @LS, @C
-			//	TODO: vms data mode /	reset @D, @PT, @F (denote branch)
-			
-			[self collectBranchData:sel index:0 height:self.frame.size.height-10];
-			[self layoutBranchData];
-			sel.liveData = saved_liveData;
-			DEFAULTEVALUATOR.shouldNotify = YES;
-			
-			[self drawBranchGraph:self.fragment
-					 parentPartId:nil
-							index:0
-					 parentRightX:0
-					parentCenterY:self.frame.size.height * 0.5 - 5
-						   height:self.frame.size.height-10];
-			
-			[lastFrameBranchGraphColumnList cleanupViews];
-			[self performSelector:@selector(showLines:) withObject:nil afterDelay:0.6];
-		}
-	}
-}
-
-- (void)layoutBranchData {
-	VMArray *keys = [branchGraphColumnList sortedKeys];
-	int x = 0;
-	
-	for ( NSNumber *p in keys ) {
-		int						index = p.intValue;
-		VMPBranchGraphColumn	*bgColumn = [branchGraphColumnList column:index];
-		bgColumn->x = x;
-		[bgColumn setItemGapForHeight:self.frame.size.height-10];
-		x += ( bgColumn->isSelectorColumn ? vmpHeaderThickness : vmpCellWidth );
-		x += vmpSelectorGap;
-	}
-}
-
-#pragma mark -
-#pragma mark fragment graph delegate
-//	delegate
-- (void)fragmentCellClicked:(VMPFragmentGraphBase *)fragCell {
-	for( NSView *v in self.subviews ) {
-		if( ClassMatch(v, VMPFragmentGraphBase ) && fragCell != v ) ((VMPFragmentGraphBase*)v).selected = NO;
-	}
-	[VMPNotificationCenter postNotificationName:VMPNotificationFragmentSelected object:self userInfo:@{@"id":fragCell.fragment.id}];
-}
-
-#pragma mark drawing
-- (void)drawRect:(NSRect)rect {
-}
-
-
-@end
-
-
-
-
-
-
-/*---------------------------------------------------------------------------------
- *
- *
- *	referrer graph
- *
- *
- *---------------------------------------------------------------------------------*/
-
-#pragma mark -
-#pragma mark *** Referrer Graph ***
-#pragma mark -
-
-@implementation VMPReferrerGraph
-- (void)setData:(id)data {
-	VMData *d = ClassCastIfMatch(data, VMData);
-	if ( !d ) return;
-	VMArray *idList = [APPDELEGATE.editorWindowController referrerListForId:d.id];
-	VMSelector *sel = ARInstance(VMSelector);
-	sel.id = @"Referrer";
-	[sel setWithData:idList];
-	self.graphType = VMPSelectorGraphType_Single_noLevels;
-	self.fragment = sel;
-}
-
-@end
-
-
-
-
 /*---------------------------------------------------------------------------------
  *
  *
@@ -695,12 +577,6 @@
  *
  *
  *---------------------------------------------------------------------------------*/
-
-#pragma mark -
-#pragma mark *** Sequence Graph ***
-#pragma mark -
-
-@implementation VMPSequenceGraph
 
 - (void)drawSequenceGraphInRect:(CGRect)rect {
 	CGFloat x = rect.origin.x + 5;
@@ -773,6 +649,150 @@
 	self.width = sequenceWidth + subseqWidth;
 }
 
+
+#pragma mark -
+#pragma mark fragment graph delegate
+//	delegate
+- (void)fragmentCellClicked:(VMPFragmentGraphBase *)fragCell {
+	for( NSView *v in self.subviews ) {
+		if( ClassMatch(v, VMPFragmentGraphBase ) && fragCell != v ) ((VMPFragmentGraphBase*)v).selected = NO;
+	}
+	[VMPNotificationCenter postNotificationName:VMPNotificationFragmentSelected object:self userInfo:@{@"id":fragCell.fragment.id}];
+}
+
+#pragma mark drawing
+- (void)drawRect:(NSRect)rect {
+}
+
+
+@end
+
+
+/*---------------------------------------------------------------------------------
+ *
+ *
+ *	VMPSelectorGraph
+ *
+ *
+ *---------------------------------------------------------------------------------*/
+
+#pragma mark -
+#pragma mark VMPSelectorGraph
+
+@implementation VMPSelectorGraph
+
+/*---------------------------------------------------------------------------------
+ 
+ set cue and draw graph
+ 
+ ----------------------------------------------------------------------------------*/
+
+- (void)setFragment:(VMFragment *)frag {	//	override
+	//	TODO: level 0 = the frag before = @F{}
+	if ( [ frag.id isEqualToString:self.fragment.id ]) return;
+	
+	[super setFragment:frag];
+	
+	if ( !frag || frag.type != vmObjectType_selector ) return;		//	because this method gets called from it's heirs.
+	
+	switch (self.graphType) {
+		case VMPSelectorGraphType_Single:
+		case VMPSelectorGraphType_Single_noLevels:
+			[self drawSelectorGraph:(VMSelector*)self.fragment rect:self.bounds position:0];
+			break;
+		case VMPSelectorGraphType_Frame:
+			[self drawFrameGraph];
+			break;
+		case VMPSelectorGraphType_Branch: {
+			//	prepare layer
+			temporaryLineLayer = [self viewWithTag:'linL'];
+			if ( ! temporaryLineLayer ) {
+				temporaryLineLayer = [[[VMPGraph alloc] initWithFrame:self.frame] taggedWith:'linL'];
+				[self addSubview:AutoRelease(temporaryLineLayer)];
+			}
+			[temporaryLineLayer removeAllSubviews];
+			temporaryLineLayer.hidden = YES;
+			//
+			Release( lastFrameBranchGraphColumnList );
+			lastFrameBranchGraphColumnList = [branchGraphColumnList copy];
+			Release( branchGraphColumnList );
+			branchGraphColumnList = NewInstance( VMPBranchGraphColumnList );
+			
+			//
+			VMSelector *sel = (VMSelector*)self.fragment;
+			
+			DEFAULTEVALUATOR.shouldNotify = NO;
+			VMLiveData *saved_liveData	= AutoRelease([sel.liveData copy]);
+			sel.liveData = nil;	//	empty livedata before eval. this does reset @LC, @LS, @C
+			//	TODO: vms data mode /	reset @D, @PT, @F (denote branch)
+			
+			[self collectBranchData:sel index:0 height:self.frame.size.height-10];
+			[self layoutBranchGraph];
+			sel.liveData = saved_liveData;
+			DEFAULTEVALUATOR.shouldNotify = YES;
+			
+			[self drawBranchGraph:self.fragment
+					 parentPartId:nil
+							index:0
+					 parentRightX:0
+					parentCenterY:self.frame.size.height * 0.5 - 5
+						   height:self.frame.size.height-10];
+			
+			[lastFrameBranchGraphColumnList cleanupViews];
+			[self performSelector:@selector(showLines:) withObject:nil afterDelay:0.6];
+		}
+	}
+}
+
+@end
+
+
+
+
+
+/*---------------------------------------------------------------------------------
+ *
+ *
+ *	referrer graph
+ *
+ *
+ *---------------------------------------------------------------------------------*/
+
+#pragma mark -
+#pragma mark *** Referrer Graph ***
+#pragma mark -
+
+@implementation VMPReferrerGraph
+- (void)setData:(id)data {
+	VMData *d = ClassCastIfMatch(data, VMData);
+	if ( !d ) return;
+	VMArray *idList = [APPDELEGATE.editorWindowController referrerListForId:d.id];
+	VMSelector *sel = ARInstance(VMSelector);
+	sel.id = @"Referrer";
+	[sel setWithData:idList];
+	self.graphType = VMPSelectorGraphType_Single_noLevels;
+	self.fragment = sel;
+}
+
+@end
+
+
+
+
+/*---------------------------------------------------------------------------------
+ *
+ *
+ *	sequence graph
+ *
+ *
+ *---------------------------------------------------------------------------------*/
+
+#pragma mark -
+#pragma mark *** Sequence Graph ***
+#pragma mark -
+
+@implementation VMPSequenceGraph
+
 - (void)setFragment:(VMFragment *)frag {	//	override
 	[super setFragment:frag];
 	[self drawSequenceGraphInRect:self.bounds];
@@ -817,6 +837,10 @@
 }
 
 - (void)redraw {
+	[self redrawWithAnimationDirection:vmp_action_no_move];
+}
+
+- (void)redrawWithAnimationDirection:(int)direction {
 	
 	if ( self.data.type == vmObjectType_chance ) return;
 	
@@ -831,6 +855,7 @@
 			VMPSelectorEditorViewController *sle;
 			if( ClassMatch( self.editorViewController, VMPSelectorEditorViewController )) {
 				sle = (VMPSelectorEditorViewController*)self.editorViewController;
+				sle.selectorGraph.animationDirection = direction;
 			} else {
 				sle = AutoRelease([[VMPSelectorEditorViewController alloc] initWithNibName:@"VMPSelectorEditorView" bundle:nil] );
 			}
@@ -945,7 +970,7 @@
 		lr = [log item:p];
 		d  = lr.VMData;
 		
-		//	switch to graph type automatically:
+		//	switch graph type automatically:
 		if ( lr.type == vmObjectType_sequence ) {
 			if ( type == vmObjectType_selector && ((VMSequence*)d).length > 1 ) {
 				type = vmObjectType_sequence;
@@ -958,23 +983,23 @@
 		if ( lr.type == type ) {
 			if (d) {
 				if ( type != vmObjectType_selector ) break;
-				if ( skipSelectorCounter == 0 ) {
+				if ( skipSelectorCounter <= 0 ) {
 					if ( ! [ClassCast(d, VMSelector) isDeadEnd] ) break;	//	do not display dead-ended sel.
 				}
-				--skipSelectorCounter;
 			}
+			--skipSelectorCounter;	//	assume d was empty because it was a subsequence (which is not registered)
 		}
 	}
 		
 	if ( d && ( ! [self.data.id isEqualToString:d.id] ) ) {
 		self.data = d;
-		[self redraw];
+		[self redrawWithAnimationDirection:vmp_action_move_next_by_player & 0xff];	
 	}
 }
 
-- (void)drawGraphWith:(VMData*)data {
+- (void)drawGraphWith:(VMData*)data animationDirection:(int)direction {
 	self.data = data;
-	[self redraw];
+	[self redrawWithAnimationDirection:direction];
 }
 
 

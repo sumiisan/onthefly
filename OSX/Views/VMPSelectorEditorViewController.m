@@ -113,10 +113,10 @@ static VMPSelectorEditorTab defaultTab__ = VMPSelectorEditor_BranchTab;
 			baseViewRect		= CGRectMake( 0, 0, graphWidth + 10, baseView.frame.size.height	 );
 			graphRect			= CGRectMake( 5, 5, graphWidth, baseViewRect.size.height -10 );
 			
-			if( ! self.selectorGraph )
+			if( ! self.selectorGraph ) {
 				self.selectorGraph = [[VMPSelectorGraph alloc] initWithFrame:graphRect];
-			
-			self.selectorGraph.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
+				self.selectorGraph.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
+			}
 			self.selectorGraph.graphType = (tab == VMPSelectorEditor_FrameTab
 											? VMPSelectorGraphType_Frame
 											: VMPSelectorGraphType_Branch );
