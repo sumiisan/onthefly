@@ -464,7 +464,7 @@ VMFloat limitedSNDRand(VMFloat min, VMFloat max) {
 - (VMArray*)histogramWithBins:(VMInt)numberOfBins
 					normalize:(BOOL)normalize {
 	VMRange range = [self valueRange];
-	VMFloat interval = ( range.maximum - range.minimum ) / (VMFloat)( numberOfBins -1 );
+	VMFloat interval = (( range.maximum - range.minimum ) / (VMFloat)( numberOfBins > 1 ? ( numberOfBins -1 ) : 1 ) );
 	VMInt	maxCount = 0;
 	VMArray *tempArray = ARInstance(VMArray);
 	for ( int i = 0; i < numberOfBins; ++i ) [tempArray push:VMIntObj(0)];

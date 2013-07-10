@@ -82,24 +82,51 @@
 	return [super textView:tv shouldChangeTextInRange:afcr replacementString:rps];
 }
 
-- (void)highlightCounterPart:(unichar)closer fromLocation:(NSUInteger)location {
-	//	TODO: check inconsistent nesting like [ { ] or { { ] .
-	NSString *text = textView.string;	
-	unichar opener  = ( closer == '}' ? '{' : ( closer == ']' ? '[' : '(' ));
-	int nest = 0;
+- (void)highlightCounterPart:(unichar)closerChar fromLocation:(NSUInteger)location {
+
+	VMStack *closedBracketsStack = ARInstance(VMStack);
+	[closedBracketsStack push:[NSString stringWithFormat:@"%c",closerChar]];
 	
-	for( NSUInteger p = location; p > 0; --p ) {
-		unichar c = [text characterAtIndex:p];
-		if ( c == closer )
-			++nest;
+	VMHash  *openerBracketFor = [VMHash hashWith:@{ @"}":@"{", @")":@"(", @"]":@"[" }];
+	
+	NSString *closeBrackets = @"})]";
+	NSUInteger p = location;
+	
+	NSCharacterSet *bracketCharSet = [NSCharacterSet characterSetWithCharactersInString:@"{}[]()"];
+
+	doForever {
+		NSRange bracketRange = [textView.string rangeOfCharacterFromSet:bracketCharSet
+																options:NSBackwardsSearch
+																  range:NSMakeRange(0, p)];
+		
+		if ( bracketRange.length == 0 ) {
+			// no matching bracket found
+			//[textView showFindIndicatorForRange:NSMakeRange( location, 1 )];
+			return;
+		}
+		p = bracketRange.location + bracketRange.length -1;
+		NSString *bracket = [textView.string substringWithRange:NSMakeRange(p,1)];
 				
-		if ( c == opener ) {
-			if ( nest == 0 ) {
+		if ( [closeBrackets rangeOfString:bracket].length > 0 ) {
+			//	one more other bracket was closed
+			[closedBracketsStack push:bracket];
+			continue;
+		}
+				
+		if ( [bracket isEqualToString: [openerBracketFor item:closedBracketsStack.current]] ) {
+			//	the correct opener for last closed bracket was found.
+			[closedBracketsStack restore];
+			if( closedBracketsStack.count == 0 ) {
+				//	all brackets are nested correctly
 				[textView showFindIndicatorForRange:NSMakeRange(p, 1)];
 				return;
 			}
-			--nest;
+			continue;
 		}
+		
+		//	mismatched bracket
+		//[textView showFindIndicatorForRange:NSMakeRange( location, 1 )];
+		return;
 	}
 }
 
@@ -116,7 +143,8 @@
  *---------------------------------------------------------------------------------*/
 
 @interface VMPCodeEditorView ()
-
+@property (nonatomic, VMStrong)	NSTextFinder *textFinder;
+@property (nonatomic, VMStrong)	NSScanner *scanner;
 @end
 
 @implementation VMPCodeEditorView
@@ -131,7 +159,7 @@
 	return self;
 }
 
-- (void)setup {	//	extra method, because it must be called after editorViewController was inited.
+- (void)setup {	//	extra method for initialization, because we want do this after editorViewController was inited.
 	[VMPNotificationCenter addObserver:self selector:@selector(fragmentSelectedInBrowser:)
 								  name:VMPNotificationFragmentSelected object:APPDELEGATE.editorWindowController];
 	[VMPNotificationCenter addObserver:self selector:@selector(reloadData:)
@@ -153,6 +181,7 @@
 	if ( ! self.vmsDocument )
 		self.vmsDocument = AutoRelease([[VMPSyntaxColoredtextDocument alloc] init] );
 	[self.vmsDocument setTextView:self.textView sourceCode:sourceCode];
+	VMNullify(scanner);
 }
 
 - (NSString*)sourceCode {
@@ -290,7 +319,7 @@
 					NSInteger searchLocation = block.location + block.length;
 					searchRange = NSMakeRange(searchLocation, self.textView.string.length -1 - searchLocation);
 				} else {
-					break;	//	could not found any with this pattern.
+					break;	//	could not find any with this pattern.
 				}
 			} while ( searchRange.length > 0 );
 			[tempComp unshift];

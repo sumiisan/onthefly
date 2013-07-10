@@ -157,6 +157,7 @@ enum {
 @property (nonatomic, assign)	CGFloat					y;
 @property (nonatomic, assign)	CGFloat					width;
 @property (nonatomic, assign)	CGFloat					height;
+@property (nonatomic, readonly, getter = isAnimating) BOOL animating;
 
 - (void)redraw;
 - (void)addTopOverlay;

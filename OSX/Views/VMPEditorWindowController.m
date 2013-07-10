@@ -240,7 +240,7 @@ static VMPObjectCell		*typeColumnCell = nil;
 	VMNullify(fieldEditor);
 	VMNullify(currentNonCompletedSearchString);
 	VMNullify(currentFilterString);
-	Dealloc( super );;
+	Dealloc( super );
 }
 
 #pragma mark -
@@ -270,13 +270,14 @@ static VMPObjectCell		*typeColumnCell = nil;
 	}
 }
 
-- (VMHash*)songData {
-	return _songData;
-}
 
-- (void)setSongData:(VMHash *)inSongData {
-	_songData = inSongData;	//	unsafe_unretained
-	[self reloadData:self];
+- (void)clearSongData {
+	_songData = nil;	//	unsafe_unretained
+	self.objectRoot = [NSTreeNode treeNodeWithRepresentedObject:@"ROOT"];
+	
+	[self.objectTreeView reloadData];
+	self.referrerList = ARInstance(VMHash);
+	VMNullify(dataIdList);	//	reset id cache for auto-complete
 }
 
 - (void)vmsDataLoaded:(id)sender {
@@ -338,7 +339,9 @@ static VMPObjectCell		*typeColumnCell = nil;
 		[self.objectRoot.mutableChildNodes addObject:sections];
 	}
 	[self.objectTreeView reloadData];
-		self.referrerList = [DEFAULTANALYZER collectReferrer];
+	self.referrerList = [DEFAULTANALYZER collectReferrer];
+	
+	VMNullify(dataIdList);	//	reset id cache for auto-complete
 	
 }
 
@@ -584,7 +587,7 @@ static VMPObjectCell		*typeColumnCell = nil;
 	if ( !sectionNode ) goto filterStringNotFound;
 
 	if ( comp.count == 0 || whole_matchedExact ) {
-		//	we have a matching section node, but check whether we have a leaf node with same id in the node.
+		//	we already have a matching section node, but check whether we have a leaf node with same id inside the node.
 		leafData	= [self seekId:searchString inNode:sectionNode matchedExact:&matchedExact];
 		if ( matchedExact ) {
 			[self expand:sectionNode];
@@ -647,7 +650,7 @@ filterStringNotFound:
 	return d;
 }
 
-//	item can be NSTreeNode or VMData object.
+//	item can be NSTreeNode or VMData object. if nil was passed, it will be recognized as root object.
 - (VMArray*)childrenOfItem:(id)item {
 	
 	if ( ! item ) return [VMArray arrayWithArray:self.objectRoot.childNodes];
@@ -869,7 +872,7 @@ forDoubleClickOnDividerAtIndex:(NSInteger)dividerIndex  {
 	
 	VMInt col = [tableColumn.identifier intValue];
 	switch (col) {
-		case 1: {	//	id row
+		case 1: {	//	id column
 			if ( ClassMatch(item, VMId) )
 				return item;
 			if ( ClassMatch(item, VMReference))
@@ -879,13 +882,13 @@ forDoubleClickOnDividerAtIndex:(NSInteger)dividerIndex  {
 			break;
 		}
 
-		case 2: {	//	description row
+		case 2: {	//	description column
 			VMData *d = ClassCastIfMatch(item, VMData);
 			if ( ClassMatch(item, VMId) ) d = [_songData item:item];
 			return [self descriptionForData:d];
 		}
 
-		case 3: {	//	comments row
+		case 3: {	//	comments column
 			if ( ClassMatch(item, VMId) ) return @"";
 			VMData *d = ClassCastIfMatch(item, VMData);
 			if ( ClassMatch(item, VMId) ) d = [_songData item:item];
@@ -893,7 +896,7 @@ forDoubleClickOnDividerAtIndex:(NSInteger)dividerIndex  {
 			break;
 		}
 			
-		case 4:	{	//	type row
+		case 4:	{	//	type column
 			VMData *d = ClassCastIfMatch(item, VMData);
 			if ( ClassMatch(item, VMId) ) d = [_songData item:item];
 			if ( d ) {
@@ -972,7 +975,7 @@ forDoubleClickOnDividerAtIndex:(NSInteger)dividerIndex  {
 
 /*---------------------------------------------------------------------------------
  
- selectRow - internally set the row selected and update editors accordingly.
+ selectRowAndRedrawViews - internally set the row selected and update editors accordingly.
  
  ----------------------------------------------------------------------------------*/
 
@@ -1103,11 +1106,11 @@ forDoubleClickOnDividerAtIndex:(NSInteger)dividerIndex  {
 #pragma mark type select
 
 - (NSString*)outlineView:(NSOutlineView *)outlineView typeSelectStringForTableColumn:(NSTableColumn *)tableColumn item:(id)item {
-	if (ClassMatch(item, NSTreeNode) )
-		item = [((NSTreeNode*)item) representedObject];
-	
 	VMInt col = [tableColumn.identifier intValue];
 	if ( col != 1 ) return nil;
+	
+	if (ClassMatch(item, NSTreeNode) )
+		item = [((NSTreeNode*)item) representedObject];
 	
 	if ( ClassMatch(item, VMId	 ))	return item;
 	if ( ClassMatch(item, VMData ))	return ((VMData*)item).id;

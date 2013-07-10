@@ -476,7 +476,7 @@ static VMPSongPlayer 	*songPlayer_singleton_static_ = nil;
 	if ( self.isPaused ) return;
 	++frameCounter;
 	
-	VMTime 			endTimeOfLastFragment 	= 0;
+	VMTime				endTimeOfLastFragment 	= 0;
 	VMPQueuedFragment	*nextUpcomingFragment	= nil;
 		
 	for ( VMInt i = 0; i < fragQueue.count; ++i ) {

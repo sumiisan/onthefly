@@ -190,9 +190,7 @@ static const CGFloat kWaveDisplayHorizontalMargin = 20;
 			self.waveView.audioObject = self.audioObject;
 	} else {
 		[APPDELEGATE.systemLog logError:@"Could not open audio file for %@." withData:fileId];
-		[VMPNotificationCenter postNotificationName:VMPNotificationLogAdded
-											 object:self
-										   userInfo:@{@"owner":@(VMLogOwner_System)}];
+		[APPDELEGATE showLogPanelIfNewSystemLogsAreAdded];
 	}
 }
 

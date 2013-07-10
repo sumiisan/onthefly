@@ -37,8 +37,6 @@
 @property (nonatomic, VMWeak)	IBOutlet NSScrollView *scrollView;
 @property (nonatomic, VMStrong)	VMString *sourceCode;
 @property (nonatomic, VMStrong)	VMPSyntaxColoredtextDocument	*vmsDocument;
-@property (nonatomic, VMStrong)	NSTextFinder *textFinder;
-@property (nonatomic, VMStrong)	NSScanner *scanner;
 @property (nonatomic, getter = isSourceCodeModidied, assign)	BOOL sourceCodeModified;
 
 - (void)selectBlockWithId:(VMId*)fragId scrollVisible:(BOOL)scrollVisible;

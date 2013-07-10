@@ -238,7 +238,7 @@ static 	VMHash *bgColorForType_static_ = nil;
 
 @implementation VMPGraph
 @synthesize graphDelegate = _graphDelegate;
-
+@synthesize animating = _animating;
 
 
 - (void)init_internal {
@@ -253,7 +253,7 @@ static 	VMHash *bgColorForType_static_ = nil;
 	return self;
 }
 
-- (id)initWithFrame:(NSRect)frameRect {
+- (id)initWithFrame:(NSRect)frameRect {		//	designated initializer
 	self = [super initWithFrame:frameRect];
 	[self init_internal];
 	return self;
@@ -289,6 +289,10 @@ static 	VMHash *bgColorForType_static_ = nil;
 
 -(void)viewDidEndLiveResize {
     [self redraw];
+}
+
+- (BOOL)isAnimating {
+	return _animating;
 }
 
 - (void)drawRect:(NSRect)dirtyRect{
@@ -391,6 +395,9 @@ static 	VMHash *bgColorForType_static_ = nil;
 	Serialize(topOverlay, Object);
 }
 
+//
+//	animation
+//
 - (void)moveToRect:(NSRect)frameRect duration:(VMTime)duration {
 	NSDictionary *dict = @{
 						NSViewAnimationTargetKey: self,
@@ -401,8 +408,16 @@ static 	VMHash *bgColorForType_static_ = nil;
     NSViewAnimation *anim = [[NSViewAnimation alloc]
                              initWithViewAnimations:[NSArray arrayWithObject:dict]];
     [anim setDuration:duration];
+	_animating = YES;
     [anim startAnimation];
     [anim release];
+	
+	[self performSelector:@selector(endAnimation:) withObject:nil afterDelay:duration];
+}
+
+- (void)endAnimation:(id)something {
+	_animating = NO;
+	self.needsDisplay = YES;
 }
 
 

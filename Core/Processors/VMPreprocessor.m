@@ -213,7 +213,14 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 		} else {
 			//	type mismatch: re-allocate with correct type.
 			//	when upper-compatible
+			
 			BOOL isUpperCompatible = [self is:typ upperCompatibleOf:data.type];
+			//
+			//	DISCUSSION: to enable overriding, we may choose the matching one from old and new frags.
+			//	so it must not be upper compatible.
+			//	change in next version.
+			//
+			//
 			
 			NSLog(@"---ConvertTypeOf:%@ %@ - > %@ %@", 
 				  dataId,
@@ -246,8 +253,7 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 
 + (VMChance*)createOrModifyChanceWithId:(VMSelector*)		selector
 								 target:(VMId*)				targetId 
-								  score:(VMFloat)			score
-								tagList:(VMId*)				tagListId {
+								  score:(VMFloat)			score {
 	
 	VMChance 	*reader = ARInstance(VMChance);	
 	[reader setWithData:targetId];
@@ -343,7 +349,7 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 			 *				(x-y) 	route					a_phrase(aa-ab)
 			 *				^x		optional				a_phrase^extension
 			 *
-			 *		following charcters are not useable as a filename in windows system:	< > : " / \ | ? *
+			 *		following charcters are not useable as a filename on windows system:	< > : " / \ | ? *
 			 *		: and / are not useable in osx.
 			 *
 			 *		btw, automatic generated sel/seq will be named in following format:
@@ -1025,9 +1031,9 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 	for ( VMHash *hash in fragArray ) {
 		VMData *data = nil;
 		vmObjectType typ = vmObjectType_unknown;
-	//	if ( [ HashItem(id) isEqualToString:@"b_004" ] )
-	//		NSLog(@"!!!");
-		
+	/*	if ( [ HashItem(id) isEqualToString:@"x_wboy_Eb_21" ] )
+			NSLog(@"!!!");
+	*/	
 		VMId *cloneTarget = HashItem(clone);
 		if ( cloneTarget ) {
 			//
@@ -1280,7 +1286,7 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 	VMSelector *sel = ARInstance( VMSelector );	
 	VMId *originalId 	= original.id;
 	VMId *wrappedId 	= [VMPP idWithVMPModifier:originalId 
-										   tag:@"selWrapped"
+										   tag:@"baseFrag"
 										  info:nil];
 	sel.id = originalId;
 	
@@ -1403,8 +1409,7 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 		VMId *fragId = ReadAsVMId(obj);
 		[VMPP createOrModifyChanceWithId:selector 
 								  target:fragId
-								   score:0
-								 tagList:nil];
+								   score:0];
 	}
 }
 

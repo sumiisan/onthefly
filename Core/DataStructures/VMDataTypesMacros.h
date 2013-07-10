@@ -6,6 +6,10 @@
 //  Copyright (c) 2013 sumiisan. All rights reserved.
 //
 
+//
+//	macros for defining obligatory functions
+//
+
 #ifndef OnTheFly_VMDataTypesMacro_h
 #define OnTheFly_VMDataTypesMacro_h
 

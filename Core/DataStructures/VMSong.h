@@ -60,6 +60,9 @@
 - (VMPlayer*)playerFrom:(id)someObj;
 - (id)resolveDataWithId:(VMId*)dataId untilReachType:(int)mask;
 
+
+- (BOOL)isFragmentDeadEnd:(VMId*)fragId;
+
 //
 //	read and save
 //

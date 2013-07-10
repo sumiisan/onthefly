@@ -65,6 +65,11 @@ static const VMFloat kDefaultLogItemViewHeight = 14.0;
 #pragma mark -
 #pragma mark Log View Panel
 #pragma mark -
+
+@interface VMPLogView()
+@property	(nonatomic, assign)	BOOL updateScheduled;
+@end
+
 @implementation VMPLogView
 
 - (void)initInternal {
@@ -228,17 +233,28 @@ static const VMFloat kDefaultLogItemViewHeight = 14.0;
 	
 	if ( self.currentSource != owner ) {
 		[self.sourceChooser setSelected:YES forSegment:owner];
-		[self sourceChoosen:self];
 		[self.window makeKeyAndOrderFront:self];
 	} else {
+		//	only update once in 0.5 secs.
+		if( ! _updateScheduled ) {
+			_updateScheduled = YES;
+			[self sourceChoosen:self];
+			[self performSelector:@selector(resetSchedule:) withObject:self afterDelay:0.5];
+		}
+
 		//	always show logwindow when system log or user log was added.
 		if ( owner == VMLogOwner_System || owner == VMLogOwner_User )
 			[self.window makeKeyAndOrderFront:self];
 	}
 }
 
+- (void)resetSchedule:(id)sender {
+	_updateScheduled = NO;
+}
+
 #pragma mark change source
 - (IBAction)sourceChoosen:(id)sender {
+	_updateScheduled = NO;
 	switch ( self.currentSource ) {
 		case VMLogOwner_MediaPlayer:
 			self.log = DEFAULTSONG.log;
@@ -262,7 +278,6 @@ static const VMFloat kDefaultLogItemViewHeight = 14.0;
 			[self makeFilteredLog];
 			break;
 	}
-
 }
 
 #pragma mark click and double click

@@ -499,8 +499,10 @@ typedef enum {
 - (VMInt)counter;
 - (void)prepareLiveData;
 - (void)prepareSelection;
+- (BOOL)useSubsequentOfBranchFragments;
 //	return value is reference to a static VMHash.	copy if you want hold the result.
-- (VMHash*)collectScoresOfFragments:(VMFloat)parentScore frameOffset:(VMInt)counterOffset normalize:(BOOL)normalize;	
+- (VMHash*)collectScoresOfFragments:(VMFloat)parentScore frameOffset:(VMInt)counterOffset normalize:(BOOL)normalize;
+- (VMFloat)ratioOfDeadEndBranchesWithScores:(VMHash*)scoreForFragments sumOfScores:(VMFloat)sum;
 @end
 
 //------------------------ Player -----------------------------

@@ -208,6 +208,7 @@ static NSShadow		*smallShadow_static_			= nil;
 	//
 	//	position index
 	//
+	if (self.animating) return;		//	do not draw position mark while animating
 	BeginGC
 	SaveGC {
 		[smallShadow_static_ set];
@@ -296,10 +297,10 @@ static NSShadow		*smallShadow_static_			= nil;
 		} else {
 			//	vertical header
 			[self.backgroundGradient drawInBezierPath:headerPath angle:270];
-			[self.fragment.id drawVerticalInRect:CGRectInset(contentRect, 0, 5. )
-							  withAttributes:headerTextAttributes_static_];
+			if ( ! self.animating ) [self.fragment.id drawVerticalInRect:CGRectInset(contentRect, 0, 5. )
+														  withAttributes:headerTextAttributes_static_];
 		}
-		[defaultShadow_static_ set];
+		if ( ! self.animating ) [defaultShadow_static_ set];
 		[[[NSColor colorForDataType:self.fragment.type] colorWithAlphaComponent:0.5] setStroke];
 		[headerPath stroke];
 	} RestoreGC
@@ -330,9 +331,6 @@ static NSShadow		*smallShadow_static_			= nil;
 
 
 @implementation VMPFragmentCell
-//@synthesize fragment = _fragment;
-
-
 
 + (VMPFragmentCell*)fragmentCellWithFragment:(VMFragment*)frag
 									   frame:(NSRect)frame
@@ -345,10 +343,16 @@ static NSShadow		*smallShadow_static_			= nil;
 }
 
 
-- (void)setFragment:(VMFragment *)frag {	//	override
+- (void)setFragment:(VMFragment *)frag {	//	override // NOTE: frame must be set before calling this method.
 	[super setFragment:frag];
 	if ( !frag )
 		return;
+	
+	//	we assume that the cell width does not change.
+	textFrameRectCache = [self rectForText:self.fragment.id
+								attributes:idTextAttributes_static_
+								  maxWidth:self.contentRect.size.width - 12];
+	
 	NSColor *c0 = [NSColor backgroundColorForDataType:frag.type];
 	NSColor *c1 = [[c0 colorModifiedByHueOffset:-.05 saturationFactor:0.9 brightnessFactor:1.1] colorWithAlphaComponent:0.5];
 	NSColor *c2 = [[c0 colorModifiedByHueOffset:+.05 saturationFactor:1.0 brightnessFactor:0.9] colorWithAlphaComponent:1.0];
@@ -393,7 +397,7 @@ static NSShadow		*smallShadow_static_			= nil;
 			[pg drawInBezierPath:cellPath angle:60];
 			Release( pg );
 		}
-		[defaultShadow_static_ set];
+		if ( ! self.animating ) [defaultShadow_static_ set];
 		[cellPath stroke];
 	} RestoreGC
 	
@@ -402,10 +406,7 @@ static NSShadow		*smallShadow_static_			= nil;
 	//
 	if ( self.contentRect.size.height > 10 && self.fragment ) {
 		SaveGC {
-			NSRect textFrameRect = [self rectForText:self.fragment.id
-										  attributes:idTextAttributes_static_
-											maxWidth:self.contentRect.size.width - 12];
-			CGFloat verticalOffset = ( self.contentRect.size.height - textFrameRect.size.height ) * 0.5;
+			CGFloat verticalOffset = ( self.contentRect.size.height - textFrameRectCache.size.height ) * 0.5;
 			if ( verticalOffset < 0 ) verticalOffset = 0;
 			[self.fragment.id drawInRect:NSMakeRect(self.contentRect.origin.x + 6.,
 													self.contentRect.origin.y + verticalOffset,

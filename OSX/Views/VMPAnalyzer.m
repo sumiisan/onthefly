@@ -708,9 +708,9 @@ static const int	kLengthOfPartTraceRoute					= 10000;	//	gives up after 10000 ti
 	if ( self.unresolveables == 0 && unreacheableAC.count == 0 ) {
 		[APPDELEGATE.systemLog addTextLog:@"Route Stats" message:@"no issue."];
 	}
-	[VMPNotificationCenter postNotificationName:VMPNotificationLogAdded
-										 object:self
-									   userInfo:@{@"owner":@(VMLogOwner_System)}];
+	
+	[APPDELEGATE showLogPanelIfNewSystemLogsAreAdded];
+
 	self.statisticsWindow.isVisible = YES;
 	[self.statisticsWindow makeKeyAndOrderFront:self];
 	[self.statisticsView.tableView reloadData];
@@ -782,9 +782,7 @@ static const int	kLengthOfPartTraceRoute					= 10000;	//	gives up after 10000 ti
 		}
 		
 		[self.progressWC setProgress:0 ofTotal:0 message:nil window:[VMPlayerOSXDelegate singleton].editorWindowController.window];
-		[VMPNotificationCenter postNotificationName:VMPNotificationLogAdded
-											 object:self
-										   userInfo:@{@"owner":@(VMLogOwner_System)}];
+		[APPDELEGATE showLogPanelIfNewSystemLogsAreAdded];
 		VMNullify(dataIdToProcess);
 		_busy =NO;
 	}
@@ -879,9 +877,7 @@ else if( ClassMatch(subData, VMChance )) \
 							   withData:nil];
 		[APPDELEGATE.systemLog record:self.unresolveables filter:NO];
 	}
-	[VMPNotificationCenter postNotificationName:VMPNotificationLogAdded
-										 object:self
-									   userInfo:@{@"owner":@(VMLogOwner_System)}];
+	[APPDELEGATE showLogPanelIfNewSystemLogsAreAdded];
 }
 
 

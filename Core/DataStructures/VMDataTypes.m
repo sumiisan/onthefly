@@ -741,7 +741,7 @@ VMOBLIGATORY_setWithData(
 )
 @end
 
-#if 0	//	TagList obsoleted. use VMTransformer
+#if 0	//	TagList become obsolete. use VMTransformer instead
 //------------------------ TagList -----------------------------
 /*
  tags
@@ -1177,7 +1177,8 @@ if ( ClassMatch(data, NSString)) {
 	if( ! self.fragments ) self.fragments = ARInstance(VMArray);
 	
     for ( id __strong obj in arr ) {
-		if( ClassMatch(obj, NSString)) {
+		if( ClassMatch(obj, VMString) ) {
+			if ( ((VMString*)obj).length == 0 ) continue;	//	creating chances with empty reference can cause errors.
 			//
 			//	create VMChance if i'm a VMSelector
 			//
@@ -1185,12 +1186,10 @@ if ( ClassMatch(data, NSString)) {
 				[VMPreprocessor 
 				   createOrModifyChanceWithId:ClassCast(self, VMSelector)
 				   target:obj
-				   score:0
-				   tagList:nil
-				];
+				   score:0];
 			} else {
 				//	strip off scoreDescriptor.
-				//	although, if this collection has to be converted to selector later,
+				//	although, if this collection has to be converted to a selector later,
 				//	the selWrapper will automatically add score information again.
 				VMId *purified	= [DEFAULTPREPROCESSOR purifiedId:obj];
 				if (purified) obj = purified;
@@ -1429,7 +1428,6 @@ static VMHash *scoreForFragment_static_ = nil;
     return [[super fragmentAtIndex:pos] resolveUntilType:vmObjectCategory_fragment];	//	because they are chances.
 }
 
-
 -(VMFloat)sumOfInnerScores {
     if ( [self.fragments count] > 0 ) {
 		return sumOfInnerScores_cache_;
@@ -1517,8 +1515,6 @@ static VMHash *scoreForFragment_static_ = nil;
 	return frag;
 }
 
-
-
 - (VMFragment*)selectOne {
 	BOOL isTemporary = [self shouldSelectTemporary];
 	
@@ -1555,6 +1551,7 @@ static VMHash *scoreForFragment_static_ = nil;
 	return fragIds;
 }
 
+
 - (BOOL)isDeadEnd {
 	if ( self.fragments.count == 0 ) return YES;
 	if ( [[self chanceAtIndex:0].targetId isEqualToString: @"*"] ) return YES;
@@ -1562,12 +1559,48 @@ static VMHash *scoreForFragment_static_ = nil;
 		VMFragment *data = [DEFAULTSONG data:ch.targetId];
 		if ( ! data ) continue;
 		if ( data.type == vmObjectType_sequence ) return NO;	//	assume sequence has valid subseqs.
-																//	DISCUSSION: shall we inspect deeper ? if yes, how deep ?
+		//	DISCUSSION: shall we inspect deeper ? if yes, how deep ?
 		if ( data.type == vmObjectType_selector )
 			if (! ((VMSelector*)data).isDeadEnd ) return NO;
 		
 	}
 	return YES;
+}
+
+- (BOOL)useSubsequentOfBranchFragments {
+	return [[self chanceAtIndex:0].targetId isEqualToString: @"*"];
+}
+
+- (VMFloat)ratioOfDeadEndBranchesWithScores:(VMHash*)scoreForFragments sumOfScores:(VMFloat)sum {
+	VMFloat deadEndScore = 0;
+	
+	if( [self.fragments count] <= 0 ) return 0;
+	
+	if ( ! scoreForFragments ) {
+		[self prepareSelection];
+		if ( sum == 0 ) sum = sumOfInnerScores_cache_;
+	} else {
+		if ( sum == 0 ) { //	needs re-calculated
+			VMArray *ids = [scoreForFragments keys];
+			for ( VMId* fragId in ids ) sum += [scoreForFragments itemAsFloat:fragId];
+		}
+	}
+	
+	if ( scoreForFragments ) {
+		//	use extern supplied data
+		VMArray *fragIds = [scoreForFragments keys];
+		for ( VMId *fragId in fragIds ) {
+			if ( [DEFAULTSONG isFragmentDeadEnd:fragId] ) deadEndScore += [scoreForFragments itemAsFloat:fragId];
+		}
+	} else {
+		//	use default internal frags and cached score
+		for ( VMChance *c in self.fragments ) {
+			if ( [DEFAULTSONG isFragmentDeadEnd:c.targetId] ) deadEndScore += c.cachedScore;
+		}
+	}
+	
+	//LLog(@"deadEndRatio %@=%.3f (%f/%f)", self.fragId, ( deadEndScore / sum ), deadEndScore, sum );
+	return deadEndScore / sum;
 }
 
 #pragma mark obligatory (selector)
@@ -1642,7 +1675,7 @@ VMOBLIGATORY_setWithData(
 if ( ClassMatch(data, VMHash)) {
 	MakeHashFromData
 	IfHashItemExist(subseq, 
-		self.subsequent = ARInstance(VMSelector);
+		if ( !self.subsequent ) self.subsequent = ARInstance(VMSelector);		//	override support
 		[self.subsequent setWithData:HASHITEM];
 		self.subsequent.id = [VMPreprocessor idWithVMPModifier:self.id
 														   tag:@"subseq" 

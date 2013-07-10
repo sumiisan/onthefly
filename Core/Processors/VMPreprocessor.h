@@ -83,7 +83,7 @@
 //	data creation
 + (id)dataWithType:(vmObjectType)inType;
 + (id)dataWithData:(id)data;
-+ (VMChance*)createOrModifyChanceWithId:(VMSelector*)selector target:(VMId*)targetId score:(VMFloat)score tagList:(VMId*)tagListId;
++ (VMChance*)createOrModifyChanceWithId:(VMSelector*)selector target:(VMId*)targetId score:(VMFloat)score;
 
 //	util
 + (Class)classForType:(vmObjectType)inType;

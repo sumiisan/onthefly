@@ -58,6 +58,9 @@
 	__unsafe_unretained		VMHash	*_songData;
 }
 
+//	accessor
+//- (void)setSongData:(VMHash *)inSongData;	//	needed to reset songData from outside.
+- (void)clearSongData;
 
 //	public methods
 - (BOOL)findObjectById:(VMId*)dataId action:(vmp_action)action;	//	display object if found. does not make editor window key.

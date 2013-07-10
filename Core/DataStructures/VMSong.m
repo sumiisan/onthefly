@@ -107,6 +107,32 @@ BOOL verbose = NO;
 	}
 }
 
+
+#pragma mark -
+#pragma mark util
+
+
+
+- (BOOL)isFragmentDeadEnd:(VMId*)fragId {
+	VMFragment *frag = [self data:fragId];
+	switch ((int)frag.type) {
+		case vmObjectType_selector:
+			return ((VMSelector*)frag).isDeadEnd;
+			break;
+		case vmObjectType_sequence:
+			if ( ! ((VMSequence*)frag).subsequent.isDeadEnd ) return NO;
+			for ( VMId *fid in ((VMSequence*)frag).fragments ) {
+				if (! [self isFragmentDeadEnd:fid] ) return NO;
+			}
+			break;
+		case vmObjectType_reference:
+			return [self isFragmentDeadEnd:((VMReference*)frag).referenceId];
+			break;
+	}
+	return YES;
+}
+
+
 #pragma mark -
 #pragma mark private internal methods to resolving frags
 

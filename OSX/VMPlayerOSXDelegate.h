@@ -18,14 +18,16 @@
 @interface VMPlayerOSXDelegate : NSObject
 	<NSApplicationDelegate, NSWindowDelegate> {
 @private
-    NSPersistentStoreCoordinator *__persistentStoreCoordinator;
-    NSManagedObjectModel *__managedObjectModel;
-    NSManagedObjectContext *__managedObjectContext;
+    NSPersistentStoreCoordinator	*__persistentStoreCoordinator;
+    NSManagedObjectModel			*__managedObjectModel;
+    NSManagedObjectContext			*__managedObjectContext;
+	
+		VMInt	numberOfShownSystemLogItems;	//	used to determine wheter new logs were added.
 }
 
 @property (nonatomic, VMStrong)	NSURL				*currentDocumentURL;
-@property (nonatomic, VMStrong)	VMLog				*systemLog;
-@property (nonatomic, VMStrong)	VMLog				*userLog;
+@property (nonatomic, VMStrong, readonly)	VMLog	*systemLog;
+@property (nonatomic, VMStrong, readonly)	VMLog	*userLog;
 @property (nonatomic, VMStrong)	VMId				*lastSelectedDataId;
 @property (nonatomic, assign, getter = isDocumentModified)	BOOL documentModified;
 
@@ -64,6 +66,8 @@
 
 + (VMPlayerOSXDelegate*)singleton;
 - (NSError*)openVMSDocumentFromURL:(NSURL *)documentURL;
+
+- (BOOL)showLogPanelIfNewSystemLogsAreAdded;
 
 /*---------------------------------------------------------------------------------
  

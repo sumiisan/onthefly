@@ -6,7 +6,7 @@
 //  Copyright 2012 sumiisan (aframasda.com). All rights reserved.
 //
 
-#define TEST
+#define TEST 0
 
 
 #import "VMPlayerOSXDelegate.h"
@@ -17,12 +17,13 @@
 #import "VMException.h"
 #import "VMPCodeEditorView.h"
 #import "VMPMacros.h"
-#ifdef TEST
+#if TEST
 #import "VMPTest.h"
 #endif
 
 
 #pragma mark VMPlayer OSX Delegate
+
 
 @implementation VMPlayerOSXDelegate
 
@@ -53,8 +54,8 @@ NSDictionary		*windowNames_static_ = nil;
 	if(! self )return nil;
     
     OnTheFly_singleton_static_ = self;
-	self.systemLog	= AutoRelease([[VMLog alloc] initWithOwner:VMLogOwner_System managedObjectContext:nil] );
-	self.userLog	= AutoRelease([[VMLog alloc] initWithOwner:VMLogOwner_User managedObjectContext:[self managedObjectContext]] );
+	_systemLog	= [[VMLog alloc] initWithOwner:VMLogOwner_System managedObjectContext:nil];
+	_userLog	= [[VMLog alloc] initWithOwner:VMLogOwner_User managedObjectContext:[self managedObjectContext]];
 	
 	NSString *urlString = [[NSUserDefaults standardUserDefaults] stringForKey:VMPUserDefaultsKey_LastDocumentURL];
 	if ( urlString )
@@ -74,8 +75,8 @@ NSDictionary		*windowNames_static_ = nil;
 	[DEFAULTSONGPLAYER coolDown];
 	VMNullify(editorWindowController);
 	VMNullify(variablesPanelController);
-	VMNullify(systemLog);
-	VMNullify(userLog);
+	Release( _systemLog );
+	Release( _userLog );
 	VMNullify(currentDocumentURL);
 	VMNullify(lastSelectedDataId);
     Release( __managedObjectContext );
@@ -218,6 +219,20 @@ NSDictionary		*windowNames_static_ = nil;
 	return windowNames_static_[window.identifier];
 }
 
+
+- (BOOL)showLogPanelIfNewSystemLogsAreAdded {
+	if ( _systemLog.count > numberOfShownSystemLogItems ) {
+		numberOfShownSystemLogItems = _systemLog.count;
+		[VMPNotificationCenter postNotificationName:VMPNotificationLogAdded
+											 object:self
+										   userInfo:@{@"owner":@(VMLogOwner_System) }];
+		return YES;
+	}
+	
+	return NO;
+}
+
+
 - (IBAction)showWindow:(id)sender {
 	if (((NSView*)sender).tag == 505 ) {
 		//	SOS !
@@ -272,7 +287,7 @@ NSDictionary		*windowNames_static_ = nil;
 	[DEFAULTSONGPLAYER stopAndDisposeQueue];
 	NSError *error = nil;
 	if ( ![DEFAULTSONG readFromString:self.editorWindowController.codeEditorView.textView.string error:&error] )
-		[VMPNotificationCenter postNotificationName:VMPNotificationLogAdded object:self userInfo:@{@"owner":@(VMLogOwner_System)}];
+		[self showLogPanelIfNewSystemLogsAreAdded];
 	
 	[self resetEverythingAfterDataIsLoaded];
 }
@@ -282,9 +297,11 @@ NSDictionary		*windowNames_static_ = nil;
 	DEFAULTSONG.vmsData = self.editorWindowController.codeEditorView.textView.string;
 	[self saveVMSDocumentToURL:self.currentDocumentURL];	//	FIRST! save anyway.
 	[DEFAULTSONGPLAYER stopAndDisposeQueue];				//	NEXT:  stopping audio can cause error, hang of device, etc.
-															//	LAST:  validate vms, it can produce lots of errors.
+															//	LAST:  validate vms, it can produce bunch of errors.
+	//	set editor's songData to nil, because it attempts to display deallocated frags on json parse error.
+	[self.editorWindowController clearSongData];
 	if( [DEFAULTSONG readFromString:nil error:&error] )
-		[VMPNotificationCenter postNotificationName:VMPNotificationLogAdded object:self userInfo:@{@"owner":@(VMLogOwner_System)}];
+		[self showLogPanelIfNewSystemLogsAreAdded];
 	
 	self.documentModified = NO;
 	[self resetEverythingAfterDataIsLoaded];
@@ -378,7 +395,7 @@ NSDictionary		*windowNames_static_ = nil;
 //
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
-#ifdef TEST
+#if TEST
 	[VMPTest test];
 #endif
     // Startup!
@@ -390,9 +407,7 @@ NSDictionary		*windowNames_static_ = nil;
 	DEFAULTSONG.showReport.current = @YES;
 	[self performSelector:@selector(mainRunLoop) withObject:nil afterDelay:0.5];
 	
-	[VMPNotificationCenter postNotificationName:VMPNotificationLogAdded
-										 object:self
-									   userInfo:@{@"owner":@(VMLogOwner_System) }];
+	[self showLogPanelIfNewSystemLogsAreAdded];
 	[VMPNotificationCenter addObserver:self selector:@selector(someWindowWillClose:) name:NSWindowWillCloseNotification object:nil];
 	[VMPNotificationCenter addObserver:self selector:@selector(dataSelected:) name:VMPNotificationFragmentSelected object:nil];
 }

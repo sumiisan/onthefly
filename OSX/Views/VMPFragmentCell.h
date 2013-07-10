@@ -59,7 +59,9 @@ static const CGFloat	vmpCellCornerRadius	= 3.;
 #pragma mark -
 #pragma mark VMPFragmentCell
 //---------------------------- VMPFragmentCell -------------------------------
-@interface VMPFragmentCell : VMPFragmentGraphBase <VMPDataGraphObject>
+@interface VMPFragmentCell : VMPFragmentGraphBase <VMPDataGraphObject> {
+	NSRect textFrameRectCache;
+}
 //@property (nonatomic)							VMFloat 				score;				//	not used internally
 
 + (VMPFragmentCell*)fragmentCellWithFragment:(VMFragment*)frag
