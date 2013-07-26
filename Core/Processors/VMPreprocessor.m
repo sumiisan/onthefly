@@ -11,6 +11,7 @@
 #import "VMPJSONDeserializer.h"
 #import "VMScoreEvaluator.h"
 #import "VMException.h"
+
 #include "VMPMacros.h"
 
 #if VMP_EDITOR
@@ -561,11 +562,15 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 #pragma mark log and alerts
 
 - (void)logWarning:(NSString *)messageFormat withData:(NSString *)data {
+#if VMP_OSX
 	[APPDELEGATE.systemLog logWarning:messageFormat withData:data];
+#endif
 }
 
 - (void)logError:(NSString*)messageFormat withData:(NSString*)data {
+#if VMP_OSX
 	[APPDELEGATE.systemLog logError:messageFormat withData:data];
+#endif
 	++fatalErrors;
 }
 
@@ -1428,7 +1433,7 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 	
 	VMArray *keys = [_song.songData keys];
 	for ( VMId *did in keys ) {
-		if ( [[did substringToIndex:4] isEqualToString: @"VMP|"] ) continue;	//	no VMData
+		if ( did.length > 3 && [[did substringToIndex:4] isEqualToString: @"VMP|"] ) continue;	//	no VMData
 		VMData *c = [self data:did];
 		
 		//	(4.30)	set audioInfoRef in audioFragment-s

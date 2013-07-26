@@ -22,11 +22,13 @@
 @property (nonatomic, readonly)		void *waveDataBorder;
 @property (nonatomic)				UInt64 numberOfFrames;
 
+- (OSErr)open:(NSString*)path;
 - (OSErr)load:(NSString*)path;
 - (int)bytesPerFrame;
 - (int)numberOfChannels;
 - (int)framesPerSecond;
 - (void*)dataAtFrame:(NSInteger)frame;
+- (VMTime)fileDuration;
 
 - (NSImage*)drawWaveImageWithSize:(NSSize)size foreColor:(NSColor*)foreColor backColor:(NSColor*)backColor;
 

@@ -25,7 +25,7 @@
  http://objective-audio.jp/2008/05/-extendedaudiofile.html
  */
 
-- (OSErr)load:(NSString*)path {
+- (OSErr)open:(NSString*)path {
 	//	variables
 	OSStatus err = noErr;
 	UInt32 size;
@@ -63,8 +63,14 @@
 								  kExtAudioFileProperty_ClientDataFormat,
 								  sizeof( cachedAudioFormat ),
 								  &cachedAudioFormat);
-	if (err)
-		return err;
+	
+	return err;
+}
+
+- (OSErr)load:(NSString*)path {
+	//	open
+	OSErr err = [self open:path];
+	if ( err ) return err;
 	
 	//	alloc buffers
 	UInt64	dataSize = _numberOfFrames * cachedAudioFormat.mBytesPerFrame;
@@ -108,6 +114,10 @@
 
 - (void*)waveDataBorder {
 	return _waveData + self.bytesPerFrame * _numberOfFrames;
+}
+
+- (VMTime)fileDuration {
+	return _numberOfFrames / cachedAudioFormat.mSampleRate;
 }
 
 //

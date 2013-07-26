@@ -30,7 +30,9 @@
 - (void)drawCircle_x:(float)x y:(float)y w:(float)w h:(float)h;
 - (void)fillCircle_x:(float)x y:(float)y w:(float)w h:(float)h;
 
+#if VMP_OSX
 @property (nonatomic, assign) NSInteger tag;		//	override
-@property (nonatomic, VMStrong) NSColor	*backgroundColor;
+#endif
+@property (nonatomic, VMStrong) VMPColor *backgroundColor;
 
 @end

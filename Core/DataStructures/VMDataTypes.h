@@ -1,5 +1,5 @@
 //
-//  VSDataTypes.h
+//  VMDataTypes.h
 //  VariableMusicPlayer
 //
 //  Created by cboy on 12/11/07.
@@ -241,12 +241,12 @@ typedef enum {
  *
  *	example 1: react to camera input
  *
- *	{ type="Stimulator", id:"@Camera{Red}"	}												//	this is a built-in definition
- *	{ type="Stimulator", id:"@Camera{Blue}"	}												//	this is a built-in definition
- *	{ type="Stimulator", id:"@Camera{Saturation}"	}										//	this is a built-in definition
+ *	{ type="Stimulator", id:"@Camera{Red}"	}												//	built-in definition
+ *	{ type="Stimulator", id:"@Camera{Blue}"	}												//	built-in definition
+ *	{ type="Stimulator", id:"@Camera{Saturation}"	}										//	built-in definition
  *
- *	{ type="Transformer", id:"FeelsWarm",	score:"@Limit{(@Camera{Red}*0.5)+(@Camera{Saturation}*0.5)}"	},	//	user definition
- *	{ type="Transformer", id:"FeelsCold",	score:"@Limit{(@Camera{Blue}*0.5)+(1-@Camera{Saturation}*0.5)}"	},	//	user definition
+ *	{ type="Transformer", id:"FeelsWarm",	score:"@Limit{(@Camera{Red}*0.5)+(@Camera{Saturation}*0.5)}"	},	//	user defined
+ *	{ type="Transformer", id:"FeelsCold",	score:"@Limit{(@Camera{Blue}*0.5)+(1-@Camera{Saturation}*0.5)}"	},	//	user defined
  *
  *	{ type="Selector", sel:["ocean_beach=FeelsWarm","home_bed=FeelsCold"] }
  *
@@ -337,7 +337,7 @@ typedef enum {
  */
 @interface VMSelector : VMCollection {
 	VMFloat			sumOfInnerScores_cache_;	//	for improve performance
-	VMChance		*selectedChance_;			//	for internal temporaly use
+	VMChance		*selectedChance_;			//	for internal temporary use
 }
 @property	(VMNonatomic VMStrong)	VMLiveData	*liveData;
 @end
@@ -348,7 +348,7 @@ typedef enum {
  generic player
  */
 @interface VMPlayer : VMLiveData
-@property	(nonatomic, VMStrong)	VMFragment	 	*nextPlayer;
+@property	(nonatomic, VMStrong)	VMFragment	*nextPlayer;
 @property	(nonatomic, copy)		VMId		*staticDataId;
 @end
 
@@ -509,7 +509,7 @@ typedef enum {
 /*
  player 
  (needs to be instanized at playback because it has a dynamic property)
- actually, not a data-type.
+ not a static data-type.
  */
 
 

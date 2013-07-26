@@ -269,6 +269,7 @@ static NSShadow		*smallShadow_static_			= nil;
 	BeginGC
 	
 	NSRect			contentRect = self.contentRect;
+	if ( contentRect.size.height == 0 || contentRect.size.width == 0 ) return;	//	insurance
 	NSBezierPath	*headerPath;
 	//
 	//	frame

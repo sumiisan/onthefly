@@ -43,7 +43,8 @@ static const BOOL kUseNotification = NO;
 #define VMPFont  UIFont
 #define VMPView  UIView
 #define VMPColor UIColor
-#define VMPColorBy(r,g,b,a) [UIColor colorWithRed:(CGFloat)(r) green:(CGFloat)(g) blue:(CGFloat)(b) alpha:(CGFloat)(a)] 
+
+#define VMPColorBy(r,g,b,a) [UIColor colorWithRed:(CGFloat)(r) green:(CGFloat)(g) blue:(CGFloat)(b) alpha:(CGFloat)(a)]
 #define VMPSize  CGSize
 #define VMPSetNeedsDisplay(instance)   [instance setNeedsDisplay]
 #define VMPMakeRect(x,y,w,h) CGRectMake(x,y,w,h)
@@ -83,7 +84,8 @@ static const BOOL kUseNotification = YES;
 #define VMPFont  NSFont
 #define VMPView  NSView
 #define VMPColor NSColor
-#define VMPColorBy(r,g,b,a) [NSColor colorWithCalibratedRed:(CGFloat)(r) green:(CGFloat)(g) blue:(CGFloat)(b) alpha:(CGFloat)(a)] 
+
+#define VMPColorBy(r,g,b,a) [NSColor colorWithCalibratedRed:(CGFloat)(r) green:(CGFloat)(g) blue:(CGFloat)(b) alpha:(CGFloat)(a)]
 #define VMPSize  NSSize
 #define VMPSetNeedsDisplay(instance)   [instance setNeedsDisplay:YES]
 #define VMPMakeRect(x,y,w,h) NSMakeRect(x,y,w,h)

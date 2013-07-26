@@ -70,12 +70,14 @@ return nil; \
 #define VMObligatory_encodeWithCoder(_code_) \
 - (void)encodeWithCoder:(NSCoder *)encoder { \
 _code_ \
+[super encodeWithCoder:encoder];\
 }
 
 #define VMObligatory_initWithCoder(_code_) \
 - (id)initWithCoder:(NSCoder *)decoder { \
 if ((self = [super init])) {\
 [self initAttributes];\
+[super initWithCoder:decoder];\
 _code_ \
 } \
 return self;\

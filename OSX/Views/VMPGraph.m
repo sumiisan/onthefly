@@ -157,30 +157,30 @@ colorModifiedByHueOffset:0 saturationFactor:0.3 brightnessFactor:1.7],	@( vmObje
 static 	VMHash *bgColorForType_static_ = nil;
 
 
-- (NSColor*)colorModifiedByRedFactor:(const CGFloat)red greenFactor:(const CGFloat)green blueFactor:(const CGFloat)blue {
+- (VMPColor*)colorModifiedByRedFactor:(const CGFloat)red greenFactor:(const CGFloat)green blueFactor:(const CGFloat)blue {
 	CGFloat r 	= red 	* self.redComponent;
 	CGFloat g 	= green * self.greenComponent;
 	CGFloat b 	= blue	* self.blueComponent;
-	return [NSColor colorWithCalibratedRed:( clipRange0to1(r) )
+	return [VMPColor colorWithCalibratedRed:( clipRange0to1(r) )
 									 green:( clipRange0to1(g) )
 									  blue:( clipRange0to1(b) )
 									 alpha:self.alphaComponent
 			];
 }
 
-- (NSColor*)colorModifiedByHueOffset:(const CGFloat)hue saturationFactor:(const CGFloat)saturation brightnessFactor:(const CGFloat)brightness {
+- (VMPColor*)colorModifiedByHueOffset:(const CGFloat)hue saturationFactor:(const CGFloat)saturation brightnessFactor:(const CGFloat)brightness {
 	CGFloat h = self.hueComponent + hue;
 	if ( h < 0. || h > 1. ) h = fmod( h + 1000, 1. );
 	CGFloat s = self.saturationComponent * saturation;
 	CGFloat b = self.brightnessComponent * brightness;
-	return [NSColor colorWithCalibratedHue:h
+	return [VMPColor colorWithCalibratedHue:h
 								saturation: clipRange0to1( s )
 								brightness: clipRange0to1( b )
 									 alpha:self.alphaComponent
 			];
 }
 
-+ (NSColor*)colorForDataType:(vmObjectType)type {
++ (VMPColor*)colorForDataType:(vmObjectType)type {
 	if ( ! bgColorForType_static_ )
 		bgColorForType_static_ = Retain([VMHash hashWithObjectsAndKeys:
 										 colorForType( fragment,			0.3, 0.3, 0.45 )
@@ -193,10 +193,10 @@ static 	VMHash *bgColorForType_static_ = nil;
 										 colorForType( reference,			0.4, 0.4, 0.4  )
 										 colorForType( unknown,				0.8, 0.8, 0.8  )
 										 nil]);
-	[bgColorForType_static_ setItem:[NSColor colorWithCalibratedRed:0.9 green:0.9 blue:0.9 alpha:1.] for:@(0)];
-	NSColor *c = (NSColor*)[bgColorForType_static_ item:@(type)];
+	[bgColorForType_static_ setItem:[VMPColor colorWithCalibratedRed:0.9 green:0.9 blue:0.9 alpha:1.] for:@(0)];
+	VMPColor *c = (VMPColor*)[bgColorForType_static_ item:@(type)];
 
-	return ( c ? c : [NSColor grayColor]);
+	return ( c ? c : [VMPColor grayColor]);
 }
 
 + (NSColor*)backgroundColorForDataType:(vmObjectType)type {

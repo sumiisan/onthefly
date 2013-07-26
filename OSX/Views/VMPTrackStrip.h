@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "VMPGraph.h"
 #import "VMPCanvas.h"
 
 
@@ -18,7 +19,11 @@
     NSTimeInterval  offset;
 }
 
+#if VMP_OSX
 @property (nonatomic, VMStrong) NSTextField *caption;
+#elif VMP_IPHONE
+@property (nonatomic, VMStrong) UILabel *caption;
+#endif
 @property (nonatomic, VMStrong) NSString *audioFragmentId;
 
 - (void)setInfoString:(NSString *)infoString;

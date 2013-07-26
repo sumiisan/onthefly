@@ -295,7 +295,7 @@ static VMPObjectCell		*typeColumnCell = nil;
 	
 	for ( VMId *dataId in ids ) {
 		
-		if ( [[dataId substringToIndex:4] isEqualToString: @"VMP|"] ) continue;		//	no VMData
+		if ( dataId.length > 3 && [[dataId substringToIndex:4] isEqualToString: @"VMP|"] ) continue;		//	no VMData
 		
 		VMData		*d = [_songData item:dataId];
 		VMFragment  *f = ClassCastIfMatch(d, VMFragment);
@@ -365,7 +365,9 @@ static VMPObjectCell		*typeColumnCell = nil;
 	NSTextView* searchFieldEditor = [obj userInfo][@"NSFieldEditor"];
 
     if ( !performingAutoComplete && !handlingCommand) {	// prevent calling "complete" too often
-		[self updateFilterWithString:self.currentNonCompletedSearchString action:vmp_action_select_during_textSearch];
+		[self updateFilterWithString:self.currentNonCompletedSearchString
+							  action:vmp_action_select_during_textSearch
+			  selectWhenPartialMatch:NO];
         performingAutoComplete = YES;
         [searchFieldEditor complete:nil];
         performingAutoComplete = NO;
@@ -382,7 +384,7 @@ static VMPObjectCell		*typeColumnCell = nil;
 		result = YES;
 		
 		if ( commandSelector == @selector(insertNewline:) )
-			[self updateFilterWithString:textView.string action:vmp_action_select_on_textSearch];
+			[self updateFilterWithString:textView.string action:vmp_action_select_on_textSearch selectWhenPartialMatch:NO];
     }
     return result;
 }
@@ -448,7 +450,7 @@ static VMPObjectCell		*typeColumnCell = nil;
 }
 
 
-- (id)reverseSeekId:(VMId*)inId inNode:(NSTreeNode*)inNode matchedExact:(BOOL*)outMatchedExact {
+- (id)seekPartialIdMatch:(VMId*)inId inNode:(NSTreeNode*)inNode matchedExact:(BOOL*)outMatchedExact {
 	VMInt len = inId.length;
 	if ( len == 0 ) return nil;
 	
@@ -534,7 +536,7 @@ static VMPObjectCell		*typeColumnCell = nil;
 							: [[self.searchField stringValue] substringToIndex:selection.location];
 	
 	if ( ! [searchString isEqualToString:self.currentFilterString] && searchString.length > 0 )
-		[self updateFilterWithString:searchString action:vmp_action_select_during_textSearch];
+		[self updateFilterWithString:searchString action:vmp_action_select_during_textSearch selectWhenPartialMatch:NO];
 }
 
 - (void)doubleClickOnFragment:(NSNotification*)notification {
@@ -544,11 +546,11 @@ static VMPObjectCell		*typeColumnCell = nil;
 
 //	returns YES if some matched.
 - (BOOL)findObjectById:(VMId*)dataId action:(vmp_action)action {	//	public
-	return [self updateFilterWithString:dataId action:action];
+	return [self updateFilterWithString:dataId action:action selectWhenPartialMatch:YES];
 }
 
 //	returns YES if some matched.
-- (BOOL)updateFilterWithString:(NSString*)searchString action:(vmp_action)action {
+- (BOOL)updateFilterWithString:(NSString*)searchString action:(vmp_action)action selectWhenPartialMatch:(BOOL)selectWhenPartialMatch {
 	performingSearchFilter = YES;
 	
 	self.currentFilterString = searchString;
@@ -607,19 +609,19 @@ static VMPObjectCell		*typeColumnCell = nil;
 	doForever {
 		leafData	= [self seekId:searchString inNode:branchNode matchedExact:&whole_matchedExact];
 		if ( ! leafData )
-			leafData = [self reverseSeekId:searchString inNode:branchNode matchedExact:&whole_matchedExact];
+			leafData = [self seekPartialIdMatch:searchString inNode:branchNode matchedExact:&whole_matchedExact];
 
 		if ( !ClassMatch( leafData, NSTreeNode ) ) break;
 		branchNode = leafData;
 		[self expand:branchNode];
-		if ( whole_matchedExact ) {
+		if ( whole_matchedExact || selectWhenPartialMatch ) {
 			[self selectItemInObjectBrowser:leafData];
 			break;
 		}
 	}
 filterStringExit:
 	performingSearchFilter = NO;
-	if ( whole_matchedExact ) [self selectRowAndRedrawViews:self.objectTreeView.selectedRow withAction:action];
+	if ( whole_matchedExact || selectWhenPartialMatch ) [self selectRowAndRedrawViews:self.objectTreeView.selectedRow withAction:action];
 	return whole_matchedExact;
 	
 filterStringNotFound:

@@ -8,9 +8,9 @@
 
 #import "VMPrimitives.h"
 #import "VMDataTypes.h"
-#import "VMException.h"
 #include "VMPMacros.h"
 #include "boxmuller.h"
+#import "VMException.h"
 
 
 VMFloat SNDRand(VMFloat center, VMFloat range) {

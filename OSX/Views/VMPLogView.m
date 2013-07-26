@@ -527,7 +527,7 @@ static const VMFloat kDefaultLogItemViewHeight = 14.0;
 			//	add message if provided
 			//
 			if ( rl.subInfo ) {
-				VMString *message = [rl.subInfo item:@"message"];
+				VMString *message = rl.message;
 				if ( message ) {
 					VMPTextField *tf = [[VMPTextField alloc] initWithFrame:expansionView.frame];
 					tf.stringValue = message;

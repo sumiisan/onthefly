@@ -10,7 +10,10 @@
 #include "MultiPlatform.h"
 
 @implementation VMPCanvas
-@synthesize tag = tag_, backgroundColor = backgroundColor_;
+#if VMP_OSX
+@synthesize tag = tag_;
+#endif
+@synthesize backgroundColor = backgroundColor_;
 
 - (id)initWithFrame:(VMPRect)frame {
     if ((self = [super initWithFrame:frame])) {
@@ -24,6 +27,7 @@
 	Dealloc( super );;	
 }
 
+#if VMP_OSX
 - (NSInteger)tag {
 	return tag_;
 }
@@ -31,12 +35,17 @@
 - (void)setTag:(NSInteger)tag {
 	tag_ = tag;
 }
+#endif
 
 
 - (void)drawRect:(VMPRect)rect {
 	if ( self.backgroundColor ) {
 		[self.backgroundColor setFill];
+#if ! TARGET_OS_IPHONE
 		NSRectFill(rect);
+#else
+		UIRectFill(rect);
+#endif
 	}
 }
 

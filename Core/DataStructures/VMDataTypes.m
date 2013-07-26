@@ -1,5 +1,5 @@
 //
-//  VSDataTypes.m
+//  VMDataTypes.m
 //  VariableMusicPlayer
 //
 //  Created by cboy on 12/11/07.
@@ -10,8 +10,11 @@
 #import "VMScoreEvaluator.h"
 #import "VMPreprocessor.h"
 #import "VMException.h"
-#import "VMPAnalyzer.h"
 #import "VMDataTypesMacros.h"
+
+#if VMP_EDITOR
+#import "VMPAnalyzer.h"
+#endif
 
 #include "VMPMacros.h"
 
@@ -200,15 +203,16 @@ VMOBLIGATORY_init(vmObjectType_data,NO,)
 
 
 //	NSCoding not fully implemented: TODO: implement NSCoding for each class
-VMObligatory_initWithCoder(
- Deserialize(id,Object)
- Deserialize(comment,Object);
-)
+- (id)initWithCoder:(NSCoder *)decoder {
+	Deserialize(id,Object)
+	Deserialize(comment,Object);
+	return self;
+}
 
-VMObligatory_encodeWithCoder(
+- (void)encodeWithCoder:(NSCoder *)encoder {
  Serialize(id,Object)
  Serialize(comment,Object)
-)
+}
 
 //	NSCopying
 /*
@@ -1016,9 +1020,9 @@ VMObligatory_encodeWithCoder
 	[DEFAULTEVALUATOR setValue:self.targetId forVariable:@"@T"];
 	VMFloat s	 = [DEFAULTEVALUATOR evaluate:self.scoreDescriptor];
 	cachedScore_ = ( s > 0 ? s : 0 );	//	score must be grataer than zero. ( at least now, when we cache. )
-										//	DISCUSSION: consider disabling a selector option (=chance) by decrementing the score value
-										//				when we overwrite the vms data to expand song. 
-										//				but probably, this should be done by the preprocessor.
+										//	DISCUSSION: consider disabling a selector option (=chance) by adding negative score value
+										//				when we overwrite vms data to expand the song. 
+										//				but probably, this should be done by the preprocessor and not at runtime.
 	return cachedScore_; 
 }
 
@@ -1199,7 +1203,7 @@ if ( ClassMatch(data, NSString)) {
 		} else if ( ClassMatch( obj, VMChance )) {
 			[self.fragments push:obj];
 		} else {
-			[VMException raise:@"Could not set frags because some Objects was in data" format:@"%@", [arr description]];
+			[VMException raise:@"Could not set frags because some bare objects were given." format:@"%@", [arr description]];
 		}
     }
 }
@@ -1339,13 +1343,19 @@ static VMHash *scoreForFragment_static_ = nil;
 	for ( int i = 0; i < c; ++i ) {
 		id d = [self.fragments item:i];
 		if ( ClassMatch(d, VMString ))  {
-			[VMException raise:@"Type mismatch." format:@"Id found where chance expected. in %@",self.description];
+#if VMP_OSX
 			//	should be chance
-/*			VMChance *ch = [[VMChance alloc] init];
+			[VMException raise:@"Type mismatch." format:@"Id found where chance expected. in %@",self.description];
+#endif
+			
+#if VMP_IPHONE
+			//	create chance on the fly. (background mode)
+			VMChance *ch = [[VMChance alloc] init];
 			[ch setByString:d];
-			[self.frags setItem:ch at:i];
+			[self.fragments setItem:ch at:i];
 			d = ch;
-			Release(ch);*/
+			Release(ch);
+#endif
 		}
 		
 		sumOfInnerScores_cache_ += ((VMChance*)d).evaluatedScore;	// just evaluate.
@@ -1471,8 +1481,12 @@ static VMHash *scoreForFragment_static_ = nil;
 					VMFragment *c = [DEFAULTSONG data:fragId];
 					//NSLog(@"- selected using ext data: %@", c.id);
 					frag = [DEFAULTEVALUATOR resolveDataWithTracking:c toType:vmObjectCategory_fragment];
-					if( frag ) break;
-					else [DEFAULTANALYZER addUnresolveable:fragId];
+					if( frag )
+						break;
+#if VMP_EDITOR
+					else
+						[DEFAULTANALYZER addUnresolveable:fragId];
+#endif
 				}
 			}
 		} else {
@@ -1499,8 +1513,13 @@ static VMHash *scoreForFragment_static_ = nil;
 #endif
 					selectedChance_ = c;
 					frag = [DEFAULTEVALUATOR resolveDataWithTracking:c toType:vmObjectCategory_fragment];
-					if( frag ) break;
-					else [DEFAULTANALYZER addUnresolveable:c.targetId];
+					if( frag )
+						break;
+#if VMP_EDITOR
+					else
+						[DEFAULTANALYZER addUnresolveable:c.targetId];
+#endif
+					
 					if (verbose) NSLog(@"    SEL: unresolveable, retry. %@", c.targetId );
 				}
 			}
@@ -1657,7 +1676,7 @@ VMOBLIGATORY_setWithData()
 
 #pragma mark private method
 
-- (VMFragment*)fragmentAtIndex:(VMInt)pos {	//override VMSelector's method. if pos is at the maximal index, return next.
+- (VMFragment*)fragmentAtIndex:(VMInt)pos {	//override VMCollection's method. if pos is at maximum index, return subsequent.
 	if( pos < self.length ) return [super fragmentAtIndex:pos];
 	if( pos == self.length ) return self.subsequent;
     return nil;

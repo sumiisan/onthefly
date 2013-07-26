@@ -37,6 +37,7 @@ typedef enum {
 @interface VMPReportRecord : NSObject
 @property (nonatomic,VMStrong) NSString	*ident;
 @property (nonatomic,VMStrong) NSString	*title;
+@property (nonatomic,VMStrong) NSString *exitParts;
 @property (nonatomic,VMStrong) NSNumber	*count;
 @property (nonatomic,VMStrong) NSNumber	*percent;
 @property (nonatomic,VMStrong) NSNumber	*duration;

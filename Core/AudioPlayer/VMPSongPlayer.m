@@ -383,7 +383,10 @@ static VMPSongPlayer 	*songPlayer_singleton_static_ = nil;
 	NSString *filePath;
 
 #if VMP_IPHONE
-	filePath = [[NSBundle bundleForClass: [self class]] pathForResource:fileId ofType:typeExt inDirectory:kDefaultVMDirectory];
+	filePath = [[NSBundle bundleForClass: [self class]]
+				pathForResource:fileId
+				ofType:song_.audioFileExtension
+				inDirectory:kDefaultVMDirectory];
 	
 #elif VMP_OSX
 	//filePath = [[NSBundle mainBundle] pathForResource:fileId ofType:song_.audioFileExtension inDirectory:kDefaultVMDirectory];

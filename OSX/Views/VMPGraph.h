@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "VMDataTypes.h"
+#import "MultiPlatform.h"
 
 #ifndef VMPGraphMacros
 #define VMPGraphMacros
@@ -79,15 +80,15 @@ enum {
 #pragma mark -
 #pragma mark NSColor (VMPDataColors)
 //------------------------- NSColor (VMPDataColors) -----------------------------
-@interface NSColor (VMPDataColors)
-- (NSColor*)colorModifiedByRedFactor:(const CGFloat)red 
+@interface VMPColor (VMPDataColors)
+- (VMPColor*)colorModifiedByRedFactor:(const CGFloat)red 
 						 greenFactor:(const CGFloat)green 
 						  blueFactor:(const CGFloat)blue;
-- (NSColor*)colorModifiedByHueOffset:(const CGFloat)hue 
+- (VMPColor*)colorModifiedByHueOffset:(const CGFloat)hue 
 					saturationFactor:(const CGFloat)saturation
 					brightnessFactor:(const CGFloat)brightness;
-+ (NSColor*)colorForDataType:(vmObjectType)type;
-+ (NSColor*)backgroundColorForDataType:(vmObjectType)type;
++ (VMPColor*)colorForDataType:(vmObjectType)type;
++ (VMPColor*)backgroundColorForDataType:(vmObjectType)type;
 @end
 
 
@@ -102,6 +103,21 @@ enum {
 		attributes:(NSDictionary*)attributes;*/
 @end
 
+
+
+
+/*---------------------------------------------------------------------------------
+ *
+ *
+ *	OSX only
+ *
+ *
+ *---------------------------------------------------------------------------------*/
+
+#if VMP_OSX
+
+
+
 #pragma mark -
 #pragma mark NSTextField (LabelCreation)
 //--------------------- NSTextField (LabelCreation) -------------------------
@@ -112,6 +128,10 @@ enum {
 
 #pragma mark -
 #pragma mark VMPButton (double clickable)
+
+
+
+
 
 //--------------------- VMPButton (double clickable) -----------------------------
 @interface VMPButton : NSButton
@@ -183,6 +203,7 @@ enum {
 
 
 
+#endif //VMP_OSX
 
 
 

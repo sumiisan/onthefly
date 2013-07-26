@@ -162,10 +162,21 @@ static VMHash *processPhaseNames_static_ = nil;
     assert( queue != nil );
 	[self reallocBuffer];
 
-#if TARGET_OS_IPHONE
-	//	prefer hardware decoder
-	UInt32 hardwarePolicy = kAudioQueueHardwareCodecPolicy_PreferHardware;
-	AudioQueueSetProperty( queue, kAudioQueueProperty_HardwareCodecPolicy, &hardwarePolicy, sizeof(hardwarePolicy));
+#if VMP_IPHONE
+	//	decoder policy
+	UInt32 hardwarePolicy = ( playerId == 0 )
+							? kAudioQueueHardwareCodecPolicy_PreferHardware
+							: kAudioQueueHardwareCodecPolicy_PreferSoftware;	//	only player #0 can use hardwre decoder
+																				//	since we have only one on board.
+	OSStatus status= AudioQueueSetProperty( queue, kAudioQueueProperty_HardwareCodecPolicy, &hardwarePolicy, sizeof(hardwarePolicy));
+	
+	//
+	//	NOTE:	setting all players to kAudioQueueHardwareCodecPolicy_PreferHardware worked for my iPhone 4S with iOS6.1.3
+	//			but not for my iPad (1st gen) with iOS5.1.1. didn't switch to software decoder when OSStatus = 'hwiu' (hardware in use)
+	//
+	
+	
+	if(status)LLog(@"HardwareCodecPolicy set returned status:%ld",status);
 #endif
 	
 }
@@ -234,6 +245,10 @@ static VMHash *processPhaseNames_static_ = nil;
     size = sizeof(numTotalPackets);
     AudioFileGetProperty(audioFile, kAudioFilePropertyAudioDataPacketCount, &size, &numTotalPackets );
 	
+	if (size == 0) {
+		processPhase = pp_idle;
+		return;	//	failed
+	}
     
 	// see if file uses a magic cookie (a magic cookie is meta data which some formats use)
 	AudioFileGetPropertyInfo( audioFile, kAudioFilePropertyMagicCookieData, &size, nil );	
@@ -264,7 +279,7 @@ static VMHash *processPhaseNames_static_ = nil;
 //static int logDone = 0;
 
 - (UInt32)readPacketsIntoBuffer:(AudioQueueBufferRef)inBuffer queue:(AudioQueueRef)inAQ {
-	UInt32		numBytes, numPackets;
+	UInt32	numBytes, numPackets;
 	
 	// read packets into buffer from file
 	numPackets = numPacketsToRead;
@@ -307,11 +322,35 @@ static VMHash *processPhaseNames_static_ = nil;
     
 	UInt32 preparedFrames;
     UInt32 primeFrames = 0x200;
-	
-	OSErr status = AudioQueuePrime( queue, primeFrames, &preparedFrames );
-	if( status )
-		NSLog(@"AudioQueuePrime Error:%d",status);
-    processPhase = pp_prime;
+	OSStatus status = AudioQueuePrime( queue, primeFrames, &preparedFrames );
+#if TARGET_OS_IPHONE
+	/*
+	 
+	 switching hardware codec policy after calling AudioQueuePrime() seems not to work.
+	 
+	if( status == 'hwiu' ) {
+		//	seems like hardware audio decoder is in use. let's try software decoder instead.
+		UInt32 hardwarePolicy = kAudioQueueHardwareCodecPolicy_UseSoftwareOnly;
+		status = AudioQueueSetProperty( queue, kAudioQueueProperty_HardwareCodecPolicy, &hardwarePolicy, sizeof(hardwarePolicy));
+			
+		AudioQueueGetProperty(queue, kAudioQueueProperty_HardwareCodecPolicy, &hardwarePolicy, nil);
+		LLog(@"hardware is in use: switch to software decoder. status= %ld set result: %ld", status, hardwarePolicy);
+		
+		
+		if ( !status ) status = AudioQueuePrime( queue, primeFrames, &preparedFrames );
+	}	*/
+#endif
+	if( status ) {
+		LLog(@"AudioQueuePrime %@ Error:%ld", fragId, (long)status);
+	} /*else {
+		LLog(@"AudioQueuePrime %@ prepared:%ld", fragId, (long)preparedFrames);
+	}*/
+	if ( preparedFrames > 0 )
+		processPhase = pp_prime;
+	else {
+		shiftTime += 0.05;
+		processPhase = pp_preLoad;	//	try again
+	}
 }
 
 #pragma mark -

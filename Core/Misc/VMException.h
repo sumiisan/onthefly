@@ -7,8 +7,14 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "MultiPlatform.h"
 
-@interface VMException : NSException <NSAlertDelegate>
+@interface VMException : NSException
+#if VMP_OSX
+	<NSAlertDelegate>
+#else
+	<UIAlertViewDelegate>
+#endif
 + (BOOL)ensure:(NSString *)format, ...;	//	not actually an exception. maybe make a separate class later.
 + (void)alert:(NSString *)format, ...;
 + (void)alert:(NSString *)name format:(NSString*)format, ...;

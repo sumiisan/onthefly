@@ -13,7 +13,7 @@
 #import "VMPSongPlayer.h"
 #include "KeyCodes.h"
 #import "VMPNotification.h"
-
+#import "VMAudioObject.h"
 
 
 /*---------------------------------------------------------------------------------
@@ -154,6 +154,7 @@
 @property (VMStrong)						VMHash						*sojournDataForPart;
 @property (VMStrong)						VMHash						*histograms;
 @property (VMStrong)						VMArray						*unresolveables;
+@property (VMStrong)						VMArray						*fileWarnings;
 
 @property (readonly, getter=isBusy)			BOOL						busy;
 @property (VMStrong)						VMFragment					*entryPoint;
@@ -179,9 +180,9 @@
 static VMPAnalyzer		*analyzer_singleton_static_		= nil;
 static VMPRecordCell	*recordCell_defaultCell_static_	= nil;
 
-//	50000 times
+//	100000 times
 static const int	kNumberOfIterationsOfGlobalTraceRoute   =  1000;
-static const int	kLengthOfGlobalTraceRoute				=    50;
+static const int	kLengthOfGlobalTraceRoute				=   100;
 
 //	300 entries
 static const int	kNumberOfIterationsOfPartTraceRoute		=	300;
@@ -224,6 +225,7 @@ static const int	kLengthOfPartTraceRoute					= 10000;	//	gives up after 10000 ti
 	VMNullify(progressWC);
 	VMNullify(currentPartId);
 	VMNullify(unresolveables);
+	VMNullify(fileWarnings);
 	VMNullify(history);
 	VMNullify(countForFragmentId);
 	VMNullify(countForPart);
@@ -305,6 +307,7 @@ static const int	kLengthOfPartTraceRoute					= 10000;	//	gives up after 10000 ti
 			self.dataIdToProcess = [DEFAULTSONG.songData sortedKeys];
 			self.unresolveables = ARInstance(VMArray);
 			self.currentPositionInDataIdList = 0;
+			self.fileWarnings = ARInstance(VMArray);
 			_busy =YES;
 			[self checkFiles_proc];
 			
@@ -373,7 +376,7 @@ static const int	kLengthOfPartTraceRoute					= 10000;	//	gives up after 10000 ti
 	[DEFAULTSONG.log save];
 	DEFAULTSONG.log = self.log;
 	
-	DEFAULTSONG.showReport.current = NO;
+	DEFAULTSONG.showReport.current = @NO;
 	[DEFAULTSONG setFragmentId:self.entryPoint.id];
 	
     exitWhenPartChanged = ( [exitCondition isEqualToString:@"exit-part" ]);
@@ -439,8 +442,8 @@ static const int	kLengthOfPartTraceRoute					= 10000;	//	gives up after 10000 ti
  ----------------------------------------------------------------------------------*/
 - (BOOL)analyze_step {
 	@autoreleasepool {
-		VMAudioFragment *ac = [DEFAULTSONG nextAudioFragment];
-		if( ! ac ) {
+		VMAudioFragment *af = [DEFAULTSONG nextAudioFragment];
+		if( ! af ) {
 			[_countForFragmentId add:1. ontoItem:@"unresolved"];
 			incrementRouteForId( _routesForFragmentId, @"unresolved,", _lastFragmentId, nil );
 			incrementRouteForId( _routesForFragmentId, _lastFragmentId, nil, @"unresolved");
@@ -452,16 +455,16 @@ static const int	kLengthOfPartTraceRoute					= 10000;	//	gives up after 10000 ti
 		
 		//	route
 		if ( _lastFragmentId ) {
-			incrementRouteForId( _routesForFragmentId, _lastFragmentId, nil, ac.id );
-			incrementRouteForId( _routesForFragmentId, ac.id, _lastFragmentId, nil );
+			incrementRouteForId( _routesForFragmentId, _lastFragmentId, nil, af.id );
+			incrementRouteForId( _routesForFragmentId, af.id, _lastFragmentId, nil );
 		}
 		
 		if ( exitWhenPartChanged ) {
-			if ( ! [ac.partId isEqualToString: self.currentPartId ] ) {
-				VMInt c = [_countForPart itemAsInt:ac.partId];
-				[_countForPart setItem:@(c+1) for:ac.partId];
-				[self pushSojournForPart:ac.partId length:sojourn startIndexInLog:startIndexOfSojourn];
-				incrementRouteForId( _routesForFragmentId, ac.partId, _lastFragmentId, ac.fragId );
+			if ( ! [af.partId isEqualToString: self.currentPartId ] ) {
+				VMInt c = [_countForPart itemAsInt:af.partId];
+				[_countForPart setItem:@(c+1) for:af.partId];
+				[self pushSojournForPart:af.partId length:sojourn startIndexInLog:startIndexOfSojourn];
+				incrementRouteForId( _routesForFragmentId, af.partId, _lastFragmentId, af.fragId );
 				sojourn = 0;
 				startIndexOfSojourn = [self.log nextIndex];
 				++totalPartCount;
@@ -469,25 +472,25 @@ static const int	kLengthOfPartTraceRoute					= 10000;	//	gives up after 10000 ti
 				return exitWhenPartChanged;
 			}
 		} else {
-			VMInt c = [_countForPart itemAsInt:ac.partId];
-			[_countForPart setItem:@(c+1) for:ac.partId];
+			VMInt c = [_countForPart itemAsInt:af.partId];
+			[_countForPart setItem:@(c+1) for:af.partId];
 			++totalPartCount;
-			if ( ! [ac.partId isEqualToString: self.currentPartId ] ) {
+			if ( ! [af.partId isEqualToString: self.currentPartId ] ) {
 				[self pushSojournForPart:self.currentPartId length:sojourn startIndexInLog:startIndexOfSojourn];
-				incrementRouteForId( _routesForFragmentId, self.currentPartId, nil, ac.partId );
-				incrementRouteForId( _routesForFragmentId, ac.partId, self.currentPartId, nil );
-				self.currentPartId = ac.partId;
+				incrementRouteForId( _routesForFragmentId, self.currentPartId, nil, af.partId );
+				incrementRouteForId( _routesForFragmentId, af.partId, self.currentPartId, nil );
+				self.currentPartId = af.partId;
 				sojourn = 0;
 				startIndexOfSojourn = [self.log nextIndex];
 			}
 		}
 		
-		[_countForFragmentId setItem:@([_countForFragmentId itemAsInt:ac.id]+1) for:ac.id];
+		[_countForFragmentId setItem:@([_countForFragmentId itemAsInt:af.id]+1) for:af.id];
 		
 		//	simulate fire
-		[ac interpreteInstructionsWithAction:vmAction_play];
+		[af interpreteInstructionsWithAction:vmAction_play];
 		++totalAudioFragmentCount;
-		self.lastFragmentId = ac.fragId;
+		self.lastFragmentId = af.fragId;
 	}
 	return NO;
 }
@@ -565,28 +568,44 @@ static const int	kLengthOfPartTraceRoute					= 10000;	//	gives up after 10000 ti
 	for ( VMString *dataId in _dataIdToProcess ) {
 		VMFloat		count		= [_countForFragmentId itemAsFloat:dataId];
 		VMFloat		percent		= (count*100./(double)totalAudioFragmentCount);
-		VMAudioFragment	*ac			= ClassCastIfMatch( [DEFAULTSONG data:dataId], VMAudioFragment );
-		VMTime		duration	= ( ac ? ac.duration * count : 0 );
+		VMAudioFragment	*af		= ClassCastIfMatch( [DEFAULTSONG data:dataId], VMAudioFragment );
+		VMTime		duration	= ( af ? af.duration * count : 0 );
 		
 		maxFragmentCount	= MAX( count,		maxFragmentCount );
 		maxFragmentPercent	= MAX( percent,		maxFragmentPercent );
 		maxFragmentDuration	= MAX( duration,	maxFragmentDuration );
 		
-		[fragArray push:AutoRelease([[VMPReportRecord alloc] initWithType:vmpReportRecordType_frag
-														   id:dataId
-														count:count
-													  percent:percent
-													 duration:duration  ] )];
+		VMPReportRecord *rec = AutoRelease([[VMPReportRecord alloc] initWithType:vmpReportRecordType_frag
+																			  id:dataId
+																		   count:count
+																		 percent:percent
+																		duration:duration  ] );
 		
-		if ( ac ) {
-			VMId	*partId			= ac.partId;
+		VMId	*partId = nil;
+		if ( af ) {
+			partId = af.partId;
 			VMTime	partDuration	= [durationForPart itemAsFloat:partId];
 			partDuration  += duration;
-			totalDuration += ac.duration;
+			totalDuration += af.duration;
 			[durationForPart		setItem:VMFloatObj(partDuration) for:partId];
 			[numberOfFragmentsForPart	setItem:@([numberOfFragmentsForPart itemAsInt:partId] +1) for:partId];
 			[durationArray			push:	VMFloatObj(duration)];
 		}
+		
+		//	list-up subsequent parts
+		VMArray *subseq = [[[_routesForFragmentId itemAsHash:dataId] itemAsHash:@"to"] sortedKeys];
+		VMArray *subseqParts = NewInstance(VMArray);
+		
+		for ( VMId* subseqId in subseq ) {
+			VMId *subPartId = [subseqId componentsSeparatedByString:@"_"][0];
+			if ( ! [partId isEqualToString:subPartId] )
+				[subseqParts pushUnique:subPartId];
+		}
+		
+		rec.exitParts = [subseqParts join:@","];
+		Release(subseqParts);
+		[fragArray push:rec];
+
 	}
 	[self.histograms setItem:durationArray for:@"duration"];
 	return fragArray;
@@ -645,6 +664,8 @@ static const int	kLengthOfPartTraceRoute					= 10000;	//	gives up after 10000 ti
 	[self.progressWC setProgress:0 ofTotal:0 message:nil window:[VMPlayerOSXDelegate singleton].editorWindowController.window];
 
 	totalDuration=maxPartCount=maxPartPercent=maxPartDuration=maxFragmentCount=maxFragmentPercent=maxFragmentDuration=maxVariety=0;
+	
+	//	make report records
 	
 	VMArray *fragArray  = [self audioFragmentReportWithDurationForPart:durationForPart
 											  numberOfFragmentsForPart:numberOfFragmentsForPart];
@@ -753,14 +774,30 @@ static const int	kLengthOfPartTraceRoute					= 10000;	//	gives up after 10000 ti
  ----------------------------------------------------------------------------------*/
 
 - (void)checkFiles_proc {
+	VMTime standardPostRoll = 5.0;	//	assume 10 secs of release time
 	VMInt dataCount = self.dataIdToProcess.count;
 	for( int i = 0; i < 100; ++i ) {
 		VMData *d = [DEFAULTSONG.songData item:[self.dataIdToProcess item:self.currentPositionInDataIdList]];
 		if ( d.type == vmObjectType_audioInfo ) {
+			VMAudioInfo *ai = (VMAudioInfo*)d;
 			NSString *fileId = ((VMAudioInfo*)d).fileId;
 			VMString *path = [DEFAULTSONGPLAYER filePathForFileId:fileId];
-			if( ! path )
+			if(( ! path ) || (! [[NSFileManager defaultManager] fileExistsAtPath:path]) )
 				[self addUnresolveable:( fileId.length > 3 ? fileId : d )];
+			
+			VMAudioObject *ao = NewInstance(VMAudioObject);
+			[ao open:path];
+			if (( ai.duration + standardPostRoll ) < ao.fileDuration ) {
+				VMLogRecord *record = [VMLogRecord recordWithAction:@"Warning" data:ai
+															subInfo:[NSString stringWithFormat:
+																	 @"fileId:%@ (dur:%.2fsecs) has file length of %.2fsecs",
+																	 ai.fileId, ai.duration, ao.fileDuration]
+															  owner:VMLogOwner_Statistics
+												 usePersistentStore:NO];
+				
+				[self.fileWarnings push:record];
+			}
+			Release(ao);
 		}
 		++self.currentPositionInDataIdList;
 		if( self.currentPositionInDataIdList >= dataCount ) break;
@@ -773,12 +810,20 @@ static const int	kLengthOfPartTraceRoute					= 10000;	//	gives up after 10000 ti
 	if ( ++self.currentPositionInDataIdList < dataCount ) {
 		[self performSelector:@selector(checkFiles_proc) withObject:nil afterDelay:0.005];
 	} else {
-		if( self.unresolveables.count == 0 ){
+		if( self.unresolveables.count == 0 && self.fileWarnings.count == 0 ){
 			[APPDELEGATE.systemLog addTextLog:@"Check Media Files" message:@"no issue"];
 		} else {
-			[APPDELEGATE.systemLog logError:[NSString stringWithFormat:@"%ld audio files not found:", self.unresolveables.count]
-								   withData:nil];
-			[APPDELEGATE.systemLog record:self.unresolveables filter:NO];
+			if ( self.unresolveables.count > 0 ) {
+				[APPDELEGATE.systemLog logError:[NSString stringWithFormat:@"%ld audio file(s) not found:", self.unresolveables.count]
+									   withData:nil];
+				[APPDELEGATE.systemLog record:self.unresolveables filter:NO];
+			}
+			if (self.fileWarnings.count > 0 ) {
+				[APPDELEGATE.systemLog logWarning:[NSString stringWithFormat:@"%ld audio file(s) have suspicious file length:",
+												   self.fileWarnings.count] withData:nil];
+				[APPDELEGATE.systemLog record:self.fileWarnings filter:NO];
+			}
+			
 		}
 		
 		[self.progressWC setProgress:0 ofTotal:0 message:nil window:[VMPlayerOSXDelegate singleton].editorWindowController.window];
@@ -955,9 +1000,13 @@ else if( ClassMatch(subData, VMChance )) \
 			
 		}
 		case 's': {
-			double s = [record.sojourn doubleValue];
-			if ( s ) return [NSString stringWithFormat:@"%.2f",s];
-			break;
+			if ( record.type == VMPReportRecordType_part ) {
+				double s = [record.sojourn doubleValue];
+				if ( s ) return [NSString stringWithFormat:@"%.2f",s];
+				break;
+			} else {
+				return record.exitParts;
+			}
 		}
 		case 'v': {
 			double v = [record.variety doubleValue];

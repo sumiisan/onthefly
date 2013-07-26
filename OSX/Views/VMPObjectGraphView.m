@@ -645,6 +645,7 @@
 				
 				VMFloat deadEndRatio = [sel ratioOfDeadEndBranchesWithScores:scoreForIds sumOfScores:sel.sumOfInnerScores];
 				activeHeight *= deadEndRatio;
+				if ( isnan(activeHeight) ) break;	//	probably some failure during calculation, haven't inspected yet. monkey patch. 
 			}
 			
 		} else {

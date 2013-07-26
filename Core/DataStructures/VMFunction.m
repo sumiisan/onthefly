@@ -8,10 +8,10 @@
 
 #import "VMDataTypes.h"
 #import "VMPrimitives.h"
-#import "VMException.h"
 #import "VMPMacros.h"
 #import "VMDataTypesMacros.h"
 #import "VMScoreEvaluator.h"
+#import "VMException.h"
 
 //------------------------ Function -----------------------------
 /*

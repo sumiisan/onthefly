@@ -12,6 +12,7 @@
 #import "VMPSongPlayer.h"
 #import "VMAppDelegate.h"
 #import "VMPScrollViewClipper.h"
+#import "KTOneFingerRotationGestureRecognizer-master/KTOneFingerRotationGestureRecognizer.h"
 
 @implementation VMPInfoViewController
 
@@ -159,8 +160,51 @@ static const int kNumberOfSkins = 4;
 		[self.view addSubview:centerFrame];
 				
 		[DEFAULTSONGPLAYER setDimmed:YES];
+		/*
+		KTOneFingerRotationGestureRecognizer *ofrgr = [[KTOneFingerRotationGestureRecognizer alloc] initWithTarget:self action:@selector(rotating:)];
+		[self.view addGestureRecognizer:ofrgr];
+		Release(ofrgr);	*/
+		
+		UITapGestureRecognizer *tgr = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(toggleTrackView:)];
+		tgr.numberOfTouchesRequired = 3;
+		tgr.numberOfTapsRequired = 3;
+		[self.view addGestureRecognizer:tgr];
+		Release(tgr);
     }
     return self;
+}
+
+
+- (void)rotating:(KTOneFingerRotationGestureRecognizer *)recognizer {
+	double angle = recognizer.rotation;
+	NSLog( @"angle: %.2f", angle );
+	
+}
+
+- (void)toggleTrackView:(id)sender {
+	
+	if ( supressToggleTrackViewUntil > [NSDate timeIntervalSinceReferenceDate]) return;
+	supressToggleTrackViewUntil = [NSDate timeIntervalSinceReferenceDate] + 0.5;
+	
+	VMPTrackView *tv = (VMPTrackView*)[self.view viewWithTag:'trkV'];
+	if ( tv ) {
+		//	hide
+		DEFAULTSONGPLAYER.trackView = nil;
+		[tv removeFromSuperview];
+		return;
+	}
+	//	show;
+	tv = [[VMPTrackView alloc] initWithFrame:self.view.frame];
+	tv.tag = 'trkV';
+	[self.view addSubview:tv];
+	[DEFAULTSONGPLAYER setDimmed:NO];
+
+	DEFAULTSONGPLAYER.trackView = tv;
+}
+
+- (void)dealloc {
+	VMNullify(scrollContentView);
+	[super dealloc];
 }
 
 //	delegate

@@ -1,5 +1,5 @@
 //
-//  NLSong.m
+//  VMSong.m
 //  VariableMusicPlayer
 //
 //  Created by cboy on 12/10/30.
@@ -299,7 +299,7 @@ BOOL verbose = NO;
 		//
 		//	case 2b:
 		//
-		NSLog(@"NAC 2b : no audioFragment in sequence !");
+		NSLog(@"NAC 2b : no audioFragment in sequence ! %@", cc.description );
 		
 		/*
 		 ac = [cc resolveUntilType:vmObjectType_audioFragment];

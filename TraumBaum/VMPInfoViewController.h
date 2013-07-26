@@ -13,8 +13,9 @@
 @end
 
 @interface VMPInfoViewController : UIViewController <UIScrollViewDelegate> {
+	NSTimeInterval	supressToggleTrackViewUntil;
 }
 
 @property (strong, nonatomic) UIView *scrollContentView;
-@property (weak)			  id <VMPInfoViewDelegate> delegate;
+@property (assign)			id <VMPInfoViewDelegate> delegate;
 @end

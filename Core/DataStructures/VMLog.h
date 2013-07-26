@@ -74,6 +74,7 @@ typedef enum {
 @property (nonatomic)									VMTime			timestamp;
 @property (nonatomic)									VMTime			playbackTimestamp;
 @property (nonatomic, VMStrong)							VMHash			*subInfo;
+@property (nonatomic, readonly)							VMString		*message;
 
 //	VMPLogView vars & flags
 @property (nonatomic, getter=isExpanded)				BOOL			expanded;

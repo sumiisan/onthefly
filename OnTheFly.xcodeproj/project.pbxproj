@@ -127,13 +127,12 @@
 		1662314C173C9F1A00F70FCB /* VMSong.m in Sources */ = {isa = PBXBuildFile; fileRef = 16623143173C9F1A00F70FCB /* VMSong.m */; };
 		16623157173C9FA300F70FCB /* VMAudioObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 16623152173C9FA300F70FCB /* VMAudioObject.m */; };
 		16623158173C9FA300F70FCB /* VMAudioObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 16623152173C9FA300F70FCB /* VMAudioObject.m */; };
-		16623159173C9FA300F70FCB /* VMAudioObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 16623152173C9FA300F70FCB /* VMAudioObject.m */; };
 		1662315A173C9FA300F70FCB /* VMLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 16623154173C9FA300F70FCB /* VMLog.m */; };
 		1662315B173C9FA300F70FCB /* VMLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 16623154173C9FA300F70FCB /* VMLog.m */; };
-		1662315C173C9FA300F70FCB /* VMLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 16623154173C9FA300F70FCB /* VMLog.m */; };
 		1662315D173C9FA300F70FCB /* VMPrimitives.m in Sources */ = {isa = PBXBuildFile; fileRef = 16623156173C9FA300F70FCB /* VMPrimitives.m */; };
 		1662315E173C9FA300F70FCB /* VMPrimitives.m in Sources */ = {isa = PBXBuildFile; fileRef = 16623156173C9FA300F70FCB /* VMPrimitives.m */; };
 		1662315F173C9FA300F70FCB /* VMPrimitives.m in Sources */ = {isa = PBXBuildFile; fileRef = 16623156173C9FA300F70FCB /* VMPrimitives.m */; };
+		167013ED179E00C100714D90 /* KTOneFingerRotationGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 167013EC179E00C100714D90 /* KTOneFingerRotationGestureRecognizer.m */; };
 		1677774016C0D600007206CF /* VMPApplescriptReceiver.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677773816C0D600007206CF /* VMPApplescriptReceiver.m */; };
 		1677774116C0D600007206CF /* VMPApplescriptReceiver.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677773816C0D600007206CF /* VMPApplescriptReceiver.m */; };
 		1677781816C0D6A0007206CF /* VMPTrackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677780B16C0D6A0007206CF /* VMPTrackView.m */; };
@@ -351,6 +350,8 @@
 		16623154173C9FA300F70FCB /* VMLog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = VMLog.m; path = Core/DataStructures/VMLog.m; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		16623155173C9FA300F70FCB /* VMPrimitives.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = VMPrimitives.h; path = Core/DataStructures/VMPrimitives.h; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		16623156173C9FA300F70FCB /* VMPrimitives.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VMPrimitives.m; path = Core/DataStructures/VMPrimitives.m; sourceTree = SOURCE_ROOT; };
+		167013EB179E00C100714D90 /* KTOneFingerRotationGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = KTOneFingerRotationGestureRecognizer.h; path = "TraumBaum/KTOneFingerRotationGestureRecognizer-master/KTOneFingerRotationGestureRecognizer.h"; sourceTree = SOURCE_ROOT; };
+		167013EC179E00C100714D90 /* KTOneFingerRotationGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = KTOneFingerRotationGestureRecognizer.m; path = "TraumBaum/KTOneFingerRotationGestureRecognizer-master/KTOneFingerRotationGestureRecognizer.m"; sourceTree = SOURCE_ROOT; };
 		1677773716C0D600007206CF /* VMPApplescriptReceiver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VMPApplescriptReceiver.h; sourceTree = "<group>"; };
 		1677773816C0D600007206CF /* VMPApplescriptReceiver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VMPApplescriptReceiver.m; sourceTree = "<group>"; };
 		1677780A16C0D6A0007206CF /* VMPTrackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VMPTrackView.h; sourceTree = "<group>"; };
@@ -757,6 +758,15 @@
 			path = Core/DataStructures;
 			sourceTree = "<group>";
 		};
+		167013EA179E00A600714D90 /* Libs */ = {
+			isa = PBXGroup;
+			children = (
+				167013EB179E00C100714D90 /* KTOneFingerRotationGestureRecognizer.h */,
+				167013EC179E00C100714D90 /* KTOneFingerRotationGestureRecognizer.m */,
+			);
+			name = Libs;
+			sourceTree = "<group>";
+		};
 		1677780916C0D6A0007206CF /* Views and Controllers */ = {
 			isa = PBXGroup;
 			children = (
@@ -934,6 +944,7 @@
 		16A27F0E16FBB1A70081C1E8 /* Traumbaum iOS */ = {
 			isa = PBXGroup;
 			children = (
+				167013EA179E00A600714D90 /* Libs */,
 				1693CBD617166596005846E6 /* iPhone-UI */,
 				16A27F1716FBB1A70081C1E8 /* VMAppDelegate.h */,
 				16A27F1816FBB1A70081C1E8 /* VMAppDelegate.m */,
@@ -1283,9 +1294,8 @@
 				16623146173C9F1A00F70FCB /* VMDataTypes.m in Sources */,
 				16623149173C9F1A00F70FCB /* VMFunction.m in Sources */,
 				1662314C173C9F1A00F70FCB /* VMSong.m in Sources */,
-				16623159173C9FA300F70FCB /* VMAudioObject.m in Sources */,
-				1662315C173C9FA300F70FCB /* VMLog.m in Sources */,
 				1662315F173C9FA300F70FCB /* VMPrimitives.m in Sources */,
+				167013ED179E00C100714D90 /* KTOneFingerRotationGestureRecognizer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1486,7 +1496,7 @@
 				GCC_WARN_SHADOW = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				ONLY_ACTIVE_ARCH = YES;
 				WARNING_CFLAGS = "";
 			};
@@ -1508,7 +1518,7 @@
 				GCC_WARN_SHADOW = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				WARNING_CFLAGS = "";
 			};
 			name = Release;

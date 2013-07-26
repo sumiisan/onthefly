@@ -182,13 +182,20 @@
 	return self.data;
 }
 
+- (VMString*)message {
+	VMString *message = ClassCastIfMatch( self.subInfo, VMString );
+	if( ClassMatch( self.subInfo, VMHash ))
+		message = [[self.subInfo item:@"message"] stringByAppendingString:@" "];
+	return message;
+	
+}
+
 - (CGFloat)expandedHeight {
 	if ( expandedHeightCache_static_ < 0 ) {
 		expandedHeightCache_static_ = 0;
 		
 		if( [self.action isEqualToString:@"SEL"] ) expandedHeightCache_static_ += 30.;
-				
-		VMString *message = [[self.subInfo item:@"message"] stringByAppendingString:@" "];
+		VMString *message = self.message;
 		if ( message ) {
 			expandedHeightCache_static_ += [self heightForStringDrawing:message font:[NSFont systemFontOfSize:10] width:250] +3;
 		}

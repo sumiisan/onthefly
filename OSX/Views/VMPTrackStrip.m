@@ -8,8 +8,8 @@
 
 #import "MultiPlatform.h"
 #import "VMPTrackStrip.h"
-#import "VMPGraph.h"
 #import "VMPNotification.h"
+#import "VMPGraph.h"
 
 @implementation VMPTrackStrip
 
@@ -17,7 +17,13 @@
 - (id)initWithFrame:(VMPRect)frameRect {
     self = [super initWithFrame:frameRect];
 	self.frame = frameRect;
+#if VMP_OSX
 	self.caption = [NSTextField labelWithText:@"" frame:VMPMakeRect(2, 2, 240, 14)];
+#elif VMP_IPHONE
+	self.caption = [[UILabel alloc] initWithFrame:VMPMakeRect(2, 2, 240, 14)];
+	self.caption.textColor = [UIColor whiteColor];
+	self.caption.backgroundColor = [UIColor clearColor];
+#endif
 	self.caption.font = [VMPFont systemFontOfSize:11];
 	[self addSubview:self.caption];
 	
@@ -40,7 +46,11 @@
 }
 
 - (void)setInfoString:(NSString *)infoString {
+#if VMP_OSX
 	self.caption.stringValue = infoString;
+#else
+	self.caption.text = infoString;
+#endif
 }
 
 - (void)drawRect:(VMPRect)dirtyRect {
@@ -52,9 +62,9 @@
     CGFloat bar_height = self.frame.size.height - y -4;
 	CGFloat w = self.frame.size.width - bar_left - 4;
     
-#ifdef VMP_MOBILE
+#ifdef VMP_IPHONE
     [self setColor_r:0.1f g:0.1f b:0.1f];
-	NSRectFill(dirtyRect);
+	UIRectFill(dirtyRect);
 #else
     [self setColor_r:0.9f g:0.9f b:0.9f];
 	NSRectFill(dirtyRect);
@@ -117,11 +127,12 @@
 	
 }
 
+#if VMP_OSX
 - (void)doubleClickOnTrackStrip:(NSEvent*)event {
 	if (self.audioFragmentId)
 		[VMPNotificationCenter postNotificationName:VMPNotificationFragmentDoubleClicked
 											 object:self
 										   userInfo:@{@"id":self.audioFragmentId}];
 }
-
+#endif
 @end
