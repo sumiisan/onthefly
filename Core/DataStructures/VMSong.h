@@ -1,5 +1,5 @@
 //
-//  NLSong.h
+//  VMSong
 //  VariableMusicPlayer
 //
 //  Created by cboy on 12/10/30.
@@ -14,7 +14,23 @@
 
 #define DEFAULTSONG [VMSong defaultSong]
 
-@interface VMSong : NSObject
+@interface VMSong : NSObject {
+#if SUPPORT_32BIT_MAC
+	NSURL		*fileURL_;
+	VMHash		*songData_;
+	VMString	*vmsData_;
+	
+	VMString	*songName_;
+	VMString	*audioFileExtension_;
+	VMString	*audioFileDirectory_;
+	VMId		*defaultFragmentId_;
+
+	VMPlayer	*player_;
+	VMArray		*history_;
+	VMStack		*showReport_;
+#endif
+
+}
 
 @property (nonatomic, VMStrong)	NSURL	*fileURL;
 
@@ -25,10 +41,10 @@
 //	static song properties
 @property (nonatomic, VMStrong)		VMString *songName;
 @property (nonatomic, VMStrong)		VMString *audioFileExtension;
-@property (nonatomic, VMStrong)		VMString *vsFilePath;
+//@property (nonatomic, VMStrong)		VMString *vsFilePath;
+
 @property (nonatomic, VMStrong)		VMString *audioFileDirectory;
-@property (nonatomic, VMStrong)		VMArray	 *entryPoints;
-@property (nonatomic, VMStrong)		VMString *defaultFragmentId;
+@property (nonatomic, VMStrong)		VMId	 *defaultFragmentId;
 
 //	runtime properties
 @property (VMNonatomic VMStrong)	VMPlayer *player;

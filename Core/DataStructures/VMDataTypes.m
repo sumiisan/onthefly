@@ -1339,22 +1339,16 @@ static VMHash *scoreForFragment_static_ = nil;
 #if prepareSelection_verbose
 	VMArray *log = NewInstance(VMArray);
 #endif
-	VMInt c = self.length;
+
+/*	VMInt c = self.length;
 	for ( int i = 0; i < c; ++i ) {
-		id d = [self.fragments item:i];
+		id d = [self chanceAtIndex:i];	*/	
+	for ( id d in self.fragments ) {
 		if ( ClassMatch(d, VMString ))  {
+			
 #if VMP_OSX
 			//	should be chance
 			[VMException raise:@"Type mismatch." format:@"Id found where chance expected. in %@",self.description];
-#endif
-			
-#if VMP_IPHONE
-			//	create chance on the fly. (background mode)
-			VMChance *ch = [[VMChance alloc] init];
-			[ch setByString:d];
-			[self.fragments setItem:ch at:i];
-			d = ch;
-			Release(ch);
 #endif
 		}
 		
@@ -1431,14 +1425,25 @@ static VMHash *scoreForFragment_static_ = nil;
 
 
 - (VMChance*)chanceAtIndex:(VMInt)pos {
-	return ClassCast([super fragmentAtIndex:pos], VMChance);
+	id ch = [super fragmentAtIndex:pos];
+	
+#if VMP_PLAYER
+	if ( ClassMatch( ch, VMId )) {
+		//	create chance on the fly. (because when suspended, they are stored as id reference )
+		VMChance *newChance = [[[VMChance alloc] init] autorelease];
+		[newChance setByString:ch];
+		[self.fragments setItem:newChance at:pos];
+		return newChance;
+	}
+#endif
+	return ClassCast(ch, VMChance);
 }
 
--(VMFragment*)fragmentAtIndex:(VMInt)pos {	/*override*/
+- (VMFragment*)fragmentAtIndex:(VMInt)pos {	/*override*/
     return [[super fragmentAtIndex:pos] resolveUntilType:vmObjectCategory_fragment];	//	because they are chances.
 }
 
--(VMFloat)sumOfInnerScores {
+- (VMFloat)sumOfInnerScores {
     if ( [self.fragments count] > 0 ) {
 		return sumOfInnerScores_cache_;
     } else {
@@ -1574,7 +1579,9 @@ static VMHash *scoreForFragment_static_ = nil;
 - (BOOL)isDeadEnd {
 	if ( self.fragments.count == 0 ) return YES;
 	if ( [[self chanceAtIndex:0].targetId isEqualToString: @"*"] ) return YES;
-	for( VMChance *ch in self.fragments ) {
+	VMInt c = self.length;
+	for( VMInt i = 0; i < c; ++i ) {
+		VMChance *ch = [self chanceAtIndex:i];
 		VMFragment *data = [DEFAULTSONG data:ch.targetId];
 		if ( ! data ) continue;
 		if ( data.type == vmObjectType_sequence ) return NO;	//	assume sequence has valid subseqs.
@@ -1630,6 +1637,17 @@ VMOBLIGATORY_init(vmObjectType_selector,YES,)
 VMOBLIGATORY_setWithProto()
 VMOBLIGATORY_setWithData()
 
+VMObligatory_initWithCoder(
+//	we want to make chances from id refs.
+   VMInt c = self.length;
+   for( VMInt i = 0; i < c; ++i ) {
+	   VMId *idRef = [self.fragments item:i];
+	   VMChance *ch = ARInstance(VMChance);
+	   [ch setWithData:idRef];
+	   [self.fragments setItem:ch at:i];
+   }
+);
+
 - (void)dealloc {
     Dealloc( super );;
 }
@@ -1667,7 +1685,7 @@ VMOBLIGATORY_setWithData()
 #pragma mark *** VMSequence ***
 
 @implementation VMSequence
-@synthesize subsequent=subsequent_;
+@synthesize subsequent = subsequent_;
 
 - (void)convertFragmentObjectsToReference {
 	[super convertFragmentObjectsToReference];

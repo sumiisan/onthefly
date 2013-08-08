@@ -30,6 +30,8 @@
 
 @implementation VMPPlayTimeAccumulator
 
+@synthesize currentPartId=currentPartId_, playingTimeOfCurrentPart=playingTimeOfCurrentPart_;
+
 - (void)startNewPart:(VMId*)partId {
 	self.playingTimeOfCurrentPart = 0;
 	self.currentPartId = partId;
@@ -106,8 +108,9 @@
 @synthesize engineIsWarm=engineIsWarm_;
 @synthesize dimmed=dimmed_;
 @synthesize song=song_;
+@synthesize playTimeAccumulator=playTimeAccumulator_;
 
-@synthesize nextCueTime;
+@synthesize nextCueTime=nextCueTime_;
 
 static const VMFloat	secondsPreroll			= 0.3;
 static const VMFloat	secondsPreparePlayer	= 3.;
@@ -158,7 +161,7 @@ static VMPSongPlayer 	*songPlayer_singleton_static_ = nil;
 	NSLog(@"beginsetfade");
 	VMTime fadeTimeRemain = fadeDuration - [self fadeTimeElapsed];
 	dimmed_ = dimmerState;
-	VMFloat dimmFactor = dimmed_ ? 0.1 : 1.0;
+	VMFloat dimmFactor = dimmed_ ? 0.3 : 1.0;
 		
 	fadeStartVolume = startVolume >= 0 ? startVolume * dimmFactor : [self currentFaderVolume];
 	fadeEndVolume   = endVolume * dimmFactor;
@@ -663,7 +666,7 @@ static VMPSongPlayer 	*songPlayer_singleton_static_ = nil;
 		
 	VMTime etolc = [self endTimeOfLastFragment];
 	if ( etolc != 0 ) {
-		nextCueTime = ( etolc > self.currentTime ? etolc : self.currentTime + secondsPreroll );
+		self.nextCueTime = ( etolc > self.currentTime ? etolc : self.currentTime + secondsPreroll );
 #ifdef DEBUG
 		[self watchNextCueTimeForDebug];
 #endif

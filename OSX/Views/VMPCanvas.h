@@ -17,6 +17,7 @@
 @interface VMPCanvas : VMPView {
 	CGContextRef	canvas;
 	NSInteger		tag_;
+	VMPColor		*backgroundColor_;
 }
 
 

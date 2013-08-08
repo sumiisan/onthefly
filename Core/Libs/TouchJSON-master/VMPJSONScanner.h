@@ -7,6 +7,8 @@
 #import "VMARC.h"
 
 
-@interface VMPJSONScanner : CJSONScanner
+@interface VMPJSONScanner : CJSONScanner {
+	NSString *lastKey_;
+}
 @property (nonatomic, VMStrong) NSString *lastKey;
 @end

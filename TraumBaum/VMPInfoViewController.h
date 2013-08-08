@@ -1,6 +1,5 @@
 //
-//  VMPFrontView.h
-//  VARI
+//  VMPInfoViewController.h
 //
 //  Created by sumiisan on 2013/04/03.
 //
@@ -18,4 +17,9 @@
 
 @property (strong, nonatomic) UIView *scrollContentView;
 @property (assign)			id <VMPInfoViewDelegate> delegate;
+@property (strong, nonatomic) IBOutlet UISwitch *backgroundPlaySwitch;
+@property (strong, nonatomic) IBOutlet UISwitch *darkBGSwitch;
+- (IBAction)buttonTouched:(id)sender;
+
+
 @end

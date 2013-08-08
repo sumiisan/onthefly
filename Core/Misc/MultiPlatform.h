@@ -9,6 +9,11 @@
 #ifndef _multiplatformh_
 #define _multiplatformh_
 
+#if VMP_EDITOR		//	VMP_EDITOR is defined in build option settings
+#define VMP_LOGGING 1
+#else
+#define VMP_PLAYER 1
+#endif
 
 
 #if TARGET_OS_IPHONE
@@ -19,6 +24,7 @@
 //-------------------------------------------------------------
 #define VMP_MOBILE 1
 #define VMP_IPHONE 1
+#undef VMP_LOGGING
 #define VMP_LOGGING 0
 static const float kTimerInterval = 0.01;			//  1/1000 sec interruption for audio
 static const int kTrackViewRedrawInterval = 10;		//  0.01 * 10   = 0.1sec
@@ -49,6 +55,7 @@ static const BOOL kUseNotification = NO;
 #define VMPSetNeedsDisplay(instance)   [instance setNeedsDisplay]
 #define VMPMakeRect(x,y,w,h) CGRectMake(x,y,w,h)
 #define VMPSetAlpha setAlpha
+#define VMPBezierPath UIBezierPath
 #define RemoveAllSubViews [[self subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)]
 
 
@@ -58,9 +65,9 @@ static const BOOL kUseNotification = NO;
 //  osx
 // 
 //-------------------------------------------------------------
-#define VMP_EDITOR 1
+
 #define VMP_OSX 1
-#define VMP_LOGGING 1
+
 static const float kTimerInterval = 0.005;			//  1/2000 sec interruption for audio
 static const int kTrackViewRedrawInterval = 6;		//  0.005 * 6   = 0.03sec
 static const int kAudioPlayer_BufferSize =  0x20000;//  128k buffer
@@ -90,6 +97,7 @@ static const BOOL kUseNotification = YES;
 #define VMPSetNeedsDisplay(instance)   [instance setNeedsDisplay:YES]
 #define VMPMakeRect(x,y,w,h) NSMakeRect(x,y,w,h)
 #define VMPSetAlpha setAlphaValue
+#define VMPBezierPath NSBezierPath
 #define RemoveAllSubViews  [self setSubviews:[NSArray array]];
 
 

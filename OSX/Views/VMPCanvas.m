@@ -41,7 +41,7 @@
 - (void)drawRect:(VMPRect)rect {
 	if ( self.backgroundColor ) {
 		[self.backgroundColor setFill];
-#if ! TARGET_OS_IPHONE
+#if VMP_OSX
 		NSRectFill(rect);
 #else
 		UIRectFill(rect);
@@ -49,7 +49,7 @@
 	}
 }
 
-#if ! TARGET_OS_IPHONE
+#if VMP_OSX
 - (BOOL)isFlipped {     //  matches NSView's coordinates to UIView
     return YES;
 }
@@ -57,9 +57,9 @@
 
 
 -(void)setCanvas {
-#if TARGET_OS_IPHONE
+#if VMP_IPHONE
 	canvas = UIGraphicsGetCurrentContext();	
-#elif TARGET_OS_MAC
+#elif VMP_OSX
     canvas = [[NSGraphicsContext currentContext] graphicsPort];
 #endif
 }

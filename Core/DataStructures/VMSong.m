@@ -23,11 +23,12 @@
 
 
 @implementation VMSong
-@synthesize songName=songName_, audioFileExtension=audioFileExtension_,
-vsFilePath=vsFilePath_, audioFileDirectory=audioFileDirectory_, defaultFragmentId=defaultFragmentId_;
-@synthesize songData=songData_, entryPoints=entryPoints_, history=history_;
-@synthesize player;
+@synthesize songName=songName_, audioFileExtension=audioFileExtension_;
+@synthesize audioFileDirectory=audioFileDirectory_, defaultFragmentId=defaultFragmentId_;
+@synthesize songData=songData_, history=history_;
+@synthesize player=player_;
 @synthesize showReport=showReport_;
+@synthesize vmsData=vmsData_, fileURL=fileURL_;
 
 static VMSong *vmsong_singleton_static_;
 //static BOOL reportNotRegisteredObjects = NO;
@@ -138,15 +139,15 @@ BOOL verbose = NO;
 
 //	private:
 - (BOOL)currentPlayerHasSubseq {
-	if( ! player.nextPlayer ) return NO;
+	if( ! player_.nextPlayer ) return NO;
 	//	NOTE:
 	//	'*' should be placed always at #0.
 	//	overriding by adding sel's is not allowed.
-	VMSelector *subseq = ClassCastIfMatch( player.nextPlayer, VMSelector );
+	VMSelector *subseq = ClassCastIfMatch( player_.nextPlayer, VMSelector );
 	if ( subseq )
 		return (! subseq.isDeadEnd );
 	
-	VMPlayer *pl = ClassCastIfMatch( player.nextPlayer, VMPlayer );
+	VMPlayer *pl = ClassCastIfMatch( player_.nextPlayer, VMPlayer );
 	if ( pl )
 		return YES;	//	DISCUSSION: ? maybe we should call 'currentPlayerHasSubseq' recursively with the parent player.
 	
@@ -262,7 +263,7 @@ BOOL verbose = NO;
 				// case 1b:
 				//
 				VerboseLog(@"NAC 1b : depth:%ld %@(popped 2)", depth, self.player.id);
-				self.player = [self playerFrom:player.nextPlayer];
+				self.player = [self playerFrom:player_.nextPlayer];
 			}
 			cc = self.player.currentFragment;
 			if(!cc && verbose)
@@ -571,7 +572,6 @@ BOOL verbose = NO;
     self = [super init];
     if (self) {
 		self.songData				= ARInstance(VMHash);
-		self.entryPoints			= ARInstance(VMArray);
 		self.history				= ARInstance(VMArray);
 		self.showReport				= ARInstance(VMStack);
 #if VMP_LOGGING
@@ -589,10 +589,8 @@ BOOL verbose = NO;
 	VMNullify(songData);
 	VMNullify(defaultFragmentId);
 	VMNullify(songName);
-	VMNullify(entryPoints);
 	VMNullify(history);
 	VMNullify(showReport);
-	VMNullify(vsFilePath);
 	VMNullify(audioFileDirectory);
 	VMNullify(audioFileExtension);
 	VMNullify(vmsData);

@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #include "MultiPlatform.h"
+#import "VMPrimitives.h"
 
 #import <AudioToolbox/AudioQueue.h>
 #import <AudioToolbox/AudioFile.h>
@@ -38,8 +39,9 @@ typedef enum {
     NSTimeInterval                  shiftTime;  	//  shift preload timing intended to distribute HD/CPU impact
     
 //  props
-	NSTimeInterval					fileDuration;
-    NSTimeInterval                  fragDuration;    
+	VMTime							fileDuration;
+    VMTime							fragDuration;
+	VMTime							offset;
 
 //  audio file    
 	NSString						*filePathToRead;

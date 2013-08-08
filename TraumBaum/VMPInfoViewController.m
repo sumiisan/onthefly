@@ -1,6 +1,5 @@
 //
-//  VMPFrontView.m
-//  VARI
+//  VMPInfoViewController.m
 //
 //  Created by sumiisan on 2013/04/03.
 //
@@ -12,7 +11,8 @@
 #import "VMPSongPlayer.h"
 #import "VMAppDelegate.h"
 #import "VMPScrollViewClipper.h"
-#import "KTOneFingerRotationGestureRecognizer-master/KTOneFingerRotationGestureRecognizer.h"
+//#import "KTOneFingerRotationGestureRecognizer-master/KTOneFingerRotationGestureRecognizer.h"
+#import "VMPRainyView.h"
 
 @implementation VMPInfoViewController
 
@@ -55,21 +55,40 @@ static const int kNumberOfSkins = 4;
 	[[VMAppDelegate defaultAppDelegate] setAudioBackgroundMode];
 }
 
-- (void)buttonTouched:(id)sender {
+- (IBAction)buttonTouched:(id)sender {
 	UIButton *b = sender;
 	BOOL closeDialog = YES;
 	
 	switch ( b.tag ) {
+			
+			//
+			//	open webpage
+			//
+		case 100:
 		case '_web':
 			[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://traumbaum.aframasda.com/"]];
 			closeDialog = NO;
 			break;
 			
+			//
+			//	reset song
+			//
+		case 101:
 		case 'rset':
 			[DEFAULTSONGPLAYER reset];
 			break;
 			
-		case 'plyb': {
+			//
+			//	background play
+			//
+		case 102: {	//	switch
+			UISwitch *sw = sender;
+			[self setBackgroundMode:sw.isOn];
+			closeDialog = NO;
+			break;
+		}
+			
+		case 'plyb': {	//	toggle button
 			BOOL doesPlayInBackGround = [[NSUserDefaults standardUserDefaults] boolForKey:@"doesPlayInBackground"];
 			doesPlayInBackGround = ! doesPlayInBackGround;
 			[self setBackgroundMode:doesPlayInBackGround];
@@ -79,6 +98,16 @@ static const int kNumberOfSkins = 4;
 			break;
 		}
 			
+		case 103:	{	//	dark ui
+			BOOL darkBG = self.darkBGSwitch.isOn;
+			[[NSUserDefaults standardUserDefaults] setBool:darkBG forKey:@"darkBgEnabled"];
+			[self.delegate setSkinIndex:(darkBG ? 1 : 0)];
+
+			closeDialog = NO;
+			break;
+		}
+			
+		case 104:
 		case 'rtrn':
 			//	nothing to do.
 			break;
@@ -95,8 +124,31 @@ static const int kNumberOfSkins = 4;
 - (id)init {
     self = [super init];
     if (self) {
-		CGFloat vOffs = ( Is4InchIPhone ? 25 : 0 );
 		
+		for (int i = 0; i < 4; ++i ) {
+			VMPRainyView *db = AutoRelease([[VMPRainyView alloc] initWithFrame:CGRectMake(0, 210 + i*50, 320, 45)]);
+			db.alpha = 0.5;
+			[self.view addSubview:db];
+			[self.view sendSubviewToBack:db];
+		}
+		
+		
+		
+		//CGFloat vOffs = ( Is4InchIPhone ? 25 : 0 );
+		
+		
+		//self.view.frame = CGRectMake(0, vOffs, 320, 480);
+				
+		
+#if 0
+		/*
+		
+		
+		depreciated due to support iOS7 ready interface.
+		we use a nib instead.
+		
+		
+		*/
 		//	bg
 		UIImageView *bg = ARImageView(@"iPhone-UI/info_phone.jpg");
 		bg.frame = CGRectMake( 0, -25 + vOffs, 320, 568 );
@@ -158,27 +210,41 @@ static const int kNumberOfSkins = 4;
 		UIImageView *centerFrame = ARImageView( @"iPhone-UI/square_button_dn.png");
 		centerFrame.frame = CGRectMake( 95, 335, 130, 78.5 );
 		[self.view addSubview:centerFrame];
+		
+#endif
+		
+		
 				
 		[DEFAULTSONGPLAYER setDimmed:YES];
 		/*
 		KTOneFingerRotationGestureRecognizer *ofrgr = [[KTOneFingerRotationGestureRecognizer alloc] initWithTarget:self action:@selector(rotating:)];
 		[self.view addGestureRecognizer:ofrgr];
 		Release(ofrgr);	*/
-		
-		UITapGestureRecognizer *tgr = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(toggleTrackView:)];
-		tgr.numberOfTouchesRequired = 3;
-		tgr.numberOfTapsRequired = 3;
-		[self.view addGestureRecognizer:tgr];
-		Release(tgr);
+		[self attachGestureRecognizer];
     }
     return self;
 }
 
+- (void)attachGestureRecognizer {
+	UITapGestureRecognizer *tgr = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(toggleTrackView:)];
+	tgr.numberOfTouchesRequired = 3;
+	tgr.numberOfTapsRequired = 3;
+	[self.view addGestureRecognizer:tgr];
+	Release(tgr);
+}
 
+/*
 - (void)rotating:(KTOneFingerRotationGestureRecognizer *)recognizer {
 	double angle = recognizer.rotation;
 	NSLog( @"angle: %.2f", angle );
+}*/
+
+- (void)viewWillAppear:(BOOL)animated {
+	self.backgroundPlaySwitch.on = [[NSUserDefaults standardUserDefaults] boolForKey:@"doesPlayInBackground"];
+	self.darkBGSwitch.on         = [[NSUserDefaults standardUserDefaults] boolForKey:@"darkBgEnabled"];
 	
+	
+	[super viewWillAppear:animated];
 }
 
 - (void)toggleTrackView:(id)sender {
@@ -194,7 +260,7 @@ static const int kNumberOfSkins = 4;
 		return;
 	}
 	//	show;
-	tv = [[VMPTrackView alloc] initWithFrame:self.view.frame];
+	tv = AutoRelease([[VMPTrackView alloc] initWithFrame:self.view.frame]);
 	tv.tag = 'trkV';
 	[self.view addSubview:tv];
 	[DEFAULTSONGPLAYER setDimmed:NO];
@@ -225,23 +291,8 @@ static const int kNumberOfSkins = 4;
 - (id)initWithCoder:(NSCoder *)aDecoder {
 	self = [super initWithCoder:aDecoder];
     if (self) {
-/*		self.maximumZoomScale = 16.;
-		self.minimumZoomScale = 0.5;
-		self.delegate = self;
-		
-		self.scrollContentView = [[[UIView alloc] initWithFrame:CGRectMake(0, 0, 640, 640)] autorelease];
+		[self attachGestureRecognizer];
 
-		self.contentSize = self.scrollContentView.frame.size;
-		
-		VMPIHole *hole = [[VMPIHole alloc] init];
-		hole.center = self.scrollContentView.center;
-		hole.frame = CGRectMake(0, 0, 640, 640);
-		
-	//	[self.layer addSublayer:hole];
-		[self.scrollContentView addSubview:hole];
-		[self addSubview:self.scrollContentView];
-		Release(hole);
-*/
     }
 	return self;
 }

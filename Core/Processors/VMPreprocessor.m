@@ -104,6 +104,8 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 @end
 
 @implementation VMPreprocessor
+@synthesize song=song_;
+
 #pragma mark singleton
 
 + (VMPreprocessor*)defaultPreprocessor {
@@ -233,7 +235,7 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 				VMData *d = [VMPP dataWithType:typ];
 				[d setWithProto:data];		//	copy original data (with wrong type) into d
 				[d setWithData:hash];		//	then override with new given hash.
-				[_song.songData removeItem:dataId];
+				[song_.songData removeItem:dataId];
 				if( d.shouldRegister ) {
 					[self registerData:d];
 					data = [self rawData:dataId]; 
@@ -426,11 +428,11 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 #pragma mark database accessor
 
 - (id)data:(VMId*)dataId {
-	return [_song data:dataId];
+	return [song_ data:dataId];
 }
 
 - (id)rawData:(VMId*)dataId {
-	return [_song.songData item:dataId];
+	return [song_.songData item:dataId];
 }
 
 - (void)setData:(id)data withId:(VMId*)dataId {
@@ -439,12 +441,12 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 		[VMException raise:@"Attempted to set data with un-purified id into songData." 
 					format:@"id: %@ (should be %@)", dataId, purifiedId ];
 	}
-	[_song.songData setItem:data for:dataId];
+	[song_.songData setItem:data for:dataId];
 }
 
 - (void)renameData:(VMData*)data newId:(VMId*)newId {
 	VMId *oldId = [data.id copy];
-	[_song.songData renameKey:oldId to:newId];
+	[song_.songData renameKey:oldId to:newId];
 	data.id = newId;
 	Release(oldId);
 }
@@ -488,7 +490,7 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 	//
 	//	(2.90)	scan song properties
 	//
-	[_song setByHash:vmsHash];
+	[song_ setByHash:vmsHash];
 	
 	[self preprocessPhase3:dataArray];
 	
@@ -525,7 +527,7 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 }
 
 - (void)unRegister:(NSString *)dataId {
-	[_song.songData removeItem:dataId];
+	[song_.songData removeItem:dataId];
 }
 
 - (void)registerAliasOfFragment:(VMData*)d as:(VMId*)aliasId {
@@ -562,13 +564,13 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 #pragma mark log and alerts
 
 - (void)logWarning:(NSString *)messageFormat withData:(NSString *)data {
-#if VMP_OSX
+#if VMP_EDITOR
 	[APPDELEGATE.systemLog logWarning:messageFormat withData:data];
 #endif
 }
 
 - (void)logError:(NSString*)messageFormat withData:(NSString*)data {
-#if VMP_OSX
+#if VMP_EDITOR
 	[APPDELEGATE.systemLog logError:messageFormat withData:data];
 #endif
 	++fatalErrors;
@@ -1420,7 +1422,8 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 
 //	(3.90)	register entrypoints
 - (void)registerEntryPoint:(VMFragment*)frag {
-	[_song.entryPoints pushUnique:frag.id];
+	//	unused:
+	//[_song.entryPoints pushUnique:frag.id];
 }
 
 
@@ -1431,7 +1434,7 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 
 - (void)preprocessPhase4 {
 	
-	VMArray *keys = [_song.songData keys];
+	VMArray *keys = [song_.songData keys];
 	for ( VMId *did in keys ) {
 		if ( did.length > 3 && [[did substringToIndex:4] isEqualToString: @"VMP|"] ) continue;	//	no VMData
 		VMData *c = [self data:did];

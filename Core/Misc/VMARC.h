@@ -9,6 +9,8 @@
 #ifndef OnTheFly_VMARC_h
 #define OnTheFly_VMARC_h
 
+#define SUPPORT_32BIT_MAC 1
+
 #if __has_feature(objc_arc)
 
 

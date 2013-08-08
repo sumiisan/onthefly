@@ -87,7 +87,12 @@ typedef enum {
 	vmAction_prepare
 } VMActionType;
 
-@interface VMTimeRangeDescriptor : NSObject <NSCoding, NSCopying>
+@interface VMTimeRangeDescriptor : NSObject <NSCoding, NSCopying> {
+#if SUPPORT_32BIT_MAC
+	VMString *locationDescriptor_;
+	VMString *lengthDescriptor_;
+#endif
+}
 @property (nonatomic, VMStrong) VMString *locationDescriptor;
 @property (nonatomic, VMStrong) VMString *lengthDescriptor;
 
@@ -145,6 +150,9 @@ typedef enum {
 	vmObjectType	type_;
 	BOOL			shouldRegister_;
 	VMId			*id_;
+#if SUPPORT_32BIT_MAC
+	VMString		*comment_;
+#endif
 }
 @property 	(nonatomic, copy)			VMId			*id;
 @property	(nonatomic, assign)			vmObjectType	type;
@@ -156,7 +164,11 @@ typedef enum {
 /*
  reference to other object
  */
-@interface VMReference : VMData
+@interface VMReference : VMData {
+#if SUPPORT_32BIT_MAC
+	VMId			*referenceId_;
+#endif
+}
 @property	(nonatomic, copy)			VMId			*referenceId;
 @end
 
@@ -180,6 +192,10 @@ typedef enum {
  a static function definition	
  */
 @interface VMFunction : VMData {
+#if SUPPORT_32BIT_MAC
+	VMId	*functionName_;
+	VMHash	*parameter_;
+#endif
 	SEL		processor_;
 }
 @property	(nonatomic, VMStrong)	VMId			*functionName;
@@ -190,7 +206,12 @@ typedef enum {
 /*
  a fragment with instruction
  */
-@interface VMMetaFragment : VMFragment 
+@interface VMMetaFragment : VMFragment {
+#if SUPPORT_32BIT_MAC
+	VMArray			*instructionList_;
+#endif
+
+}
 @property	(nonatomic, VMStrong)	VMArray			*instructionList;
 @end
 
@@ -199,7 +220,12 @@ typedef enum {
  information about audio file
  */
 @interface VMAudioInfo : VMMetaFragment {
-	VMId	*fileId_;
+#if SUPPORT_32BIT_MAC
+	VMId						*fileId_;
+	VMVolume					volume_;
+	VMTimeRangeDescriptor		*cuePoints_;
+	VMTimeRangeDescriptor		*regionRange_;
+#endif
 }
 @property	(nonatomic, copy)		VMId						*fileId;
 @property	(nonatomic, assign)		VMVolume					volume;
@@ -211,7 +237,11 @@ typedef enum {
 /*
  information about audio playback, add audio-file modification such as volume, cue-point, EQ, compression, here.
  */
-@interface VMAudioModifier : VMAudioInfo
+@interface VMAudioModifier : VMAudioInfo {
+#if SUPPORT_32BIT_MAC
+	VMId	*originalId_;
+#endif
+}
 @property	(nonatomic, copy)		VMId				*originalId;
 @end
 
@@ -219,7 +249,12 @@ typedef enum {
 /*
  evaluate expression and transform multiple factros into one output value
  */
-@interface VMTransformer : VMData
+@interface VMTransformer : VMData {
+#if SUPPORT_32BIT_MAC
+	VMString	*scoreDescriptor_;
+#endif
+
+}
 @property	(nonatomic, copy)		VMString 			*scoreDescriptor;
 @property	(nonatomic, readonly)	VMFloat				currentValue;
 @end
@@ -229,7 +264,13 @@ typedef enum {
 /*
  external input definition
   */
-@interface VMStimulator : VMData
+@interface VMStimulator : VMData {
+#if SUPPORT_32BIT_MAC
+	VMId	*source_;
+	VMId	*key_;
+#endif
+
+}
 @property	(nonatomic, copy)		VMId				*source;
 @property	(nonatomic, copy)		VMId				*key;
 @property	(nonatomic, readonly)	VMFloat				currentValue;
@@ -269,7 +310,13 @@ typedef enum {
 /*
  fragment with audio
  */
-@interface VMAudioFragment : VMMetaFragment
+@interface VMAudioFragment : VMMetaFragment {
+#if SUPPORT_32BIT_MAC
+	VMId		*audioInfoId_;
+	VMAudioInfo	*audioInfoRef_;
+#endif
+
+}
 @property	(nonatomic, copy)		VMId			*audioInfoId;
 
 //	audioInfoReference 
@@ -283,7 +330,11 @@ typedef enum {
 /*
  dynamic data related to audio fragment.
  */
-@interface VMAudioFragmentPlayer : VMAudioFragment
+@interface VMAudioFragmentPlayer : VMAudioFragment {
+#if SUPPORT_32BIT_MAC
+	VMTime	firedTimestamp_;
+#endif
+}
 //@property	(nonatomic, assign)		VMAudioFragment	*nextLayer;			//	re-design in future.
 @property	(nonatomic, assign)		VMTime			firedTimestamp;
 @end
@@ -297,6 +348,11 @@ typedef enum {
 @interface VMChance : VMReference {
 @private
 	VMFloat		cachedScore_;
+#if SUPPORT_32BIT_MAC
+@protected
+	VMString	*scoreDescriptor_;
+	
+#endif
 }
 @property	(nonatomic, copy)		VMString		*scoreDescriptor;
 @property	(nonatomic, copy)		VMId			*targetId;
@@ -311,7 +367,11 @@ typedef enum {
 /*
  generic collection of fragments (abstract)
  */
-@interface VMCollection : VMMetaFragment 
+@interface VMCollection : VMMetaFragment {
+#if SUPPORT_32BIT_MAC
+	VMArray	*frags_;
+#endif
+}
 @property	(nonatomic, VMStrong)	VMArray			*fragments;
 @property	(nonatomic, readonly)	VMInt			length;
 @end
@@ -320,7 +380,14 @@ typedef enum {
 /*
  runtime properties
  */
-@interface VMLiveData : VMCollection
+@interface VMLiveData : VMCollection {
+#if SUPPORT_32BIT_MAC
+	VMInt			counter_;
+	VMInt			fragPosition_;
+	VMArray			*history_;
+#endif
+	
+}
 @property	(nonatomic, assign)	VMInt			counter;
 @property 	(nonatomic, assign)	VMInt			fragPosition;
 @property	(nonatomic, VMStrong)	VMArray			*history;
@@ -338,6 +405,9 @@ typedef enum {
 @interface VMSelector : VMCollection {
 	VMFloat			sumOfInnerScores_cache_;	//	for improve performance
 	VMChance		*selectedChance_;			//	for internal temporary use
+#if SUPPORT_32BIT_MAC
+	VMLiveData		*liveData_;
+#endif
 }
 @property	(VMNonatomic VMStrong)	VMLiveData	*liveData;
 @end
@@ -347,7 +417,13 @@ typedef enum {
 /*
  generic player
  */
-@interface VMPlayer : VMLiveData
+@interface VMPlayer : VMLiveData {
+#if SUPPORT_32BIT_MAC
+	VMFragment	*nextPlayer_;
+	VMId		*staticDataId_;
+#endif
+
+}
 @property	(nonatomic, VMStrong)	VMFragment	*nextPlayer;
 @property	(nonatomic, copy)		VMId		*staticDataId;
 @end
@@ -364,7 +440,11 @@ typedef enum {
 /*
  fragments collection sequence
  */
-@interface VMSequence : VMCollection
+@interface VMSequence : VMCollection {
+#if SUPPORT_32BIT_MAC
+	VMSelector	*subsequent_;
+#endif
+}
 //	the fragment which should be set after finishing sequence.
 //	only used if sequence has no parent sequence
 @property 	(nonatomic, VMStrong)	VMSelector		*subsequent;	

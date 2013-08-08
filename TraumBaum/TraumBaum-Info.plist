@@ -3,32 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
-	<string>ja</string>
+	<string>en</string>
 	<key>CFBundleDisplayName</key>
 	<string>${PRODUCT_NAME}</string>
-	<key>CFBundleDocumentTypes</key>
-	<array>
-		<dict>
-			<key>CFBundleTypeExtensions</key>
-			<array>
-				<string>vms</string>
-			</array>
-			<key>CFBundleTypeIconFile</key>
-			<string>vsDocIcon</string>
-			<key>CFBundleTypeIconFiles</key>
-			<array>
-				<string>vsDocIcon</string>
-			</array>
-			<key>CFBundleTypeName</key>
-			<string>Variable Music Structure</string>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>LSItemContentTypes</key>
-			<array>
-				<string>vms</string>
-			</array>
-		</dict>
-	</array>
 	<key>CFBundleExecutable</key>
 	<string>${EXECUTABLE_NAME}</string>
 	<key>CFBundleIcons</key>

@@ -20,7 +20,7 @@
 #if VMP_OSX
 	self.caption = [NSTextField labelWithText:@"" frame:VMPMakeRect(2, 2, 240, 14)];
 #elif VMP_IPHONE
-	self.caption = [[UILabel alloc] initWithFrame:VMPMakeRect(2, 2, 240, 14)];
+	self.caption = AutoRelease([[UILabel alloc] initWithFrame:VMPMakeRect(2, 2, 240, 14)]);
 	self.caption.textColor = [UIColor whiteColor];
 	self.caption.backgroundColor = [UIColor clearColor];
 #endif

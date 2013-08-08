@@ -42,6 +42,20 @@ enum  {
 
 @interface VMScoreEvaluator : NSObject {
 	BOOL	trackingPathIsReturning;
+#if SUPPORT_32BIT_MAC
+	NSNumberFormatter	*numberFormatter_;
+	VMHash				*variables_;
+	VMArray				*pathTrackerArray_;
+	
+	VMArray				*objectsWaitingToBeProcessed_;
+	VMArray				*objectsWaitingToBeLogged_;
+		
+	BOOL	testMode_;
+	BOOL	shouldNotify_;
+	BOOL	shouldLog_;
+#endif
+	
+	
 }
 
 + (VMScoreEvaluator*)defaultEvaluator;
@@ -53,7 +67,7 @@ enum  {
  functions() are evaluated dynamically
  
 name		description											responsible setter		implemented
- @A			current audio frag 's id								song					YES
+ @A			current audio frag 's id							song					YES
  @ABS(x)	|x|																			NO
  @C			parent selector's playback counter 					parent selector			YES
  @COS(x)	x = 0..1																	NO
@@ -67,10 +81,10 @@ name		description											responsible setter		implemented
  @ID		id of caller VMData object							data					YES
  @F{x}		1 if the last fragId was x, otherwise 0				-						YES
  @INT(x)	(int)x												-						NO
- @L			last audio frag's id									song					NO
- @LL		audio frag before last audio frag -'s id				song					NO
- @LS		alias for @LS{@T}														YES
- @LS{id}	distance to last selection (inside selector) of fragId in frames				NO
+ @L			last audio frag's id								song					NO
+ @LL		audio frag before last audio frag -'s id			song					NO
+ @LS		alias for @LS{@T}															YES
+ @LS{id}	distance to last selection (inside selector) of fragId in frames			NO
  @LC		alias for @LC{@T}									parent selector			YES
  @LC{id}	1 - ( 1 / @LS{id} )			( for dist n = 0, 0.5, 0.666667, 0.75, 			NO
  @MAX(x,y)																				NO

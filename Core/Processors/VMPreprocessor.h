@@ -64,7 +64,7 @@
 	int 		debugCounter;
 	
 @private
-	__unsafe_unretained VMSong *_song;
+	__unsafe_unretained VMSong *song_;
 }
 
 @property (nonatomic,VMWeak)	VMSong	*song;

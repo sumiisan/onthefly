@@ -43,7 +43,7 @@ inline static int HexToInt(char inCharacter)
 
 static BOOL didThrownError__ = NO;
 
-@synthesize lastKey;
+@synthesize lastKey=lastKey_;
 
 #define ScanInst(scanFunc,errorCode,descriptionString ) \
 if ([self scanFunc] == NO) {\
