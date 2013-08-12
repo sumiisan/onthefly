@@ -125,16 +125,21 @@ static const int kNumberOfSkins = 4;
     self = [super init];
     if (self) {
 		
+#if 0
+	
+		//	no fancy button bg's for now.
+		
+		
+		CGFloat vOffs = ( Is4InchIPhone ? 88 : 0 );
 		for (int i = 0; i < 4; ++i ) {
-			VMPRainyView *db = AutoRelease([[VMPRainyView alloc] initWithFrame:CGRectMake(0, 210 + i*50, 320, 45)]);
+			VMPRainyView *db = AutoRelease([[VMPRainyView alloc] initWithFrame:CGRectMake(0, 210 + i*50 + vOffs, 320, 45)]);
 			db.alpha = 0.5;
 			[self.view addSubview:db];
 			[self.view sendSubviewToBack:db];
 		}
+#endif
 		
 		
-		
-		//CGFloat vOffs = ( Is4InchIPhone ? 25 : 0 );
 		
 		
 		//self.view.frame = CGRectMake(0, vOffs, 320, 480);

@@ -65,7 +65,7 @@
 									<reference key="NSOnImage" ref="35465992"/>
 									<reference key="NSMixedImage" ref="502551668"/>
 								</object>
-								<object class="NSMenuItem" id="50607462">
+								<object class="NSMenuItem" id="856827319">
 									<reference key="NSMenu" ref="110575045"/>
 									<string key="NSTitle">Open Website...</string>
 									<string key="NSKeyEquiv"/>
@@ -112,7 +112,7 @@
 								</object>
 								<object class="NSMenuItem" id="755159360">
 									<reference key="NSMenu" ref="110575045"/>
-									<string key="NSTitle">Hide traumbaum mac</string>
+									<string key="NSTitle">Hide traumbaum</string>
 									<string key="NSKeyEquiv">h</string>
 									<int key="NSKeyEquivModMask">1048576</int>
 									<int key="NSMnemonicLoc">2147483647</int>
@@ -182,7 +182,7 @@
 									<reference key="NSOnImage" ref="35465992"/>
 									<reference key="NSMixedImage" ref="502551668"/>
 								</object>
-								<object class="NSMenuItem" id="1042603689">
+								<object class="NSMenuItem" id="194676612">
 									<reference key="NSMenu" ref="835318025"/>
 									<string key="NSTitle">Dim Volume</string>
 									<string key="NSKeyEquiv">d</string>
@@ -191,7 +191,7 @@
 									<reference key="NSOnImage" ref="35465992"/>
 									<reference key="NSMixedImage" ref="502551668"/>
 								</object>
-								<object class="NSMenuItem" id="1027450193">
+								<object class="NSMenuItem" id="282269824">
 									<reference key="NSMenu" ref="835318025"/>
 									<string key="NSTitle">Dark Background</string>
 									<string key="NSKeyEquiv">b</string>
@@ -200,7 +200,7 @@
 									<reference key="NSOnImage" ref="35465992"/>
 									<reference key="NSMixedImage" ref="502551668"/>
 								</object>
-								<object class="NSMenuItem" id="268717592">
+								<object class="NSMenuItem" id="923685420">
 									<reference key="NSMenu" ref="835318025"/>
 									<string key="NSTitle">Fog</string>
 									<string key="NSKeyEquiv">f</string>
@@ -231,7 +231,7 @@
 					<reference key="NSNextResponder"/>
 					<int key="NSvFlags">256</int>
 					<array class="NSMutableArray" key="NSSubviews">
-						<object class="NSImageView" id="557758816">
+						<object class="NSImageView" id="606140933">
 							<reference key="NSNextResponder" ref="439893737"/>
 							<int key="NSvFlags">274</int>
 							<array class="NSMutableArray" key="NSSubviews"/>
@@ -250,7 +250,7 @@
 							<bool key="NSViewIsLayerTreeHost">YES</bool>
 							<string key="NSReuseIdentifierKey">_NS:9</string>
 							<bool key="NSEnabled">YES</bool>
-							<object class="NSImageCell" key="NSCell" id="544733593">
+							<object class="NSImageCell" key="NSCell" id="471910131">
 								<int key="NSCellFlags">134217728</int>
 								<int key="NSCellFlags2">33554432</int>
 								<object class="NSCustomResource" key="NSContents">
@@ -270,7 +270,7 @@
 					<string key="NSFrameSize">{320, 480}</string>
 					<reference key="NSSuperview"/>
 					<reference key="NSWindow"/>
-					<reference key="NSNextKeyView" ref="557758816"/>
+					<reference key="NSNextKeyView" ref="606140933"/>
 					<bool key="NSViewIsLayerTreeHost">YES</bool>
 				</object>
 				<string key="NSScreenRect">{{0, 0}, {1366, 746}}</string>
@@ -348,7 +348,7 @@
 					<object class="IBActionConnection" key="connection">
 						<string key="label">dimmPlayer:</string>
 						<reference key="source" ref="1014"/>
-						<reference key="destination" ref="1042603689"/>
+						<reference key="destination" ref="194676612"/>
 					</object>
 					<int key="connectionID">544</int>
 				</object>
@@ -356,7 +356,7 @@
 					<object class="IBActionConnection" key="connection">
 						<string key="label">openWebsite:</string>
 						<reference key="source" ref="1014"/>
-						<reference key="destination" ref="50607462"/>
+						<reference key="destination" ref="856827319"/>
 					</object>
 					<int key="connectionID">545</int>
 				</object>
@@ -364,7 +364,7 @@
 					<object class="IBActionConnection" key="connection">
 						<string key="label">toggleFog:</string>
 						<reference key="source" ref="1014"/>
-						<reference key="destination" ref="268717592"/>
+						<reference key="destination" ref="923685420"/>
 					</object>
 					<int key="connectionID">548</int>
 				</object>
@@ -372,7 +372,7 @@
 					<object class="IBActionConnection" key="connection">
 						<string key="label">toggleBackground:</string>
 						<reference key="source" ref="1014"/>
-						<reference key="destination" ref="1027450193"/>
+						<reference key="destination" ref="282269824"/>
 					</object>
 					<int key="connectionID">554</int>
 				</object>
@@ -388,7 +388,7 @@
 					<object class="IBOutletConnection" key="connection">
 						<string key="label">fogMenuItem</string>
 						<reference key="source" ref="976324537"/>
-						<reference key="destination" ref="268717592"/>
+						<reference key="destination" ref="923685420"/>
 					</object>
 					<int key="connectionID">549</int>
 				</object>
@@ -396,7 +396,7 @@
 					<object class="IBOutletConnection" key="connection">
 						<string key="label">darkBackgroundMenuItem</string>
 						<reference key="source" ref="976324537"/>
-						<reference key="destination" ref="1027450193"/>
+						<reference key="destination" ref="282269824"/>
 					</object>
 					<int key="connectionID">552</int>
 				</object>
@@ -404,7 +404,7 @@
 					<object class="IBOutletConnection" key="connection">
 						<string key="label">backgroundImage</string>
 						<reference key="source" ref="976324537"/>
-						<reference key="destination" ref="557758816"/>
+						<reference key="destination" ref="606140933"/>
 					</object>
 					<int key="connectionID">553</int>
 				</object>
@@ -473,7 +473,7 @@
 							<reference ref="1046388886"/>
 							<reference ref="1056857174"/>
 							<reference ref="342932134"/>
-							<reference ref="50607462"/>
+							<reference ref="856827319"/>
 						</array>
 						<reference key="parent" ref="694149608"/>
 					</object>
@@ -542,7 +542,7 @@
 						<int key="objectID">372</int>
 						<reference key="object" ref="439893737"/>
 						<array class="NSMutableArray" key="children">
-							<reference ref="557758816"/>
+							<reference ref="606140933"/>
 						</array>
 						<reference key="parent" ref="972006081"/>
 					</object>
@@ -558,25 +558,25 @@
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">536</int>
-						<reference key="object" ref="557758816"/>
+						<reference key="object" ref="606140933"/>
 						<array class="NSMutableArray" key="children">
-							<reference ref="544733593"/>
+							<reference ref="471910131"/>
 						</array>
 						<reference key="parent" ref="439893737"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">537</int>
-						<reference key="object" ref="544733593"/>
-						<reference key="parent" ref="557758816"/>
+						<reference key="object" ref="471910131"/>
+						<reference key="parent" ref="606140933"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">24</int>
 						<reference key="object" ref="835318025"/>
 						<array class="NSMutableArray" key="children">
 							<reference ref="1011231497"/>
-							<reference ref="1042603689"/>
-							<reference ref="268717592"/>
-							<reference ref="1027450193"/>
+							<reference ref="194676612"/>
+							<reference ref="923685420"/>
+							<reference ref="282269824"/>
 						</array>
 						<reference key="parent" ref="713487014"/>
 					</object>
@@ -587,22 +587,22 @@
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">538</int>
-						<reference key="object" ref="1042603689"/>
+						<reference key="object" ref="194676612"/>
 						<reference key="parent" ref="835318025"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">540</int>
-						<reference key="object" ref="50607462"/>
+						<reference key="object" ref="856827319"/>
 						<reference key="parent" ref="110575045"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">546</int>
-						<reference key="object" ref="268717592"/>
+						<reference key="object" ref="923685420"/>
 						<reference key="parent" ref="835318025"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">550</int>
-						<reference key="object" ref="1027450193"/>
+						<reference key="object" ref="282269824"/>
 						<reference key="parent" ref="835318025"/>
 					</object>
 				</array>

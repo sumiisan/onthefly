@@ -1340,10 +1340,10 @@ static VMHash *scoreForFragment_static_ = nil;
 	VMArray *log = NewInstance(VMArray);
 #endif
 
-/*	VMInt c = self.length;
-	for ( int i = 0; i < c; ++i ) {
-		id d = [self chanceAtIndex:i];	*/	
-	for ( id d in self.fragments ) {
+	VMInt c = self.length;
+	for ( int i = 0; i < c; ++i ) {		//	insurance
+		id d = [self chanceAtIndex:i];
+/*	for ( id d in self.fragments ) {*/
 		if ( ClassMatch(d, VMString ))  {
 			
 #if VMP_OSX
@@ -1497,7 +1497,11 @@ static VMHash *scoreForFragment_static_ = nil;
 		} else {
 			//	use default internal frags and cached score
 			
-			for ( VMChance *c in self.fragments ) {
+	//		for ( VMChance *c in self.fragments ) {
+			VMInt count = self.length;
+			for ( VMInt i = 0; i < count; ++i ) {
+				VMChance *c = [self chanceAtIndex:i];
+			
 				s += c.cachedScore;
 				if ( s > xi ) { 
 					//if (verbose) NSLog(@"    SEL %@ : -> selected: CHA targ:%@, resolve frag -->", self.id, c.targetId );
