@@ -432,7 +432,7 @@
 		16A2030C17474F4600CD2A57 /* VMPFragmentCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VMPFragmentCell.m; sourceTree = "<group>"; };
 		16A27EFF16F9730F0081C1E8 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		16A27F0116F9736F0081C1E8 /* defaultSong */ = {isa = PBXFileReference; lastKnownFileType = folder; name = defaultSong; path = ../../defaultSong; sourceTree = "<group>"; };
-		16A27F0716FBB1A70081C1E8 /* traumbaum iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "traumbaum iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		16A27F0716FBB1A70081C1E8 /* traumbaum for iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "traumbaum for iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		16A27F1016FBB1A70081C1E8 /* Traumbaum-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Traumbaum-Info.plist"; sourceTree = "<group>"; };
 		16A27F1216FBB1A70081C1E8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		16A27F1416FBB1A70081C1E8 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -873,7 +873,7 @@
 			children = (
 				162F7B1816A0341900420443 /* OnTheFly Editor OSX.app */,
 				162F7B3516A0341D00420443 /* OTF Tests.octest */,
-				16A27F0716FBB1A70081C1E8 /* traumbaum iOS.app */,
+				16A27F0716FBB1A70081C1E8 /* traumbaum for iOS.app */,
 				16C074A717B28C4900351113 /* traumbaum.app */,
 			);
 			name = Products;
@@ -1165,7 +1165,7 @@
 			);
 			name = "traumbaum iOS";
 			productName = Traumbaum;
-			productReference = 16A27F0716FBB1A70081C1E8 /* traumbaum iOS.app */;
+			productReference = 16A27F0716FBB1A70081C1E8 /* traumbaum for iOS.app */;
 			productType = "com.apple.product-type.application";
 		};
 		16C074A617B28C4900351113 /* traumbaum mac */ = {
@@ -1763,7 +1763,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS = $inherited;
 				INFOPLIST_FILE = "Traumbaum/Traumbaum-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "traumbaum for iOS";
 				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -1792,7 +1792,7 @@
 				INFOPLIST_FILE = "Traumbaum/Traumbaum-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "traumbaum for iOS";
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos;

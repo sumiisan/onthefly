@@ -16,6 +16,7 @@
 #import "VMPreprocessor.h"
 #import "VMPlayerOSXDelegate.h"
 
+#define kAnimationDuration 0.5	//5.0	//	this is for shooting videos
 
 #pragma mark -
 #pragma mark ** branch graph data models **
@@ -359,7 +360,7 @@
 		[self addSubview:bgItem.graph];
 		[bgItem.graph moveToRect:NSMakeRect(bgColumn->x, bgItem->y,
 											bgItem.graph.contentRect.size.width, summedHeight)
-						duration:0.5];
+						duration:kAnimationDuration];
 		graphRightX = bgColumn->x + bgItem.graph.contentRect.size.width;
 		drawChildren = YES;
 	}
@@ -782,7 +783,7 @@
 						   height:self.frame.size.height-10];
 			
 			[lastFrameBranchGraphColumnList cleanupViews];
-			[self performSelector:@selector(showLines:) withObject:nil afterDelay:0.6];
+			[self performSelector:@selector(showLines:) withObject:nil afterDelay:kAnimationDuration+0.1];
 		}
 	}
 }

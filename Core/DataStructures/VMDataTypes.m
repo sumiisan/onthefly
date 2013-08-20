@@ -1425,7 +1425,7 @@ static VMHash *scoreForFragment_static_ = nil;
 
 
 - (VMChance*)chanceAtIndex:(VMInt)pos {
-	id ch = [super fragmentAtIndex:pos];
+	id ch = [self.fragments item:pos];
 	
 #if VMP_PLAYER
 	if ( ClassMatch( ch, VMId )) {
@@ -1646,9 +1646,11 @@ VMObligatory_initWithCoder(
    VMInt c = self.length;
    for( VMInt i = 0; i < c; ++i ) {
 	   VMId *idRef = [self.fragments item:i];
-	   VMChance *ch = ARInstance(VMChance);
-	   [ch setWithData:idRef];
-	   [self.fragments setItem:ch at:i];
+	   if (ClassMatch(idRef, VMId)) {
+		   VMChance *ch = ARInstance(VMChance);
+		   [ch setWithData:idRef];
+		   [self.fragments setItem:ch at:i];
+	   }
    }
 );
 
