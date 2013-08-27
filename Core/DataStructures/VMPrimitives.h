@@ -33,6 +33,7 @@ typedef VMInt 			VMComparatorType;
 typedef VMInt			VMOperatorType;
 typedef NSString 		VMString;
 typedef VMString		VMId;
+typedef Float32			VMPAudioSample;
 
 typedef struct {
 	VMFloat minimum;

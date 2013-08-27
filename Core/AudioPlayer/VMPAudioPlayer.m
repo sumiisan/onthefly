@@ -20,13 +20,28 @@ static void BufferCallback(void *inUserData, AudioQueueRef inAQ, AudioQueueBuffe
 @synthesize fragId;
 @synthesize playerId;
 @synthesize fragDuration, fileDuration, offset;
+
+#if enableDSP
+@synthesize audioObject = audioObject_;
+#endif
+
 static VMHash *processPhaseNames_static_ = nil;
 
 #pragma mark -
 #pragma mark accessor
 
 -(Float32)loadedRatio {
+#if enableDSP
+	if( audioObject_ ) {
+//		LLog(@"framesLoaded:%.2f",(double)audioObject_.framesLoaded / (double)audioObject_.numberOfFrames);
+		
+		return (double)audioObject_.framesLoaded / (double)audioObject_.numberOfFrames;
+	}
+	else
+		return 0;
+#else
 	return packetIndex / (Float32) numTotalPackets;
+#endif
 }
 
 - (void)setVolume:(Float32)volume {
@@ -89,14 +104,23 @@ static VMHash *processPhaseNames_static_ = nil;
 	trackClosed = YES;
 	AudioQueueStop(queue, YES);
 	AudioQueueDispose(queue, YES);
+
+#if enableDSP
+	[self.audioObject close];
+#else
 	AudioFileClose(audioFile);
 	audioFile = nil;
+#endif
 	processPhase = pp_idle;
 }
 
 - (void)dealloc {
 	Release(timer);
-	timer = nil;	
+#if enableDSP
+	VMNullify(audioObject);
+#endif
+	timer = nil;
+	if ( filePathToRead ) Release(filePathToRead);
 	[self close];
 	if( packetDescs )   free( packetDescs );
     if( channelLayout ) free( channelLayout );
@@ -104,6 +128,9 @@ static VMHash *processPhaseNames_static_ = nil;
 }
 
 - (void) reallocBuffer {
+#if enableDSP
+	numPacketsToRead = kAudioPlayer_BufferSize / audioObject_->cachedAudioFormat.mBytesPerPacket;
+#else
 	UInt32	size;
 	UInt32	maxPacketSize;
 	
@@ -141,26 +168,36 @@ static VMHash *processPhaseNames_static_ = nil;
     if ( channelLayout ) {
         AudioQueueSetProperty(queue, kAudioQueueProperty_ChannelLayout, channelLayout, channelLayoutSize );
     }
+#endif
     
 	// allocate buffers
 	for ( int i = 0; i < kNumberOfQueueBuffers; ++i ) {
-		AudioQueueAllocateBuffer( queue, kAudioPlayer_BufferSize, &buffers[i] );
+		OSStatus status = AudioQueueAllocateBuffer( queue, kAudioPlayer_BufferSize, &buffers[i] );
+		if (status)
+			LLog(@"AudioQueueAllocateBuffer returned status %ld", status);
         buffers[i]->mUserData = (void*)i;   //  set the index of buffer
 	}
 }
 
 - (void) createNewQueue {		
 	// create a new playback queue using the specified data format and buffer callback
-	AudioQueueNewOutput(
-                        &dataFormat, 
-                        BufferCallback, 
+	OSStatus status = AudioQueueNewOutput(
+#if enableDSP
+						&(audioObject_->cachedAudioFormat),
+#else
+                        &dataFormat,
+#endif
+                        BufferCallback,
                         (VMBridge void *)(self),
                         CFRunLoopGetCurrent(), 
                         kCFRunLoopCommonModes, 
                         0, 
                         &queue);
     assert( queue != nil );
+	if( status ) LLog(@"AudioQueueNewOutput returned status %ld",status);
+	
 	[self reallocBuffer];
+	
 
 #if VMP_IPHONE
 	//	decoder policy
@@ -168,7 +205,7 @@ static VMHash *processPhaseNames_static_ = nil;
 							? kAudioQueueHardwareCodecPolicy_PreferHardware
 							: kAudioQueueHardwareCodecPolicy_PreferSoftware;	//	only player #0 can use hardwre decoder
 																				//	since we have only one on board.
-	OSStatus status= AudioQueueSetProperty( queue, kAudioQueueProperty_HardwareCodecPolicy, &hardwarePolicy, sizeof(hardwarePolicy));
+	status= AudioQueueSetProperty( queue, kAudioQueueProperty_HardwareCodecPolicy, &hardwarePolicy, sizeof(hardwarePolicy));
 	
 	//
 	//	NOTE:	setting all players to kAudioQueueHardwareCodecPolicy_PreferHardware worked for my iPhone 4S with iOS6.1.3
@@ -185,43 +222,58 @@ static VMHash *processPhaseNames_static_ = nil;
 #pragma mark audio file
 
 - (void)openAudio:(NSString *)path {
-	UInt32		size;
+	OSStatus	status;
+	NSURL		*url;
 
 	if (path == nil)
         return;
 
+#if enableDSP
+	if ( self.audioObject ) {
+		VMNullify(audioObject);
+		self.audioObject = ARInstance(VMAudioObject);
+	}
+	status = [self.audioObject open:path];
+	url = self.audioObject.url;
+#else
 	if( audioFile ) {
 		AudioFileClose( audioFile );
 		audioFile = nil;
 	}
+	url =		[NSURL URLWithString:[path stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];	//	escape
+	status =	AudioFileOpenURL( (VMBridge CFURLRef)url, 0x01, 0, &audioFile );
+#endif
 	
 	// try to open up the file using the specified path
 	
-	NSURL		*url = [NSURL URLWithString:[path stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];	//	escape
-	OSStatus	status;
-	status =	AudioFileOpenURL( (VMBridge CFURLRef)url, 0x01, 0, &audioFile );
-	if ( noErr != status ) {
+	if ( status ) {
 		[VMException alert:@"Failed to open audio file." format:@"Audio file at path %@ status=%d", url, status];
+#if ! enableDSP
 		audioFile = nil;
+#endif
 		return;
 	}
-	
+
+#if enableDSP
+	fileDuration = audioObject_.fileDuration;
+#else
 	// get the data format of the file
-	size = sizeof(dataFormat);
+	UInt32 size = sizeof(dataFormat);
 	AudioFileGetProperty( audioFile, kAudioFilePropertyDataFormat, &size, &dataFormat );
 
 	// get the length of the file
 	size = sizeof( fileDuration );
 	AudioFileGetProperty( audioFile, kAudioFilePropertyEstimatedDuration, &size, &fileDuration );
-	
-	if ( fragDuration == 0 ) fragDuration = fileDuration;
 	//waveformSampleInterval = ( fileDuration * dataFormat.mSampleRate ) / kWaveFormCacheFrames;
+#endif
+	if ( fragDuration == 0 ) fragDuration = fileDuration;
 }
 
 - (void)preloadAudio:(NSString *)path atTime:(float)inTime {
     assert( path != nil );
-    
+#if ! enableDSP
 	if( queue && audioFile ) [self close];
+#endif
 	processPhase = pp_warmUp;
 	Release(filePathToRead);
 	filePathToRead = Retain([NSString stringWithString:path]);
@@ -231,14 +283,41 @@ static VMHash *processPhaseNames_static_ = nil;
 }
 
 -(void)openAudioAndReadInfo {
-	char		*cookie;
-	UInt32		size;
     
     processPhase = pp_locked;
 	if ( ! filePathToRead ) {
 		[self stop];
 		return;
 	}
+	
+	
+#if enableDSP
+	
+	if ( self.audioObject ) {
+		VMNullify(audioObject);
+	}
+	self.audioObject = ARInstance(VMAudioObject);
+	OSStatus status = [audioObject_ open:filePathToRead];
+
+	int totalBytes = audioObject_.numberOfFrames * audioObject_.bytesPerFrame;
+	numTotalPackets = totalBytes / audioObject_->cachedAudioFormat.mBytesPerPacket;
+
+	if (numTotalPackets == 0) {
+		processPhase = pp_idle;
+		return;	//	failed
+	}
+	// try to open up the file using the specified path
+	
+	if ( noErr != status ) {
+		[VMException alert:@"Failed to open audio file." format:@"Audio file at path %@ status=%d", audioObject_.url, status];
+		return;
+	}
+	fileDuration = audioObject_.fileDuration;
+	if ( fragDuration == 0 ) fragDuration = fileDuration;
+	
+#else
+	char		*cookie;
+	UInt32		size;
 	[self openAudio:filePathToRead];
     
     //  read packet count
@@ -269,6 +348,7 @@ static VMHash *processPhaseNames_static_ = nil;
         channelLayout = (AudioChannelLayout *)malloc( channelLayoutSize );
         AudioFileGetProperty(audioFile, kAudioFilePropertyChannelLayout, &channelLayoutSize, channelLayout);
     }
+#endif
 
 	[self createNewQueue];
     processPhase = pp_fileOpened;
@@ -279,40 +359,71 @@ static VMHash *processPhaseNames_static_ = nil;
 //static int logDone = 0;
 
 - (UInt32)readPacketsIntoBuffer:(AudioQueueBufferRef)inBuffer queue:(AudioQueueRef)inAQ {
-	UInt32	numBytes, numPackets;
 	
 	// read packets into buffer from file
-	numPackets = numPacketsToRead;
+	UInt32 packetsToRead = numPacketsToRead;
+
+#if enableDSP
+	UInt32 playedFrames = packetIndex * audioObject_->cachedAudioFormat.mFramesPerPacket;
+	UInt32 framesToPlay = audioObject_.numberOfFrames - playedFrames;
+	
+	if( playedFrames < audioObject_.numberOfFrames ) {
+		size_t copyBytes = MIN(framesToPlay * audioObject_->cachedAudioFormat.mBytesPerFrame,
+							   inBuffer->mAudioDataBytesCapacity );
+		if ( playedFrames > audioObject_.framesLoaded ) {
+			LLog(@"attempted to play unloaded frames %ld / %ld", playedFrames, audioObject_.framesLoaded);
+		}
+		
+		const char *source = [audioObject_ dataAtFrame:playedFrames];
+		if( source ) {
+			memcpy((char*)inBuffer->mAudioData, source, copyBytes );
+			inBuffer->mAudioDataByteSize = copyBytes;
+		
+			AudioQueueEnqueueBuffer(queue, inBuffer, 0, nil );
+			packetIndex += copyBytes / audioObject_->cachedAudioFormat.mBytesPerPacket;
+		}
+	}
+	
+#else
+	UInt32 bytesRead;
 	
 	AudioFileReadPackets
 	(
 	 audioFile, 
 	 NO,
-	 &numBytes, 
+	 &bytesRead,
 	 packetDescs, 
 	 packetIndex, 
-	 &numPackets,
+	 &packetsToRead,
 	 inBuffer->mAudioData );
 
-    if (numPackets > 0)	{
+    if (packetsToRead > 0)	{
         // - End Of File has not been reached yet since we read some packets, so enqueue the buffer we just read into
         // the audio queue, to be played next
         // - (packetDescs ? numPackets : 0) means that if there are packet descriptions (which are used only for Variable
         // BitRate data (VBR)) we'll have to send one for each packet, otherwise zero
-        inBuffer->mAudioDataByteSize = numBytes;
-        AudioQueueEnqueueBuffer(queue, inBuffer, (packetDescs ? numPackets : 0), packetDescs);
+        inBuffer->mAudioDataByteSize = bytesRead;
+        AudioQueueEnqueueBuffer(queue, inBuffer, (packetDescs ? packetsToRead : 0), packetDescs);
         
         // move ahead to be ready for next time we need to read from the file
-        packetIndex += numPackets;
+        packetIndex += packetsToRead;
     }
-	return numPackets;
+#endif
+	return packetsToRead;
 }
 
--(void)enqueueBuffers {
+#if enableDSP
+- (void)beginLoadFile {
+	[audioObject_ beginLoad:nil];
+	skipCounter = 0;
+}
+#endif
+
+- (void)enqueueBuffers {
     processPhase = pp_locked;
     
 	for ( int i = 0; i < kNumberOfQueueBuffers; ++i )
-        if( [self readPacketsIntoBuffer: buffers[i] queue:nil ] == 0 ) break;
+        if( [self readPacketsIntoBuffer: buffers[i] queue:queue ] == 0 ) break;
 	
     processPhase = pp_preLoad;
 }
@@ -341,7 +452,7 @@ static VMHash *processPhaseNames_static_ = nil;
 	}	*/
 #endif
 	if( status ) {
-		LLog(@"AudioQueuePrime %@ Error:%ld", fragId, (long)status);
+		LLog(@"AudioQueuePrime %@ OSStatus:%ld", fragId, (long)status);
 	} /*else {
 		LLog(@"AudioQueuePrime %@ prepared:%ld", fragId, (long)preparedFrames);
 	}*/
@@ -357,6 +468,14 @@ static VMHash *processPhaseNames_static_ = nil;
 #pragma mark timer handler
 
 -(void)timerCall:(NSTimer*)theTimer {
+	
+#if enableDSP
+	if (audioObject_ && audioObject_.framesLeft > 0 ) {
+		skipCounter = (++skipCounter) % 3;
+		if ( skipCounter == 1 ) [audioObject_ continueLoad];
+	}
+#endif
+	
     switch ( processPhase ) {
         case pp_locked:         //  currently processing something.
         case pp_idle:           //  nothing to do. ( playback has ended )
@@ -365,11 +484,19 @@ static VMHash *processPhaseNames_static_ = nil;
             
         case pp_warmUp:
             if( self.currentTime > 1 )              [self stop];        //  too late.
-            if( self.currentTime > -2.5+shiftTime ) [self openAudioAndReadInfo];
+            if( self.currentTime > -2.5+shiftTime ) {
+				[self openAudioAndReadInfo];
+#if enableDSP
+				[self beginLoadFile];
+#endif
+			}
             break;
             
         case pp_fileOpened:
-            if( self.currentTime > -1.8+shiftTime ) [self enqueueBuffers];
+			if( self.currentTime > -1.8+shiftTime ) {
+				processPhase = pp_preLoad;
+				[self enqueueBuffers];
+			}
             break;
             
         case pp_preLoad:
@@ -381,7 +508,7 @@ static VMHash *processPhaseNames_static_ = nil;
             break;
             
         case pp_waitCue:        //  waiting for the start time 
-            //  firing is handled by the songplayer 
+            //  firing is handled by the songplayer
 /*            if ( self.currentTime >= 0 && self.currentTime < 1 )
                                                     [self playWithVolume:-1];
 */            break;
@@ -389,9 +516,29 @@ static VMHash *processPhaseNames_static_ = nil;
         default:
             break;
     }
+#if enableDSP
 	
-	if( self.currentTime > fileDuration -0.2 )      AudioQueueStop(queue, NO );	// <- makes more noise?!
-	if( self.currentTime > fileDuration +1.0 )      [self stop];
+	/* for debug
+	if ( queue ) {
+		UInt32 size;
+		AudioQueueGetPropertySize(queue, kAudioQueueProperty_IsRunning, &size);
+		UInt32 running;
+		OSStatus status = AudioQueueGetProperty( queue, kAudioQueueProperty_IsRunning, &running, &size);
+		LLog(@"queue  %@ is running:%d / status:%ld, %d",fragId,(unsigned int)running, status, (unsigned int)size);
+	}*/
+/*
+	AudioTimeStamp *ats_p = NULL;
+	OSStatus status = AudioQueueGetCurrentTime(queue, nil, ats_p, nil);
+	if( ats_p )
+		LLog(@"CurrentTime:%.2f",ats_p->mSampleTime / audioObject_->cachedAudioFormat.mSampleRate);
+	if (status)
+		LLog(@"AudioQueueGetCurrentTime retured status:%ld",status);
+*/
+#endif
+/*	if( self.currentTime > fileDuration -0.2 )
+		AudioQueueStop(queue, NO );*/
+	if( self.currentTime > fileDuration +1.0 )
+		[self stop];
 }	
 
 #pragma mark -
@@ -406,8 +553,10 @@ static VMHash *processPhaseNames_static_ = nil;
     if( processPhase == pp_play )       return;
 	
 	processPhase = pp_play;
-	AudioQueueStart(queue, nil);
 	self.currentTime = 0;
+	OSStatus __unused status = AudioQueueStart(queue, nil);
+	//LLog(@"start:%@ at %.2f, status:%ld",self.fragId,self.currentTime,status);
+
 }
 
 - (void)pause {
@@ -419,8 +568,13 @@ static VMHash *processPhaseNames_static_ = nil;
     UInt32 running;
 	if ( queue ) {
 		AudioQueueGetProperty( queue, kAudioQueueProperty_IsRunning, &running, nil);
-		
+#if enableDSP
+		if( audioObject_->audioFile) AudioQueueStop( queue, YES );
+		[audioObject_ close];
+	//	LLog(@"stop:%@ at %.2f",self.fragId,self.currentTime);
+#else
 		if( /*running &&*/ audioFile) AudioQueueStop( queue, YES );
+#endif
 	}
 	processPhase = pp_idle;
 	self.currentTime = RESET_TIME;
@@ -429,11 +583,7 @@ static VMHash *processPhaseNames_static_ = nil;
 
 #pragma mark -
 #pragma mark Callback
-/*
-- (void)callbackForBuffer:(AudioQueueBufferRef)inBuffer {
-	[self readPacketsIntoBuffer:inBuffer];
-}
-*/
+
 static void BufferCallback(void *inUserData, AudioQueueRef inAQ, AudioQueueBufferRef inBuffer) {
 	// redirect back to the class to handle it there instead, so we have direct access to the instance variables
 	[(VMBridge VMPAudioPlayer *)inUserData readPacketsIntoBuffer:inBuffer queue:inAQ];

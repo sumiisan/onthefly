@@ -10,6 +10,10 @@
 #include "MultiPlatform.h"
 #import "VMPrimitives.h"
 
+#if enableDSP
+#import "VMAudioObject.h"
+#endif
+
 #import <AudioToolbox/AudioQueue.h>
 #import <AudioToolbox/AudioFile.h>
 #import "VMPlayerBase.h"
@@ -30,6 +34,8 @@ typedef enum {
     pp_locked = 999					//	isBusy = YES	isPlaying = NO		didPlay = NO
 } vmpAudioPlayerProcessPhase;
 
+
+
 @interface VMPAudioPlayer : VMPlayerBase {
 	int								playerId;
 	
@@ -37,6 +43,7 @@ typedef enum {
 	vmpAudioPlayerProcessPhase		processPhase;
 	BOOL							trackClosed;	
     NSTimeInterval                  shiftTime;  	//  shift preload timing intended to distribute HD/CPU impact
+	int								skipCounter;
     
 //  props
 	VMTime							fileDuration;
@@ -47,9 +54,17 @@ typedef enum {
 	NSString						*filePathToRead;
 	NSString						*fragId;
     
-//  Core Audio file info
+#if enableDSP
+	UInt32							framesSignalProcessed;
+	
+	//	audio object with extended audio file
+	VMAudioObject					*audioObject_;
+#else
+	//  Core Audio file info
 	AudioFileID						audioFile;
 	AudioStreamBasicDescription		dataFormat;
+#endif
+	
 	AudioQueueRef					queue;
 	UInt64							packetIndex;
 	UInt32							numPacketsToRead;
@@ -61,16 +76,22 @@ typedef enum {
 	AudioQueueBufferRef				buffers[kNumberOfQueueBuffers];
     UInt64                          numTotalPackets;
 	
-//	waveform cache
-//	double							waveformCache[kWaveFormCacheFrames];
-//	double							waveformSampleInterval;
 }
 
-@property (nonatomic,   VMStrong)				NSString *fragId;
-@property (readonly)						int playerId;
-@property (readonly)						NSTimeInterval fileDuration;
-@property (nonatomic)						NSTimeInterval fragDuration;
-@property (nonatomic)						NSTimeInterval offset;		//	not used internally.
+@property (nonatomic,   VMStrong)			NSString		*fragId;
+@property (readonly)						int				playerId;
+@property (readonly)						NSTimeInterval	fileDuration;
+@property (nonatomic)						NSTimeInterval	fragDuration;
+#if enableDSP
+@property (nonatomic,	VMStrong)			VMAudioObject	*audioObject;
+#endif
+
+#if VMP_IPHONE
+@property (nonatomic, getter = isAmbientNoiseMode)	BOOL	ambientNoiseMode;	//	to prevent app shutdown
+#endif
+
+@property (nonatomic)						NSTimeInterval	offset;		//	not used internally.
+
 
 - (id)initWithId:(int)identifier;
 - (void)preloadAudio:(NSString *)path atTime:(float)inTime;

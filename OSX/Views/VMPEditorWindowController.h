@@ -84,6 +84,11 @@
 - (IBAction)zoomIn:(id)sender;
 - (IBAction)zoomOut:(id)sender;
 
+
+//	insert fragment
+- (IBAction)insertFragment:(id)sender;
+
+
 //----	used internal ----
 - (IBAction)clickOnRow:(id)sender;
 - (IBAction)updateFilter:(id)sender;
@@ -121,6 +126,8 @@
 @property (nonatomic, VMWeak)	IBOutlet NSButton				*currentFragmentIdButton;
 @property (nonatomic, VMWeak)	IBOutlet NSButton				*chaseToggleButton;
 @property (nonatomic, VMWeak)	IBOutlet NSButton				*scoreToggleButton;
+
+
 
 @end
 

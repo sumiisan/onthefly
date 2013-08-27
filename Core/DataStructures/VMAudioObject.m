@@ -14,86 +14,149 @@
 
 @implementation VMAudioObject
 
+@synthesize framesLoaded=framesLoaded_;
+@synthesize waveData=waveData_;
+
 - (void)dealloc {
+	VMNullify(url);
 	if ( audioFile ) ExtAudioFileDispose( audioFile );
-    if ( _waveData ) free( _waveData );
-	Dealloc( super );;
+    if ( waveData_ ) free( waveData_ );
+	Dealloc( super );
 }
 
-/*
- based on code taken from mr. yasoshima's website 
- http://objective-audio.jp/2008/05/-extendedaudiofile.html
- */
 
-- (OSErr)open:(NSString*)path {
+- (OSStatus)open:(NSString*)path {
 	//	variables
-	OSStatus err = noErr;
+	OSStatus status = noErr;
 	UInt32 size;
     audioFile = nil;
 	
 	//	open in file
-    NSURL *inUrl = [NSURL fileURLWithPath:path];
+    self.url = [NSURL fileURLWithPath:path];
 	
 	if ( audioFile ) ExtAudioFileDispose( audioFile );
-    err = ExtAudioFileOpenURL((VMBridge CFURLRef)inUrl, &audioFile);
-	if (err) return err;
+    status = ExtAudioFileOpenURL((VMBridge CFURLRef)self.url, &audioFile);
+	if (status) return status;
 	
 	//	read format
     size = sizeof( audioFileFormat );
-    err = ExtAudioFileGetProperty( audioFile, kExtAudioFileProperty_FileDataFormat, &size, &audioFileFormat );
-	if (err) return err;
+    status = ExtAudioFileGetProperty( audioFile, kExtAudioFileProperty_FileDataFormat, &size, &audioFileFormat );
+	if (status) return status;
 	
 	//  read packet count
     size = sizeof( _numberOfFrames );
-    err = ExtAudioFileGetProperty( audioFile, kExtAudioFileProperty_FileLengthFrames, &size, &_numberOfFrames );
-	if (err) return err;
+    status = ExtAudioFileGetProperty( audioFile, kExtAudioFileProperty_FileLengthFrames, &size, &_numberOfFrames );
+	if (status) return status;
 	
 	
 	//	client format
     cachedAudioFormat.mSampleRate		= audioFileFormat.mSampleRate;
     cachedAudioFormat.mFormatID			= kAudioFormatLinearPCM;
     cachedAudioFormat.mFormatFlags		= kAudioFormatFlagsNativeFloatPacked;
-    cachedAudioFormat.mBitsPerChannel	= 32;
+    cachedAudioFormat.mBitsPerChannel	= 32;	// VMPAudioSample = double
     cachedAudioFormat.mChannelsPerFrame	= audioFileFormat.mChannelsPerFrame;
     cachedAudioFormat.mFramesPerPacket	= 1;
     cachedAudioFormat.mBytesPerFrame	= cachedAudioFormat.mBitsPerChannel / 8 * cachedAudioFormat.mChannelsPerFrame;
     cachedAudioFormat.mBytesPerPacket	= cachedAudioFormat.mBytesPerFrame * cachedAudioFormat.mFramesPerPacket;
 	
-    err = ExtAudioFileSetProperty( audioFile,
+    status = ExtAudioFileSetProperty( audioFile,
 								  kExtAudioFileProperty_ClientDataFormat,
 								  sizeof( cachedAudioFormat ),
 								  &cachedAudioFormat);
 	
-	return err;
+	return status;
 }
 
-- (OSErr)load:(NSString*)path {
+- (OSStatus)load:(NSString *)path frames:(UInt32*)numberOfFramesToLoad {
+	OSStatus status;
 	//	open
-	OSErr err = [self open:path];
-	if ( err ) return err;
+	if ( ! audioFile ) {
+		if ( !path ) return -1;
+		status = [self open:path];
+		if ( status ) return status;
+	}
 	
 	//	alloc buffers
 	UInt64	dataSize = _numberOfFrames * cachedAudioFormat.mBytesPerFrame;
 	
-	if ( _waveData ) free( _waveData );
-    _waveData = malloc( dataSize );
-    if ( ! _waveData ) {
+	if ( waveData_ )
+		free( waveData_ );
+    waveData_ = malloc( dataSize );
+    if ( ! waveData_ ) {
 		[VMException raise:@"Could not allocate memory."
 					format:@"VMAudioObject could not allocate memory (%.2fkbytes) for reading file %@ ", dataSize / 1024., path ];
 	}
 	
-    AudioBufferList audioBufferList;
-    audioBufferList.mNumberBuffers = 1;
+    audioBufferList.mNumberBuffers = 1;	//	we will read the entire wavedata into one single buffer.
     audioBufferList.mBuffers[0].mNumberChannels = cachedAudioFormat.mChannelsPerFrame;
     audioBufferList.mBuffers[0].mDataByteSize = (UInt32)dataSize;
-    audioBufferList.mBuffers[0].mData = _waveData;
-	UInt32 frames = (UInt32)_numberOfFrames;
-		
+    audioBufferList.mBuffers[0].mData = waveData_;
+
 	//	read
-	err = ExtAudioFileRead( audioFile, &frames, &audioBufferList );
-		
-	return err;
+    if ( *numberOfFramesToLoad > _numberOfFrames ) *numberOfFramesToLoad = (UInt32)_numberOfFrames;
+	status = ExtAudioFileRead( audioFile, numberOfFramesToLoad, &audioBufferList );
+
+//	LLog(@"ExtAudioFileRead loaded %ld",*numberOfFramesToLoad);
+	return status;
 }
+
+- (OSStatus)load:(NSString*)path {
+	UInt32 frames = UINT32_MAX;
+	return [self load:path frames:&frames];
+}
+
+- (UInt32)framesToLoad {
+	return (UInt32)_numberOfFrames;	//	TEST to read at once
+	
+	//	code below doesn't work yet
+	int bytesPerFrame = cachedAudioFormat.mBytesPerFrame;
+	int framesToLoad = MIN( kAudioPlayer_BufferSize / bytesPerFrame,
+						   _numberOfFrames - framesLoaded_ );
+	
+	if ( framesToLoad <= 0 ) return 0;
+	return (UInt32)framesToLoad;
+}
+
+- (OSStatus)beginLoad:(NSString*)path {
+	UInt32 frames = [self framesToLoad];
+	if ( frames == 0 ) return 0;
+
+	OSStatus status = [self load:path frames:&frames];
+	if( !status )
+		framesLoaded_ += frames;
+	
+	return status;
+}
+
+- (OSStatus)continueLoad {
+	int bytesPerFrame = cachedAudioFormat.mBytesPerFrame;
+	UInt32 frames = [self framesToLoad];
+	if ( frames == 0 || (!waveData_)) return 0;
+	
+	//	shift buffer start address
+	audioBufferList.mBuffers[0].mData = waveData_ + framesLoaded_ * bytesPerFrame;
+	audioBufferList.mBuffers[0].mDataByteSize = frames * bytesPerFrame;
+
+	OSStatus status = ExtAudioFileRead( audioFile, &frames, &audioBufferList );
+	if( !status )
+		framesLoaded_ += frames;
+	else
+		LLog(@"continueLoad status:%ld",status);
+
+	return status;
+}
+
+- (UInt32)framesLeft {
+	if ( ! waveData_ ) return 0;
+	return (UInt32)_numberOfFrames - framesLoaded_;
+}
+
+- (void)close {
+	if ( audioFile ) ExtAudioFileDispose( audioFile );
+    if ( waveData_ ) free( waveData_ );
+	waveData_ = nil;
+}
+
 
 - (int)bytesPerFrame {
 	return cachedAudioFormat.mBytesPerFrame;
@@ -108,18 +171,24 @@
 }
 
 - (void*)dataAtFrame:(NSInteger)frame {
-	if ( _numberOfFrames <= frame ) return nil;
-	return _waveData + frame * cachedAudioFormat.mBytesPerFrame;
+	if ( _numberOfFrames <= frame )
+		return nil;
+	return waveData_ + frame * cachedAudioFormat.mBytesPerFrame;
 }
 
 - (void*)waveDataBorder {
-	return _waveData + self.bytesPerFrame * _numberOfFrames;
+	return waveData_ + self.bytesPerFrame * _numberOfFrames;
 }
 
 - (VMTime)fileDuration {
 	return _numberOfFrames / cachedAudioFormat.mSampleRate;
 }
 
+
+/*
+ 
+	depreciated
+ 
 //
 //	note: this method draws the entire wave-form at once. use VMPWaveView to draw only the visible rect
 //
@@ -154,6 +223,6 @@
 	}
 	return image;
 }
-
+*/
 
 @end

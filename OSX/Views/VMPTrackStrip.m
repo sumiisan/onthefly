@@ -70,7 +70,7 @@
 	NSRectFill(dirtyRect);
 #endif
     
-    [self setColor_r:0.8f g:0.7f b:0.5f];
+    [self setColor_r:0.8f g:0.9f b:0.5f];
 
     float buffered_x = loading * w;
     
@@ -83,7 +83,7 @@
                        h:bar_height];
         
         //  buffered
-        [self setColor_r:0.4f g:0.5f b:0.4f];
+        [self setColor_r:0.4f g:0.3f b:0.4f];
         [self fillRect_x:bar_left 
                        y:y 
                        w:buffered_x+1

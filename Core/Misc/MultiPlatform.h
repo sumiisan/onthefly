@@ -28,7 +28,11 @@
 #define VMP_LOGGING 0
 static const float kTimerInterval = 0.01;			//  1/1000 sec interruption for audio
 static const int kTrackViewRedrawInterval = 10;		//  0.01 * 10   = 0.1sec
+#if enableDSP
+static const int kAudioPlayer_BufferSize = 0x80000;	//  512k buffer
+#else
 static const int kAudioPlayer_BufferSize = 0x8000;	//  32k buffer
+#endif
 static const int kNumberOfQueueBuffers = 3;			//  this is for CoreAudio's AudioQueueAllocateBuffer
 static const int kNumberOfAudioPlayers = 10;		//  number of sound players
 static const int kWaveFormCacheFrames = 0;			//	do not cache waveform
@@ -70,7 +74,11 @@ static const BOOL kUseNotification = NO;
 
 static const float kTimerInterval = 0.005;			//  1/2000 sec interruption for audio
 static const int kTrackViewRedrawInterval = 6;		//  0.005 * 6   = 0.03sec
-static const int kAudioPlayer_BufferSize =  0x20000;//  128k buffer
+#if enableDSP
+static const int kAudioPlayer_BufferSize = 0x80000;	//  512k buffer
+#else
+static const int kAudioPlayer_BufferSize = 0x20000;	//  128k buffer
+#endif
 static const int kNumberOfQueueBuffers = 3;			//  this is for CoreAudio's AudioQueueAllocateBuffer
 static const int kNumberOfAudioPlayers = 10;        //  number of sound players
 static const int kWaveFormCacheFrames = 0x1000;		//	4k
@@ -114,6 +122,10 @@ static const BOOL kUseNotification = YES;
 //  common
 //
 //-------------------------------------------------------------
+
+#define enableDSP 0	//	testing ss130825 //not working ss130826
+
+
 static const Float32 kDefaultFadeoutTime = 5.;
 static NSString *kDefaultVMDirectory __unused = @"defaultSong";
 

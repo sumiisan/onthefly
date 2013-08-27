@@ -1579,16 +1579,25 @@ static VMHash *scoreForFragment_static_ = nil;
 	return fragIds;
 }
 
-
+//
+//	dead-end means:
+//
+//		fragment has no subsequent.
+//		1.	subseq is "*"
+//		2.	has no sequences included.		-- (we assume a sequence contains somewhere a valid subseq)
+//		3.	all included selectors are dead-end
+//
 - (BOOL)isDeadEnd {
 	if ( self.fragments.count == 0 ) return YES;
 	if ( [[self chanceAtIndex:0].targetId isEqualToString: @"*"] ) return YES;
+	
 	VMInt c = self.length;
 	for( VMInt i = 0; i < c; ++i ) {
 		VMChance *ch = [self chanceAtIndex:i];
 		VMFragment *data = [DEFAULTSONG data:ch.targetId];
 		if ( ! data ) continue;
 		if ( data.type == vmObjectType_sequence ) return NO;	//	assume sequence has valid subseqs.
+		
 		//	DISCUSSION: shall we inspect deeper ? if yes, how deep ?
 		if ( data.type == vmObjectType_selector )
 			if (! ((VMSelector*)data).isDeadEnd ) return NO;

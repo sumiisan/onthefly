@@ -53,7 +53,7 @@
 
 - (void)dealloc {
     VMNullify(currentPartId);
-	Dealloc( super );;
+	Dealloc( super );
 }
 
 
@@ -423,6 +423,8 @@ static VMPSongPlayer 	*songPlayer_singleton_static_ = nil;
 	[player setVolume:[self currentVolume]];
 	[player play];
 	
+	LLog(@"Fired:%@",af.id);
+	
 	af.firedTimestamp = [NSDate timeIntervalSinceReferenceDate];
 	[self.playTimeAccumulator addAudioFragment:af];
 	
@@ -521,19 +523,40 @@ static VMPSongPlayer 	*songPlayer_singleton_static_ = nil;
 	
 	//	manage fade out / count running players.
 	float volume = [self currentVolume];
+	VMTime remainTime = 0;
 	for ( VMPAudioPlayer *ap in audioPlayerList ) {
 		if ( ap.isBusy ) {
 	   		if( fadeStartPoint > 0 && fadeDuration > 0 )
 				[ap setVolume:volume];	    //  manage fade out
 
 			numberOfPlayersRunnning++;
+			remainTime = ap.fileDuration - ap.currentTime;
 		}
     }
 	
+#if VMP_IPHONE
+	
+	//
+	//	if the mobile app is background mode, and the last audioPlayer is going to stop,
+	//	we must play a emergency audioFile to prevent the app terminatated by the system.
+	//
+	UIApplicationState appState = [[UIApplication sharedApplication] applicationState];
+	if (appState == UIApplicationStateBackground || appState == UIApplicationStateInactive) {
+		if ( numberOfPlayersRunnning == 1 && remainTime < 0.5 ) {
+			LLog(@"OOPS ! app gonna quit !");
+			[self emergencyFire];
+		} else if ( numberOfPlayersRunnning == 0 ) {
+			LLog(@"NOOOO ! save our souls !");
+			[self emergencyFire];
+		}
+	}
+	
+#else
 	//	stop if no active player or queue
 	if (( numberOfPlayersRunnning == 0 && fragQueue.count == 0 ) || volume == 0 ) {
 		[self stop];
 	}
+#endif
 	
     //  track view update
 	if( trackView_ && ( frameCounter % kTrackViewRedrawInterval ) == 1 ) {
@@ -546,6 +569,15 @@ static VMPSongPlayer 	*songPlayer_singleton_static_ = nil;
 	
 }
 
+- (void)emergencyFire {
+	VMAudioFragment *ambient = [DEFAULTSONG data:@"ambient"];
+	VMPQueuedFragment *q = [self queue:ambient at:self.currentTime+0.2];
+	if (q) {
+		[self setFragmentIntoAudioPlayer:q];
+		[self fireCue:q];
+	}
+}
+
 - (void)update {
 	[self timerCall:nil];
 }
@@ -554,11 +586,6 @@ static VMPSongPlayer 	*songPlayer_singleton_static_ = nil;
 #pragma mark -
 #pragma mark player control
 
-/*
--(void)cancelNextPart {
-    [nextPlayer stop];
-}
-*/
 -(void)start {
 	[self startWithFragmentId:song_.defaultFragmentId];
 }

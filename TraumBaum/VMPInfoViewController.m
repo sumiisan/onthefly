@@ -232,7 +232,12 @@ static const int kNumberOfSkins = 4;
 
 - (void)attachGestureRecognizer {
 	UITapGestureRecognizer *tgr = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(toggleTrackView:)];
-	tgr.numberOfTouchesRequired = 3;
+	tgr.numberOfTouchesRequired =
+#if TARGET_IPHONE_SIMULATOR
+	1;
+#else
+	3;
+#endif
 	tgr.numberOfTapsRequired = 3;
 	[self.view addGestureRecognizer:tgr];
 	Release(tgr);

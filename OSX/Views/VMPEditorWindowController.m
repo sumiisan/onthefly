@@ -1105,6 +1105,11 @@ forDoubleClickOnDividerAtIndex:(NSInteger)dividerIndex  {
 - (IBAction)zoomIn:(id)sender {}
 - (IBAction)zoomOut:(id)sender {}
 
+
+//	insert fragment
+- (IBAction)insertFragment:(id)sender {}
+
+
 #pragma mark type select
 
 - (NSString*)outlineView:(NSOutlineView *)outlineView typeSelectStringForTableColumn:(NSTableColumn *)tableColumn item:(id)item {
