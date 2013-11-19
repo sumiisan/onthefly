@@ -11,6 +11,7 @@
 #import "MultiPlatform.h"
 #import "VMPrimitives.h"
 
+
 @interface VMAudioObject : NSObject {
 	//  Core Audio file info
 @public
@@ -19,8 +20,14 @@
 	AudioStreamBasicDescription		cachedAudioFormat;
 	AudioBufferList					audioBufferList;
 
+#if SUPPORT_32BIT_MAC
+@protected
+	NSURL							*url_;
 	void							*waveData_;
 	UInt32							framesLoaded_;
+	UInt64							numberOfFrames_;
+	BOOL							streamingMode_;
+#endif
 }
 
 @property (nonatomic)				UInt32 framesLoaded;		//	async load support
@@ -29,6 +36,7 @@
 @property (nonatomic, readonly)		void *waveDataBorder;
 @property (nonatomic)				UInt64 numberOfFrames;
 @property (nonatomic, retain)		NSURL *url;
+@property (nonatomic, getter = isStreamingMode ) BOOL streamingMode;
 
 
 - (OSStatus)open:(NSString*)path;
@@ -43,7 +51,6 @@
 - (void*)dataAtFrame:(NSInteger)frame;
 - (VMTime)fileDuration;
 
-//	depreciated
 //- (NSImage*)drawWaveImageWithSize:(NSSize)size foreColor:(NSColor*)foreColor backColor:(NSColor*)backColor;
 
 @end

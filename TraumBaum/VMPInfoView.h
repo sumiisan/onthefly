@@ -11,15 +11,15 @@
 - (void)setSkinIndex:(int)skinIndex;
 @end
 
-@interface VMPInfoViewController : UIViewController <UIScrollViewDelegate> {
+@interface VMPInfoView : UIView /*<UIScrollViewDelegate>*/ {
 	NSTimeInterval	supressToggleTrackViewUntil;
 }
 
-@property (strong, nonatomic) UIView *scrollContentView;
+//@property (strong, nonatomic) UIView *scrollContentView;
 @property (assign)			id <VMPInfoViewDelegate> delegate;
 @property (strong, nonatomic) IBOutlet UISwitch *backgroundPlaySwitch;
-@property (strong, nonatomic) IBOutlet UISwitch *darkBGSwitch;
+//@property (strong, nonatomic) IBOutlet UISwitch *darkBGSwitch;
 - (IBAction)buttonTouched:(id)sender;
-
+- (void)showView;
 
 @end

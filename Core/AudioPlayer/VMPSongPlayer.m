@@ -158,7 +158,7 @@ static VMPSongPlayer 	*songPlayer_singleton_static_ = nil;
 }
 
 - (void)setFadeFrom:(VMFloat)startVolume to:(VMFloat)endVolume length:(VMTime)seconds setDimmed:(BOOL)dimmerState {
-	NSLog(@"beginsetfade");
+//	NSLog(@"beginsetfade");
 	VMTime fadeTimeRemain = fadeDuration - [self fadeTimeElapsed];
 	dimmed_ = dimmerState;
 	VMFloat dimmFactor = dimmed_ ? 0.3 : 1.0;
@@ -169,7 +169,7 @@ static VMPSongPlayer 	*songPlayer_singleton_static_ = nil;
 		fadeDuration = seconds;
 		fadeStartPoint = self.currentTime;
 	}	
-	NSLog(@"end setfade from:%.3f to %.3f", fadeStartVolume, fadeEndVolume );
+//	NSLog(@"end setfade from:%.3f to %.3f", fadeStartVolume, fadeEndVolume );
 }
 
 - (void)setDimmed:(BOOL)dimmed {
@@ -514,7 +514,8 @@ static VMPSongPlayer 	*songPlayer_singleton_static_ = nil;
 	}
 	
 	int numberOfPlayersRunnning = 0;
-	if ( endTimeOfLastFragment < self.currentTime ) endTimeOfLastFragment = self.currentTime + secondsPreroll;
+	if ( endTimeOfLastFragment < self.currentTime )
+		endTimeOfLastFragment = self.currentTime + secondsPreroll;
 
 	//	fill cueue
 	if ( endTimeOfLastFragment < ( [self currentTime] + secondsLookAhead ) ) {
@@ -534,26 +535,37 @@ static VMPSongPlayer 	*songPlayer_singleton_static_ = nil;
 		}
     }
 	
+	BOOL fadeOutFinished = volume == 0 && fadeEndVolume == 0;
+	BOOL timerExecuted = DEFAULTEVALUATOR.timeManager.timerExecuted;
+	
 #if VMP_IPHONE
 	
 	//
 	//	if the mobile app is background mode, and the last audioPlayer is going to stop,
-	//	we must play a emergency audioFile to prevent the app terminatated by the system.
+	//	we must play an emergency audioFile to prevent the app terminatated by the system.
 	//
-	UIApplicationState appState = [[UIApplication sharedApplication] applicationState];
-	if (appState == UIApplicationStateBackground || appState == UIApplicationStateInactive) {
-		if ( numberOfPlayersRunnning == 1 && remainTime < 0.5 ) {
+	if ( numberOfPlayersRunnning <= 1 && remainTime < 0.5 ) {
+		UIApplicationState appState = [[UIApplication sharedApplication] applicationState];
+		if (( appState == UIApplicationStateBackground || appState == UIApplicationStateInactive )
+			&& (!fadeOutFinished) && (!timerExecuted) ) {
 			LLog(@"OOPS ! app gonna quit !");
-			[self emergencyFire];
-		} else if ( numberOfPlayersRunnning == 0 ) {
-			LLog(@"NOOOO ! save our souls !");
 			[self emergencyFire];
 		}
 	}
+	if ( fadeOutFinished ) [self stop];
 	
 #else
-	//	stop if no active player or queue
-	if (( numberOfPlayersRunnning == 0 && fragQueue.count == 0 ) || volume == 0 ) {
+	
+	if ( self.simulateIOSAppBackgroundState ) {
+		
+		if ((( numberOfPlayersRunnning == 1 && remainTime < 0.5 ) || ( numberOfPlayersRunnning == 0 ) )
+			&& (!fadeOutFinished) && (!timerExecuted) ) {
+			LLog(@"OOPS ! app gonna quit !");
+			[self emergencyFire];
+		}
+		
+	} else if (( numberOfPlayersRunnning == 0 && fragQueue.count == 0 ) || fadeOutFinished ) {
+		//	stop if no active player or queue
 		[self stop];
 	}
 #endif
@@ -594,6 +606,7 @@ static VMPSongPlayer 	*songPlayer_singleton_static_ = nil;
 //	[self setFadeFrom:0 to:1 length:0.01 setDimmed:NO];
 	fadeStartPoint = 0;
 
+	
 	if ( ! self.isWarmedUp ) [self warmUp];
 	
 	if ( fragId ) {
@@ -614,6 +627,7 @@ static VMPSongPlayer 	*songPlayer_singleton_static_ = nil;
 	[self resume];
 	NSLog(@"SongPlayer resumed");
 	[self adjustCurrentTimeToQueuedFragment];
+	[DEFAULTEVALUATOR.timeManager resetTimer];
 }
 
 -(void)stop {
@@ -711,7 +725,7 @@ static VMPSongPlayer 	*songPlayer_singleton_static_ = nil;
 //
 - (void)setFragmentId:(VMId*)fragId fadeOut:(BOOL)fadeFlag restartAfterFadeOut:(BOOL)inStartPlayAfterSetFragment {
 	startPlayAfterSetFragment = inStartPlayAfterSetFragment;
-    if( fadeFlag && ( ! self.isPaused ) ) {        
+    if( fadeFlag && ( ! self.isPaused ) ) {
         [self fadeoutAndStop:secondsAutoFadeOut];
         [self performSelector:@selector(setNextFragmentId:) withObject:fragId afterDelay:secondsAutoFadeOut+0.5];
     } else {

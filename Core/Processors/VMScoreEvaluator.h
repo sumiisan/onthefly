@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "VMDataTypes.h"
 #import "MultiPlatform.h"
+#import "VMPTimeManager.h"
 
 enum {
 	vmOperatorType_undefined = 0,
@@ -96,6 +97,9 @@ name		description											responsible setter		implemented
  @RS		uniform random value 0 or 1							scoreEvaluator			NO
  @RG		gaussian random value (sigma = 3)					scoreEvaluator			NO 
  @T			target of caller VMChance object					chance					YES
+ @TD		time - dayness										scoreEvaluator			YES
+ @TN		time - nightness									scoreEvaluator			YES
+ @TS		time - shutdown										scoreEvaluator			YES
  @TYPE		type of caller VMData object						data					YES
  
  
@@ -123,6 +127,8 @@ internal
 
 @property	(VMNonatomic VMStrong)	VMArray				*objectsWaitingToBeProcessed;
 @property	(VMStrong)				VMArray				*objectsWaitingToBeLogged;
+
+@property	(VMNonatomic VMStrong)	VMPTimeManager		*timeManager;
 
 
 @property	(nonatomic, getter = isTestMode)	BOOL	testMode;

@@ -302,8 +302,9 @@ static const int	kLengthOfPartTraceRoute					= 10000;	//	gives up after 10000 ti
 		}
 		case 3: {
 			//
-			// check missing audio files
+			// check audio files
 			//
+			totalFileDuration = 0;
 			self.dataIdToProcess = [DEFAULTSONG.songData sortedKeys];
 			self.unresolveables = ARInstance(VMArray);
 			self.currentPositionInDataIdList = 0;
@@ -769,12 +770,12 @@ static const int	kLengthOfPartTraceRoute					= 10000;	//	gives up after 10000 ti
 
 /*---------------------------------------------------------------------------------
  
- check for missing media files
+ check media files
  
  ----------------------------------------------------------------------------------*/
 
 - (void)checkFiles_proc {
-	VMTime standardPostRoll = 5.0;	//	assume 10 secs of release time
+	VMTime standardReleaseTime = 5.0;	//	assume 5 secs of release time
 	VMInt dataCount = self.dataIdToProcess.count;
 	for( int i = 0; i < 100; ++i ) {
 		VMData *d = [DEFAULTSONG.songData item:[self.dataIdToProcess item:self.currentPositionInDataIdList]];
@@ -787,16 +788,20 @@ static const int	kLengthOfPartTraceRoute					= 10000;	//	gives up after 10000 ti
 			
 			VMAudioObject *ao = NewInstance(VMAudioObject);
 			[ao open:path];
-			if (( ai.duration + standardPostRoll ) < ao.fileDuration ) {
+			if ( (( ai.duration + standardReleaseTime ) < ao.fileDuration ) ||
+				 (  ai.duration > ao.fileDuration + 2. )) {
 				VMLogRecord *record = [VMLogRecord recordWithAction:@"Warning" data:ai
 															subInfo:[NSString stringWithFormat:
-																	 @"fileId:%@ (dur:%.2fsecs) has file length of %.2fsecs",
+																	 @"%@ fileId:%@ (dur:%.2fsecs) has file length of %.2fsecs",
+																	 ai.duration > ao.fileDuration ? @"S" : @"L",
 																	 ai.fileId, ai.duration, ao.fileDuration]
 															  owner:VMLogOwner_Statistics
 												 usePersistentStore:NO];
 				
 				[self.fileWarnings push:record];
 			}
+			if ( !isnan(ao.fileDuration))
+				totalFileDuration += ao.fileDuration;
 			Release(ao);
 		}
 		++self.currentPositionInDataIdList;
@@ -825,6 +830,7 @@ static const int	kLengthOfPartTraceRoute					= 10000;	//	gives up after 10000 ti
 			}
 			
 		}
+		LLog(@"totalFileDuration: %.2f",totalFileDuration);
 		
 		[self.progressWC setProgress:0 ofTotal:0 message:nil window:[VMPlayerOSXDelegate singleton].editorWindowController.window];
 		[APPDELEGATE showLogPanelIfNewSystemLogsAreAdded];

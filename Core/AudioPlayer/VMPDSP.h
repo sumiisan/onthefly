@@ -11,7 +11,13 @@
 
 #import "VMPrimitives.h"
 
-@interface VMPDSP : NSObject
+@interface VMPDSP : NSObject {
+#if SUPPORT_32BIT_MAC
+	VMHash *parameter_;
+	AudioStreamBasicDescription *audioFileFormat_;
+#endif
+	
+}
 
 @property (nonatomic) AudioStreamBasicDescription *audioFileFormat;
 @property (nonatomic, VMStrong) VMHash *parameter;

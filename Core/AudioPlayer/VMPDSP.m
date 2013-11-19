@@ -9,6 +9,9 @@
 #import "VMPDSP.h"
 
 @implementation VMPDSP
+
+@synthesize parameter = parameter_, audioFileFormat = audioFileFormat_;
+
 - (id)initWithStream:(AudioStreamBasicDescription*)streamDescription {
 	self = [super init];
 	if ( self ) {

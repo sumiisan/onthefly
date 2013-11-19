@@ -88,6 +88,9 @@
 //	insert fragment
 - (IBAction)insertFragment:(id)sender;
 
+//	simulate iOS app state
+- (IBAction)toggleIOSAppState:(id)sender;
+
 
 //----	used internal ----
 - (IBAction)clickOnRow:(id)sender;

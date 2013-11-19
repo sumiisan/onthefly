@@ -90,6 +90,7 @@ typedef enum {
 	VMInt		sojourn;
 	VMInt		startIndexOfSojourn;
 	VMTime		totalDuration;
+	VMTime		totalFileDuration;
 	VMFloat		maxPartPercent,maxPartDuration;
 	VMFloat		maxFragmentPercent,maxFragmentDuration;
 	VMFloat		maxVariety;

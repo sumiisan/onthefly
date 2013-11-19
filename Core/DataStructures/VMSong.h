@@ -13,6 +13,7 @@
 
 
 #define DEFAULTSONG [VMSong defaultSong]
+#define ENDOFSEQUENCE_NOTIFICATION @"vmendofsequence"
 
 @interface VMSong : NSObject {
 #if SUPPORT_32BIT_MAC

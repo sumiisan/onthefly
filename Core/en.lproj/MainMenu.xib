@@ -563,14 +563,14 @@
 					</object>
 					<object class="NSMenuItem" id="461352999">
 						<reference key="NSMenu" ref="649796088"/>
-						<string key="NSTitle">Song</string>
+						<string key="NSTitle">Player</string>
 						<string key="NSKeyEquiv"/>
 						<int key="NSMnemonicLoc">2147483647</int>
 						<reference key="NSOnImage" ref="35465992"/>
 						<reference key="NSMixedImage" ref="502551668"/>
 						<string key="NSAction">submenuAction:</string>
 						<object class="NSMenu" key="NSSubmenu" id="249891071">
-							<string key="NSTitle">Song</string>
+							<string key="NSTitle">Player</string>
 							<array class="NSMutableArray" key="NSMenuItems">
 								<object class="NSMenuItem" id="436817154">
 									<reference key="NSMenu" ref="249891071"/>
@@ -602,7 +602,26 @@
 								</object>
 								<object class="NSMenuItem" id="1745925">
 									<reference key="NSMenu" ref="249891071"/>
-									<string key="NSTitle">Reset</string>
+									<string key="NSTitle">Reset Song</string>
+									<string key="NSKeyEquiv">!</string>
+									<int key="NSKeyEquivModMask">131072</int>
+									<int key="NSMnemonicLoc">2147483647</int>
+									<reference key="NSOnImage" ref="35465992"/>
+									<reference key="NSMixedImage" ref="502551668"/>
+								</object>
+								<object class="NSMenuItem" id="42484449">
+									<reference key="NSMenu" ref="249891071"/>
+									<bool key="NSIsDisabled">YES</bool>
+									<bool key="NSIsSeparator">YES</bool>
+									<string key="NSTitle"/>
+									<string key="NSKeyEquiv"/>
+									<int key="NSMnemonicLoc">2147483647</int>
+									<reference key="NSOnImage" ref="35465992"/>
+									<reference key="NSMixedImage" ref="502551668"/>
+								</object>
+								<object class="NSMenuItem" id="545710171">
+									<reference key="NSMenu" ref="249891071"/>
+									<string key="NSTitle">Simulate iOS Background State</string>
 									<string key="NSKeyEquiv"/>
 									<int key="NSMnemonicLoc">2147483647</int>
 									<reference key="NSOnImage" ref="35465992"/>
@@ -634,7 +653,7 @@
 								</object>
 								<object class="NSMenuItem" id="408614938">
 									<reference key="NSMenu" ref="17244046"/>
-									<string key="NSTitle">Check Missing Audio Files</string>
+									<string key="NSTitle">Check Media Files</string>
 									<string key="NSKeyEquiv"/>
 									<int key="NSMnemonicLoc">2147483647</int>
 									<reference key="NSOnImage" ref="35465992"/>
@@ -2835,7 +2854,6 @@
 						<string key="NSFrame">{{125, 2}, {124, 16}}</string>
 						<reference key="NSSuperview" ref="876833702"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="NSEnabled">YES</bool>
 						<object class="NSButtonCell" key="NSCell" id="159594375">
@@ -4641,6 +4659,14 @@
 					</object>
 					<int key="connectionID">1700</int>
 				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">toggleIOSAppState:</string>
+						<reference key="source" ref="623418476"/>
+						<reference key="destination" ref="545710171"/>
+					</object>
+					<int key="connectionID">1715</int>
+				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<array key="orderedObjects">
@@ -6070,6 +6096,8 @@
 							<reference ref="1745925"/>
 							<reference ref="319493163"/>
 							<reference ref="594214950"/>
+							<reference ref="42484449"/>
+							<reference ref="545710171"/>
 						</array>
 						<reference key="parent" ref="461352999"/>
 					</object>
@@ -6390,6 +6418,16 @@
 						<reference key="object" ref="1023055165"/>
 						<reference key="parent" ref="571190446"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">1712</int>
+						<reference key="object" ref="42484449"/>
+						<reference key="parent" ref="249891071"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">1713</int>
+						<reference key="object" ref="545710171"/>
+						<reference key="parent" ref="249891071"/>
+					</object>
 				</array>
 			</object>
 			<dictionary class="NSMutableDictionary" key="flattenedProperties">
@@ -6529,6 +6567,8 @@
 				<string key="1704.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="1706.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="1707.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<string key="1712.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<string key="1713.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="19.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="23.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="236.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -6691,7 +6731,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">1711</int>
+			<int key="maxID">1715</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -6903,13 +6943,13 @@
 					<dictionary class="NSMutableDictionary" key="actions">
 						<string key="buttonClicked:">id</string>
 						<string key="clickOnRow:">id</string>
-						<string key="doubleClickOnRow:">id</string>
 						<string key="focusTextSearchField:">id</string>
 						<string key="historyButtonClicked:">id</string>
 						<string key="insertFragment:">id</string>
 						<string key="moveHistoryBack:">id</string>
 						<string key="moveHistoryForward:">id</string>
 						<string key="songPlay:">id</string>
+						<string key="toggleIOSAppState:">id</string>
 						<string key="updateFilter:">id</string>
 						<string key="zoomIn:">id</string>
 						<string key="zoomOut:">id</string>
@@ -6921,10 +6961,6 @@
 						</object>
 						<object class="IBActionInfo" key="clickOnRow:">
 							<string key="name">clickOnRow:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="doubleClickOnRow:">
-							<string key="name">doubleClickOnRow:</string>
 							<string key="candidateClassName">id</string>
 						</object>
 						<object class="IBActionInfo" key="focusTextSearchField:">
@@ -6949,6 +6985,10 @@
 						</object>
 						<object class="IBActionInfo" key="songPlay:">
 							<string key="name">songPlay:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="toggleIOSAppState:">
+							<string key="name">toggleIOSAppState:</string>
 							<string key="candidateClassName">id</string>
 						</object>
 						<object class="IBActionInfo" key="updateFilter:">

@@ -99,6 +99,9 @@
 		[self pushFunctionIntoTable:@"@LC"];
 		[self pushFunctionIntoTable:@"@LC{%@}"];
 		[self pushFunctionIntoTable:@"@PT"];
+		[self pushFunctionIntoTable:@"@TD"];
+		[self pushFunctionIntoTable:@"@TN"];
+		[self pushFunctionIntoTable:@"@TS"];
 		
 	}
 	

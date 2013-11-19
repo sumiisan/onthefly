@@ -302,6 +302,11 @@ BOOL verbose = NO;
 		//
 		NSLog(@"NAC 2b : no audioFragment in sequence ! %@", cc.description );
 		
+		//	possibly end of sequence.
+		[DEFAULTEVALUATOR.timeManager executeTimer];
+		
+		[[NSNotificationCenter defaultCenter] postNotificationName:ENDOFSEQUENCE_NOTIFICATION object:self];
+		
 		/*
 		 ac = [cc resolveUntilType:vmObjectType_audioFragment];
 		 NSLog(@"%@",ac);

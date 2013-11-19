@@ -14,6 +14,8 @@
 
 #define DEFAULTSONGPLAYER [VMPSongPlayer defaultPlayer]
 
+
+
 /*---------------------------------------------------------------------------------
  *
  *
@@ -98,6 +100,8 @@
 @property (nonatomic, getter = isDimmed)	BOOL				dimmed;				//	volume dimmer
 @property (readonly, getter = isWarmedUp)	BOOL				engineIsWarm;		//
 @property (nonatomic, VMReadonly)			VMAudioFragment		*lastFiredFragment;
+
+@property (nonatomic)						BOOL				simulateIOSAppBackgroundState;
 
 //	for calculating playing time of part
 @property (nonatomic, VMStrong)				VMPPlayTimeAccumulator	*playTimeAccumulator;

@@ -14,8 +14,8 @@
 
 @implementation VMAudioObject
 
-@synthesize framesLoaded=framesLoaded_;
-@synthesize waveData=waveData_;
+@synthesize framesLoaded=framesLoaded_, numberOfFrames=numberOfFrames_, url=url_;
+@synthesize waveData=waveData_, streamingMode=streamingMode_;
 
 - (void)dealloc {
 	VMNullify(url);
@@ -44,8 +44,8 @@
 	if (status) return status;
 	
 	//  read packet count
-    size = sizeof( _numberOfFrames );
-    status = ExtAudioFileGetProperty( audioFile, kExtAudioFileProperty_FileLengthFrames, &size, &_numberOfFrames );
+    size = sizeof( numberOfFrames_ );
+    status = ExtAudioFileGetProperty( audioFile, kExtAudioFileProperty_FileLengthFrames, &size, &numberOfFrames_ );
 	if (status) return status;
 	
 	
@@ -77,7 +77,7 @@
 	}
 	
 	//	alloc buffers
-	UInt64	dataSize = _numberOfFrames * cachedAudioFormat.mBytesPerFrame;
+	size_t dataSize = (size_t)( numberOfFrames_ * cachedAudioFormat.mBytesPerFrame );
 	
 	if ( waveData_ )
 		free( waveData_ );
@@ -93,7 +93,7 @@
     audioBufferList.mBuffers[0].mData = waveData_;
 
 	//	read
-    if ( *numberOfFramesToLoad > _numberOfFrames ) *numberOfFramesToLoad = (UInt32)_numberOfFrames;
+    if ( *numberOfFramesToLoad > numberOfFrames_ ) *numberOfFramesToLoad = (UInt32)numberOfFrames_;
 	status = ExtAudioFileRead( audioFile, numberOfFramesToLoad, &audioBufferList );
 
 //	LLog(@"ExtAudioFileRead loaded %ld",*numberOfFramesToLoad);
@@ -106,12 +106,12 @@
 }
 
 - (UInt32)framesToLoad {
-	return (UInt32)_numberOfFrames;	//	TEST to read at once
+	return (UInt32)numberOfFrames_;	//	TEST to read at once
 	
 	//	code below doesn't work yet
 	int bytesPerFrame = cachedAudioFormat.mBytesPerFrame;
-	int framesToLoad = MIN( kAudioPlayer_BufferSize / bytesPerFrame,
-						   _numberOfFrames - framesLoaded_ );
+	int framesToLoad = (int) MIN( kAudioPlayer_BufferSize / bytesPerFrame,
+						   numberOfFrames_ - framesLoaded_ );
 	
 	if ( framesToLoad <= 0 ) return 0;
 	return (UInt32)framesToLoad;
@@ -141,14 +141,14 @@
 	if( !status )
 		framesLoaded_ += frames;
 	else
-		LLog(@"continueLoad status:%ld",status);
+		LLog(@"continueLoad status:%d",(int)status);
 
 	return status;
 }
 
 - (UInt32)framesLeft {
 	if ( ! waveData_ ) return 0;
-	return (UInt32)_numberOfFrames - framesLoaded_;
+	return (UInt32)numberOfFrames_ - framesLoaded_;
 }
 
 - (void)close {
@@ -171,17 +171,17 @@
 }
 
 - (void*)dataAtFrame:(NSInteger)frame {
-	if ( _numberOfFrames <= frame )
+	if ( numberOfFrames_ <= frame )
 		return nil;
 	return waveData_ + frame * cachedAudioFormat.mBytesPerFrame;
 }
 
 - (void*)waveDataBorder {
-	return waveData_ + self.bytesPerFrame * _numberOfFrames;
+	return waveData_ + self.bytesPerFrame * numberOfFrames_;
 }
 
 - (VMTime)fileDuration {
-	return _numberOfFrames / cachedAudioFormat.mSampleRate;
+	return numberOfFrames_ / cachedAudioFormat.mSampleRate;
 }
 
 

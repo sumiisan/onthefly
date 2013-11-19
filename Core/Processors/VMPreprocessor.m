@@ -1038,9 +1038,9 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 	for ( VMHash *hash in fragArray ) {
 		VMData *data = nil;
 		vmObjectType typ = vmObjectType_unknown;
-	/*	if ( [ HashItem(id) isEqualToString:@"x_wboy_Eb_21" ] )
+	if ( [ HashItem(id) isEqualToString:@"ambient" ] )
 			NSLog(@"!!!");
-	*/	
+		
 		VMId *cloneTarget = HashItem(clone);
 		if ( cloneTarget ) {
 			//

@@ -34,6 +34,7 @@ static BOOL verbose = NO;
 @synthesize variables=variables_, pathTrackerArray=pathTrackerArray_, testMode=testMode_;
 @synthesize objectsWaitingToBeProcessed=objectsWaitingToBeProcessed_, objectsWaitingToBeLogged=objectsWaitingToBeLogged_,
 shouldLog=shouldLog_,shouldNotify=shouldNotify_;
+@synthesize timeManager = timeManager_;
 
 #define BoolAsFloat(expr) ((expr)?1.:0.)
 #define SetTypeForOp(type,string) VMIntObj( vmOperatorType_##type ),@"" string,
@@ -80,17 +81,23 @@ static VMScoreEvaluator *se_singleton_static_ = nil;
 		
 		if ( ! seFunctionTable_static_ )
 			seFunctionTable_static_ = Retain([VMHash hashWithObjectsAndKeys:
-										SEFunctionEntry( LC )
-										SEFunctionEntry( LS )
-										SEFunctionEntry( F )
-										SEFunctionEntry( D )
-										SEFunctionEntry( PT )
-										nil] );
+											  SEFunctionEntry( LC )
+											  SEFunctionEntry( LS )
+											  SEFunctionEntry( F )
+											  SEFunctionEntry( D )
+											  SEFunctionEntry( PT )
+											  SEFunctionEntry( TN )
+											  SEFunctionEntry( TD )
+											  SEFunctionEntry( TS )
+											  nil] );
 		
 		[self reset];
+		
+		self.timeManager = [[[VMPTimeManager alloc] init] autorelease];
+		
+		self.shouldLog = YES;
+		self.shouldNotify = YES;
 	}
-	self.shouldLog = YES;
-	self.shouldNotify = YES;
 	return self;
 }
 
@@ -103,6 +110,7 @@ static VMScoreEvaluator *se_singleton_static_ = nil;
 
 - (void)dealloc {
 	VMNullify(variables);
+	VMNullify(timeManager);
 	VMNullify(numberFormatter);
 	VMNullify(pathTrackerArray);
 	
@@ -272,6 +280,42 @@ SEFunctionDefinition( PT ) {
 		return nil;
 	return VMFloatObj( DEFAULTSONGPLAYER.playTimeAccumulator.playingTimeOfCurrentPart );
 }
+
+//
+//	TD/TN		dayness, nightness
+//
+SEFunctionDefinition( TD ) {
+	return VMFloatObj( timeManager_.dayNess );
+}
+
+SEFunctionDefinition( TN ) {
+	return VMFloatObj( timeManager_.nightNess );
+}
+
+//
+//	TS			shall we end sequence ??
+//
+SEFunctionDefinition( TS ) {
+	VMTime secondsRemain = timeManager_.remainTimeUntilShutdown;
+	//
+	//	end sequence if remaining time is less than 5 minutes.
+	//
+	VMFloat secondsForFinalCall				= 1.0 * 60;
+	VMFloat secondsForPrepareTermination	= 3.0 * 60;
+	
+	VMFloat ts;
+	
+	if ( secondsRemain > secondsForFinalCall + secondsForPrepareTermination ) {
+		ts = 0.;
+	} else if ( secondsRemain < secondsForFinalCall ) {
+		ts = 1.;
+	} else {
+		ts = 1 - (( secondsRemain - secondsForFinalCall ) / secondsForPrepareTermination );
+	}
+	NSLog( @"@TS check from %@ = %.2f", [self.variables item:@"@T"], ts );
+	return VMFloatObj( ts );
+}
+
 
 #pragma mark -
 #pragma mark variables and functions (public)

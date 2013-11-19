@@ -1109,6 +1109,13 @@ forDoubleClickOnDividerAtIndex:(NSInteger)dividerIndex  {
 //	insert fragment
 - (IBAction)insertFragment:(id)sender {}
 
+//	toggle iOSAppState
+- (IBAction)toggleIOSAppState:(id)sender {
+	NSMenuItem *mi = sender;
+	mi.state = NSOnState - mi.state;
+	DEFAULTSONGPLAYER.simulateIOSAppBackgroundState = ( mi.state == NSOnState );
+}
+
 
 #pragma mark type select
 

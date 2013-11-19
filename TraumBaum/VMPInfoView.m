@@ -6,7 +6,7 @@
 //
 #import <AVFoundation/AVFoundation.h>
 
-#import "VMPInfoViewController.h"
+#import "VMPInfoView.h"
 #import "MultiPlatform.h"
 #import "VMPSongPlayer.h"
 #import "VMAppDelegate.h"
@@ -14,13 +14,14 @@
 //#import "KTOneFingerRotationGestureRecognizer-master/KTOneFingerRotationGestureRecognizer.h"
 #import "VMPRainyView.h"
 
-@implementation VMPInfoViewController
+@implementation VMPInfoView
 
 static const int kNumberOfSkins = 4;
 
 
 #define ARImageView(fileName) [[[UIImageView alloc] initWithImage:[UIImage imageNamed:fileName]] autorelease]
 
+/*
 - (void)newButtonAt:(CGPoint)position type:(NSString*)type tag:(NSInteger)tag {
 		
 	UIButton *bt = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -48,6 +49,7 @@ static const int kNumberOfSkins = 4;
 		}
 	}
 }
+*/
 
 - (void)setBackgroundMode:(BOOL)enabled {
 	NSLog(@"Setting background playback to:%@", (enabled ? @"YES" : @"NO"));
@@ -75,7 +77,7 @@ static const int kNumberOfSkins = 4;
 			//
 		case 101:
 		case 'rset':
-			[DEFAULTSONGPLAYER reset];
+			[[VMAppDelegate defaultAppDelegate] reset];
 			break;
 			
 			//
@@ -93,11 +95,11 @@ static const int kNumberOfSkins = 4;
 			doesPlayInBackGround = ! doesPlayInBackGround;
 			[self setBackgroundMode:doesPlayInBackGround];
 			b.selected = doesPlayInBackGround;
-			[self.view viewWithTag:'chck'].hidden = ( ! doesPlayInBackGround );
+			[self viewWithTag:'chck'].hidden = ( ! doesPlayInBackGround );
 			closeDialog = NO;
 			break;
 		}
-			
+/*
 		case 103:	{	//	dark ui
 			BOOL darkBG = self.darkBGSwitch.isOn;
 			[[NSUserDefaults standardUserDefaults] setBool:darkBG forKey:@"darkBgEnabled"];
@@ -106,7 +108,7 @@ static const int kNumberOfSkins = 4;
 			closeDialog = NO;
 			break;
 		}
-			
+*/
 		case 104:
 		case 'rtrn':
 			//	nothing to do.
@@ -115,10 +117,41 @@ static const int kNumberOfSkins = 4;
 	}
 	
 	if (closeDialog) {
-		[DEFAULTSONGPLAYER setDimmed:NO];
-		[self dismissModalViewControllerAnimated:YES];
+//		[DEFAULTSONGPLAYER setDimmed:NO];
+//		[self dismissModalViewControllerAnimated:YES];
+		[self hideView];
 	}
 	
+}
+
+- (void)showView {
+	self.alpha = 0;
+	self.backgroundPlaySwitch.on = [[NSUserDefaults standardUserDefaults] boolForKey:@"doesPlayInBackground"];
+	self.backgroundColor = [UIColor colorWithWhite:1. alpha:0.7];
+	
+	
+	
+	CGRect screenRect = [UIScreen mainScreen].bounds;
+	CGFloat vOffset = ( screenRect.size.height - self.frame.size.height ) * 0.5;
+	
+	self.frame = CGRectMake(0, vOffset, self.frame.size.width, self.frame.size.height );
+	NSLog(@"%@", NSStringFromCGRect(self.frame));
+	[UIView beginAnimations:nil context:nil];
+	[UIView setAnimationDuration:0.5];
+	self.alpha = 1;
+	[UIView commitAnimations];
+}
+
+- (void)hideView {
+	[UIView beginAnimations:nil context:nil];
+	[UIView setAnimationDuration:0.5];
+	self.alpha = 0.;
+	[UIView commitAnimations];
+	[self performSelector:@selector(dismissView) withObject:nil afterDelay:0.6];
+}
+
+- (void)dismissView {
+	[self removeFromSuperview];
 }
 
 - (id)init {
@@ -220,7 +253,7 @@ static const int kNumberOfSkins = 4;
 		
 		
 				
-		[DEFAULTSONGPLAYER setDimmed:YES];
+	//	[DEFAULTSONGPLAYER setDimmed:YES];
 		/*
 		KTOneFingerRotationGestureRecognizer *ofrgr = [[KTOneFingerRotationGestureRecognizer alloc] initWithTarget:self action:@selector(rotating:)];
 		[self.view addGestureRecognizer:ofrgr];
@@ -239,7 +272,7 @@ static const int kNumberOfSkins = 4;
 	3;
 #endif
 	tgr.numberOfTapsRequired = 3;
-	[self.view addGestureRecognizer:tgr];
+	[self addGestureRecognizer:tgr];
 	Release(tgr);
 }
 
@@ -249,12 +282,15 @@ static const int kNumberOfSkins = 4;
 	NSLog( @"angle: %.2f", angle );
 }*/
 
-- (void)viewWillAppear:(BOOL)animated {
+- (void)willMoveToSuperview:(UIView *)newSuperview {
+
+//- (void)viewWillAppear:(BOOL)animated {
 	self.backgroundPlaySwitch.on = [[NSUserDefaults standardUserDefaults] boolForKey:@"doesPlayInBackground"];
-	self.darkBGSwitch.on         = [[NSUserDefaults standardUserDefaults] boolForKey:@"darkBgEnabled"];
+	self.backgroundColor = [UIColor colorWithWhite:1. alpha:0.6];
+//	self.darkBGSwitch.on         = [[NSUserDefaults standardUserDefaults] boolForKey:@"darkBgEnabled"];
 	
-	
-	[super viewWillAppear:animated];
+//	[super viewWillAppear:animated];
+	[super willMoveToSuperview:newSuperview];
 }
 
 - (void)toggleTrackView:(id)sender {
@@ -262,7 +298,7 @@ static const int kNumberOfSkins = 4;
 	if ( supressToggleTrackViewUntil > [NSDate timeIntervalSinceReferenceDate]) return;
 	supressToggleTrackViewUntil = [NSDate timeIntervalSinceReferenceDate] + 0.5;
 	
-	VMPTrackView *tv = (VMPTrackView*)[self.view viewWithTag:'trkV'];
+	VMPTrackView *tv = (VMPTrackView*)[self viewWithTag:'trkV'];
 	if ( tv ) {
 		//	hide
 		DEFAULTSONGPLAYER.trackView = nil;
@@ -270,16 +306,16 @@ static const int kNumberOfSkins = 4;
 		return;
 	}
 	//	show;
-	tv = AutoRelease([[VMPTrackView alloc] initWithFrame:self.view.frame]);
+	tv = AutoRelease([[VMPTrackView alloc] initWithFrame:self.frame]);
 	tv.tag = 'trkV';
-	[self.view addSubview:tv];
-	[DEFAULTSONGPLAYER setDimmed:NO];
+	[self addSubview:tv];
+//	[DEFAULTSONGPLAYER setDimmed:NO];
 
 	DEFAULTSONGPLAYER.trackView = tv;
 }
 
 - (void)dealloc {
-	VMNullify(scrollContentView);
+//	VMNullify(scrollContentView);
 	[super dealloc];
 }
 
@@ -287,7 +323,7 @@ static const int kNumberOfSkins = 4;
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
 //	int centerSkin = ( scrollView.contentOffset.x +70 ) / 140;
 	for( int skin = 0; skin < kNumberOfSkins; ++skin ) {
-		UIImageView *skinView = (UIImageView*)[self.view viewWithTag:'skn0'+skin];
+		UIImageView *skinView = (UIImageView*)[self viewWithTag:'skn0'+skin];
 		double dist = fabs( skinView.frame.origin.x - scrollView.contentOffset.x );
 		skinView.alpha = dist > 200 ? 0. : 1 - dist * 0.005;
 	}
@@ -298,6 +334,15 @@ static const int kNumberOfSkins = 4;
 	[self.delegate setSkinIndex:selectedSkin];
 }
 
+- (id)initWithFrame:(CGRect)frame {
+	self = [super initWithFrame:frame];
+	if ( self ) {
+		[self attachGestureRecognizer];
+	}
+	return self;
+}
+
+/*
 - (id)initWithCoder:(NSCoder *)aDecoder {
 	self = [super initWithCoder:aDecoder];
     if (self) {
@@ -305,7 +350,7 @@ static const int kNumberOfSkins = 4;
 
     }
 	return self;
-}
+}*/
 /*
 - (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView {
     return self.scrollContentView;

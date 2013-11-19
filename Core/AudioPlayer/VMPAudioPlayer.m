@@ -174,8 +174,8 @@ static VMHash *processPhaseNames_static_ = nil;
 	for ( int i = 0; i < kNumberOfQueueBuffers; ++i ) {
 		OSStatus status = AudioQueueAllocateBuffer( queue, kAudioPlayer_BufferSize, &buffers[i] );
 		if (status)
-			LLog(@"AudioQueueAllocateBuffer returned status %ld", status);
-        buffers[i]->mUserData = (void*)i;   //  set the index of buffer
+			LLog(@"AudioQueueAllocateBuffer returned status %d", (int)status);
+        buffers[i]->mUserData = (void*)(long)i;   //  set the index of buffer
 	}
 }
 
@@ -194,7 +194,7 @@ static VMHash *processPhaseNames_static_ = nil;
                         0, 
                         &queue);
     assert( queue != nil );
-	if( status ) LLog(@"AudioQueueNewOutput returned status %ld",status);
+	if( status ) LLog(@"AudioQueueNewOutput returned status %d",(int)status);
 	
 	[self reallocBuffer];
 	
@@ -358,6 +358,12 @@ static VMHash *processPhaseNames_static_ = nil;
 
 //static int logDone = 0;
 
+
+//
+//
+//	TODO: maybe we should rewrite this to a C function and exclude all Obj-C calls.
+//
+//
 - (UInt32)readPacketsIntoBuffer:(AudioQueueBufferRef)inBuffer queue:(AudioQueueRef)inAQ {
 	
 	// read packets into buffer from file
