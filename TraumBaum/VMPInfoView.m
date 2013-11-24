@@ -117,7 +117,7 @@ static const int kNumberOfSkins = 4;
 	}
 	
 	if (closeDialog) {
-//		[DEFAULTSONGPLAYER setDimmed:NO];
+		[DEFAULTSONGPLAYER setDimmed:NO];
 //		[self dismissModalViewControllerAnimated:YES];
 		[self hideView];
 	}
@@ -137,17 +137,19 @@ static const int kNumberOfSkins = 4;
 	self.frame = CGRectMake(0, vOffset, self.frame.size.width, self.frame.size.height );
 	NSLog(@"%@", NSStringFromCGRect(self.frame));
 	[UIView beginAnimations:nil context:nil];
-	[UIView setAnimationDuration:0.5];
+	[UIView setAnimationDuration:1.];
 	self.alpha = 1;
 	[UIView commitAnimations];
+	[DEFAULTSONGPLAYER setDimmed:YES];
+
 }
 
 - (void)hideView {
 	[UIView beginAnimations:nil context:nil];
-	[UIView setAnimationDuration:0.5];
+	[UIView setAnimationDuration:1.];
 	self.alpha = 0.;
 	[UIView commitAnimations];
-	[self performSelector:@selector(dismissView) withObject:nil afterDelay:0.6];
+	[self performSelector:@selector(dismissView) withObject:nil afterDelay:1.1];
 }
 
 - (void)dismissView {
@@ -309,7 +311,7 @@ static const int kNumberOfSkins = 4;
 	tv = AutoRelease([[VMPTrackView alloc] initWithFrame:self.frame]);
 	tv.tag = 'trkV';
 	[self addSubview:tv];
-//	[DEFAULTSONGPLAYER setDimmed:NO];
+	[DEFAULTSONGPLAYER setDimmed:NO];
 
 	DEFAULTSONGPLAYER.trackView = tv;
 }

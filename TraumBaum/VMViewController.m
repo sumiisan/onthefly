@@ -13,7 +13,6 @@
 #import "VMPInfoView.h"
 #import <AVFoundation/AVFoundation.h>
 #import "VMAppDelegate.h"
-#import "VMPFrontView.h"
 
 @interface VMViewController ()
 
@@ -54,47 +53,14 @@
 //    [self.view addSubview:trackView];
     DEFAULTSONGPLAYER.trackView = self.trackView;
 		
-	self.view.backgroundColor = [UIColor whiteColor];
+	self.view.backgroundColor = [UIColor grayColor];
 	//	background
 //	NSInteger skinIndex = [[NSUserDefaults standardUserDefaults] integerForKey:@"skinIndex"];
 //	[self setSkin: skinIndex];
 	
 	//	testing:
-	VMPFrontView *fv = AutoRelease( [[VMPFrontView alloc] initWithFrame:self.view.frame] );
-	[self.view addSubview:fv];
-
-	
-	//	config button
-	UIButton *bt = [UIButton buttonWithType:UIButtonTypeCustom];
-	/*
-	[bt setImage:[UIImage imageNamed:@"iPhone-UI/round_button_up.png"] forState:UIControlStateNormal];
-	[bt setImage:[UIImage imageNamed:@"iPhone-UI/round_button_dn.png"] forState:UIControlStateHighlighted];
-	 */
-	
-	//	draw config button
-	CGRect outerRect = CGRectMake(  0.0,  0.0, 100, 100 );
-	CGRect innerRect = CGRectMake( 10.0, 10.0,  80,  80 );
-	CGContextRef context = UIGraphicsGetCurrentContext();
-	UIGraphicsPushContext(context);
-	UIGraphicsBeginImageContext(outerRect.size);
-	UIBezierPath *outerCircle = [UIBezierPath bezierPathWithOvalInRect:outerRect];
-	UIBezierPath *innerCircle = [UIBezierPath bezierPathWithOvalInRect:innerRect];
-	[[UIColor colorWithWhite:0.7 alpha:0.5] setFill];
-	[outerCircle fill];
-	CGContextAddPath(context, outerCircle.CGPath);
-	[[UIColor colorWithWhite:0.7 alpha:0.5] setFill];
-	[innerCircle fill];
-	CGContextAddPath(context, innerCircle.CGPath);
-	UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-	UIGraphicsPopContext();
-	UIGraphicsEndImageContext();
-	
-	[bt setImage:image forState:UIControlStateNormal];
-	
-	CGFloat radius = 19;
-	bt.frame = CGRectMake( 162 - radius, 397 + ( Is4InchIPhone ? 45 : 0 ), radius*2, radius*2 );
-	[bt addTarget:self action:@selector(configButtonTouched:) forControlEvents:UIControlEventTouchUpInside];
-	[self.view addSubview:bt];
+	self.frontView = [[VMPFrontView alloc] initWithFrame:self.view.frame];
+	[self.view addSubview:self.frontView];
 	
 	if ( ! self.infoView ) {
 		//	info view
@@ -103,6 +69,44 @@
 		UIView *view = [[[NSBundle mainBundle] loadNibNamed:@"VMPInfoView" owner:self.infoView options:nil] objectAtIndex:0];
 		[self.infoView addSubview: view];
 	}
+	[self attachConfigButton];
+}
+
+- (void)attachConfigButton {
+	
+	//	config button
+	UIButton *bt = [UIButton buttonWithType:UIButtonTypeCustom];
+	
+	
+    // draw original image into the context
+	
+	//	draw config button
+	CGRect outerRect = CGRectMake(  0.0,  0.0, 100, 100 );
+	CGRect innerRect = CGRectMake( 10.0, 10.0,  80,  80 );
+
+	CGContextRef originalContext = UIGraphicsGetCurrentContext();
+	if (originalContext) UIGraphicsPushContext(originalContext);
+	
+	UIGraphicsBeginImageContext(outerRect.size);
+	//assert(context);
+	UIBezierPath *outerCircle = [UIBezierPath bezierPathWithOvalInRect:outerRect];
+	UIBezierPath *innerCircle = [UIBezierPath bezierPathWithOvalInRect:innerRect];
+	[[UIColor colorWithWhite:0.5 alpha:0.3] setFill];
+	[outerCircle fill];
+	[[UIColor colorWithWhite:0.5 alpha:0.3] setFill];
+	[innerCircle fill];
+	UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+	
+	UIGraphicsEndImageContext();
+	if (originalContext) UIGraphicsPopContext();
+	
+	[bt setImage:image forState:UIControlStateNormal];
+	
+	CGFloat radius = 19;
+	bt.frame = CGRectMake( 162 - radius, 397 + ( Is4InchIPhone ? 45 : 0 ), radius*2, radius*2 );
+	[bt addTarget:self action:@selector(configButtonTouched:) forControlEvents:UIControlEventTouchUpInside];
+	[self.view addSubview:bt];
+	
 }
 
 
@@ -124,6 +128,8 @@
 
 - (void)dealloc {
 	VMNullify(infoView);
+	VMNullify(trackView);
+	VMNullify(frontView);
 	Dealloc(super);
 }
 

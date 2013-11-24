@@ -50,6 +50,8 @@ enum  {
 	
 	VMArray				*objectsWaitingToBeProcessed_;
 	VMArray				*objectsWaitingToBeLogged_;
+	VMPTimeManager		*timeManager_;
+
 		
 	BOOL	testMode_;
 	BOOL	shouldNotify_;

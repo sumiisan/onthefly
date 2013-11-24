@@ -214,7 +214,7 @@ static VMAppDelegate *appDelegate_singleton_;
 		  );
 		
 	if ( songplayer.isPaused ) [songplayer resume];
-	[songplayer setFadeFrom:-1 to:1 length:.1 setDimmed:NO];	//	dummy set to prevent the player stopped in update call.
+	[songplayer setFadeFrom:-1 to:1 length:.1];	//	dummy set to prevent the player stopped in update call.
 	[songplayer update];
 	
 	//	awake from suspension
@@ -222,7 +222,7 @@ static VMAppDelegate *appDelegate_singleton_;
 		if ( [songplayer numberOfUnfiredFragments] > 0 ) {
 			NSLog( @"Startup: songplayer is running. no extra startup required.\n%@", songplayer.description );
 			[[NSNotificationCenter defaultCenter] postNotificationName:PLAYERSTARTED_NOTIFICATION object:self];
-			[songplayer setFadeFrom:-1 to:1 length:2. setDimmed:NO];
+			[songplayer setFadeFrom:-1 to:1 length:2.];
 			return;
 		}
 	};		//	seems nothing special required.
@@ -231,7 +231,7 @@ static VMAppDelegate *appDelegate_singleton_;
 		[songplayer adjustCurrentTimeToQueuedFragment];
 		NSLog( @"Startup: songplayer has frags in queue. let them fire now!\n%@", songplayer.description );
 		[[NSNotificationCenter defaultCenter] postNotificationName:PLAYERSTARTED_NOTIFICATION object:self];
-		[songplayer setFadeFrom:-1 to:1 length:2. setDimmed:NO];
+		[songplayer setFadeFrom:-1 to:1 length:2.];
 		return;
 	}
 	
@@ -239,7 +239,7 @@ static VMAppDelegate *appDelegate_singleton_;
 		if ( songplayer.isPaused ) [songplayer resume];
 		NSLog( @"Startup: player data is still on memory. let's fill the queue with them.\n%@", DEFAULTSONG.player.description );
 		[[NSNotificationCenter defaultCenter] postNotificationName:PLAYERSTARTED_NOTIFICATION object:self];
-		[songplayer setFadeFrom:-1 to:1 length:2. setDimmed:NO];
+		[songplayer setFadeFrom:-1 to:1 length:2.];
 		return;
 	}
 	
@@ -252,7 +252,7 @@ static VMAppDelegate *appDelegate_singleton_;
 			NSLog(@"Startup: trying to recover from saved state:%@",player.description);
 			DEFAULTSONG.player = player;
 			[[NSNotificationCenter defaultCenter] postNotificationName:PLAYERSTARTED_NOTIFICATION object:self];
-			[songplayer setFadeFrom:0.01 to:1 length:3. setDimmed:NO];
+			[songplayer setFadeFrom:0.01 to:1 length:3.];
 			[songplayer startWithFragmentId:nil];
 			return;
 		}
@@ -299,6 +299,8 @@ static VMAppDelegate *appDelegate_singleton_;
 		  "\n---------------------------------\n");
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
     // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
+	if ( ! self.isBackgroundPlaybackEnabled )
+		[DEFAULTSONGPLAYER setFadeFrom:-1 to:0 length:.1];	//	prevent garbage audio at next startup.	ss1311123
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application {
@@ -320,7 +322,7 @@ static VMAppDelegate *appDelegate_singleton_;
 	
 	
 	if ( ! self.isBackgroundPlaybackEnabled ) {
-		[DEFAULTSONGPLAYER setFadeFrom:0 to:0 length:0 setDimmed:NO];	//	set fader to zero
+		[DEFAULTSONGPLAYER setFadeFrom:0 to:0 length:0];	//	set fader to zero
 		[DEFAULTSONGPLAYER setGlobalVolume:1.];	//	dummy call to make sure fader volume is set.
 		[self performSelector:@selector(startup) withObject:nil afterDelay:0.1];
 	}
@@ -374,14 +376,14 @@ static VMAppDelegate *appDelegate_singleton_;
 - (void)beginInterruption {
 	NSLog(@"\n*****\nAudioSession Begin Interruption\n*****%@*************\n", DEFAULTSONGPLAYER.description );
 	[self savePlayerState];
-	[DEFAULTSONGPLAYER setFadeFrom:-1 to:0.01 length:0.1 setDimmed:NO];
+	[DEFAULTSONGPLAYER setFadeFrom:-1 to:0.01 length:0.1];
 }
 - (void)endInterruptionWithFlags:(NSUInteger)flags {
 //	[DEFAULTSONGPLAYER resume];
 	[DEFAULTSONGPLAYER flushFiredFragments];
 	[DEFAULTSONGPLAYER flushFinishedFragments];
 	[DEFAULTSONGPLAYER adjustCurrentTimeToQueuedFragment];
-	[DEFAULTSONGPLAYER setFadeFrom:0.01 to:1. length:2. setDimmed:NO];
+	[DEFAULTSONGPLAYER setFadeFrom:0.01 to:1. length:2.];
 	[DEFAULTSONGPLAYER restartTimer];
 	NSLog(@"\n*****\nAudioSession End Interruption\n*****%@*************\n", DEFAULTSONGPLAYER.description );
 	[self startup];

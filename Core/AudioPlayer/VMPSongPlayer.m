@@ -90,6 +90,71 @@
 }
 @end
 
+/*---------------------------------------------------------------------------------
+ 
+ VMPAutoFader
+ 
+ ----------------------------------------------------------------------------------*/
+
+#pragma mark -
+#pragma mark VMPAutoFader
+
+@implementation VMPAutoFader
+
+- (id)init {
+	self = [super init];
+	if( self ) {
+		fadeStartPoint  = 0;
+		fadeStartVolume = 1;
+		fadeEndVolume   = 1;
+		fadeDuration    = 0;
+	}
+	return self;
+}
+
+- (VMTime)fadeTimeElapsedAt:(VMTime)time {
+	return time - fadeStartPoint;
+}
+
+- (VMVolume)currentFaderVolume:(VMTime)time {
+    float faderVolume = fadeEndVolume;
+    if( fadeStartPoint > 0 && fadeDuration > 0 ) {
+        NSTimeInterval elapsed = [self fadeTimeElapsedAt:time];
+        if( elapsed < fadeDuration ) {
+			VMFloat elapsedRatio = ( elapsed / fadeDuration );
+			VMFloat exponential = ( exp( elapsedRatio ) -1 ) / 1.71828182845904523536028747135266250;	//	M_E -1
+			VMFloat range = ( fadeEndVolume - fadeStartVolume );
+            faderVolume = fadeStartVolume + range * exponential;
+			//	NSLog(@"range = %.3f, elapsed = %.3f, exp = %.3f, fader = %.3f", range, elapsedRatio, exponential, faderVolume );
+		} else {
+			fadeStartPoint = -1;
+			fadeDuration = -1;
+		}
+		VMVolume max = MAX( fadeStartVolume, fadeEndVolume );
+		VMVolume min = MIN( fadeStartVolume, fadeEndVolume );
+		faderVolume = ( faderVolume > max ? max : ( faderVolume < min ? min : faderVolume ));
+    }
+	return faderVolume;
+}
+
+
+- (void)setFadeFrom:(VMFloat)startVolume to:(VMFloat)endVolume length:(VMTime)seconds currentTime:(VMTime)time {
+	VMTime fadeTimeRemain = fadeDuration - [self fadeTimeElapsedAt:time];
+	
+	fadeStartVolume = startVolume >= 0 ? startVolume : [self currentFaderVolume:time];
+	fadeEndVolume   = endVolume;
+	if( fadeTimeRemain < seconds ) {
+		fadeDuration = seconds;
+		fadeStartPoint = time;
+	}
+}
+
+- (BOOL)isActive {
+	return fadeStartPoint > 0 && fadeDuration > 0;
+}
+@end
+
+
 
 /*---------------------------------------------------------------------------------
  *
@@ -106,10 +171,10 @@
 
 @synthesize trackView=trackView_;
 @synthesize engineIsWarm=engineIsWarm_;
-@synthesize dimmed=dimmed_;
+@synthesize dimmed=dimmed_, mainFader=mainFader_, dimmer=dimmer_;
 @synthesize song=song_;
 @synthesize playTimeAccumulator=playTimeAccumulator_;
-
+@synthesize simulateIOSAppBackgroundState=simulateIOSAppBackgroundState_;
 @synthesize nextCueTime=nextCueTime_;
 
 static const VMFloat	secondsPreroll			= 0.3;
@@ -128,54 +193,24 @@ static VMPSongPlayer 	*songPlayer_singleton_static_ = nil;
 #pragma mark volume and fade
 
 
-- (VMTime)fadeTimeElapsed {
-	return self.currentTime - fadeStartPoint;
-}
 
-- (VMVolume)currentFaderVolume {
-    float faderVolume = fadeEndVolume;
-    if( fadeStartPoint > 0 && fadeDuration > 0 ) {
-        NSTimeInterval elapsed = [self fadeTimeElapsed];
-        if( elapsed < fadeDuration ) {
-			VMFloat elapsedRatio = ( elapsed / fadeDuration );
-			VMFloat exponential = ( exp( elapsedRatio ) -1 ) / 1.71828182845904523536028747135266250;	//	M_E -1
-			VMFloat range = ( fadeEndVolume - fadeStartVolume );
-            faderVolume = fadeStartVolume + range * exponential;
-		//	NSLog(@"range = %.3f, elapsed = %.3f, exp = %.3f, fader = %.3f", range, elapsedRatio, exponential, faderVolume );
-		} else {
-			fadeStartPoint = -1;
-			fadeDuration = -1;
-		}
-		VMVolume max = MAX( fadeStartVolume, fadeEndVolume );
-		VMVolume min = MIN( fadeStartVolume, fadeEndVolume );
-		faderVolume = ( faderVolume > max ? max : ( faderVolume < min ? min : faderVolume ));
-    }
-	return faderVolume;
-}
 
 - (VMVolume)currentVolume {
-    return [self currentFaderVolume] * globalVolume;
+	VMTime time = self.currentTime;
+    return    [self.mainFader currentFaderVolume:time]
+			* [self.dimmer currentFaderVolume:time]
+			* globalVolume;
 }
 
-- (void)setFadeFrom:(VMFloat)startVolume to:(VMFloat)endVolume length:(VMTime)seconds setDimmed:(BOOL)dimmerState {
-//	NSLog(@"beginsetfade");
-	VMTime fadeTimeRemain = fadeDuration - [self fadeTimeElapsed];
-	dimmed_ = dimmerState;
-	VMFloat dimmFactor = dimmed_ ? 0.3 : 1.0;
-		
-	fadeStartVolume = startVolume >= 0 ? startVolume * dimmFactor : [self currentFaderVolume];
-	fadeEndVolume   = endVolume * dimmFactor;
-	if( fadeTimeRemain < seconds ) {
-		fadeDuration = seconds;
-		fadeStartPoint = self.currentTime;
-	}	
-//	NSLog(@"end setfade from:%.3f to %.3f", fadeStartVolume, fadeEndVolume );
+- (void)setFadeFrom:(VMFloat)startVolume to:(VMFloat)endVolume length:(VMTime)seconds {// setDimmed:(BOOL)dimmerState {
+	[self.mainFader setFadeFrom:startVolume to:endVolume length:seconds currentTime:self.currentTime];
 }
 
 - (void)setDimmed:(BOOL)dimmed {
 	if( dimmed_ == dimmed ) return;	//	no change
 	dimmed_ = dimmed;
-	[self setFadeFrom:-1 to:1 length:1. setDimmed:dimmed_];
+//	[self setFadeFrom:-1 to:1 length:1. setDimmed:dimmed_];
+	[self.dimmer setFadeFrom:-1 to:dimmed_ ? .3 : 1. length:1. currentTime:self.currentTime];
 }
 
 #pragma mark -
@@ -524,10 +559,11 @@ static VMPSongPlayer 	*songPlayer_singleton_static_ = nil;
 	
 	//	manage fade out / count running players.
 	float volume = [self currentVolume];
+	BOOL faderActive = mainFader_.isActive || dimmer_.isActive;
 	VMTime remainTime = 0;
 	for ( VMPAudioPlayer *ap in audioPlayerList ) {
 		if ( ap.isBusy ) {
-	   		if( fadeStartPoint > 0 && fadeDuration > 0 )
+	   		if( faderActive )
 				[ap setVolume:volume];	    //  manage fade out
 
 			numberOfPlayersRunnning++;
@@ -535,7 +571,7 @@ static VMPSongPlayer 	*songPlayer_singleton_static_ = nil;
 		}
     }
 	
-	BOOL fadeOutFinished = volume == 0 && fadeEndVolume == 0;
+	BOOL fadeOutFinished = volume == 0 && mainFader_->fadeEndVolume == 0;
 	BOOL timerExecuted = DEFAULTEVALUATOR.timeManager.timerExecuted;
 	
 #if VMP_IPHONE
@@ -604,8 +640,7 @@ static VMPSongPlayer 	*songPlayer_singleton_static_ = nil;
 
 - (void)startWithFragmentId:(VMId*)fragId {
 //	[self setFadeFrom:0 to:1 length:0.01 setDimmed:NO];
-	fadeStartPoint = 0;
-
+	self.mainFader->fadeStartPoint = 0;
 	
 	if ( ! self.isWarmedUp ) [self warmUp];
 	
@@ -631,7 +666,8 @@ static VMPSongPlayer 	*songPlayer_singleton_static_ = nil;
 }
 
 -(void)stop {
-    fadeStartPoint = 0;
+    self.mainFader->fadeStartPoint = 0;
+	self.dimmer->fadeStartPoint = 0;
 	//fragQueue clear];
 	[self flushFiredFragments];
 	[self pause];
@@ -652,7 +688,8 @@ static VMPSongPlayer 	*songPlayer_singleton_static_ = nil;
 }
 
 -(void)fadeoutAndStop:(VMTime)duration {
-	[self setFadeFrom:-1 to:0. length:duration setDimmed:self.isDimmed];
+	//[self setFadeFrom:-1 to:0. length:duration setDimmed:self.isDimmed];
+	[self.mainFader setFadeFrom:-1 to:0 length:duration currentTime:self.currentTime];
 }
 
 
@@ -682,7 +719,7 @@ static VMPSongPlayer 	*songPlayer_singleton_static_ = nil;
 #endif
 		}
 		if ( startPlayAfterSetFragment && self.isPaused ) {
-			[self setFadeFrom:0. to:1. length:0. setDimmed:NO];
+			[self setFadeFrom:0. to:1. length:0.];
 			[self resume];
 		}
 		startPlayAfterSetFragment = NO;
@@ -804,10 +841,8 @@ static VMPSongPlayer 	*songPlayer_singleton_static_ = nil;
 		fragQueue 		= NewInstance(VMArray);
 		dimmed_			= NO;
 		globalVolume	= 1.;
-		fadeStartPoint  = 0;
-		fadeStartVolume = 1;
-		fadeEndVolume   = 1;
-		fadeDuration    = 0;
+		self.mainFader	= ARInstance(VMPAutoFader);
+		self.dimmer		= ARInstance(VMPAutoFader);
 	}
     return self;
 }
@@ -817,6 +852,8 @@ static VMPSongPlayer 	*songPlayer_singleton_static_ = nil;
 	Release(audioPlayerList);
 	Release(fragQueue);
 	Release(lastFiredFragment_);
+	VMNullify(mainFader);
+	VMNullify(dimmer);
 	VMNullify(song);
 	Dealloc( super );;
 }

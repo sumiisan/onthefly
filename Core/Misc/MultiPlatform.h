@@ -41,7 +41,6 @@ static const BOOL kUseNotification = NO;
 
 #define Is4InchIPhone ( [[UIScreen mainScreen] bounds].size.height == 568 )
 
-
 //
 //  32k(buffer) x 3(buffer per player) x 4(players total) = 384k (x 2 (stereo??) not sure.. )
 //
@@ -49,17 +48,23 @@ static const BOOL kUseNotification = NO;
 
 //  aliases
 #define VMPDocument UIDocument
+#define VMPPoint CGPoint
+#define VMPSize	CGSize
 #define VMPRect  CGRect
+#define VMPRectZero	 CGRectZero
 #define VMPFont  UIFont
 #define VMPView  UIView
 #define VMPColor UIColor
 
 #define VMPColorBy(r,g,b,a) [UIColor colorWithRed:(CGFloat)(r) green:(CGFloat)(g) blue:(CGFloat)(b) alpha:(CGFloat)(a)]
+#define VMPColorByHSBA(h,s,b,a) [UIColor colorWithHue:(CGFloat)(h) saturation:(CGFloat)(s) brightness:(CGFloat)(b) alpha:(CGFloat)(a)]
 #define VMPSize  CGSize
 #define VMPSetNeedsDisplay(instance)   [instance setNeedsDisplay]
-#define VMPMakeRect(x,y,w,h) CGRectMake(x,y,w,h)
+#define VMPMakeRect(x,y,w,h) CGRectMake((x),(y),(w),(h))
+#define VMPMakePoint(x,y) CGPointMake((x),(y))
 #define VMPSetAlpha setAlpha
 #define VMPBezierPath UIBezierPath
+#define VMPLabel UILabel
 #define RemoveAllSubViews [[self subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)]
 
 
@@ -95,17 +100,23 @@ static const BOOL kUseNotification = YES;
 
 //  aliases
 #define VMPDocument NSDocument
+#define VMPPoint NSPoint
+#define VMPSize NSSize
 #define VMPRect  NSRect
+#define VMPRectZero	 NSMakeRect(0,0,0,0)
 #define VMPFont  NSFont
 #define VMPView  NSView
 #define VMPColor NSColor
 
 #define VMPColorBy(r,g,b,a) [NSColor colorWithCalibratedRed:(CGFloat)(r) green:(CGFloat)(g) blue:(CGFloat)(b) alpha:(CGFloat)(a)]
+#define VMPColorByHSBA(h,s,b,a) [NSColor colorWithCalibratedHue:(CGFloat)(h) saturation:(CGFloat)(s) brightness:(CGFloat)(b) alpha:(CGFloat)(a)]
 #define VMPSize  NSSize
 #define VMPSetNeedsDisplay(instance)   [instance setNeedsDisplay:YES]
-#define VMPMakeRect(x,y,w,h) NSMakeRect(x,y,w,h)
+#define VMPMakeRect(x,y,w,h) NSMakeRect((x),(y),(w),(h))
+#define VMPMakePoint(x,y) NSMakePoint((x),(y))
 #define VMPSetAlpha setAlphaValue
 #define VMPBezierPath NSBezierPath
+#define VMPLabel NSTextField
 #define RemoveAllSubViews  [self setSubviews:[NSArray array]];
 
 

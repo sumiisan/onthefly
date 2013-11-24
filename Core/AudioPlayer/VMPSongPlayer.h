@@ -53,6 +53,22 @@
 }
 @end
 
+
+@interface VMPAutoFader : NSObject {
+	//	fade
+@public
+    VMTime					fadeDuration;
+    VMTime					fadeStartPoint;
+	VMFloat					fadeStartVolume;
+	VMFloat					fadeEndVolume;
+
+}
+- (VMTime)fadeTimeElapsedAt:(VMTime)time;
+- (VMVolume)currentFaderVolume:(VMTime)time;
+- (void)setFadeFrom:(VMFloat)startVolume to:(VMFloat)endVolume length:(VMTime)seconds currentTime:(VMTime)time;
+- (BOOL)isActive;
+@end
+
 /*---------------------------------------------------------------------------------
  *
  *
@@ -73,10 +89,10 @@
     VMVolume				globalVolume;
 
 	//	fade
-    VMTime					fadeDuration;
+/*    VMTime					fadeDuration;
     VMTime					fadeStartPoint;
 	VMFloat					fadeStartVolume;
-	VMFloat					fadeEndVolume;
+	VMFloat					fadeEndVolume;*/
 	BOOL					startPlayAfterSetFragment;
 
 	//	view
@@ -90,6 +106,9 @@
 	VMTime					nextCueTime_;
 	VMPPlayTimeAccumulator	*playTimeAccumulator_;
 	VMPTrackView			*trackView_;
+	VMPAutoFader			*mainFader_;
+	VMPAutoFader			*dimmer_;
+	BOOL					simulateIOSAppBackgroundState_;
 	
 #endif
 
@@ -100,6 +119,8 @@
 @property (nonatomic, getter = isDimmed)	BOOL				dimmed;				//	volume dimmer
 @property (readonly, getter = isWarmedUp)	BOOL				engineIsWarm;		//
 @property (nonatomic, VMReadonly)			VMAudioFragment		*lastFiredFragment;
+@property (nonatomic, VMStrong)				VMPAutoFader		*mainFader;
+@property (nonatomic, VMStrong)				VMPAutoFader		*dimmer;
 
 @property (nonatomic)						BOOL				simulateIOSAppBackgroundState;
 
@@ -126,7 +147,7 @@
 - (void)stopAndDisposeQueue;
 - (void)reset;
 - (void)fadeoutAndStop:(VMTime)duration;
-- (void)setFadeFrom:(VMFloat)startVolume to:(VMFloat)endVolume length:(VMTime)seconds setDimmed:(BOOL)dimmerState;
+- (void)setFadeFrom:(VMFloat)startVolume to:(VMFloat)endVolume length:(VMTime)seconds;// setDimmed:(BOOL)dimmerState;
 
 - (void)setGlobalVolume:(VMFloat)volume;
 

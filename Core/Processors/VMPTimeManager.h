@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "MultiPlatform.h"
+#import "VMARC.h"
 #import "VMDataTypes.h"
 
 typedef enum {
@@ -18,7 +19,12 @@ typedef enum {
 	vmdp_unknown
 } VMDayPhase;
 
-@interface VMPTimeManager : NSObject
+@interface VMPTimeManager : NSObject {
+#ifdef SUPPORT_32BIT_MAC
+	NSDate	*shutdownTime_;
+	BOOL	timerExecuted_;
+#endif
+}
 
 @property (nonatomic, retain)	NSDate			*shutdownTime;
 @property (nonatomic)			VMTime			remainTimeUntilShutdown;

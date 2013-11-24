@@ -290,9 +290,7 @@ static VMHash *processPhaseNames_static_ = nil;
 		return;
 	}
 	
-	
 #if enableDSP
-	
 	if ( self.audioObject ) {
 		VMNullify(audioObject);
 	}

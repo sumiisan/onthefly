@@ -7,42 +7,67 @@
 //
 
 #import "VMPAppDelegate.h"
+#import "VMScoreEvaluator.h"
 #import "VMPSongPlayer.h"
 #import "VMPRainyView.h"
+#import "VMPFrontView.h"
 
 #define kDefaultVMSFileName @"default.vms"
 
 
 @implementation VMPAppDelegate
 
-@synthesize song=song_, window=window_, rainyView=rainyView_, fogMenuItem=fogMenuItem_,
+static VMPAppDelegate *singleton__static__ = nil;
+
+@synthesize song=song_, window=window_, rainyView=rainyView_, frontView=frontView_, fogMenuItem=fogMenuItem_,
 darkBackgroundMenuItem=darkBackgroundMenuItem_, backgroundImage=backgroundImage_;
+
++ (VMPAppDelegate*)defaultAppDelegate {
+	return singleton__static__;
+}
+
+
+- (id)init {
+	self = [super init];
+	singleton__static__ = self;
+	return self;
+}
 
 - (void)dealloc {
 	[DEFAULTSONGPLAYER coolDown];
-	[song_ release];
-	[rainyView_ release];
+	[NSObject cancelPreviousPerformRequestsWithTarget:self.frontView selector:@selector(animate:) object:nil];
+	self.song = nil;
+	self.rainyView = nil;
+	self.frontView = nil;
+	NSLog(@"app dealloc");
+	singleton__static__ = nil;
 	[super dealloc];
+}
+
+- (void)windowWillClose:(NSNotification *)notification {
+	[NSObject cancelPreviousPerformRequestsWithTarget:self.frontView selector:@selector(animate:) object:nil];
 }
 
 - (void)applicationWillTerminate:(NSNotification *)notification {
 	//	save current song position
+	NSLog(@"app will terminate");
 	NSData *playerData = [NSKeyedArchiver archivedDataWithRootObject:DEFAULTSONG.player];
 	[[NSUserDefaults standardUserDefaults] setObject:playerData forKey:@"lastPlayer"];
 
 }
 
 - (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)sender {
+	NSLog(@"applicationShouldTerminateAfterLastWindowClosed");
 	return YES;
 }
 
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
-	// Insert code here to initialize your application
-	
-	BOOL darkBG = [[NSUserDefaults standardUserDefaults] boolForKey:@"useDarkBackground"];
-	self.darkBackgroundMenuItem.state = darkBG;
-	if( darkBG ) [self.backgroundImage setImage:[NSImage imageNamed:@"skin1_phone.jpg"]];
+
+	self.window.delegate = self;
+//	BOOL darkBG = [[NSUserDefaults standardUserDefaults] boolForKey:@"useDarkBackground"];
+//	self.darkBackgroundMenuItem.state = darkBG;
+//	if( darkBG ) [self.backgroundImage setImage:[NSImage imageNamed:@"skin1_phone.jpg"]];
 	
 	self.fogMenuItem.state			  = [[NSUserDefaults standardUserDefaults] boolForKey:@"useFog"];
 	
@@ -53,17 +78,17 @@ darkBackgroundMenuItem=darkBackgroundMenuItem_, backgroundImage=backgroundImage_
 											  isDirectory:NO];
 	
 	[self openVMSDocumentFromURL:songURL error:&outError];
-	/*
-	 variableSong = [[VariableSong alloc] initWithFileURL:songURL];
-	 NSData *data = [NSData dataWithContentsOfURL:songURL];
-	 [variableSong loadFromContents:data ofType:@"vms" error:&outError];
-	 */
+	
+	self.frontView = AutoRelease([[VMPFrontView alloc] initWithFrame:NSMakeRect(0, 0, 320, 480)]);
+	[self.window.contentView addSubview:self.frontView];
     
     DEFAULTSONGPLAYER.song = self.song;	//	unsafe_unretained.
 	
     Release(songURL);
 	
-	
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(endOfSequence:)
+												 name:ENDOFSEQUENCE_NOTIFICATION object:nil];
+
     [DEFAULTSONGPLAYER warmUp];
 	
 	
@@ -77,74 +102,87 @@ darkBackgroundMenuItem=darkBackgroundMenuItem_, backgroundImage=backgroundImage_
 	[rainyView_ setContentFilters:[NSArray arrayWithObject:filter]];
 	 
 	[self.window.contentView addSubview:rainyView_];
-	[self waitForLaunch];
+	[self startup];
 }
 
 
-- (void)waitForLaunch {	//	wait for warm up
+- (void)endOfSequence:(NSNotification*)notification {
+	//	we should clear players and save datas to disable resuming from old saved state.
+	DEFAULTSONG.player = nil;
+	[self savePlayerState];
+}
+
+
+- (void)startup {	//	wait for warm up
+	VMPSongPlayer *songplayer = DEFAULTSONGPLAYER;
 	
+	if ( ! songplayer.isWarmedUp ) {
+		[self performSelector:@selector(startup) withObject:nil afterDelay:0.1];
+		return;
+	}
 	
-	if ( DEFAULTSONGPLAYER.isWarmedUp ) {
-		//
-		//
-		//		startup sequence
-		//
-		//
-		NSLog(@""
-			  "SongPlayer paused:%@\n"
-			  "some AudioPlayer running:%@\n"
-			  "unfired frags:%ld\n",
-			  
-			  ( DEFAULTSONGPLAYER.isPaused ? @"YES" : @"NO" ),
-			  ( DEFAULTSONGPLAYER.isRunning ? @"YES" : @"NO" ),
-			  [DEFAULTSONGPLAYER numberOfUnfiredFragments]
-			  );
-		
-		
-		if ( DEFAULTSONGPLAYER.isPaused ) [DEFAULTSONGPLAYER resume];
-		[DEFAULTSONGPLAYER update];
-		
-		//	awake from suspension
-		if ( DEFAULTSONGPLAYER.isRunning ) {
-			if ( [DEFAULTSONGPLAYER numberOfUnfiredFragments] > 0 ) {
-				NSLog( @"Startup: songplayer is running. no extra startup required.\n%@", DEFAULTSONGPLAYER.description );
-				[DEFAULTSONGPLAYER setFadeFrom:-1 to:1 length:2. setDimmed:NO];
-				return;
-			}
-		};		//	seems nothing special required.
-		
-		if ( [DEFAULTSONGPLAYER numberOfUnfiredFragments] > 0 ) {
-			[DEFAULTSONGPLAYER adjustCurrentTimeToQueuedFragment];
-			NSLog( @"Startup: songplayer has frags in queue. let them fire now!\n%@", DEFAULTSONGPLAYER.description );
-			[DEFAULTSONGPLAYER setFadeFrom:-1 to:1 length:2. setDimmed:NO];
+	//
+	//
+	//		startup sequence
+	//
+	//
+	NSLog(@""
+		  "SongPlayer paused:%@\n"
+		  "some AudioPlayer running:%@\n"
+		  "unfired frags:%ld\n",
+		  
+		  ( songplayer.isPaused ? @"YES" : @"NO" ),
+		  ( songplayer.isRunning ? @"YES" : @"NO" ),
+		  [songplayer numberOfUnfiredFragments]
+		  );
+	
+	if ( songplayer.isPaused ) [songplayer resume];
+	[songplayer setFadeFrom:-1 to:1 length:.1];	//	dummy set to prevent the player stopped in update call.
+	[songplayer update];
+	
+	//	awake from suspension
+	if ( songplayer.isRunning ) {
+		if ( [songplayer numberOfUnfiredFragments] > 0 ) {
+			NSLog( @"Startup: songplayer is running. no extra startup required.\n%@", songplayer.description );
+			[[NSNotificationCenter defaultCenter] postNotificationName:PLAYERSTARTED_NOTIFICATION object:self];
+			[songplayer setFadeFrom:-1 to:1 length:2.];
 			return;
 		}
-		
-		if ( DEFAULTSONG.player ) {
-			if ( DEFAULTSONGPLAYER.isPaused ) [DEFAULTSONGPLAYER resume];
-			NSLog( @"Startup: player data is still on memory. let's fill the queue with them.\n%@", DEFAULTSONG.player.description );
-			[DEFAULTSONGPLAYER setFadeFrom:-1 to:1 length:2. setDimmed:NO];
+	};		//	seems nothing special required.
+	
+	if ( [songplayer numberOfUnfiredFragments] > 0 ) {
+		[songplayer adjustCurrentTimeToQueuedFragment];
+		NSLog( @"Startup: songplayer has frags in queue. let them fire now!\n%@", songplayer.description );
+		[[NSNotificationCenter defaultCenter] postNotificationName:PLAYERSTARTED_NOTIFICATION object:self];
+		[songplayer setFadeFrom:-1 to:1 length:2.];
+		return;
+	}
+	
+	if ( DEFAULTSONG.player ) {
+		if ( songplayer.isPaused ) [songplayer resume];
+		NSLog( @"Startup: player data is still on memory. let's fill the queue with them.\n%@", DEFAULTSONG.player.description );
+		[[NSNotificationCenter defaultCenter] postNotificationName:PLAYERSTARTED_NOTIFICATION object:self];
+		[songplayer setFadeFrom:-1 to:1 length:2.];
+		return;
+	}
+	
+	//	try resume from saved data
+	NSData *playerData = [[NSUserDefaults standardUserDefaults] objectForKey:@"lastPlayer"];
+	
+	if ( playerData ) {
+		VMPlayer *player = [NSKeyedUnarchiver unarchiveObjectWithData:playerData];
+		if ( player.fragments.count > 0 ) {
+			NSLog(@"Startup: trying to recover from saved state:%@",player.description);
+			DEFAULTSONG.player = player;
+			[[NSNotificationCenter defaultCenter] postNotificationName:PLAYERSTARTED_NOTIFICATION object:self];
+			[songplayer setFadeFrom:0.01 to:1 length:3.];
+			[songplayer startWithFragmentId:nil];
 			return;
 		}
-		
-		//	try resume from saved data
-		NSData *playerData = [[NSUserDefaults standardUserDefaults] objectForKey:@"lastPlayer"];
-		
-		if ( playerData ) {
-			VMPlayer *player = [NSKeyedUnarchiver unarchiveObjectWithData:playerData];
-			if ( player.fragments.count > 0 ) {
-				NSLog(@"Startup: trying to recover from saved state:%@",player.description);
-				DEFAULTSONG.player = player;
-				[DEFAULTSONGPLAYER setFadeFrom:0.01 to:1 length:3. setDimmed:NO];
-				[DEFAULTSONGPLAYER startWithFragmentId:nil];
-				return;
-			}
-		}
-		NSLog(@"Startup: no data for recovery found. start new fron beginning.");
-		[DEFAULTSONGPLAYER start];
-	} else {
-		[self performSelector:@selector(waitForLaunch) withObject:nil afterDelay:0.1];
-	}	
+	}
+	NSLog(@"Startup: no data for recovery found. start new fron beginning.");
+	[[NSNotificationCenter defaultCenter] postNotificationName:PLAYERSTARTED_NOTIFICATION object:self];
+	[songplayer start];
 }
 
 
@@ -153,6 +191,34 @@ darkBackgroundMenuItem=darkBackgroundMenuItem_, backgroundImage=backgroundImage_
 	return [self.song readFromURL:documentURL error:error];
 }
 
+- (void)savePlayerState {
+	NSData *playerData = [NSKeyedArchiver archivedDataWithRootObject:DEFAULTSONG.player];
+	[[NSUserDefaults standardUserDefaults] setObject:playerData forKey:@"lastPlayer"];
+	NSLog(@"Saving player state");
+}
+
+- (IBAction)stop:(id)sender {
+	NSLog(@"*stop");
+	[self savePlayerState];
+	[DEFAULTSONGPLAYER stop];
+}
+
+- (IBAction)pause:(id)sender {
+	NSLog(@"*pause");
+	[self savePlayerState];
+	[DEFAULTSONGPLAYER fadeoutAndStop:3.];
+}
+
+- (IBAction)resume:(id)sender {
+	NSLog(@"*resume");
+	[self startup];
+}
+
+- (IBAction)reset:(id)sender {
+	DEFAULTEVALUATOR.timeManager.shutdownTime = nil;
+    [DEFAULTSONGPLAYER reset];
+	[[NSNotificationCenter defaultCenter] postNotificationName:PLAYERSTARTED_NOTIFICATION object:self];
+}
 
 - (IBAction)resetSong:(id)sender {
 	[DEFAULTSONGPLAYER reset];
@@ -161,7 +227,9 @@ darkBackgroundMenuItem=darkBackgroundMenuItem_, backgroundImage=backgroundImage_
 - (IBAction)dimmPlayer:(id)sender {
 	NSMenuItem *menuItem = sender;
 	menuItem.state = NSOnState - menuItem.state;
-	DEFAULTSONGPLAYER.dimmed = menuItem.state == NSOnState;
+	BOOL dimmed = menuItem.state == NSOnState;
+	DEFAULTSONGPLAYER.dimmed = dimmed;
+	self.frontView.alphaValue = dimmed ? 0.5 : 1.;
 }
 
 - (IBAction)openWebsite:(id)sender {
@@ -174,19 +242,17 @@ darkBackgroundMenuItem=darkBackgroundMenuItem_, backgroundImage=backgroundImage_
 	[[NSUserDefaults standardUserDefaults] setBool:menuItem.state forKey:@"useFog"];
 	self.rainyView.enabled = menuItem.state;
 }
-
+/*
 - (IBAction)toggleBackground:(id)sender {
 	NSMenuItem *menuItem = sender;
 	menuItem.state = NSOnState - menuItem.state;
 	[[NSUserDefaults standardUserDefaults] setBool:menuItem.state forKey:@"useDarkBackground"];
 	
 	if( menuItem.state ) {
-		[self.backgroundImage setImage:[NSImage imageNamed:@"skin1_phone.jpg"]];
+		[self.backgroundImage setImage:[NSImage imageNamed:@"s1_phone.jpg"]];
 	} else {
 		[self.backgroundImage setImage:[NSImage imageNamed:@"skin0_phone.jpg"]];
 	}
 }
-
-
-
+ */
 @end

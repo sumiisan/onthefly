@@ -1193,7 +1193,11 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 		if(! fragIdsToConvert ) return;
 		
 		for ( id idObj in fragIdsToConvert ) {
+#if __has_feature(objc_arc)
 			VMFragment			*__autoreleasing frag 	= [self data:ReadAsVMId(idObj)];
+#else
+			VMFragment			*frag 	= [self data:ReadAsVMId(idObj)];
+#endif
 			
 			if( [frag.id isEqualToString:@"x3_t003_SEL1"] )
 				NSLog(@"debug!");
