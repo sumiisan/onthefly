@@ -53,9 +53,13 @@ static const CGFloat dragThreshold = 30;
 static CGFloat holeHotSpotRadius = 0;
 
 @synthesize frontViewWasVisibleAtLastCall = frontViewWasVisibleAtLastCall_,standardRadius=standardRadius_,holeCenter=holeCenter_,dragOffsetY=dragOffsetY_,angle=angle_,hueOffset=hueOffset_,speed=speed_,velocity=velocity_,targetVelocity=targetVelocity_,stem=stem_,blendMode=blendMode_,shouldRecognizeTap=shouldRecognizeTap_,timeIndicator=timeIndicator_,touchBeginPoint=touchBeginPoint_,
-stemLength=stemLength_,transitionRemain=transitionRemain_,refreshScreenCounter=refreshScreenCounter_,transitionColor=transitionColor_,lastDayPhase=lastDayPhase_,circles=circles_;
+stemLength=stemLength_,refreshScreenCounter=refreshScreenCounter_,lastDayPhase=lastDayPhase_,circles=circles_;
+
 
 #if VMP_OSX
+@synthesize transitionRemain=transitionRemain_,transitionColor=transitionColor_;
+
+
 //
 //	this utility is for os x version < 10.8 ( alternative for NSColor's .CGColor )
 //
@@ -235,9 +239,9 @@ stemLength=stemLength_,transitionRemain=transitionRemain_,refreshScreenCounter=r
 #if VMP_IPHONE
 
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event {
-	_stemLength = 0;
-	_stem.strokeColor = [UIColor clearColor].CGColor;
-	_timeIndicator.backgroundColor = [UIColor clearColor];
+	stemLength_ = 0;
+	stem_.strokeColor = [UIColor clearColor].CGColor;
+	timeIndicator_.backgroundColor = [UIColor clearColor];
 	touchBeginPoint_.x = -9999;
 }
 
@@ -393,6 +397,7 @@ stemLength=stemLength_,transitionRemain=transitionRemain_,refreshScreenCounter=r
 	CGFloat baseRad = ( 2 * M_PI / numOfCircles );
 	CGFloat hueInterval = 1.0 / numOfCircles;
 	CGFloat offsetRad = angle_ * 2 * M_PI;
+	CGContextRef context = UIGraphicsGetCurrentContext();
 #if VMP_OSX
 	CGContextRef context = [[NSGraphicsContext currentContext] graphicsPort];
 #endif
@@ -453,7 +458,7 @@ stemLength=stemLength_,transitionRemain=transitionRemain_,refreshScreenCounter=r
 #if CALayerCompositingFilterAvailable
 		CGFloat hue = hueInterval * i;
 #else
-		CGFloat hue = hueInterval * i + _hueOffset;
+		CGFloat hue = hueInterval * i + hueOffset_;
 #endif
 		if ( hue > 1 ) hue -= 1.;
 #if VMP_OSX
@@ -544,7 +549,7 @@ stemLength=stemLength_,transitionRemain=transitionRemain_,refreshScreenCounter=r
 		}
 	}
 
-	[self performSelector:@selector(animate:) withObject:nil afterDelay:( velocity_ > 0 ? 0.03 : 1. )];
+	[self performSelector:@selector(animate:) withObject:nil afterDelay:( velocity_ > 0 ? 0.03333333334 : 1. )];
 }
 
 - (void)dealloc {
