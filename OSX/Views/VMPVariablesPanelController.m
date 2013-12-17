@@ -120,9 +120,30 @@
 	
 	[self.tableView reloadData];
 }
-
-- (IBAction)expressionEntered:(id)sender {
 	
+- (IBAction)expressionEntered:(id)sender {
+	NSTextField *tf = (NSTextField*)sender;
+		
+	NSString *exp = tf.stringValue;
+	
+	if ( [[exp lowercaseString] hasPrefix:@"set "] ) {
+		VMArray *comp = [VMArray arrayWithString:[exp substringFromIndex:4] splitBy:@"="];
+		if( comp.count == 2 ) {
+			NSString *varName = [[comp itemAsString:0]
+								 stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+			exp = [comp item:1];
+			VMFloat value = [DEFAULTEVALUATOR evaluate:exp];
+			[DEFAULTEVALUATOR setValue:@(value) forVariable:varName];
+			self.resultField.stringValue = [NSString stringWithFormat:@"%@ = %.2f",varName,value];
+			return;
+		}
+	}
+	
+	//
+	//	evaluate
+	//
+	VMFloat value = [DEFAULTEVALUATOR evaluate:exp];
+	self.resultField.stringValue = [NSString stringWithFormat:@"%.2f",value];
 }
 
 #pragma mark -

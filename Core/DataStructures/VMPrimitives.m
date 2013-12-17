@@ -470,6 +470,7 @@ VMFloat limitedSNDRand(VMFloat min, VMFloat max) {
 	for ( int i = 0; i < numberOfBins; ++i ) [tempArray push:VMIntObj(0)];
 	for ( NSNumber *num in array_ ) {
 		int bin = ( interval ? (([num floatValue] - range.minimum ) / interval ) : 0 );
+		if( numberOfBins >= bin ) bin = (int)numberOfBins -1;
 		VMInt c = [tempArray itemAsInt:bin];
 		++c;
 		if ( c > maxCount ) maxCount = c;

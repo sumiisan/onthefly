@@ -15,7 +15,25 @@
 #define DEFAULTSONG [VMSong defaultSong]
 #define ENDOFSEQUENCE_NOTIFICATION @"vmendofsequence"
 
-@interface VMSong : NSObject {
+@interface VMSongStatistics : NSObject <NSCoding> {
+#if SUPPORT_32BIT_MAC
+	VMTime		secondsPlayed_;
+	VMHash		*playedFrags_;
+	int			numberOfAudioFragments_;
+#endif
+}
+
+@property (nonatomic)			VMTime	secondsPlayed;
+@property (nonatomic,retain)	VMHash	*playedFrags;
+@property (nonatomic)			int		numberOfAudioFragments;
+@property (readonly,nonatomic)	VMFloat	percentsPlayed;
+
+- (void)addAudioFrag:(VMAudioFragment*)frag;
+- (void)reset;
+
+@end
+
+@interface VMSong : NSObject <NSCoding> {
 #if SUPPORT_32BIT_MAC
 	NSURL		*fileURL_;
 	VMHash		*songData_;
@@ -29,6 +47,8 @@
 	VMPlayer	*player_;
 	VMArray		*history_;
 	VMStack		*showReport_;
+	
+	VMSongStatistics *songStatistics_;
 #endif
 
 }
@@ -51,6 +71,8 @@
 @property (VMNonatomic VMStrong)	VMPlayer *player;
 @property (VMNonatomic VMStrong)	VMArray	 *history;
 @property (nonatomic, VMStrong)		VMStack	 *showReport;
+@property (nonatomic, VMStrong)		VMSongStatistics *songStatistics;
+
 
 //	log
 #if VMP_LOGGING
@@ -58,9 +80,14 @@
 #endif
 
 
-
-
+//	singleton
 + (VMSong*)defaultSong;
+
+//	save and load
++ (VMSong*)songWithDataFromUrl:(NSURL*)url;
+- (BOOL)saveToFile:(NSURL*)url;
+
+//
 - (void)setByHash:(VMHash*)hash;
 - (id)data:(VMId*)dataId;
 - (VMAudioFragment*)nextAudioFragment;

@@ -14,6 +14,77 @@
 
 
 /*---------------------------------------------------------------------------------
+ 
+ VMSongStatistics
+ 
+ ----------------------------------------------------------------------------------*/
+
+#pragma mark -
+#pragma mark VMSongStatistics
+
+@implementation VMSongStatistics
+@synthesize secondsPlayed=secondsPlayed_,playedFrags=playedFrags_,numberOfAudioFragments=numberOfAudioFragments_;
+
+- (VMFloat)percentsPlayed {
+	if( numberOfAudioFragments_ == 0 )
+		[self countNumberOfAudioFrags];
+	return self.playedFrags.count / (VMFloat)numberOfAudioFragments_ * 100.;
+}
+
+- (void)addAudioFrag:(VMAudioFragment*)frag {
+	[self.playedFrags add:1. ontoItem:frag.id];
+	self.secondsPlayed += frag.duration;
+}
+
+- (void)reset {
+	self.playedFrags = ARInstance(VMHash);
+	self.secondsPlayed = 0;
+}
+
+- (void)countNumberOfAudioFrags {
+	self.numberOfAudioFragments = 0;
+	
+	//	count number of audio frags.
+	VMArray *fragIds = [DEFAULTSONG.songData keys];
+	for (VMId *fragId in fragIds) {
+		VMData *d = [DEFAULTSONG.songData item:fragId];
+		if ( d.type == vmObjectType_audioFragment )
+			++numberOfAudioFragments_;
+	}
+}
+
+- (id)init {
+	self = [super init];
+	if(!self)return nil;
+	
+	[self reset];
+	return self;
+}
+
+- (void)dealloc {
+	self.playedFrags = nil;
+	[super dealloc];
+}
+
+- (id)initWithCoder:(NSCoder *)aDecoder {
+	self = [super init];
+	if(!self)return nil;
+	
+	self.secondsPlayed = [aDecoder decodeDoubleForKey:@"secondsPlayed" ];
+	self.playedFrags = [aDecoder decodeObjectForKey:@"playedFrags" ];
+	return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)aCoder {
+	[aCoder encodeDouble:self.secondsPlayed forKey:@"secondsPlayed"];
+	[aCoder encodeObject:self.playedFrags forKey:@"playedFrags"];
+}
+
+@end
+
+
+
+/*---------------------------------------------------------------------------------
  *
  *
  *	Variable Media Song
@@ -25,7 +96,7 @@
 @implementation VMSong
 @synthesize songName=songName_, audioFileExtension=audioFileExtension_;
 @synthesize audioFileDirectory=audioFileDirectory_, defaultFragmentId=defaultFragmentId_;
-@synthesize songData=songData_, history=history_;
+@synthesize songData=songData_, history=history_, songStatistics=songStatistics_;
 @synthesize player=player_;
 @synthesize showReport=showReport_;
 @synthesize vmsData=vmsData_, fileURL=fileURL_;
@@ -99,6 +170,7 @@ BOOL verbose = NO;
 - (void)reset {
 	self.player				= nil;
 	self.history			= ARInstance(VMArray);
+	[self.songStatistics reset];
 	
 	VMArray *dataIds = [self.songData keys];
 	for( VMId *dataId in dataIds ) {
@@ -106,6 +178,8 @@ BOOL verbose = NO;
 		if ( ClassMatch( d, VMLiveData )) [ClassCast( d, VMLiveData ) reset];
 		if ( ClassMatch( d, VMSelector )) [ClassCast( d, VMSelector ).liveData reset];
 	}
+	
+	NSLog(@"Reset Song (player,history,liveData,stats)");
 }
 
 
@@ -573,18 +647,18 @@ BOOL verbose = NO;
 
 //	NOTE:	should not called directly. use [VMSong defaultSong] instead (at least for now).
 //			for future expansion, consider creating multiple song instances.
+
 - (id)init {
     self = [super init];
     if (self) {
 		self.songData				= ARInstance(VMHash);
 		self.history				= ARInstance(VMArray);
 		self.showReport				= ARInstance(VMStack);
+		self.songStatistics			= ARInstance(VMSongStatistics);
 #if VMP_LOGGING
 		self.log				= AutoRelease([[VMLog alloc] initWithOwner:VMLogOwner_MediaPlayer managedObjectContext:nil] );
 #endif
-		if (!vmsong_singleton_static_) {
-			vmsong_singleton_static_ = self;
-		}
+		vmsong_singleton_static_ = self;
     }
     return self;
 }
@@ -605,6 +679,70 @@ BOOL verbose = NO;
 #endif
 	
     Dealloc( super );
+}
+
+//
+//	NSCoding
+//
+- (id)initWithCoder:(NSCoder *)aDecoder {
+	self = [super init];
+	if (self ) {
+		self = [self init];
+		float __unused dataVersion = [aDecoder decodeFloatForKey:@"dataVersion"];
+		self.songData = [aDecoder decodeObjectForKey:@"songData"];
+		self.history = [aDecoder decodeObjectForKey:@"history"];
+		self.defaultFragmentId = [aDecoder decodeObjectForKey:@"defaultFragmentId"];
+		self.songName = [aDecoder decodeObjectForKey:@"songName"];
+		self.audioFileDirectory = [aDecoder decodeObjectForKey:@"audioFileDirectory"];
+		self.audioFileExtension = [aDecoder decodeObjectForKey:@"audioFileExtension"];
+		self.songStatistics = [aDecoder decodeObjectForKey:@"songStatistics"];
+		DEFAULTEVALUATOR.variables = [aDecoder decodeObjectForKey:@"variables"];
+		NSLog(@"Variables: %@",DEFAULTEVALUATOR.variables);
+
+	}
+	return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)aCoder {
+	[aCoder encodeFloat:1.0 forKey:@"dataVersion"];
+	[aCoder encodeObject:self.songData forKey:@"songData"];
+	[aCoder encodeObject:self.history forKey:@"history"];
+	[aCoder encodeObject:self.defaultFragmentId forKey:@"defaultFragmentId"];
+	[aCoder encodeObject:self.songName forKey:@"songName"];
+	[aCoder encodeObject:self.audioFileDirectory forKey:@"audioFileDirectory"];
+	[aCoder encodeObject:self.audioFileExtension forKey:@"audioFileExtension"];
+	[aCoder encodeObject:self.songStatistics forKey:@"songStatistics"];
+	
+	[aCoder encodeObject:DEFAULTEVALUATOR.variables forKey:@"variables"];
+}
+
+//
+//	save and load
+//
+- (BOOL)saveToFile:(NSURL*)url {
+	NSMutableData* data = [NSMutableData data];
+	NSKeyedArchiver *encoder = [[NSKeyedArchiver alloc] initForWritingWithMutableData:data];
+	[self encodeWithCoder:encoder];
+	[encoder finishEncoding];
+	[encoder release];
+	return [data writeToURL:url atomically:YES];
+}
+
+- (void)doEncodeAsynchronously {
+	
+}
+
++ (VMSong*)songWithDataFromUrl:(NSURL*)url {
+	NSMutableData* data = [NSMutableData dataWithContentsOfURL:url];
+	if (data.length == 0) return nil;
+	
+	NSKeyedUnarchiver *decoder = [[NSKeyedUnarchiver alloc] initForReadingWithData:data];
+	VMSong *song = [[VMSong alloc] initWithCoder:decoder];
+	DEFAULTPREPROCESSOR.song = song;
+	[DEFAULTPREPROCESSOR setAudioInfoRefForAllAudioFragments];	//update link.
+	[decoder release];
+	song.fileURL = url;
+	return AutoRelease(song);
 }
 
 -(void)setByHash:(VMHash *)hash {

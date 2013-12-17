@@ -1437,13 +1437,17 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 //----- object optimization phase (4) ------------------------------------------
 
 - (void)preprocessPhase4 {
-	
+	[self setAudioInfoRefForAllAudioFragments];
+}
+
+//	(4.30)	set audioInfoRef in audioFragment-s
+- (void)setAudioInfoRefForAllAudioFragments {
+	NSLog(@"setAudioInfoRefForAllAudioFragments song:%p", song_);
 	VMArray *keys = [song_.songData keys];
 	for ( VMId *did in keys ) {
 		if ( did.length > 3 && [[did substringToIndex:4] isEqualToString: @"VMP|"] ) continue;	//	no VMData
 		VMData *c = [self data:did];
 		
-		//	(4.30)	set audioInfoRef in audioFragment-s
 		if ( c.type == vmObjectType_audioFragment ) {
 			[self setAudioInfoRefInAudioFragments:ClassCast(c, VMAudioFragment)];
 		}

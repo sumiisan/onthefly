@@ -410,7 +410,7 @@ static 	VMHash *bgColorForType_static_ = nil;
 	
     NSViewAnimation *anim = [[NSViewAnimation alloc]
                              initWithViewAnimations:[NSArray arrayWithObject:dict]];
-	anim.animationBlockingMode = NSAnimationNonblockingThreaded;	//	test ss131123
+	//anim.animationBlockingMode = NSAnimationNonblockingThreaded;	//	test ss131123
     [anim setDuration:duration];
 	_animating = YES;
     [anim startAnimation];

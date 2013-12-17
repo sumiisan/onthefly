@@ -216,12 +216,17 @@ darkBackgroundMenuItem=darkBackgroundMenuItem_, backgroundImage=backgroundImage_
 
 - (IBAction)reset:(id)sender {
 	DEFAULTEVALUATOR.timeManager.shutdownTime = nil;
-    [DEFAULTSONGPLAYER reset];
+	[DEFAULTSONGPLAYER stopAndDisposeQueue];
+	[DEFAULTSONG reset];
+	[DEFAULTEVALUATOR reset];
+	[self deleteUserSavedSong];
+	[self loadSongFromVMS];
 	[[NSNotificationCenter defaultCenter] postNotificationName:PLAYERSTARTED_NOTIFICATION object:self];
+    [DEFAULTSONGPLAYER reset];
 }
 
 - (IBAction)resetSong:(id)sender {
-	[DEFAULTSONGPLAYER reset];
+	[self reset:sender];
 }
 
 - (IBAction)dimmPlayer:(id)sender {

@@ -168,20 +168,20 @@
 #pragma mark VMPSongPlayer
 
 @implementation VMPSongPlayer
+	
+	@synthesize trackView=trackView_;
+	@synthesize engineIsWarm=engineIsWarm_;
+	@synthesize dimmed=dimmed_, mainFader=mainFader_, dimmer=dimmer_;
+	@synthesize song=song_;
+	@synthesize playTimeAccumulator=playTimeAccumulator_;
+	@synthesize simulateIOSAppBackgroundState=simulateIOSAppBackgroundState_;
+	@synthesize nextCueTime=nextCueTime_;
 
-@synthesize trackView=trackView_;
-@synthesize engineIsWarm=engineIsWarm_;
-@synthesize dimmed=dimmed_, mainFader=mainFader_, dimmer=dimmer_;
-@synthesize song=song_;
-@synthesize playTimeAccumulator=playTimeAccumulator_;
-@synthesize simulateIOSAppBackgroundState=simulateIOSAppBackgroundState_;
-@synthesize nextCueTime=nextCueTime_;
-
-static const VMFloat	secondsPreroll			= 0.3;
-static const VMFloat	secondsPreparePlayer	= 3.;
-static const VMFloat	secondsLookAhead		= secondsPreparePlayer + 0.5;
-static const VMFloat	secondsAutoFadeOut		= 0.5;
-static VMPSongPlayer 	*songPlayer_singleton_static_ = nil;
+	static const VMFloat	secondsPreroll			= 0.3;
+	static const VMFloat	secondsPreparePlayer	= 3.;
+	static const VMFloat	secondsLookAhead		= secondsPreparePlayer + 7.;//	0.5;	changed ss131215
+	static const VMFloat	secondsAutoFadeOut		= 0.5;
+	static VMPSongPlayer 	*songPlayer_singleton_static_ = nil;
 
 
 - (void)watchNextCueTimeForDebug {
@@ -390,7 +390,7 @@ static VMPSongPlayer 	*songPlayer_singleton_static_ = nil;
 -(void)setFragmentIntoAudioPlayer:(VMPQueuedFragment*)frag {
 	VMPAudioPlayer *player = [self seekFreePlayer];
 	if ( ! player ) {
-		NSLog( @"No Free player!" );
+		NSLog( @"No Free player! at %.2f", self.currentTime );
 		[self performSelector:@selector(setFragmentIntoAudioPlayer:) withObject:frag afterDelay:1.];
 		return;
 	}
@@ -458,7 +458,8 @@ static VMPSongPlayer 	*songPlayer_singleton_static_ = nil;
 	[player setVolume:[self currentVolume]];
 	[player play];
 	
-	LLog(@"Fired:%@",af.id);
+	[DEFAULTSONG.songStatistics addAudioFrag:af];			//	runtime statistics.
+	LLog(@"(%.1f):%@",self.currentTime, af.id);
 	
 	af.firedTimestamp = [NSDate timeIntervalSinceReferenceDate];
 	[self.playTimeAccumulator addAudioFragment:af];
@@ -490,6 +491,8 @@ static VMPSongPlayer 	*songPlayer_singleton_static_ = nil;
 	VMAudioFragment *nextAudioFragment = [song_ nextAudioFragment];
 	
 	if ( nextAudioFragment && (! [nextAudioFragment.fileId isEqualToString: @"*"] )) {
+	//	NSLog(@"Queue Audio Frag : %@ %p", nextAudioFragment.id, nextAudioFragment );
+		
 		if ( time < self.currentTime ) time = self.currentTime + secondsPreroll;
 		VMPQueuedFragment *qc = [self queue:nextAudioFragment at:time];
 		self.nextCueTime = time + ( qc ? LengthOfVMTimeRange( qc->cuePoints) : 0 );
@@ -668,7 +671,7 @@ static VMPSongPlayer 	*songPlayer_singleton_static_ = nil;
 -(void)stop {
     self.mainFader->fadeStartPoint = 0;
 	self.dimmer->fadeStartPoint = 0;
-	//fragQueue clear];
+
 	[self flushFiredFragments];
 	[self pause];
     [self stopAllPlayers];
@@ -676,13 +679,14 @@ static VMPSongPlayer 	*songPlayer_singleton_static_ = nil;
 
 - (void)stopAndDisposeQueue {
 	[self stop];
-	[fragQueue clear];
+	if( fragQueue.count > 0 ) {
+		[fragQueue clear];
+		NSLog(@"empty audio queue.");
+	}
 }
 
 -(void)reset {
-	[self stopAllPlayers];
-	[DEFAULTSONG reset];
-	[DEFAULTEVALUATOR reset];
+	[self stopAndDisposeQueue];
 	[self.playTimeAccumulator clear];
     [self setFragmentId:song_.defaultFragmentId fadeOut:NO restartAfterFadeOut:YES];
 }

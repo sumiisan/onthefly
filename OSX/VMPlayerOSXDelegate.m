@@ -16,6 +16,7 @@
 #import "VMPUserDefaults.h"
 #import "VMException.h"
 #import "VMPCodeEditorView.h"
+#import "VMScoreEvaluator.h"
 #import "VMPMacros.h"
 #if TEST
 #import "VMPTest.h"
@@ -61,6 +62,7 @@ NSDictionary		*windowNames_static_ = nil;
 	if ( urlString )
 		self.currentDocumentURL = AutoRelease([[NSURL alloc] initFileURLWithPath:urlString] );
 	
+	[self.editorWindowController.window setAllowsConcurrentViewDrawing:NO];		//test 131126
 	return self;
 }
 
@@ -145,6 +147,13 @@ NSDictionary		*windowNames_static_ = nil;
 }
 
 - (IBAction)songReset:(id)sender {
+//	DEFAULTEVALUATOR.timeManager.shutdownTime = nil;
+	[DEFAULTSONGPLAYER stopAndDisposeQueue];
+	[DEFAULTSONG reset];
+	[DEFAULTEVALUATOR reset];
+//	[self deleteUserSavedSong];
+//	[self loadSongFromVMS];
+//	[[NSNotificationCenter defaultCenter] postNotificationName:PLAYERSTARTED_NOTIFICATION object:self];
     [DEFAULTSONGPLAYER reset];
 }
 

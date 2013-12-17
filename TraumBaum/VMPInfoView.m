@@ -11,13 +11,16 @@
 #import "VMPSongPlayer.h"
 #import "VMAppDelegate.h"
 #import "VMPScrollViewClipper.h"
+#import "VMViewController.h"
+#import "VMPFrontView.h"
 //#import "KTOneFingerRotationGestureRecognizer-master/KTOneFingerRotationGestureRecognizer.h"
-#import "VMPRainyView.h"
+//#import "VMPRainyView.h"
+#import "VMPMultiLanguage.h"
 
 @implementation VMPInfoView
 
-static const int kNumberOfSkins = 4;
-
+//static const int kNumberOfSkins = 4;
+#define DROPBOX_MESSAGE_URL @"https://dl.dropboxusercontent.com/u/147605/tbmessage.txt"
 
 #define ARImageView(fileName) [[[UIImageView alloc] initWithImage:[UIImage imageNamed:fileName]] autorelease]
 
@@ -76,10 +79,21 @@ static const int kNumberOfSkins = 4;
 			//	reset song
 			//
 		case 101:
-		case 'rset':
-			[[VMAppDelegate defaultAppDelegate] reset];
-			break;
+		case 'rset': {
+			closeDialog = NO;
+
+			UIAlertView *av = [[UIAlertView alloc] initWithTitle:[VMPMultiLanguage confirmTitle]
+														 message:[VMPMultiLanguage reallyRestartMessage]
+														delegate:self
+											   cancelButtonTitle:[VMPMultiLanguage noString]
+											   otherButtonTitles:[VMPMultiLanguage yesString], nil];
 			
+			[av show];
+			[av release];
+			
+	//		[[VMAppDelegate defaultAppDelegate] reset];
+			break;
+		}
 			//
 			//	background play
 			//
@@ -117,155 +131,198 @@ static const int kNumberOfSkins = 4;
 	}
 	
 	if (closeDialog) {
-		[DEFAULTSONGPLAYER setDimmed:NO];
-//		[self dismissModalViewControllerAnimated:YES];
-		[self hideView];
+		[self closeView];
 	}
 	
 }
 
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+	if( buttonIndex == 1) {
+		self.statisticsLabel.text = @"";
+		[self closeView];
+		[[VMAppDelegate defaultAppDelegate] reset];
+	}
+}
+
 - (void)showView {
 	self.alpha = 0;
+	
+	[self retrieveMessageFile];
+	
 	self.backgroundPlaySwitch.on = [[NSUserDefaults standardUserDefaults] boolForKey:@"doesPlayInBackground"];
-	self.backgroundColor = [UIColor colorWithWhite:1. alpha:0.7];
+	self.backgroundColor = [UIColor clearColor];
 	
+//	CGRect screenRect = [UIScreen mainScreen].bounds;
+//	CGFloat vOffset = ( screenRect.size.height - self.frame.size.height ) * 0.5;
 	
+	self.frame = [UIScreen mainScreen].bounds;
+	NSLog(@"frame:%@",NSStringFromCGRect(self.frame));
 	
-	CGRect screenRect = [UIScreen mainScreen].bounds;
-	CGFloat vOffset = ( screenRect.size.height - self.frame.size.height ) * 0.5;
+	UIView		*bgSwitchBG		= [self viewWithTag:109];
+	UIView		*titlePane		= [self viewWithTag:110];
+	UIView		*controlPane	= [self viewWithTag:111];
+	UILabel		*infoField		= (UILabel*)[self viewWithTag:112];
+	UIButton	*resetButton	= (UIButton*)[self viewWithTag:101];
+	UIButton	*backButton		= (UIButton*)[self viewWithTag:104];
 	
-	self.frame = CGRectMake(0, vOffset, self.frame.size.width, self.frame.size.height );
-	NSLog(@"%@", NSStringFromCGRect(self.frame));
+	//	adjust titlePane postiion
+//	titlePane.center = [VMAppDelegate defaultAppDelegate].viewController.frontView.holeCenter;
+	CGPoint center = [VMAppDelegate defaultAppDelegate].viewController.frontView.holeCenter;
+	titlePane.frame = CGRectMake(0,center.y-110,320,220);
+	controlPane.frame = CGRectMake(0, self.bounds.size.height-controlPane.frame.size.height,
+								   320, controlPane.frame.size.height);
+	
+	CAGradientLayer *g0 = [CAGradientLayer layer];
+	g0.frame = self.frame;
+	g0.colors = [NSArray arrayWithObjects:
+				 (id)[UIColor colorWithWhite:.87 alpha:.7].CGColor,
+				 (id)[UIColor colorWithWhite:.87 alpha:.6].CGColor,
+				 (id)[UIColor colorWithWhite:.87 alpha:.5].CGColor,
+				 (id)[UIColor colorWithWhite:.87 alpha:.4].CGColor,
+				 nil];
+	g0.locations = @[ @0.0, @0.1, @0.9, @1.0 ];
+	
+	[self.layer insertSublayer:g0 atIndex:0];
+	
+	CAGradientLayer *g1 = [CAGradientLayer layer];
+	g1.frame = CGRectMake( 0, -40, 320, titlePane.bounds.size.height + 80 );
+	g1.colors = [NSArray arrayWithObjects:
+				 (id)[UIColor colorWithWhite:.99 alpha:.0].CGColor,
+				 (id)[UIColor colorWithWhite:.99 alpha:.5].CGColor,
+				 (id)[UIColor colorWithWhite:.99 alpha:.6].CGColor,
+				 (id)[UIColor colorWithWhite:.99 alpha:.6].CGColor,
+				 (id)[UIColor colorWithWhite:.99 alpha:.5].CGColor,
+				 (id)[UIColor colorWithWhite:.99 alpha:.0].CGColor,
+				 nil];
+	g1.locations = @[ @0.0, @0.1, @0.2, @0.8, @0.9, @1.0 ];
+	
+//	[titlePane.layer insertSublayer:g1 atIndex:0];
+	
+	NSArray *ar = [NSArray arrayWithObjects:
+				   (id)[UIColor colorWithWhite:.70 alpha:.1].CGColor,
+				   (id)[UIColor colorWithWhite:.99 alpha:.3].CGColor,
+				   (id)[UIColor colorWithWhite:.99 alpha:.6].CGColor,
+				   (id)[UIColor colorWithWhite:.99 alpha:.6].CGColor,
+				   (id)[UIColor colorWithWhite:.99 alpha:.3].CGColor,
+				   (id)[UIColor colorWithWhite:.70 alpha:.1].CGColor,
+				   nil];
+	NSArray *lc = @[ @0.0, @0.03, @0.06, @0.94, @0.97, @1.0 ];
+	
+	CAGradientLayer *g2 = [CAGradientLayer layer];
+	CAGradientLayer *g3 = [CAGradientLayer layer];
+	CAGradientLayer *g4 = [CAGradientLayer layer];
+	CAGradientLayer *g5 = [CAGradientLayer layer];
+	g2.frame = bgSwitchBG.bounds;
+	g3.frame = resetButton.bounds;
+	g4.frame = backButton.bounds;
+	g5.frame = infoField.bounds;
+	g2.colors = ar;
+	g3.colors = ar;
+	g4.colors = ar;
+	g5.colors = ar;
+	g2.locations = lc;
+	g3.locations = lc;
+	g4.locations = lc;
+	g5.locations = lc;
+
+	[bgSwitchBG.layer insertSublayer:g2 atIndex:0];
+	[resetButton.layer insertSublayer:g3 atIndex:0];
+	[backButton.layer insertSublayer:g4 atIndex:0];
+	[infoField.layer insertSublayer:g5 atIndex:0];
+	infoField.hidden = YES;
+	
+//	self.frame = CGRectMake(0, vOffset, self.frame.size.width, self.frame.size.height );
+//	NSLog(@"%@", NSStringFromCGRect(self.frame));
 	[UIView beginAnimations:nil context:nil];
 	[UIView setAnimationDuration:1.];
 	self.alpha = 1;
 	[UIView commitAnimations];
 	[DEFAULTSONGPLAYER setDimmed:YES];
-
+	[self updateStats:nil];
 }
 
-- (void)hideView {
-	[UIView beginAnimations:nil context:nil];
-	[UIView setAnimationDuration:1.];
-	self.alpha = 0.;
-	[UIView commitAnimations];
-	[self performSelector:@selector(dismissView) withObject:nil afterDelay:1.1];
+- (void)retrieveMessageFile {
+	NSURLRequest *req = [NSURLRequest requestWithURL:
+						 [NSURL URLWithString:DROPBOX_MESSAGE_URL]
+						 ];
+	NSURLConnection *conn = [NSURLConnection connectionWithRequest:req delegate:self];
+	if( !conn )
+		NSLog(@"failed to connect dropbox");
+	
 }
 
-- (void)dismissView {
-	[self removeFromSuperview];
+- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
+	NSString *wholeText = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+	NSString *dismissed = [[NSUserDefaults standardUserDefaults] stringForKey:@"dismissedMessage"];
+	NSArray *lines = [wholeText componentsSeparatedByString:@"\n"];
+	NSString *preferredLanguage = [VMPMultiLanguage language];
+	NSString *message = nil;
+	for( NSString *line in lines) {
+		NSArray *c = [line componentsSeparatedByString:@"|"];
+		if ( [c[0] isEqualToString:preferredLanguage])  {
+			message = c[1];
+			break;
+		}
+	}
+	
+	UILabel	*infoField = (UILabel*)[self viewWithTag:112];
+	infoField.text = message;
+	if ( message.length > 0 && ! [message isEqualToString:dismissed] ) {
+		infoField.hidden = NO;
+	} else {
+		infoField.hidden = YES;
+	}
+}
+
+- (void)updateStats:(id)sender {
+	VMInt minutes = DEFAULTSONG.songStatistics.secondsPlayed / 60;
+	VMFloat percent = DEFAULTSONG.songStatistics.percentsPlayed;
+	
+	
+	if( minutes > 1440 ) {
+		self.statisticsLabel.text = [NSString stringWithFormat:@"%ld %02ld:%02ld / %.1f%%",
+									 minutes / 1440,
+									 ( minutes / 60 ) % 24,
+									 minutes % 60,
+									 percent ];
+	} else {
+		self.statisticsLabel.text = [NSString stringWithFormat:@"%2ld:%02ld / %.1f%%",
+									 ( minutes / 60 ) % 24,
+									 minutes % 60,
+									 percent ];
+	}
+	[self performSelector:@selector(updateStats:) withObject:nil afterDelay:3.];
+}
+
+- (void)closeView {
+	[DEFAULTSONGPLAYER setDimmed:NO];
+	[UIView animateWithDuration:1.0f
+					 animations:^(){
+						 self.alpha = 0.;
+					 }
+					 completion:^(BOOL finished){
+						 if( finished ) [self removeFromSuperview];
+					 }];
+	
+	
+	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(updateStats:) object:nil];
 }
 
 - (id)init {
     self = [super init];
     if (self) {
-		
-#if 0
-	
-		//	no fancy button bg's for now.
-		
-		
-		CGFloat vOffs = ( Is4InchIPhone ? 88 : 0 );
-		for (int i = 0; i < 4; ++i ) {
-			VMPRainyView *db = AutoRelease([[VMPRainyView alloc] initWithFrame:CGRectMake(0, 210 + i*50 + vOffs, 320, 45)]);
-			db.alpha = 0.5;
-			[self.view addSubview:db];
-			[self.view sendSubviewToBack:db];
-		}
-#endif
-		
-		
-		
-		
-		//self.view.frame = CGRectMake(0, vOffs, 320, 480);
-				
-		
-#if 0
-		/*
-		
-		
-		depreciated due to support iOS7 ready interface.
-		we use a nib instead.
-		
-		
-		*/
-		//	bg
-		UIImageView *bg = ARImageView(@"iPhone-UI/info_phone.jpg");
-		bg.frame = CGRectMake( 0, -25 + vOffs, 320, 568 );
-		[self.view addSubview:bg];
-		
-		//	place buttons;
-		[self newButtonAt:CGPointMake(  70, 178 + vOffs ) type:@"long" tag:'_web'];
-		[self newButtonAt:CGPointMake(  70, 223 + vOffs ) type:@"long" tag:'rset'];
-		[self newButtonAt:CGPointMake(  70, 268 + vOffs ) type:@"long" tag:'plyb'];
-		
-
-		[self newButtonAt:CGPointMake( 142, 427 + vOffs ) type:@"round" tag:'rtrn'];
-		
-		//
-
-		UIImageView *check = ARImageView(@"iPhone-UI/check.png");
-		check.frame = CGRectMake( 40, 272 + vOffs, 20, 20 );
-		check.tag = 'chck';
-		BOOL bgplay =  [[NSUserDefaults standardUserDefaults] boolForKey:@"doesPlayInBackground"];
-		check.hidden = ! bgplay;
-		((UIButton*)[self.view viewWithTag:'plyb']).selected = bgplay;
-		[self.view addSubview:check];
-		
-		int currentSkinIndex = [[NSUserDefaults standardUserDefaults] integerForKey:@"skinIndex"];
-		if ( currentSkinIndex < 0 || currentSkinIndex >= kNumberOfSkins ) currentSkinIndex = 0;	//	insurance
-
-		
-		UIScrollView *sv = [[[UIScrollView alloc] initWithFrame:CGRectMake(0, 0/*335*/, 320, 79)] autorelease];
-		sv.tag = 'scrl';
-		
-		VMPScrollViewClipper *svc = [[[VMPScrollViewClipper alloc] initWithFrame:CGRectMake( 0, 335, 320, 79 )] autorelease];
-		[svc addSubview:sv];
-		svc.scrollView = sv;
-		
-		[self.view addSubview:svc];
-		
-		sv.scrollEnabled = YES;
-		sv.pagingEnabled = YES;
-		sv.clipsToBounds = NO;
-		sv.contentSize = CGSizeMake( kNumberOfSkins * 140, 79);
-		sv.bounds = CGRectMake(0, 0, 140, 79);
-		sv.showsVerticalScrollIndicator = sv.showsHorizontalScrollIndicator = NO;
-		sv.delegate = self;
-		sv.contentOffset = CGPointMake( currentSkinIndex * 140, 0 );
-		
-		for( int skin =0; skin < kNumberOfSkins; ++skin ) {
-			NSString *skinImageName = [NSString stringWithFormat:@"iPhone-UI/preview_skin%d.png", skin];
-			UIImageView *skimg = ARImageView( skinImageName );
-			UIImageView *frimg = ARImageView( @"iPhone-UI/square_button_up.png" );
-			skimg.tag = 'skn0' + skin;
-			frimg.tag = 'frm0' + skin;
-			skimg.frame = CGRectMake(skin * 140 +8, 3, 124, 72 );
-			frimg.frame = CGRectMake(skin * 140 +5, 0, 130, 79 );
-			skimg.alpha = skin == currentSkinIndex ? 1 : 0.35;
-			[sv addSubview:skimg];
-			[sv addSubview:frimg];
-		}
-		
-		UIImageView *centerFrame = ARImageView( @"iPhone-UI/square_button_dn.png");
-		centerFrame.frame = CGRectMake( 95, 335, 130, 78.5 );
-		[self.view addSubview:centerFrame];
-		
-#endif
-		
-		
-				
-	//	[DEFAULTSONGPLAYER setDimmed:YES];
-		/*
-		KTOneFingerRotationGestureRecognizer *ofrgr = [[KTOneFingerRotationGestureRecognizer alloc] initWithTarget:self action:@selector(rotating:)];
-		[self.view addGestureRecognizer:ofrgr];
-		Release(ofrgr);	*/
-		[self attachGestureRecognizer];
+		[self initViewAndRecognizer];
     }
     return self;
 }
 
-- (void)attachGestureRecognizer {
+- (void)initViewAndRecognizer {
+/*	[[NSNotificationCenter defaultCenter] addObserver:self
+											 selector:@selector(tweetFetched:)
+												 name:TWITTERTIMELINEFETCHED_NOTIFICATION
+											   object:nil];
+*/
+	
 	UITapGestureRecognizer *tgr = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(toggleTrackView:)];
 	tgr.numberOfTouchesRequired =
 #if TARGET_IPHONE_SIMULATOR
@@ -277,7 +334,13 @@ static const int kNumberOfSkins = 4;
 	[self addGestureRecognizer:tgr];
 	Release(tgr);
 }
-
+/*
+- (void)tweetFetched:(NSNotification*)notification {
+	NSDictionary *tl = notification.userInfo;
+	UILabel		*infoField		= (UILabel*)[self viewWithTag:112];
+	infoField.text = tl.description;
+}
+*/
 /*
 - (void)rotating:(KTOneFingerRotationGestureRecognizer *)recognizer {
 	double angle = recognizer.rotation;
@@ -286,12 +349,10 @@ static const int kNumberOfSkins = 4;
 
 - (void)willMoveToSuperview:(UIView *)newSuperview {
 
-//- (void)viewWillAppear:(BOOL)animated {
 	self.backgroundPlaySwitch.on = [[NSUserDefaults standardUserDefaults] boolForKey:@"doesPlayInBackground"];
 	self.backgroundColor = [UIColor colorWithWhite:1. alpha:0.6];
 //	self.darkBGSwitch.on         = [[NSUserDefaults standardUserDefaults] boolForKey:@"darkBgEnabled"];
 	
-//	[super viewWillAppear:animated];
 	[super willMoveToSuperview:newSuperview];
 }
 
@@ -312,23 +373,24 @@ static const int kNumberOfSkins = 4;
 	tv.tag = 'trkV';
 	[self addSubview:tv];
 	[DEFAULTSONGPLAYER setDimmed:NO];
-
 	DEFAULTSONGPLAYER.trackView = tv;
 }
 
 - (void)dealloc {
 //	VMNullify(scrollContentView);
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	[super dealloc];
 }
+
 
 //	delegate
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
 //	int centerSkin = ( scrollView.contentOffset.x +70 ) / 140;
-	for( int skin = 0; skin < kNumberOfSkins; ++skin ) {
+/*	for( int skin = 0; skin < kNumberOfSkins; ++skin ) {
 		UIImageView *skinView = (UIImageView*)[self viewWithTag:'skn0'+skin];
 		double dist = fabs( skinView.frame.origin.x - scrollView.contentOffset.x );
 		skinView.alpha = dist > 200 ? 0. : 1 - dist * 0.005;
-	}
+	}*/
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
@@ -339,7 +401,7 @@ static const int kNumberOfSkins = 4;
 - (id)initWithFrame:(CGRect)frame {
 	self = [super initWithFrame:frame];
 	if ( self ) {
-		[self attachGestureRecognizer];
+		[self initViewAndRecognizer];
 	}
 	return self;
 }

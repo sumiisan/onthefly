@@ -119,17 +119,11 @@ static VMAppDelegate *appDelegate_singleton_;
 	appDelegate_singleton_ = self;
 	
 	//  open document
-    NSError 	*outError = nil;//AutoRelease([[NSError alloc] init]);
-	NSString 	*resourcePath = [[NSBundle bundleForClass: [self class]] resourcePath];
-    NSURL 		*songURL = [[NSURL alloc] initFileURLWithPath:[NSString stringWithFormat:@"%@/%@/%@",
-															   resourcePath,kDefaultVMDirectory,kDefaultVMSFileName]
-											  isDirectory:NO];
 	
-	[self openVMSDocumentFromURL:songURL error:&outError];
-    
-    DEFAULTSONGPLAYER.song = self.song;		//	unsafe_unretained.
+	if( ! [self loadUserSavedSong] ) {		//	load saved song if possible
+		[self loadSongFromVMS];
+    }
 	
-    Release(songURL);
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(endOfSequence:) name:ENDOFSEQUENCE_NOTIFICATION object:nil];
 	
 	
@@ -137,11 +131,50 @@ static VMAppDelegate *appDelegate_singleton_;
 	return self;
 }
 
-- (BOOL)openVMSDocumentFromURL:(NSURL *)documentURL error:(NSError**)error {
-	self.song = AutoRelease( [[VMSong alloc] init] );
-	return [self.song readFromURL:documentURL error:error];	
+- (BOOL)loadSongFromVMS {
+    NSError 	*outError = nil;
+	NSString 	*resourcePath = [[NSBundle bundleForClass: [self class]] resourcePath];
+    NSURL 		*songURL = [[[NSURL alloc] initFileURLWithPath:[NSString stringWithFormat:@"%@/%@/%@",
+															   resourcePath,kDefaultVMDirectory,kDefaultVMSFileName]
+											   isDirectory:NO] autorelease];
+	return [self openVMSDocumentFromURL:songURL error:&outError];
 }
 
+- (NSURL *)userSaveDataUrl {
+    NSArray *searchPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentPath = [searchPaths lastObject];
+    return [NSURL fileURLWithPath:[documentPath stringByAppendingPathComponent:@"usersave.data"]];
+}
+
+- (BOOL)loadUserSavedSong {
+	self.song = [VMSong songWithDataFromUrl:[self userSaveDataUrl]];
+	if( self.song ) {
+		DEFAULTSONGPLAYER.song = self.song;		//	unsafe_unretained.
+		NSLog(@"**** load saved song");
+	}
+	return (self.song != nil);
+}
+
+- (BOOL)deleteUserSavedSong {
+	NSError *error = nil;
+	[[NSFileManager defaultManager] removeItemAtURL:[self userSaveDataUrl] error:&error];
+	return error != nil;
+}
+
+- (BOOL)saveSong {
+	[self.song performSelectorInBackground:@selector(saveToFile:) withObject:[self userSaveDataUrl]];
+	NSLog(@"**** song saved");
+	return YES;
+}
+
+- (BOOL)openVMSDocumentFromURL:(NSURL *)documentURL error:(NSError**)error {
+	self.song = AutoRelease( [[VMSong alloc] init] );
+	DEFAULTSONGPLAYER.song = self.song;		//	unsafe_unretained.
+	NSLog(@"**** new song from VMS" );
+	BOOL success = [self.song readFromURL:documentURL error:error];
+	[DEFAULTSONGPLAYER stopAndDisposeQueue];
+	return success;
+}
 
 - (void)dealloc {
 	[DEFAULTSONGPLAYER coolDown];
@@ -150,7 +183,6 @@ static VMAppDelegate *appDelegate_singleton_;
 	appDelegate_singleton_ = nil;
     Dealloc( super );
 }
-
 
 - (void)savePlayerState {
 	NSData *playerData = [NSKeyedArchiver archivedDataWithRootObject:DEFAULTSONG.player];
@@ -168,6 +200,7 @@ static VMAppDelegate *appDelegate_singleton_;
 	NSLog(@"*pause");
 	[self savePlayerState];
 	[DEFAULTSONGPLAYER fadeoutAndStop:3.];
+	[self saveSong];
 }
 
 - (void)resume {
@@ -175,10 +208,18 @@ static VMAppDelegate *appDelegate_singleton_;
 	[self startup];
 }
 
+//
+//	reset button was touched.
+//
 - (void)reset {
 	DEFAULTEVALUATOR.timeManager.shutdownTime = nil;
-    [DEFAULTSONGPLAYER reset];
+	[DEFAULTSONGPLAYER stopAndDisposeQueue];
+	[DEFAULTSONG reset];
+	[DEFAULTEVALUATOR reset];	
+	[self deleteUserSavedSong];
+	[self loadSongFromVMS];
 	[[NSNotificationCenter defaultCenter] postNotificationName:PLAYERSTARTED_NOTIFICATION object:self];
+    [DEFAULTSONGPLAYER reset];
 }
 
 
@@ -191,7 +232,6 @@ static VMAppDelegate *appDelegate_singleton_;
 
 - (void)startup {	//	wait for warm up
 	VMPSongPlayer *songplayer = DEFAULTSONGPLAYER;
-	
 	
 	if ( ! songplayer.isWarmedUp ) {
 		[self performSelector:@selector(startup) withObject:nil afterDelay:0.1];
@@ -301,6 +341,11 @@ static VMAppDelegate *appDelegate_singleton_;
     // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
 	if ( ! self.isBackgroundPlaybackEnabled )
 		[DEFAULTSONGPLAYER setFadeFrom:-1 to:0 length:.1];	//	prevent garbage audio at next startup.	ss1311123
+	
+	if ( [self.viewController.view.subviews containsObject:self.viewController.infoView] ) {
+		[self.viewController.infoView closeView];
+	}
+
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application {
@@ -310,9 +355,11 @@ static VMAppDelegate *appDelegate_singleton_;
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
 	[self savePlayerState];
-/*	if ( self.isBackgroundPlaybackEnabled ) {
-		DEFAULTSONGPLAYER.dimmed = NO;	//
-	}*/
+	if ( !self.isBackgroundPlaybackEnabled || DEFAULTSONGPLAYER.isPaused ) {
+		[self saveSong];
+	}
+	[self.viewController.infoView removeFromSuperview];
+
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {
@@ -326,7 +373,6 @@ static VMAppDelegate *appDelegate_singleton_;
 		[DEFAULTSONGPLAYER setGlobalVolume:1.];	//	dummy call to make sure fader volume is set.
 		[self performSelector:@selector(startup) withObject:nil afterDelay:0.1];
 	}
-    // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
@@ -347,6 +393,7 @@ static VMAppDelegate *appDelegate_singleton_;
 		  "\n---------------------------------\n");
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 	[self savePlayerState];
+	[self saveSong];
 	NSLog(@"stop player");
 	[DEFAULTSONGPLAYER stop];
 	[DEFAULTSONGPLAYER coolDown];

@@ -33,7 +33,7 @@
 
 #if VMP_OSX
 @property (nonatomic, assign) NSInteger tag;		//	override
-#endif
 @property (nonatomic, VMStrong) VMPColor *backgroundColor;
+#endif
 
 @end

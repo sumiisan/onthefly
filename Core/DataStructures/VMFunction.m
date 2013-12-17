@@ -361,6 +361,7 @@ VMOBLIGATORY_setWithData
 
 VMObligatory_initWithCoder
 (
+ [self initProcessorTable];
  Deserialize(functionName, Object)
  Deserialize(parameter, Object)
  )

@@ -312,7 +312,7 @@ SEFunctionDefinition( TS ) {
 	} else {
 		ts = 1 - (( secondsRemain - secondsForFinalCall ) / secondsForPrepareTermination );
 	}
-	NSLog( @"@TS check from %@ = %.2f", [self.variables item:@"@T"], ts );
+	//NSLog( @"@TS check from %@ = %.2f", [self.variables item:@"@T"], ts );
 	return VMFloatObj( ts );
 }
 

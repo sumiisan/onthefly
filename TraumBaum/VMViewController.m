@@ -9,7 +9,6 @@
 #import "VMViewController.h"
 #import "VMPTrackView.h"
 #import "VMPSongPlayer.h"
-//#import "VMPIHole.h"
 #import "VMPInfoView.h"
 #import <AVFoundation/AVFoundation.h>
 #import "VMAppDelegate.h"
@@ -59,16 +58,13 @@
 //	[self setSkin: skinIndex];
 	
 	//	testing:
-	self.frontView = [[VMPFrontView alloc] initWithFrame:self.view.frame];
+	self.frontView = [[[VMPFrontView alloc]
+					   initWithFrame:CGRectMake(0,
+												0,
+												320,
+												self.view.bounds.size.height)
+					   ] autorelease];
 	[self.view addSubview:self.frontView];
-	
-	if ( ! self.infoView ) {
-		//	info view
-		self.infoView = [[[VMPInfoView alloc] initWithFrame:CGRectMake(0, 0, 320, 480)] autorelease];
-		
-		UIView *view = [[[NSBundle mainBundle] loadNibNamed:@"VMPInfoView" owner:self.infoView options:nil] objectAtIndex:0];
-		[self.infoView addSubview: view];
-	}
 	[self attachConfigButton];
 }
 
@@ -111,6 +107,12 @@
 
 
 - (void)configButtonTouched:(id)sender {
+	self.infoView = [[[VMPInfoView alloc] initWithFrame:CGRectMake(0, (self.view.bounds.size.height - 480)*0.5,
+																   320, 480)] autorelease];
+	
+	UIView *view = [[[NSBundle mainBundle] loadNibNamed:@"VMPInfoView" owner:self.infoView options:nil] objectAtIndex:0];
+	[self.infoView addSubview: view];
+
 	[self.view addSubview:self.infoView];
 	[(VMPInfoView*)self.infoView showView];
 }
@@ -122,6 +124,10 @@
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
+	if( ![self.view.subviews containsObject:self.infoView] )
+		self.infoView = nil;
+//	self.trackView = nil;
+
     // Dispose of any resources that can be recreated.
 }
 

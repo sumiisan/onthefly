@@ -53,10 +53,10 @@ VMId *tid __unused = ( arr.count > 2 )\
 }
 
 - (VMTime)location {
-	return [VMTimeRangeDescriptor secondsFromTimeDescriptor:self.locationDescriptor];
+	return [VMTimeRangeDescriptor secondsFromTimeDescriptor:locationDescriptor_];
 }
 - (VMTime)length {
-	return [VMTimeRangeDescriptor secondsFromTimeDescriptor:self.lengthDescriptor];
+	return [VMTimeRangeDescriptor secondsFromTimeDescriptor:lengthDescriptor_];
 }
 - (VMTime)start {
 	return self.location;
@@ -690,19 +690,22 @@ if ( ClassMatch(data, VMHash)) {
 }
 )
 
+#define ArcKeyNoFileId @"*NFID"
+
 VMObligatory_initWithCoder(
  Deserialize(cuePoints, Object )
  Deserialize(regionRange, Object )
  Deserialize(volume, Float)
  VMId *tempId=[decoder decodeObjectForKey:@"fileId"];
- if( tempId ) fileId_ = [tempId copy];
+ if( tempId && ![tempId isEqualToString:ArcKeyNoFileId] )
+	fileId_ = [tempId copy];
 )
 
 VMObligatory_encodeWithCoder(
  Serialize(cuePoints, Object )
  Serialize(regionRange, Object )
  Serialize(volume, Float)
- if( fileId_ ) [encoder encodeObject:fileId_ forKey:@"fileId"];
+[encoder encodeObject:fileId_ ? fileId_ : ArcKeyNoFileId forKey:@"fileId"];
 )
 
 
@@ -1080,6 +1083,7 @@ VMOBLIGATORY_setWithProto(
 
 VMObligatory_initWithCoder
 (
+ cachedScore_=NAN;
  Deserialize(targetId, Object)
  Deserialize(scoreDescriptor, Object)
  )
@@ -1346,7 +1350,7 @@ static VMHash *scoreForFragment_static_ = nil;
 /*	for ( id d in self.fragments ) {*/
 		if ( ClassMatch(d, VMString ))  {
 			
-#if VMP_OSX
+#if VMP_EDITOR
 			//	should be chance
 			[VMException raise:@"Type mismatch." format:@"Id found where chance expected. in %@",self.description];
 #endif
@@ -1454,7 +1458,6 @@ static VMHash *scoreForFragment_static_ = nil;
 //	NOTE:
 //	set scoreForFragments = nil to use cached score of latest evaluation.
 //
-
 
 - (VMFragment*)selectOneTemporaryUsingScores:(VMHash*)scoreForFragments sumOfScores:(VMFloat)sum {
 	if( [self.fragments count] <= 0 ) return nil;

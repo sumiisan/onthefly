@@ -93,5 +93,7 @@
 - (VMId*)completeId:(VMId*)dataId withParentId:(VMId*)parentId;
 - (VMId*)purifiedId:(VMId*)fragId;
 
+- (void)setAudioInfoRefForAllAudioFragments;
+
 @end
 

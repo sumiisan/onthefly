@@ -74,12 +74,13 @@ stemLength=stemLength_,refreshScreenCounter=refreshScreenCounter_,lastDayPhase=l
 
 - (void)setBackgroundColor:(VMPColor *)backgroundColor {
 	[super setBackgroundColor:backgroundColor];
+	if ( useCALayer ) return;
 	
 	CGFloat brightness;
 #if VMP_OSX
 	brightness = backgroundColor.brightnessComponent;
 #else
-	[backgroundColor getHue:nil saturation:nil brightness:&brightness alpha:nil];
+	brightness = [backgroundColor getHue:nil saturation:nil brightness:&brightness alpha:nil];
 #endif
 	
 	if ( brightness < 0.5 ) {
@@ -91,9 +92,15 @@ stemLength=stemLength_,refreshScreenCounter=refreshScreenCounter_,lastDayPhase=l
 
 - (void)initializeShapes {
 	if( useCALayer ) {
-		for ( int i = 0; i < numOfCircles; ++i ) {
-			VMPBezierPath *path = [VMPBezierPath bezierPathWithOvalInRect:VMPMakeRect(-standardRadius_, - standardRadius_,
-																					 standardRadius_*2, standardRadius_*2)];
+		for ( int i = 0; i < numOfCircles + 1; ++i ) {
+			VMPBezierPath *path;
+			if( i < numOfCircles )
+				path = [VMPBezierPath bezierPathWithOvalInRect:VMPMakeRect(-standardRadius_, - standardRadius_,
+																		   standardRadius_*2, standardRadius_*2)];
+			else
+				path = [VMPBezierPath bezierPathWithOvalInRect:VMPMakeRect(-standardRadius_*0.95, - standardRadius_*0.95,
+																		   standardRadius_*1.9, standardRadius_*1.9)];
+			
 			CAShapeLayer *circle = [CAShapeLayer layer];
 			circle.path = path.quartzPath;
 			[self.circles addObject:circle];
@@ -160,7 +167,8 @@ stemLength=stemLength_,refreshScreenCounter=refreshScreenCounter_,lastDayPhase=l
 #if CALayerCompositingFilterAvailable
 		useCALayer = NO;	//	no! because it was not efficient. drawing in drawRect() was faster!
 #else
-		useCALayer = ! [self hasEnoughCPUPowerForCPURendering];	//	use CALayer without compositing filter if the CPU power is low.
+		useCALayer = YES;	//	yes! because it is too slow anyway
+		//! [self hasEnoughCPUPowerForCPURendering];	//	use CALayer without compositing filter if the CPU power is low.
 #endif
 				
 		self.timeIndicator = [[[VMPLabel alloc] initWithFrame:VMPRectZero] autorelease];
@@ -184,7 +192,7 @@ stemLength=stemLength_,refreshScreenCounter=refreshScreenCounter_,lastDayPhase=l
 		//
 		
 		self.circles = [NSMutableArray array];
-		standardRadius_ = screenSize.width * 0.21;
+		standardRadius_ = screenSize.width * 0.21;//0.21;v1.1
 		holeHotSpotRadius = screenSize.width * 0.27;
 		holeCenter_ = CGPointMake( screenSize.width * 0.5, screenSize.height * 0.33 );
 		
@@ -211,6 +219,8 @@ stemLength=stemLength_,refreshScreenCounter=refreshScreenCounter_,lastDayPhase=l
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
 	UITouch *touch = [[event allTouches] anyObject];
     touchBeginPoint_ = [touch locationInView:self];
+#elif A_DUMMY_CONDITION_NEVER_TRUE
+}
 #else
 - (void)mouseDown:(NSEvent *)theEvent {
 	touchBeginPoint_ = [self convertPoint:[theEvent locationInWindow] fromView:nil];
@@ -247,6 +257,8 @@ stemLength=stemLength_,refreshScreenCounter=refreshScreenCounter_,lastDayPhase=l
 
 	
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
+#elif A_DUMMY_CONDITION_NEVER_TRUE
+}
 #else
 - (void)mouseUp:(NSEvent *)theEvent {
 #endif
@@ -264,6 +276,8 @@ stemLength=stemLength_,refreshScreenCounter=refreshScreenCounter_,lastDayPhase=l
 	
 	UITouch *touch = [[event allTouches] anyObject];
 	CGPoint touchPoint = [touch locationInView:self];
+#elif A_DUMMY_CONDITION_NEVER_TRUE
+}
 #else
 - (void)mouseDragged:(NSEvent *)theEvent {
 	if ( touchBeginPoint_.x < 0 ) return;	//	invalid touch
@@ -385,7 +399,7 @@ stemLength=stemLength_,refreshScreenCounter=refreshScreenCounter_,lastDayPhase=l
 #endif
 }
 
-
+#if VMP_OSX		// disable drawrect for iOS because it conflicts with UIView Animation
 - (void)drawRect:(VMPRect)rect {
 	[super drawRect:rect];
 	if ( useCALayer ) return;
@@ -437,11 +451,13 @@ stemLength=stemLength_,refreshScreenCounter=refreshScreenCounter_,lastDayPhase=l
 		[[VMPColor lightGrayColor] setStroke];
 		[path stroke];
 	}
-}
-
+#endif
+	
+	
 - (void)updateCALayers {
 	CGFloat brightness = touchBeginPoint_.x >= 0 ? 0.7 : 1.0 - ( velocity_ * 0.2 );
 	CGFloat radius = screenSize.width * 0.22 + (( 1 - velocity_ ) * screenSize.width * 0.3 );
+	CGFloat r2 = radius*2;
 	CGFloat gap = radius * 0.2 - ( radius * velocity_ * 0.1 );
 	CGFloat baseRad = ( 2 * M_PI / numOfCircles );
 	CGFloat hueInterval = 1.0 / numOfCircles;
@@ -449,7 +465,7 @@ stemLength=stemLength_,refreshScreenCounter=refreshScreenCounter_,lastDayPhase=l
 #if CALayerCompositingFilterAvailable
 	CGFloat alpha = 0.2 + ( velocity_ * 0.4 );
 #else
-	CGFloat alpha = 0.1 + ( velocity_ * 0.2 );
+	CGFloat alpha = 0.1 + ( velocity_ * velocity_ *.3 );
 #endif
 	for ( int i = 0; i < numOfCircles; ++i ) {
 		CGFloat rad = baseRad * i + offsetRad;
@@ -466,8 +482,13 @@ stemLength=stemLength_,refreshScreenCounter=refreshScreenCounter_,lastDayPhase=l
 #else
 		circle.fillColor = VMPColorByHSBA(hue, 1., brightness, alpha ).CGColor;
 #endif
-		circle.frame = CGRectMake( center.x, center.y, radius*2, radius*2 );
+		circle.frame = CGRectMake( center.x, center.y, r2, r2 );
 	}
+	CAShapeLayer *centerCircle = [self.circles lastObject];
+	CGFloat a = velocity_ * 1.2 - 0.6;
+	centerCircle.fillColor = VMPColorByHSBA( 0, 0, 0.1, a > 0. ? a : 0. ).CGColor;
+	centerCircle.frame = CGRectMake( holeCenter_.x, holeCenter_.y, r2, r2 );
+	
 }
 
 
@@ -531,10 +552,10 @@ stemLength=stemLength_,refreshScreenCounter=refreshScreenCounter_,lastDayPhase=l
 			NSLog(@"dayPhase changed %d -> %d", lastDayPhase_, dp );
 
 #if VMP_IPHONE
-			[UIView beginAnimations:nil context:nil];
-			[UIView setAnimationDuration:5.0];
-			self.backgroundColor = DEFAULTEVALUATOR.timeManager.backgroundColor;
-			[UIView commitAnimations];
+			[UIView animateWithDuration:5.0f animations:^()
+			 {
+				 self.backgroundColor = DEFAULTEVALUATOR.timeManager.backgroundColor;
+			 }];
 #else
 			VMPColorAnimation *anim = [[VMPColorAnimation alloc] initWithDuration:5.0 animationCurve:NSAnimationLinear];
 			anim.target = self;

@@ -12,8 +12,8 @@
 @implementation VMPCanvas
 #if VMP_OSX
 @synthesize tag = tag_;
-#endif
 @synthesize backgroundColor = backgroundColor_;
+#endif
 
 - (id)initWithFrame:(VMPRect)frame {
     if ((self = [super initWithFrame:frame])) {
@@ -39,14 +39,15 @@
 
 
 - (void)drawRect:(VMPRect)rect {
+	[super drawRect:rect];
+#if VMP_OSX
 	if ( self.backgroundColor ) {
 		[self.backgroundColor setFill];
-#if VMP_OSX
 		NSRectFill(rect);
-#else
-		UIRectFill(rect);
-#endif
 	}
+#else
+//		UIRectFill(rect);	//	let UIView do this.
+#endif
 }
 
 #if VMP_OSX

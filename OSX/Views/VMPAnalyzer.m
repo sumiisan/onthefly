@@ -165,6 +165,10 @@
 
 @property (VMStrong)						VMString					*lastFragmentId;
 
+//	for histogram
+@property (VMStrong)						VMArray						*hist_numberOfBranches;
+@property (VMStrong)						VMArray						*hist_duration;
+
 @end
 
 /*---------------------------------------------------------------------------------
@@ -232,7 +236,10 @@ static const int	kLengthOfPartTraceRoute					= 10000;	//	gives up after 10000 ti
 	VMNullify(sojournDataForPart);
 	VMNullify(routesForFragmentId);
 	VMNullify(routesForSelectorId);
-	VMNullify(histograms);	
+	VMNullify(histograms);
+	VMNullify(hist_numberOfBranches);
+	VMNullify(hist_duration);
+	
     Dealloc( super );;
 }
 
@@ -304,11 +311,14 @@ static const int	kLengthOfPartTraceRoute					= 10000;	//	gives up after 10000 ti
 			//
 			// check audio files
 			//
+			totalDuration = 0;
 			totalFileDuration = 0;
 			self.dataIdToProcess = [DEFAULTSONG.songData sortedKeys];
 			self.unresolveables = ARInstance(VMArray);
 			self.currentPositionInDataIdList = 0;
 			self.fileWarnings = ARInstance(VMArray);
+			self.hist_numberOfBranches = ARInstance(VMArray);
+			self.hist_duration = ARInstance(VMArray);
 			_busy =YES;
 			[self checkFiles_proc];
 			
@@ -800,9 +810,21 @@ static const int	kLengthOfPartTraceRoute					= 10000;	//	gives up after 10000 ti
 				
 				[self.fileWarnings push:record];
 			}
-			if ( !isnan(ao.fileDuration))
+			totalDuration += ai.duration;
+			[self.hist_duration push:@(ai.duration)];
+			if ( !isnan( ao.fileDuration ) )
 				totalFileDuration += ao.fileDuration;
-			Release(ao);
+			Release( ao );
+		} else
+			//
+			//	number of branches -- statistics (	actually, it has nothing to do with checking files..
+			//										make it separate maybe later )
+			//
+			if ( d.type == vmObjectType_selector ) {
+			[self.hist_numberOfBranches push:@( ((VMSelector*)d).length ) ];
+		} else if ( d.type == vmObjectType_sequence ) {
+			[self.hist_numberOfBranches push:@( ((VMSequence*)d).subsequent.length ) ];
+			
 		}
 		++self.currentPositionInDataIdList;
 		if( self.currentPositionInDataIdList >= dataCount ) break;
@@ -815,6 +837,9 @@ static const int	kLengthOfPartTraceRoute					= 10000;	//	gives up after 10000 ti
 	if ( ++self.currentPositionInDataIdList < dataCount ) {
 		[self performSelector:@selector(checkFiles_proc) withObject:nil afterDelay:0.005];
 	} else {
+		//
+		//	finito!
+		//
 		if( self.unresolveables.count == 0 && self.fileWarnings.count == 0 ){
 			[APPDELEGATE.systemLog addTextLog:@"Check Media Files" message:@"no issue"];
 		} else {
@@ -830,8 +855,18 @@ static const int	kLengthOfPartTraceRoute					= 10000;	//	gives up after 10000 ti
 			}
 			
 		}
-		LLog(@"totalFileDuration: %.2f",totalFileDuration);
-		
+		VMTime margin = totalFileDuration - totalDuration;
+		LLog(@"\n"
+			 "total duration: %.2fmin\n"
+			 "total file duration: %.2fmin\n"
+			 "margin: %.2fmin"
+			 "\n"
+			 "median of duration %.2fsec\n"
+			 "average of numberOfBranches %.2fbranches\n"
+			 ,totalDuration / 60., totalFileDuration / 60., margin / 60.
+			 ,[self.hist_duration median]
+			 ,[self.hist_numberOfBranches mean]
+			 );
 		[self.progressWC setProgress:0 ofTotal:0 message:nil window:[VMPlayerOSXDelegate singleton].editorWindowController.window];
 		[APPDELEGATE showLogPanelIfNewSystemLogsAreAdded];
 		VMNullify(dataIdToProcess);
