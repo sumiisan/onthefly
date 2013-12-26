@@ -552,6 +552,7 @@ typedef enum {
 - (VMArray*)fragmentIdList;
 - (void)addFragmentsWithData:(id)data;
 - (void)convertFragmentObjectsToReference;
+- (VMTime)averageDuration;	//	abstract
 @end
 
 //------------------------ LiveData -----------------------------

@@ -76,13 +76,7 @@
 		160ED06C173B526B0009D04B /* VMTextPreprocessor.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ECFBC173B50B70009D04B /* VMTextPreprocessor.m */; };
 		160ED06D173B526C0009D04B /* VMTextPreprocessor.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ECFBC173B50B70009D04B /* VMTextPreprocessor.m */; };
 		161C9A9E16A585F2001E7B46 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 168CEBC7163186B400B721E2 /* MainMenu.xib */; };
-		161CC69A17E51F97001C869D /* TraumBaum.entitlements in Resources */ = {isa = PBXBuildFile; fileRef = 160E51AB1738AF2800C3D9BB /* TraumBaum.entitlements */; };
-		161CC6AA17E552F5001C869D /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 161CC6A917E552F4001C869D /* AVFoundation.framework */; };
-		161CC6AC17E552FE001C869D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 161CC6AB17E552FE001C869D /* QuartzCore.framework */; };
-		161CC6AE17E55305001C869D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 161CC6AD17E55305001C869D /* CoreGraphics.framework */; };
-		161CC6B017E5530E001C869D /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 161CC6AF17E5530E001C869D /* AudioToolbox.framework */; };
-		161CC6B217E55316001C869D /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 161CC6B117E55315001C869D /* UIKit.framework */; };
-		1629EAE01845D9A1009687F1 /* VMPMultiLanguage.m in Sources */ = {isa = PBXBuildFile; fileRef = 1629EADF1845D9A1009687F1 /* VMPMultiLanguage.m */; };
+		162413361717B0DC00EF631A /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 162413351717B0DC00EF631A /* AVFoundation.framework */; };
 		162EFC41173026230000A4FB /* VMPSelectorEditorView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 162EFC3E173026230000A4FB /* VMPSelectorEditorView.xib */; };
 		162EFC451730CE3F0000A4FB /* VMPVariablesPanel.xib in Resources */ = {isa = PBXBuildFile; fileRef = 162EFC421730CE3F0000A4FB /* VMPVariablesPanel.xib */; };
 		162F7B1A16A0341900420443 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 168CEBB2163186B400B721E2 /* Cocoa.framework */; };
@@ -136,10 +130,6 @@
 		1662315D173C9FA300F70FCB /* VMPrimitives.m in Sources */ = {isa = PBXBuildFile; fileRef = 16623156173C9FA300F70FCB /* VMPrimitives.m */; };
 		1662315E173C9FA300F70FCB /* VMPrimitives.m in Sources */ = {isa = PBXBuildFile; fileRef = 16623156173C9FA300F70FCB /* VMPrimitives.m */; };
 		1662315F173C9FA300F70FCB /* VMPrimitives.m in Sources */ = {isa = PBXBuildFile; fileRef = 16623156173C9FA300F70FCB /* VMPrimitives.m */; };
-		16750A25183E27AD0028195B /* NSBezierPath+CGPathConversion.m in Sources */ = {isa = PBXBuildFile; fileRef = 16750A24183E27AD0028195B /* NSBezierPath+CGPathConversion.m */; };
-		16750A28183F8A280028195B /* VMPColorAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = 16750A27183F8A280028195B /* VMPColorAnimation.m */; };
-		16750A2A18409D8D0028195B /* tb_new_artwork.png in Resources */ = {isa = PBXBuildFile; fileRef = 16750A2918409D8D0028195B /* tb_new_artwork.png */; };
-		16750A2B1840A3BB0028195B /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16A27F6E1709AD680081C1E8 /* QuartzCore.framework */; };
 		1677774016C0D600007206CF /* VMPApplescriptReceiver.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677773816C0D600007206CF /* VMPApplescriptReceiver.m */; };
 		1677774116C0D600007206CF /* VMPApplescriptReceiver.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677773816C0D600007206CF /* VMPApplescriptReceiver.m */; };
 		1677781816C0D6A0007206CF /* VMPTrackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677780B16C0D6A0007206CF /* VMPTrackView.m */; };
@@ -152,43 +142,40 @@
 		1677782D16C0D6A0007206CF /* VMPCanvas.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677781516C0D6A0007206CF /* VMPCanvas.m */; };
 		168A6350171902B700B08329 /* VMPScrollViewClipper.m in Sources */ = {isa = PBXBuildFile; fileRef = 168A634F171902B700B08329 /* VMPScrollViewClipper.m */; };
 		168C5AA817C9786D00AA8916 /* VMPInsertFragmentWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 168C5AA717C9786D00AA8916 /* VMPInsertFragmentWindow.xib */; };
+		168F875217A2815900FCA42F /* VMViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 16A27F2316FBB1A70081C1E8 /* VMViewController_iPhone.xib */; };
 		168F875717A283B500FCA42F /* VMPInfoView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 168F875517A283B400FCA42F /* VMPInfoView.xib */; };
-		16933BFC170C32E2005381FC /* VMPInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 16933BFB170C32E2005381FC /* VMPInfoView.m */; };
+		16933BFC170C32E2005381FC /* VMPInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 16933BFB170C32E2005381FC /* VMPInfoViewController.m */; };
 		16933C00170C389F005381FC /* VMPIHole.m in Sources */ = {isa = PBXBuildFile; fileRef = 16933BFE170C389F005381FC /* VMPIHole.m */; };
 		1693CBD717166596005846E6 /* iPhone-UI in Resources */ = {isa = PBXBuildFile; fileRef = 1693CBD617166596005846E6 /* iPhone-UI */; };
 		1693CBD9171665DA005846E6 /* appicon.png in Resources */ = {isa = PBXBuildFile; fileRef = 1693CBD8171665D9005846E6 /* appicon.png */; };
 		1693CBDB171665EA005846E6 /* appicon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1693CBDA171665EA005846E6 /* appicon@2x.png */; };
-		1695A50C1805390800EEC1F5 /* VMPTimeManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1695A50B1805390800EEC1F5 /* VMPTimeManager.m */; };
-		1695A50D1805390800EEC1F5 /* VMPTimeManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1695A50B1805390800EEC1F5 /* VMPTimeManager.m */; };
-		1695A50E1805390800EEC1F5 /* VMPTimeManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1695A50B1805390800EEC1F5 /* VMPTimeManager.m */; };
-		1695A50F1805390800EEC1F5 /* VMPTimeManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1695A50B1805390800EEC1F5 /* VMPTimeManager.m */; };
-		16960589183B853B001C3551 /* VMPFrontView.m in Sources */ = {isa = PBXBuildFile; fileRef = 16A26C4E18010E4D00A91A46 /* VMPFrontView.m */; };
 		1696ADD6172E7344008362E5 /* VMPAudioInfoEditorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1696ADD3172E7344008362E5 /* VMPAudioInfoEditorViewController.m */; };
 		1698E49617CA208200D2130A /* VMPInsertFragmentWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1698E49517CA208200D2130A /* VMPInsertFragmentWindowController.m */; };
 		1698E49717CAC47300D2130A /* VMAudioObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 16623152173C9FA300F70FCB /* VMAudioObject.m */; };
 		1698E49817CAC47400D2130A /* VMAudioObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 16623152173C9FA300F70FCB /* VMAudioObject.m */; };
-		169913461818A8A300290B8D /* appicon120.png in Resources */ = {isa = PBXBuildFile; fileRef = 169913451818A8A300290B8D /* appicon120.png */; };
-		1699134A18190C2900290B8D /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1699134718190C2900290B8D /* Default-568h@2x.png */; };
-		1699134B18190C2900290B8D /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 1699134818190C2900290B8D /* Default.png */; };
-		1699134C18190C2900290B8D /* Default~iphone.png in Resources */ = {isa = PBXBuildFile; fileRef = 1699134918190C2900290B8D /* Default~iphone.png */; };
 		16A2030D17474F4700CD2A57 /* VMPFragmentCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 16A2030C17474F4600CD2A57 /* VMPFragmentCell.m */; };
 		16A2030E17474F4700CD2A57 /* VMPFragmentCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 16A2030C17474F4600CD2A57 /* VMPFragmentCell.m */; };
-		16A26C4F18010E4D00A91A46 /* VMPFrontView.m in Sources */ = {isa = PBXBuildFile; fileRef = 16A26C4E18010E4D00A91A46 /* VMPFrontView.m */; };
 		16A27F0016F9730F0081C1E8 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16A27EFF16F9730F0081C1E8 /* AudioToolbox.framework */; };
 		16A27F1316FBB1A70081C1E8 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 16A27F1116FBB1A70081C1E8 /* InfoPlist.strings */; };
 		16A27F1516FBB1A70081C1E8 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 16A27F1416FBB1A70081C1E8 /* main.m */; };
 		16A27F1916FBB1A70081C1E8 /* VMAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 16A27F1816FBB1A70081C1E8 /* VMAppDelegate.m */; };
+		16A27F1B16FBB1A70081C1E8 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 16A27F1A16FBB1A70081C1E8 /* Default.png */; };
+		16A27F1D16FBB1A70081C1E8 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 16A27F1C16FBB1A70081C1E8 /* Default@2x.png */; };
+		16A27F1F16FBB1A70081C1E8 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 16A27F1E16FBB1A70081C1E8 /* Default-568h@2x.png */; };
 		16A27F2216FBB1A70081C1E8 /* VMViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 16A27F2116FBB1A70081C1E8 /* VMViewController.m */; };
+		16A27F2F16FBE1300081C1E8 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16A27F2E16FBE1300081C1E8 /* UIKit.framework */; };
+		16A27F4616FBE8030081C1E8 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16A27F4516FBE8030081C1E8 /* AudioToolbox.framework */; };
 		16A27F4716FC14460081C1E8 /* defaultSong in Resources */ = {isa = PBXBuildFile; fileRef = 16A27F0116F9736F0081C1E8 /* defaultSong */; };
 		16A27F4A16FC1DF30081C1E8 /* VMPTrackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677780B16C0D6A0007206CF /* VMPTrackView.m */; };
 		16A27F4B16FC1DF30081C1E8 /* VMPTrackStrip.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677781316C0D6A0007206CF /* VMPTrackStrip.m */; };
 		16A27F4C16FC1F720081C1E8 /* VMPCanvas.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677781516C0D6A0007206CF /* VMPCanvas.m */; };
+		16A27F4E16FC1FC70081C1E8 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16A27F4D16FC1FC60081C1E8 /* CoreGraphics.framework */; };
 		16A27F5016FC2EC90081C1E8 /* default.vms in Resources */ = {isa = PBXBuildFile; fileRef = 16A27F4F16FC2EC90081C1E8 /* default.vms */; };
 		16A27F5216FC2EC90081C1E8 /* default.vms in Resources */ = {isa = PBXBuildFile; fileRef = 16A27F4F16FC2EC90081C1E8 /* default.vms */; };
 		16A27F5F17006E720081C1E8 /* VMPProgressWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 16A27F5C17006E720081C1E8 /* VMPProgressWindowController.m */; };
 		16A27F6117006E720081C1E8 /* VMPProgressWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 16A27F5D17006E720081C1E8 /* VMPProgressWindow.xib */; };
 		16A27F6517008A550081C1E8 /* VMPRecordDetailPopover.m in Sources */ = {isa = PBXBuildFile; fileRef = 16A27F6317008A540081C1E8 /* VMPRecordDetailPopover.m */; };
-		16B9F8EF184493FF00CDAD27 /* VMViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 16A27F2316FBB1A70081C1E8 /* VMViewController_iPhone.xib */; };
+		16A27F711709AD770081C1E8 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16A27F701709AD760081C1E8 /* QuartzCore.framework */; };
 		16C074A217B2750900351113 /* VMPRainyView.m in Sources */ = {isa = PBXBuildFile; fileRef = 16C074A117B2750900351113 /* VMPRainyView.m */; };
 		16C074AA17B28C4A00351113 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16C074A917B28C4A00351113 /* Cocoa.framework */; };
 		16C074B417B28C4A00351113 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 16C074B217B28C4A00351113 /* InfoPlist.strings */; };
@@ -220,29 +207,22 @@
 		16C074D917B2AFB400351113 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16A27EFF16F9730F0081C1E8 /* AudioToolbox.framework */; };
 		16C074DA17B2AFB900351113 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 168CEBD41631871400B721E2 /* CoreAudio.framework */; };
 		16C074DB17B2AFD500351113 /* VMPrimitives.m in Sources */ = {isa = PBXBuildFile; fileRef = 16623156173C9FA300F70FCB /* VMPrimitives.m */; };
+		16C074DE17B2B16500351113 /* skin0_phone.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 16C074DD17B2B16500351113 /* skin0_phone.jpg */; };
 		16C074DF17B2B27100351113 /* defaultSong in Resources */ = {isa = PBXBuildFile; fileRef = 16A27F0116F9736F0081C1E8 /* defaultSong */; };
+		16C074E017B2BB9200351113 /* appicon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1693CBDA171665EA005846E6 /* appicon@2x.png */; };
+		16C074E217B2BC8E00351113 /* traumbaum.icns in Resources */ = {isa = PBXBuildFile; fileRef = 16C074E117B2BC8E00351113 /* traumbaum.icns */; };
 		16C074E417B2C0DF00351113 /* VMPRainyView.m in Sources */ = {isa = PBXBuildFile; fileRef = 16C074A117B2750900351113 /* VMPRainyView.m */; };
 		16C074E517B2C3DC00351113 /* VMPCanvas.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677781516C0D6A0007206CF /* VMPCanvas.m */; };
-		16C217D51845F2DD00C3A995 /* VMPTwitter.m in Sources */ = {isa = PBXBuildFile; fileRef = 16C217D41845F2DD00C3A995 /* VMPTwitter.m */; };
-		16C217D71845F50E00C3A995 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16C217D61845F50E00C3A995 /* Social.framework */; };
-		16C217D91846004900C3A995 /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16C217D81846004800C3A995 /* Accounts.framework */; };
+		16C074E717B3253600351113 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16C074E617B3253500351113 /* QuartzCore.framework */; };
+		16C074E917B3755C00351113 /* skin1_phone.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 16C074E817B3755C00351113 /* skin1_phone.jpg */; };
 		16C7677116DC83DE003636C3 /* VMPAnalyzer.m in Sources */ = {isa = PBXBuildFile; fileRef = 16C7676E16DC83DE003636C3 /* VMPAnalyzer.m */; };
 		16C7677216DC83DE003636C3 /* VMPAnalyzer.m in Sources */ = {isa = PBXBuildFile; fileRef = 16C7676E16DC83DE003636C3 /* VMPAnalyzer.m */; };
 		16C90C7E1722774800F7E91F /* VMPHistogramView.m in Sources */ = {isa = PBXBuildFile; fileRef = 16C90C7B1722774800F7E91F /* VMPHistogramView.m */; };
 		16C90C7F1722774800F7E91F /* VMPHistogramView.m in Sources */ = {isa = PBXBuildFile; fileRef = 16C90C7B1722774800F7E91F /* VMPHistogramView.m */; };
 		16C90C8417241EF500F7E91F /* VMPLogView.m in Sources */ = {isa = PBXBuildFile; fileRef = 16C90C8117241EF500F7E91F /* VMPLogView.m */; };
 		16C90C8517241EF500F7E91F /* VMPLogView.m in Sources */ = {isa = PBXBuildFile; fileRef = 16C90C8117241EF500F7E91F /* VMPLogView.m */; };
-		16D7EB2B1861AB2800D0BCEB /* VMRouteComputer.m in Sources */ = {isa = PBXBuildFile; fileRef = 16D7EB2A1861AB2800D0BCEB /* VMRouteComputer.m */; };
-		16D7EB2C1861AB2800D0BCEB /* VMRouteComputer.m in Sources */ = {isa = PBXBuildFile; fileRef = 16D7EB2A1861AB2800D0BCEB /* VMRouteComputer.m */; };
-		16D7EB2D1861AB2800D0BCEB /* VMRouteComputer.m in Sources */ = {isa = PBXBuildFile; fileRef = 16D7EB2A1861AB2800D0BCEB /* VMRouteComputer.m */; };
-		16D7EB2E1861AB2800D0BCEB /* VMRouteComputer.m in Sources */ = {isa = PBXBuildFile; fileRef = 16D7EB2A1861AB2800D0BCEB /* VMRouteComputer.m */; };
 		16DC63E616B78D8D00E579AE /* play.png in Resources */ = {isa = PBXBuildFile; fileRef = 16DC63E016B78D8D00E579AE /* play.png */; };
 		16DC63EE16B78E2B00E579AE /* stop.png in Resources */ = {isa = PBXBuildFile; fileRef = 16DC63EB16B78E2A00E579AE /* stop.png */; };
-		16DF1D9E184195B1005850B7 /* tb_new_osx.icns in Resources */ = {isa = PBXBuildFile; fileRef = 16DF1D9D184195B1005850B7 /* tb_new_osx.icns */; };
-		16F77CCC1865802400B58BA7 /* VMRoute.m in Sources */ = {isa = PBXBuildFile; fileRef = 16F77CCB1865802400B58BA7 /* VMRoute.m */; };
-		16F77CCD1865802400B58BA7 /* VMRoute.m in Sources */ = {isa = PBXBuildFile; fileRef = 16F77CCB1865802400B58BA7 /* VMRoute.m */; };
-		16F77CCE1865802400B58BA7 /* VMRoute.m in Sources */ = {isa = PBXBuildFile; fileRef = 16F77CCB1865802400B58BA7 /* VMRoute.m */; };
-		16F77CCF1865802400B58BA7 /* VMRoute.m in Sources */ = {isa = PBXBuildFile; fileRef = 16F77CCB1865802400B58BA7 /* VMRoute.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXBuildRule section */
@@ -300,7 +280,7 @@
 		160E519717338EA500C3D9BB /* VMPObjectGraphView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = VMPObjectGraphView.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		160E51A01735390B00C3D9BB /* VMPSelectorEditorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = VMPSelectorEditorViewController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		160E51A11735390C00C3D9BB /* VMPSelectorEditorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = VMPSelectorEditorViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		160E51AB1738AF2800C3D9BB /* TraumBaum.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = TraumBaum.entitlements; path = ../TraumBaum/TraumBaum.entitlements; sourceTree = "<group>"; };
+		160E51AB1738AF2800C3D9BB /* TraumBaum.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = TraumBaum.entitlements; path = ../TraumBaum/TraumBaum.entitlements; sourceTree = "<group>"; };
 		160ECFAC173B50730009D04B /* VMPreprocessor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = VMPreprocessor.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		160ECFAD173B50730009D04B /* VMPreprocessor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = VMPreprocessor.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		160ECFAE173B50730009D04B /* VMScoreEvaluator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = VMScoreEvaluator.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -355,23 +335,10 @@
 		160ED01A173B517A0009D04B /* VMPJSONDeserializer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = VMPJSONDeserializer.m; path = "Core/Libs/TouchJSON-master/VMPJSONDeserializer.m"; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		160ED01B173B517A0009D04B /* VMPJSONScanner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VMPJSONScanner.h; sourceTree = "<group>"; };
 		160ED01C173B517A0009D04B /* VMPJSONScanner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = VMPJSONScanner.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		161CC69817E51B74001C869D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/VMPInfoView.xib; sourceTree = "<group>"; };
-		161CC69E17E51FD5001C869D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/VMViewController_iPhone.xib; sourceTree = "<group>"; };
-		161CC6A417E52945001C869D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/VMPInfoView.strings; sourceTree = "<group>"; };
-		161CC6A517E52948001C869D /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/VMPInfoView.strings; sourceTree = "<group>"; };
-		161CC6A617E5294A001C869D /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/VMPInfoView.strings; sourceTree = "<group>"; };
-		161CC6A717E5294C001C869D /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/VMPInfoView.strings; sourceTree = "<group>"; };
-		161CC6A817E5294E001C869D /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/VMPInfoView.strings; sourceTree = "<group>"; };
-		161CC6A917E552F4001C869D /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.0.sdk/System/Library/Frameworks/AVFoundation.framework; sourceTree = DEVELOPER_DIR; };
-		161CC6AB17E552FE001C869D /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.0.sdk/System/Library/Frameworks/QuartzCore.framework; sourceTree = DEVELOPER_DIR; };
-		161CC6AD17E55305001C869D /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.0.sdk/System/Library/Frameworks/CoreGraphics.framework; sourceTree = DEVELOPER_DIR; };
-		161CC6AF17E5530E001C869D /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.0.sdk/System/Library/Frameworks/AudioToolbox.framework; sourceTree = DEVELOPER_DIR; };
-		161CC6B117E55315001C869D /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.0.sdk/System/Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
+		162413351717B0DC00EF631A /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS6.1.sdk/System/Library/Frameworks/AVFoundation.framework; sourceTree = DEVELOPER_DIR; };
 		1624A6FB1642B76B004AA351 /* vsDocIcon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = vsDocIcon.icns; sourceTree = "<group>"; };
 		1624A6FE1642B7D0004AA351 /* vsPlayer.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = vsPlayer.icns; sourceTree = "<group>"; };
 		1624A7131644D8AC004AA351 /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = usr/lib/libicucore.dylib; sourceTree = SDKROOT; };
-		1629EADE1845D9A1009687F1 /* VMPMultiLanguage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VMPMultiLanguage.h; path = TraumBaum/VMPMultiLanguage.h; sourceTree = SOURCE_ROOT; };
-		1629EADF1845D9A1009687F1 /* VMPMultiLanguage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VMPMultiLanguage.m; path = TraumBaum/VMPMultiLanguage.m; sourceTree = SOURCE_ROOT; };
 		162EFC3E173026230000A4FB /* VMPSelectorEditorView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VMPSelectorEditorView.xib; sourceTree = "<group>"; };
 		162EFC421730CE3F0000A4FB /* VMPVariablesPanel.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VMPVariablesPanel.xib; sourceTree = "<group>"; };
 		162F7B1816A0341900420443 /* OnTheFly Editor OSX.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "OnTheFly Editor OSX.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -425,11 +392,6 @@
 		16623154173C9FA300F70FCB /* VMLog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = VMLog.m; path = Core/DataStructures/VMLog.m; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		16623155173C9FA300F70FCB /* VMPrimitives.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = VMPrimitives.h; path = Core/DataStructures/VMPrimitives.h; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		16623156173C9FA300F70FCB /* VMPrimitives.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VMPrimitives.m; path = Core/DataStructures/VMPrimitives.m; sourceTree = SOURCE_ROOT; };
-		16750A23183E27AD0028195B /* NSBezierPath+CGPathConversion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSBezierPath+CGPathConversion.h"; sourceTree = "<group>"; };
-		16750A24183E27AD0028195B /* NSBezierPath+CGPathConversion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSBezierPath+CGPathConversion.m"; sourceTree = "<group>"; };
-		16750A26183F8A280028195B /* VMPColorAnimation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VMPColorAnimation.h; path = "traumbaum mac/VMPColorAnimation.h"; sourceTree = "<group>"; };
-		16750A27183F8A280028195B /* VMPColorAnimation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VMPColorAnimation.m; path = "traumbaum mac/VMPColorAnimation.m"; sourceTree = "<group>"; };
-		16750A2918409D8D0028195B /* tb_new_artwork.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tb_new_artwork.png; sourceTree = "<group>"; };
 		1677773716C0D600007206CF /* VMPApplescriptReceiver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VMPApplescriptReceiver.h; sourceTree = "<group>"; };
 		1677773816C0D600007206CF /* VMPApplescriptReceiver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VMPApplescriptReceiver.m; sourceTree = "<group>"; };
 		1677780A16C0D6A0007206CF /* VMPTrackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VMPTrackView.h; sourceTree = "<group>"; };
@@ -455,40 +417,48 @@
 		168CEBC8163186B400B721E2 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		168CEBCB163186B400B721E2 /* VMPEditor.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = VMPEditor.xcdatamodel; sourceTree = "<group>"; };
 		168CEBD41631871400B721E2 /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
-		16933BFA170C32E2005381FC /* VMPInfoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VMPInfoView.h; path = ../TraumBaum/VMPInfoView.h; sourceTree = "<group>"; };
-		16933BFB170C32E2005381FC /* VMPInfoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VMPInfoView.m; path = TraumBaum/VMPInfoView.m; sourceTree = SOURCE_ROOT; };
+		168F875317A2823F00FCA42F /* ja */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ja; path = ja.lproj/VMViewController_iPhone.xib; sourceTree = "<group>"; };
+		168F875417A2824D00FCA42F /* de */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = de; path = de.lproj/VMViewController_iPhone.xib; sourceTree = "<group>"; };
+		168F875617A283B500FCA42F /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = TraumBaum/en.lproj/VMPInfoView.xib; sourceTree = SOURCE_ROOT; };
+		168F875817A283CA00FCA42F /* de */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = de; path = TraumBaum/de.lproj/VMPInfoView.xib; sourceTree = SOURCE_ROOT; };
+		168F875917A283D700FCA42F /* ja */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ja; path = TraumBaum/ja.lproj/VMPInfoView.xib; sourceTree = SOURCE_ROOT; };
+		168F875A17A2996100FCA42F /* fr */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = fr; path = fr.lproj/VMPInfoView.xib; sourceTree = "<group>"; };
+		168F875B17A2996100FCA42F /* fr */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = fr; path = fr.lproj/VMViewController_iPhone.xib; sourceTree = "<group>"; };
+		168F875C17A2997500FCA42F /* es */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = es; path = es.lproj/VMPInfoView.xib; sourceTree = "<group>"; };
+		168F875D17A2997500FCA42F /* es */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = es; path = es.lproj/VMViewController_iPhone.xib; sourceTree = "<group>"; };
+		16933BFA170C32E2005381FC /* VMPInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VMPInfoViewController.h; path = TraumBaum/VMPInfoViewController.h; sourceTree = SOURCE_ROOT; };
+		16933BFB170C32E2005381FC /* VMPInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VMPInfoViewController.m; path = TraumBaum/VMPInfoViewController.m; sourceTree = SOURCE_ROOT; };
 		16933BFD170C389F005381FC /* VMPIHole.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VMPIHole.h; sourceTree = "<group>"; };
 		16933BFE170C389F005381FC /* VMPIHole.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = VMPIHole.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		1693CBD617166596005846E6 /* iPhone-UI */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "iPhone-UI"; path = "TraumBaum/iPhone-UI"; sourceTree = SOURCE_ROOT; };
 		1693CBD8171665D9005846E6 /* appicon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = appicon.png; path = ../appicon.png; sourceTree = "<group>"; };
 		1693CBDA171665EA005846E6 /* appicon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "appicon@2x.png"; path = "../appicon@2x.png"; sourceTree = "<group>"; };
-		1695A50A1805390800EEC1F5 /* VMPTimeManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VMPTimeManager.h; sourceTree = "<group>"; };
-		1695A50B1805390800EEC1F5 /* VMPTimeManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VMPTimeManager.m; sourceTree = "<group>"; };
 		1695BE841634D5A3009103F4 /* vmp.sdef */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = vmp.sdef; sourceTree = "<group>"; };
 		1696ADD2172E7344008362E5 /* VMPAudioInfoEditorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = VMPAudioInfoEditorViewController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		1696ADD3172E7344008362E5 /* VMPAudioInfoEditorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = VMPAudioInfoEditorViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		1698E49417CA208100D2130A /* VMPInsertFragmentWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VMPInsertFragmentWindowController.h; sourceTree = "<group>"; };
 		1698E49517CA208200D2130A /* VMPInsertFragmentWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VMPInsertFragmentWindowController.m; sourceTree = "<group>"; };
-		169913451818A8A300290B8D /* appicon120.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = appicon120.png; sourceTree = SOURCE_ROOT; };
-		1699134718190C2900290B8D /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
-		1699134818190C2900290B8D /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
-		1699134918190C2900290B8D /* Default~iphone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default~iphone.png"; sourceTree = "<group>"; };
 		16A2030A174632B700CD2A57 /* VMARC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VMARC.h; path = Core/Misc/VMARC.h; sourceTree = SOURCE_ROOT; };
 		16A2030B17474F4500CD2A57 /* VMPFragmentCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VMPFragmentCell.h; sourceTree = "<group>"; };
 		16A2030C17474F4600CD2A57 /* VMPFragmentCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VMPFragmentCell.m; sourceTree = "<group>"; };
-		16A26C4D18010E4D00A91A46 /* VMPFrontView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VMPFrontView.h; path = ../TraumBaum/VMPFrontView.h; sourceTree = "<group>"; };
-		16A26C4E18010E4D00A91A46 /* VMPFrontView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VMPFrontView.m; path = ../TraumBaum/VMPFrontView.m; sourceTree = "<group>"; };
 		16A27EFF16F9730F0081C1E8 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		16A27F0116F9736F0081C1E8 /* defaultSong */ = {isa = PBXFileReference; lastKnownFileType = folder; name = defaultSong; path = ../../defaultSong; sourceTree = "<group>"; };
 		16A27F0716FBB1A70081C1E8 /* traumbaum for iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "traumbaum for iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		16A27F1016FBB1A70081C1E8 /* Traumbaum-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Traumbaum-Info.plist"; sourceTree = "<group>"; };
 		16A27F1216FBB1A70081C1E8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		16A27F1416FBB1A70081C1E8 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		16A27F1616FBB1A70081C1E8 /* Traumbaum-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Traumbaum-Prefix.pch"; sourceTree = "<group>"; };
+		16A27F1416FBB1A70081C1E8 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		16A27F1616FBB1A70081C1E8 /* Traumbaum-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Traumbaum-Prefix.pch"; sourceTree = "<group>"; };
 		16A27F1716FBB1A70081C1E8 /* VMAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VMAppDelegate.h; sourceTree = "<group>"; };
 		16A27F1816FBB1A70081C1E8 /* VMAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = VMAppDelegate.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		16A27F1A16FBB1A70081C1E8 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
+		16A27F1C16FBB1A70081C1E8 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
+		16A27F1E16FBB1A70081C1E8 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		16A27F2016FBB1A70081C1E8 /* VMViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VMViewController.h; sourceTree = "<group>"; };
 		16A27F2116FBB1A70081C1E8 /* VMViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VMViewController.m; sourceTree = "<group>"; };
+		16A27F2416FBB1A70081C1E8 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/VMViewController_iPhone.xib; sourceTree = "<group>"; };
+		16A27F2E16FBE1300081C1E8 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS6.1.sdk/System/Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
+		16A27F4516FBE8030081C1E8 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS6.1.sdk/System/Library/Frameworks/AudioToolbox.framework; sourceTree = DEVELOPER_DIR; };
+		16A27F4D16FC1FC60081C1E8 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS6.1.sdk/System/Library/Frameworks/CoreGraphics.framework; sourceTree = DEVELOPER_DIR; };
 		16A27F4F16FC2EC90081C1E8 /* default.vms */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; lineEnding = 0; name = default.vms; path = ../../defaultSong/default.vms; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.javascript; };
 		16A27F5B17006E710081C1E8 /* VMPProgressWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = VMPProgressWindowController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		16A27F5C17006E720081C1E8 /* VMPProgressWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VMPProgressWindowController.m; sourceTree = "<group>"; };
@@ -496,6 +466,7 @@
 		16A27F6217008A540081C1E8 /* VMPRecordDetailPopover.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = VMPRecordDetailPopover.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		16A27F6317008A540081C1E8 /* VMPRecordDetailPopover.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VMPRecordDetailPopover.m; sourceTree = "<group>"; };
 		16A27F6E1709AD680081C1E8 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/System/Library/Frameworks/QuartzCore.framework; sourceTree = DEVELOPER_DIR; };
+		16A27F701709AD760081C1E8 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS6.1.sdk/System/Library/Frameworks/QuartzCore.framework; sourceTree = DEVELOPER_DIR; };
 		16C074A017B2750900351113 /* VMPRainyView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VMPRainyView.h; path = TraumBaum/VMPRainyView.h; sourceTree = SOURCE_ROOT; };
 		16C074A117B2750900351113 /* VMPRainyView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VMPRainyView.m; path = TraumBaum/VMPRainyView.m; sourceTree = SOURCE_ROOT; };
 		16C074A717B28C4900351113 /* traumbaum.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = traumbaum.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -514,24 +485,16 @@
 		16C074DD17B2B16500351113 /* skin0_phone.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = skin0_phone.jpg; sourceTree = "<group>"; };
 		16C074E117B2BC8E00351113 /* traumbaum.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = traumbaum.icns; sourceTree = "<group>"; };
 		16C074E317B2BC9D00351113 /* traumbaum mac.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = "traumbaum mac.entitlements"; path = "traumbaum mac/traumbaum mac.entitlements"; sourceTree = "<group>"; };
+		16C074E617B3253500351113 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk/System/Library/Frameworks/QuartzCore.framework; sourceTree = DEVELOPER_DIR; };
 		16C074E817B3755C00351113 /* skin1_phone.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = skin1_phone.jpg; path = "../TraumBaum/iPhone-UI/skin1_phone.jpg"; sourceTree = "<group>"; };
-		16C217D31845F2DD00C3A995 /* VMPTwitter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VMPTwitter.h; path = ../TraumBaum/VMPTwitter.h; sourceTree = "<group>"; };
-		16C217D41845F2DD00C3A995 /* VMPTwitter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VMPTwitter.m; path = ../TraumBaum/VMPTwitter.m; sourceTree = "<group>"; };
-		16C217D61845F50E00C3A995 /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.0.sdk/System/Library/Frameworks/Social.framework; sourceTree = DEVELOPER_DIR; };
-		16C217D81846004800C3A995 /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.0.sdk/System/Library/Frameworks/Accounts.framework; sourceTree = DEVELOPER_DIR; };
 		16C7676D16DC83DE003636C3 /* VMPAnalyzer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = VMPAnalyzer.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		16C7676E16DC83DE003636C3 /* VMPAnalyzer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = VMPAnalyzer.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		16C90C7A1722774800F7E91F /* VMPHistogramView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VMPHistogramView.h; sourceTree = "<group>"; };
 		16C90C7B1722774800F7E91F /* VMPHistogramView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = VMPHistogramView.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		16C90C8017241EF500F7E91F /* VMPLogView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = VMPLogView.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		16C90C8117241EF500F7E91F /* VMPLogView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = VMPLogView.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		16D7EB291861AB2800D0BCEB /* VMRouteComputer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VMRouteComputer.h; sourceTree = "<group>"; };
-		16D7EB2A1861AB2800D0BCEB /* VMRouteComputer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VMRouteComputer.m; sourceTree = "<group>"; };
 		16DC63E016B78D8D00E579AE /* play.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = play.png; sourceTree = "<group>"; };
 		16DC63EB16B78E2A00E579AE /* stop.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = stop.png; sourceTree = "<group>"; };
-		16DF1D9D184195B1005850B7 /* tb_new_osx.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = tb_new_osx.icns; sourceTree = "<group>"; };
-		16F77CCA1865802400B58BA7 /* VMRoute.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VMRoute.h; path = Core/DataStructures/VMRoute.h; sourceTree = SOURCE_ROOT; };
-		16F77CCB1865802400B58BA7 /* VMRoute.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VMRoute.m; path = Core/DataStructures/VMRoute.m; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -565,13 +528,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				16C217D91846004900C3A995 /* Accounts.framework in Frameworks */,
-				16C217D71845F50E00C3A995 /* Social.framework in Frameworks */,
-				161CC6B217E55316001C869D /* UIKit.framework in Frameworks */,
-				161CC6B017E5530E001C869D /* AudioToolbox.framework in Frameworks */,
-				161CC6AE17E55305001C869D /* CoreGraphics.framework in Frameworks */,
-				161CC6AC17E552FE001C869D /* QuartzCore.framework in Frameworks */,
-				161CC6AA17E552F5001C869D /* AVFoundation.framework in Frameworks */,
+				162413361717B0DC00EF631A /* AVFoundation.framework in Frameworks */,
+				16A27F711709AD770081C1E8 /* QuartzCore.framework in Frameworks */,
+				16A27F4E16FC1FC70081C1E8 /* CoreGraphics.framework in Frameworks */,
+				16A27F4616FBE8030081C1E8 /* AudioToolbox.framework in Frameworks */,
+				16A27F2F16FBE1300081C1E8 /* UIKit.framework in Frameworks */,
 				162FBBC4174061FE0060E003 /* libicucore.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -580,7 +541,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				16750A2B1840A3BB0028195B /* QuartzCore.framework in Frameworks */,
+				16C074E717B3253600351113 /* QuartzCore.framework in Frameworks */,
 				16C074AA17B28C4A00351113 /* Cocoa.framework in Frameworks */,
 				16C074D817B2AFAA00351113 /* libicucore.dylib in Frameworks */,
 				16C074D917B2AFB400351113 /* AudioToolbox.framework in Frameworks */,
@@ -596,12 +557,8 @@
 			children = (
 				160ECFAC173B50730009D04B /* VMPreprocessor.h */,
 				160ECFAD173B50730009D04B /* VMPreprocessor.m */,
-				1695A50A1805390800EEC1F5 /* VMPTimeManager.h */,
-				1695A50B1805390800EEC1F5 /* VMPTimeManager.m */,
 				160ECFAE173B50730009D04B /* VMScoreEvaluator.h */,
 				160ECFAF173B50730009D04B /* VMScoreEvaluator.m */,
-				16D7EB291861AB2800D0BCEB /* VMRouteComputer.h */,
-				16D7EB2A1861AB2800D0BCEB /* VMRouteComputer.m */,
 			);
 			name = Processors;
 			path = Core/Processors;
@@ -720,14 +677,12 @@
 		160ED06F173B6F6F0009D04B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				16C217D81846004800C3A995 /* Accounts.framework */,
-				16C217D61845F50E00C3A995 /* Social.framework */,
-				161CC6B117E55315001C869D /* UIKit.framework */,
-				161CC6AF17E5530E001C869D /* AudioToolbox.framework */,
-				161CC6AD17E55305001C869D /* CoreGraphics.framework */,
-				161CC6AB17E552FE001C869D /* QuartzCore.framework */,
-				161CC6A917E552F4001C869D /* AVFoundation.framework */,
 				162FBBC3174061FE0060E003 /* libicucore.dylib */,
+				16A27F2E16FBE1300081C1E8 /* UIKit.framework */,
+				16A27F4D16FC1FC60081C1E8 /* CoreGraphics.framework */,
+				16A27F701709AD760081C1E8 /* QuartzCore.framework */,
+				16A27F4516FBE8030081C1E8 /* AudioToolbox.framework */,
+				162413351717B0DC00EF631A /* AVFoundation.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -864,8 +819,6 @@
 			isa = PBXGroup;
 			children = (
 				16623140173C9F1A00F70FCB /* VMDataTypesMacros.h */,
-				16F77CCA1865802400B58BA7 /* VMRoute.h */,
-				16F77CCB1865802400B58BA7 /* VMRoute.m */,
 				1662313E173C9F1A00F70FCB /* VMDataTypes.h */,
 				1662313F173C9F1A00F70FCB /* VMDataTypes.m */,
 				16623141173C9F1A00F70FCB /* VMFunction.m */,
@@ -917,10 +870,7 @@
 		168CEBA3163186B300B721E2 = {
 			isa = PBXGroup;
 			children = (
-				16DF1D9D184195B1005850B7 /* tb_new_osx.icns */,
-				16750A2918409D8D0028195B /* tb_new_artwork.png */,
-				16750A26183F8A280028195B /* VMPColorAnimation.h */,
-				16750A27183F8A280028195B /* VMPColorAnimation.m */,
+				16C074E617B3253500351113 /* QuartzCore.framework */,
 				16C074E317B2BC9D00351113 /* traumbaum mac.entitlements */,
 				16C074E117B2BC8E00351113 /* traumbaum.icns */,
 				168CEBB8163186B400B721E2 /* Core */,
@@ -1078,21 +1028,15 @@
 		16A27F0E16FBB1A70081C1E8 /* Traumbaum iOS */ = {
 			isa = PBXGroup;
 			children = (
-				16C217D31845F2DD00C3A995 /* VMPTwitter.h */,
-				16C217D41845F2DD00C3A995 /* VMPTwitter.m */,
 				168F875517A283B400FCA42F /* VMPInfoView.xib */,
 				16A27F2316FBB1A70081C1E8 /* VMViewController_iPhone.xib */,
 				1693CBD617166596005846E6 /* iPhone-UI */,
 				16A27F1716FBB1A70081C1E8 /* VMAppDelegate.h */,
-				1629EADE1845D9A1009687F1 /* VMPMultiLanguage.h */,
-				1629EADF1845D9A1009687F1 /* VMPMultiLanguage.m */,
 				16A27F1816FBB1A70081C1E8 /* VMAppDelegate.m */,
 				16A27F2016FBB1A70081C1E8 /* VMViewController.h */,
 				16A27F2116FBB1A70081C1E8 /* VMViewController.m */,
-				16A26C4D18010E4D00A91A46 /* VMPFrontView.h */,
-				16A26C4E18010E4D00A91A46 /* VMPFrontView.m */,
-				16933BFA170C32E2005381FC /* VMPInfoView.h */,
-				16933BFB170C32E2005381FC /* VMPInfoView.m */,
+				16933BFA170C32E2005381FC /* VMPInfoViewController.h */,
+				16933BFB170C32E2005381FC /* VMPInfoViewController.m */,
 				16C074A017B2750900351113 /* VMPRainyView.h */,
 				16C074A117B2750900351113 /* VMPRainyView.m */,
 				160ED06F173B6F6F0009D04B /* Frameworks */,
@@ -1110,14 +1054,13 @@
 				160E51AB1738AF2800C3D9BB /* TraumBaum.entitlements */,
 				1693CBDA171665EA005846E6 /* appicon@2x.png */,
 				1693CBD8171665D9005846E6 /* appicon.png */,
-				169913451818A8A300290B8D /* appicon120.png */,
 				16A27F1016FBB1A70081C1E8 /* Traumbaum-Info.plist */,
 				16A27F1116FBB1A70081C1E8 /* InfoPlist.strings */,
 				16A27F1416FBB1A70081C1E8 /* main.m */,
 				16A27F1616FBB1A70081C1E8 /* Traumbaum-Prefix.pch */,
-				1699134718190C2900290B8D /* Default-568h@2x.png */,
-				1699134818190C2900290B8D /* Default.png */,
-				1699134918190C2900290B8D /* Default~iphone.png */,
+				16A27F1A16FBB1A70081C1E8 /* Default.png */,
+				16A27F1C16FBB1A70081C1E8 /* Default@2x.png */,
+				16A27F1E16FBB1A70081C1E8 /* Default-568h@2x.png */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -1145,8 +1088,6 @@
 		16C074AF17B28C4A00351113 /* traumbaum mac */ = {
 			isa = PBXGroup;
 			children = (
-				16750A23183E27AD0028195B /* NSBezierPath+CGPathConversion.h */,
-				16750A24183E27AD0028195B /* NSBezierPath+CGPathConversion.m */,
 				16C074A817B28C4A00351113 /* Frameworks */,
 				16C074BB17B28C4A00351113 /* VMPAppDelegate.h */,
 				16C074BC17B28C4A00351113 /* VMPAppDelegate.m */,
@@ -1267,16 +1208,8 @@
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 0500;
-				TargetAttributes = {
-					16A27F0616FBB1A70081C1E8 = {
-						DevelopmentTeam = 8476FPU6X3;
-					};
-					16C074A617B28C4900351113 = {
-						DevelopmentTeam = 8476FPU6X3;
-					};
-				};
 			};
-			buildConfigurationList = 168CEBA8163186B300B721E2 /* Build configuration list for PBXProject "OnTheFly" */;
+			buildConfigurationList = 168CEBA8163186B300B721E2 /* Build configuration list for PBXProject "OnTheFly_dp6" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -1286,7 +1219,6 @@
 				de,
 				fr,
 				es,
-				Base,
 			);
 			mainGroup = 168CEBA3163186B300B721E2;
 			productRefGroup = 168CEBAF163186B400B721E2 /* Products */;
@@ -1337,19 +1269,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				16A27F1316FBB1A70081C1E8 /* InfoPlist.strings in Resources */,
-				1699134A18190C2900290B8D /* Default-568h@2x.png in Resources */,
-				169913461818A8A300290B8D /* appicon120.png in Resources */,
+				16A27F1B16FBB1A70081C1E8 /* Default.png in Resources */,
+				16A27F1D16FBB1A70081C1E8 /* Default@2x.png in Resources */,
+				16A27F1F16FBB1A70081C1E8 /* Default-568h@2x.png in Resources */,
 				16A27F4716FC14460081C1E8 /* defaultSong in Resources */,
-				1699134C18190C2900290B8D /* Default~iphone.png in Resources */,
 				16A27F5216FC2EC90081C1E8 /* default.vms in Resources */,
 				1693CBD717166596005846E6 /* iPhone-UI in Resources */,
 				1693CBD9171665DA005846E6 /* appicon.png in Resources */,
-				161CC69A17E51F97001C869D /* TraumBaum.entitlements in Resources */,
 				1693CBDB171665EA005846E6 /* appicon@2x.png in Resources */,
 				160ED034173B517A0009D04B /* License.rtf in Resources */,
 				160ED043173B517A0009D04B /* README.markdown in Resources */,
-				1699134B18190C2900290B8D /* Default.png in Resources */,
-				16B9F8EF184493FF00CDAD27 /* VMViewController_iPhone.xib in Resources */,
+				168F875217A2815900FCA42F /* VMViewController_iPhone.xib in Resources */,
 				168F875717A283B500FCA42F /* VMPInfoView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1358,12 +1288,14 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				16750A2A18409D8D0028195B /* tb_new_artwork.png in Resources */,
 				16C074B417B28C4A00351113 /* InfoPlist.strings in Resources */,
 				16C074BA17B28C4A00351113 /* Credits.rtf in Resources */,
 				16C074DF17B2B27100351113 /* defaultSong in Resources */,
 				16C074C017B28C4B00351113 /* MainMenu.xib in Resources */,
-				16DF1D9E184195B1005850B7 /* tb_new_osx.icns in Resources */,
+				16C074DE17B2B16500351113 /* skin0_phone.jpg in Resources */,
+				16C074E017B2BB9200351113 /* appicon@2x.png in Resources */,
+				16C074E217B2BC8E00351113 /* traumbaum.icns in Resources */,
+				16C074E917B3755C00351113 /* skin1_phone.jpg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1393,7 +1325,6 @@
 				162F7B4E16A1130300420443 /* VMPlayerOSXDelegate.m in Sources */,
 				162F7B5516A1135600420443 /* VMPEditor.xcdatamodeld in Sources */,
 				162F7B4D16A112D300420443 /* main.m in Sources */,
-				16F77CCC1865802400B58BA7 /* VMRoute.m in Sources */,
 				1677774016C0D600007206CF /* VMPApplescriptReceiver.m in Sources */,
 				1677781816C0D6A0007206CF /* VMPTrackView.m in Sources */,
 				1677781C16C0D6A0007206CF /* VMPEditorWindowController.m in Sources */,
@@ -1406,7 +1337,6 @@
 				16C90C7E1722774800F7E91F /* VMPHistogramView.m in Sources */,
 				16C90C8417241EF500F7E91F /* VMPLogView.m in Sources */,
 				165DAC2C172D54CE009708B3 /* VMPTimeRangeEditorView.m in Sources */,
-				1695A50C1805390800EEC1F5 /* VMPTimeManager.m in Sources */,
 				1696ADD6172E7344008362E5 /* VMPAudioInfoEditorViewController.m in Sources */,
 				160E51941732783000C3D9BB /* VMPVariablesPanelController.m in Sources */,
 				160E519A17338EA600C3D9BB /* VMPObjectGraphView.m in Sources */,
@@ -1444,7 +1374,6 @@
 				1662315D173C9FA300F70FCB /* VMPrimitives.m in Sources */,
 				162FBBCD174071FE0060E003 /* VMPTest.m in Sources */,
 				16A2030D17474F4700CD2A57 /* VMPFragmentCell.m in Sources */,
-				16D7EB2B1861AB2800D0BCEB /* VMRouteComputer.m in Sources */,
 				163C02B117C9D5F300244A81 /* VMPDSP.m in Sources */,
 				1698E49617CA208200D2130A /* VMPInsertFragmentWindowController.m in Sources */,
 			);
@@ -1460,10 +1389,8 @@
 				1677781D16C0D6A0007206CF /* VMPEditorWindowController.m in Sources */,
 				1677782916C0D6A0007206CF /* VMPTrackStrip.m in Sources */,
 				1677782D16C0D6A0007206CF /* VMPCanvas.m in Sources */,
-				16F77CCD1865802400B58BA7 /* VMRoute.m in Sources */,
 				16347C1316C286C9002BE1FE /* VMPGraph.m in Sources */,
 				16C7677216DC83DE003636C3 /* VMPAnalyzer.m in Sources */,
-				16D7EB2C1861AB2800D0BCEB /* VMRouteComputer.m in Sources */,
 				16C90C7F1722774800F7E91F /* VMPHistogramView.m in Sources */,
 				16C90C8517241EF500F7E91F /* VMPLogView.m in Sources */,
 				160ECFB1173B50730009D04B /* VMPreprocessor.m in Sources */,
@@ -1474,7 +1401,6 @@
 				160ECFD7173B51160009D04B /* VMPAudioPlayer.m in Sources */,
 				160ECFDA173B51160009D04B /* VMPlayerBase.m in Sources */,
 				160ECFDD173B51160009D04B /* VMPSongPlayer.m in Sources */,
-				1695A50D1805390800EEC1F5 /* VMPTimeManager.m in Sources */,
 				160ED039173B517A0009D04B /* RegexKitLite.m in Sources */,
 				160ED045173B517A0009D04B /* CDataScanner.m in Sources */,
 				160ED048173B517A0009D04B /* CFilteringJSONSerializer.m in Sources */,
@@ -1507,21 +1433,17 @@
 				16A27F4A16FC1DF30081C1E8 /* VMPTrackView.m in Sources */,
 				16A27F4B16FC1DF30081C1E8 /* VMPTrackStrip.m in Sources */,
 				16A27F4C16FC1F720081C1E8 /* VMPCanvas.m in Sources */,
-				16A26C4F18010E4D00A91A46 /* VMPFrontView.m in Sources */,
-				16933BFC170C32E2005381FC /* VMPInfoView.m in Sources */,
+				16933BFC170C32E2005381FC /* VMPInfoViewController.m in Sources */,
 				16933C00170C389F005381FC /* VMPIHole.m in Sources */,
 				168A6350171902B700B08329 /* VMPScrollViewClipper.m in Sources */,
 				160ECFB2173B50730009D04B /* VMPreprocessor.m in Sources */,
-				16D7EB2D1861AB2800D0BCEB /* VMRouteComputer.m in Sources */,
 				160ECFB5173B50730009D04B /* VMScoreEvaluator.m in Sources */,
-				16F77CCE1865802400B58BA7 /* VMRoute.m in Sources */,
 				160ECFD8173B51160009D04B /* VMPAudioPlayer.m in Sources */,
 				160ECFDB173B51160009D04B /* VMPlayerBase.m in Sources */,
 				160ECFDE173B51160009D04B /* VMPSongPlayer.m in Sources */,
 				160ED03A173B517A0009D04B /* RegexKitLite.m in Sources */,
 				160ED046173B517A0009D04B /* CDataScanner.m in Sources */,
 				160ED049173B517A0009D04B /* CFilteringJSONSerializer.m in Sources */,
-				1629EAE01845D9A1009687F1 /* VMPMultiLanguage.m in Sources */,
 				160ED04C173B517A0009D04B /* CJSONDeserializer_BlocksExtensions.m in Sources */,
 				160ED04F173B517A0009D04B /* CJSONSerialization.m in Sources */,
 				160ED052173B517A0009D04B /* CJSONSerializedData.m in Sources */,
@@ -1540,10 +1462,8 @@
 				1662314C173C9F1A00F70FCB /* VMSong.m in Sources */,
 				1662315F173C9FA300F70FCB /* VMPrimitives.m in Sources */,
 				16C074A217B2750900351113 /* VMPRainyView.m in Sources */,
-				16C217D51845F2DD00C3A995 /* VMPTwitter.m in Sources */,
 				163C02B217C9D5F300244A81 /* VMPDSP.m in Sources */,
 				1698E49717CAC47300D2130A /* VMAudioObject.m in Sources */,
-				1695A50E1805390800EEC1F5 /* VMPTimeManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1552,7 +1472,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				16C074B617B28C4A00351113 /* main.m in Sources */,
-				16750A25183E27AD0028195B /* NSBezierPath+CGPathConversion.m in Sources */,
 				16C074BD17B28C4A00351113 /* VMPAppDelegate.m in Sources */,
 				16C074C417B2AEBF00351113 /* VMPAudioPlayer.m in Sources */,
 				16C074C517B2AEC300351113 /* VMPlayerBase.m in Sources */,
@@ -1563,10 +1482,7 @@
 				16C074CA17B2AEFA00351113 /* RegexKitLite.m in Sources */,
 				16C074CB17B2AF0B00351113 /* VMPJSONDeserializer.m in Sources */,
 				16C074CC17B2AF0E00351113 /* VMPJSONScanner.m in Sources */,
-				16960589183B853B001C3551 /* VMPFrontView.m in Sources */,
-				16D7EB2E1861AB2800D0BCEB /* VMRouteComputer.m in Sources */,
 				16C074CD17B2AF1500351113 /* CDataScanner.m in Sources */,
-				1695A50F1805390800EEC1F5 /* VMPTimeManager.m in Sources */,
 				16C074CE17B2AF1B00351113 /* CDataScanner_Extensions.m in Sources */,
 				16C074CF17B2AF1F00351113 /* NSDictionary_JSONExtensions.m in Sources */,
 				16C074D017B2AF2500351113 /* CJSONDeserializer.m in Sources */,
@@ -1579,9 +1495,7 @@
 				16C074D717B2AF5A00351113 /* VMScoreEvaluator.m in Sources */,
 				16C074DB17B2AFD500351113 /* VMPrimitives.m in Sources */,
 				16C074E417B2C0DF00351113 /* VMPRainyView.m in Sources */,
-				16750A28183F8A280028195B /* VMPColorAnimation.m in Sources */,
 				16C074E517B2C3DC00351113 /* VMPCanvas.m in Sources */,
-				16F77CCF1865802400B58BA7 /* VMRoute.m in Sources */,
 				163C02B317C9D5F300244A81 /* VMPDSP.m in Sources */,
 				1698E49817CAC47400D2130A /* VMAudioObject.m in Sources */,
 			);
@@ -1643,12 +1557,11 @@
 		168F875517A283B400FCA42F /* VMPInfoView.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
-				161CC69817E51B74001C869D /* Base */,
-				161CC6A417E52945001C869D /* en */,
-				161CC6A517E52948001C869D /* de */,
-				161CC6A617E5294A001C869D /* ja */,
-				161CC6A717E5294C001C869D /* fr */,
-				161CC6A817E5294E001C869D /* es */,
+				168F875617A283B500FCA42F /* en */,
+				168F875817A283CA00FCA42F /* de */,
+				168F875917A283D700FCA42F /* ja */,
+				168F875A17A2996100FCA42F /* fr */,
+				168F875C17A2997500FCA42F /* es */,
 			);
 			name = VMPInfoView.xib;
 			sourceTree = "<group>";
@@ -1664,7 +1577,11 @@
 		16A27F2316FBB1A70081C1E8 /* VMViewController_iPhone.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
-				161CC69E17E51FD5001C869D /* Base */,
+				16A27F2416FBB1A70081C1E8 /* en */,
+				168F875317A2823F00FCA42F /* ja */,
+				168F875417A2824D00FCA42F /* de */,
+				168F875B17A2996100FCA42F /* fr */,
+				168F875D17A2997500FCA42F /* es */,
 			);
 			name = VMViewController_iPhone.xib;
 			sourceTree = "<group>";
@@ -1864,8 +1781,7 @@
 				GCC_PREFIX_HEADER = "Traumbaum/Traumbaum-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = $inherited;
 				INFOPLIST_FILE = "Traumbaum/Traumbaum-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
-				MACH_O_TYPE = mh_execute;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				PRODUCT_NAME = "traumbaum for iOS";
 				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
@@ -1881,8 +1797,8 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
 				CLANG_CXX_LIBRARY = "compiler-default";
 				CLANG_WARN_EMPTY_BODY = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				COPY_PHASE_STRIP = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1892,8 +1808,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Traumbaum/Traumbaum-Prefix.pch";
 				INFOPLIST_FILE = "Traumbaum/Traumbaum-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
-				MACH_O_TYPE = mh_execute;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				PRODUCT_NAME = "traumbaum for iOS";
 				PROVISIONING_PROFILE = "";
@@ -1909,7 +1824,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_WARN_EMPTY_BODY = YES;
@@ -1926,9 +1840,9 @@
 				);
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				INFOPLIST_FILE = "traumbaum mac/traumbaum mac-Info.plist";
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				PRODUCT_NAME = traumbaum;
-				SDKROOT = macosx10.8;
+				SDKROOT = macosx;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -1937,7 +1851,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_WARN_EMPTY_BODY = YES;
@@ -1950,9 +1863,9 @@
 				GCC_PREFIX_HEADER = "traumbaum mac/traumbaum mac-Prefix.pch";
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				INFOPLIST_FILE = "traumbaum mac/traumbaum mac-Info.plist";
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				PRODUCT_NAME = traumbaum;
-				SDKROOT = macosx10.8;
+				SDKROOT = macosx;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -1978,7 +1891,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		168CEBA8163186B300B721E2 /* Build configuration list for PBXProject "OnTheFly" */ = {
+		168CEBA8163186B300B721E2 /* Build configuration list for PBXProject "OnTheFly_dp6" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				168CEBCD163186B400B721E2 /* Debug */,

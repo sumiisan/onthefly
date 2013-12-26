@@ -622,10 +622,8 @@
 	
 	VMInt num = sequence.length;
 	
-	CGFloat contentHeight 	= self.contentRect.size.height - y;
-	VMFloat ratioLeft = 1.;
-	
-	CGFloat activeHeight = contentHeight * ratioLeft;
+	CGFloat contentHeight 	= self.contentRect.size.height - y;	
+	CGFloat activeHeight = contentHeight;
 	
 	for ( int position = 0; position < num; ++position ) {
 		CGFloat graphWidth = vmpCellWidth;

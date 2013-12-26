@@ -16,6 +16,7 @@
 #import "VMPNotification.h"
 #import "VMPCodeEditorView.h"
 #import "VMPObjectGraphView.h"
+#import "VMScoreEvaluator.h"
 
 #define FormString NSString stringWithFormat:
 
@@ -333,13 +334,14 @@ static VMPObjectCell		*typeColumnCell = nil;
 				[sections.mutableChildNodes addObject:tracks];
 			} else {
 				VMData *data = [_songData item:[dataArray item:0]];
-				[sections.mutableChildNodes addObject:[NSTreeNode treeNodeWithRepresentedObject:( data ? data : [dataArray item:0] )]];
+				[sections.mutableChildNodes
+				 addObject:[NSTreeNode treeNodeWithRepresentedObject:( data ? data : [dataArray item:0] )]];
 			}
 		}
 		[self.objectRoot.mutableChildNodes addObject:sections];
 	}
 	[self.objectTreeView reloadData];
-	self.referrerList = [DEFAULTANALYZER collectReferrer];
+	self.referrerList = [DEFAULTEVALUATOR collectReferrer];
 	
 	VMNullify(dataIdList);	//	reset id cache for auto-complete
 	

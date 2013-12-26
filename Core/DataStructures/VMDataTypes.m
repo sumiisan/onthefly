@@ -11,6 +11,7 @@
 #import "VMPreprocessor.h"
 #import "VMException.h"
 #import "VMDataTypesMacros.h"
+#import "VMRoute.h"
 
 #if VMP_EDITOR
 #import "VMPAnalyzer.h"
@@ -1158,6 +1159,10 @@ if ( ClassMatch(data, NSString)) {
 	return fragIds;
 }
 
+- (VMTime)averageDuration {	//	abstract
+	return 0;
+}
+
 #pragma mark public methods
 
 /*
@@ -1434,8 +1439,8 @@ static VMHash *scoreForFragment_static_ = nil;
 #if VMP_PLAYER
 	if ( ClassMatch( ch, VMId )) {
 		//	create chance on the fly. (because when suspended, they are stored as id reference )
-		VMChance *newChance = [[[VMChance alloc] init] autorelease];
-		[newChance setByString:ch];
+		VMChance *newChance = [[[[VMChance alloc] init] autorelease] setByString:ch];
+//		[newChance setByString:ch];
 		[self.fragments setItem:newChance at:pos];
 		return newChance;
 	}
@@ -1582,6 +1587,11 @@ static VMHash *scoreForFragment_static_ = nil;
 	return fragIds;
 }
 
+
+- (BOOL)useSubsequentOfBranchFragments {
+	return [[self chanceAtIndex:0].targetId isEqualToString: @"*"];
+}
+
 //
 //	dead-end means:
 //
@@ -1591,8 +1601,7 @@ static VMHash *scoreForFragment_static_ = nil;
 //		3.	all included selectors are dead-end
 //
 - (BOOL)isDeadEnd {
-	if ( self.fragments.count == 0 ) return YES;
-	if ( [[self chanceAtIndex:0].targetId isEqualToString: @"*"] ) return YES;
+	if ( self.fragments.count == 0 || self.useSubsequentOfBranchFragments ) return YES;
 	
 	VMInt c = self.length;
 	for( VMInt i = 0; i < c; ++i ) {
@@ -1607,10 +1616,6 @@ static VMHash *scoreForFragment_static_ = nil;
 		
 	}
 	return YES;
-}
-
-- (BOOL)useSubsequentOfBranchFragments {
-	return [[self chanceAtIndex:0].targetId isEqualToString: @"*"];
 }
 
 - (VMFloat)ratioOfDeadEndBranchesWithScores:(VMHash*)scoreForFragments sumOfScores:(VMFloat)sum {
@@ -1644,6 +1649,65 @@ static VMHash *scoreForFragment_static_ = nil;
 	//LLog(@"deadEndRatio %@=%.3f (%f/%f)", self.fragId, ( deadEndScore / sum ), deadEndScore, sum );
 	return deadEndScore / sum;
 }
+
+
+- (VMTime)averageDuration {
+	VMTime duration = 0;
+	int c = (int)self.length;
+	for ( int i = 0; i < c; ++i ) {
+		VMFragment *f = [self fragmentAtIndex:i];
+		
+		switch ( f.type ) {
+			case vmObjectType_audioFragment:
+				duration += ((VMAudioFragment*)f).duration;
+				break;
+			case vmObjectType_selector:
+				duration += [((VMSelector*)f) averageDuration];
+				break;
+			case vmObjectType_sequence:
+				duration += [((VMSequence*)f) averageDuration];
+				break;
+			default:
+				assert(0);		//	we are expecting audioFragment, selector or sequence.
+				break;
+		}
+	}
+	return duration / (double)c;	//	average
+}
+
+
+//
+//	same as averageDuration, but we do not follow sequences inside. (treat as exit point)
+//
+- (VMTime)averageDurationDoNotFollowSequences {
+	VMTime duration = 0;
+	int c = (int)self.length;
+	int n = 0;
+	for ( int i = 0; i < c; ++i ) {
+		VMFragment *f = [self fragmentAtIndex:i];
+		
+		switch ( f.type ) {
+			case vmObjectType_audioFragment:
+				duration += ((VMAudioFragment*)f).duration;
+				++n;
+				break;
+			case vmObjectType_selector:
+				duration += [((VMSelector*)f) averageDurationDoNotFollowSequences];
+				++n;
+				break;
+			case vmObjectType_sequence:
+				break;
+			default:
+				assert(0);		//	we are expecting audioFragment, selector or sequence.
+				break;
+		}
+	}
+	return duration / (double)n;	//	average
+}
+
+
+
+
 
 #pragma mark obligatory (selector)
 VMObligatory_resolveUntilType(
@@ -1708,6 +1772,104 @@ VMOBLIGATORY_setWithData()
 - (void)convertFragmentObjectsToReference {
 	[super convertFragmentObjectsToReference];
 	[self.subsequent convertFragmentObjectsToReference];
+}
+
+
+
+//
+//	averaged duration
+//
+- (VMTime)averageDuration {
+	VMTime duration = 0;
+	int c = (int)self.length;
+	for ( int i = 0; i < c; ++i ) {
+		VMFragment *f = [self fragmentAtIndex:i];
+		
+		switch ( f.type ) {
+			case vmObjectType_audioFragment:
+				duration += ((VMAudioFragment*)f).duration;
+				break;
+			case vmObjectType_selector:
+				duration += [((VMSelector*)f) averageDuration];
+				break;
+			case vmObjectType_sequence:
+				duration += [((VMSequence*)f) averageDuration];
+				break;
+			default:
+				assert(0);		//	we are expecting audioFragment, selector or sequence.
+				break;
+		}
+	}
+	return duration;
+	
+}
+
+
+//
+//	list up possible routes for exit points
+//
+- (VMHash*)routeList {
+	VMHash *routeList = ARInstance(VMHash);
+	if ( self.subsequent.useSubsequentOfBranchFragments ) {
+		//
+		//	the subseq is the only exit.
+		//
+		VMRoute *route = ARInstance(VMRoute);
+		route.route = [[self fragments] copy];
+		route.length = [self averageDuration];
+		int c = (int)self.subsequent.length;
+		for( int i = 0; i < c; ++i ) {
+			[routeList setValue:route forKey:[self fragmentAtIndex:i].id];
+		}
+	} else {
+		VMTime duration = 0;
+		//
+		//	collect route and time for all exits.
+		//
+		
+		VMSequence *sequence = self;
+		VMInt length = sequence.length;
+		for ( int position = 0; position < length; ++position ) {
+			VMFragment *fragmentAtPosition = [sequence fragmentAtIndex:position];
+			VMTime	durationSum = 0;
+			int		numOfSummedFrags = 0;
+			switch ( (int)fragmentAtPosition.type ) {
+				case vmObjectType_selector: {
+					//	selector
+					VMSelector *selector = ClassCast( fragmentAtPosition, VMSelector );
+					VMInt numOfBranches = selector.length;
+					for ( int selPosition = 0; selPosition < numOfBranches; ++selPosition ) {
+						//	(1) exclude sequences. they are exits.
+						VMFragment *f = [selector fragmentAtIndex:selPosition];
+						if ( ! f.type == vmObjectType_sequence ) {
+							//	(2) sum the duration of audiofragments and selectors inside.
+							
+
+							//	(4) for sequences inside, clone the main route until this selector, make routes for sequences.
+						
+					}
+					
+					break;
+				}
+				case vmObjectType_audioFragment: {
+					//	audio
+					//	add to main route
+					break;
+				}
+				case vmObjectType_sequence: {
+					//	sequence
+					//	this is exit sequence.
+					break;
+				}
+				default:
+					assert(0);		//	we expect sel, audioFragment or sequence.
+					break;
+			}
+		}
+		
+	}
+	
+	return routeList;
 }
 
 #pragma mark private method
