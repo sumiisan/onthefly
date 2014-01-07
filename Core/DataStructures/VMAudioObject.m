@@ -185,7 +185,7 @@
 }
 
 
-/*
+#if 0
  
 	depreciated
  
@@ -223,10 +223,10 @@
 	}
 	return image;
 }
-*/
+#endif
 
-/*
- 
+#if 0
+
  //
  //
  //
@@ -245,7 +245,7 @@
  that is obtained straight from the fft.
  Tested and working.
  Cheers!
- * /
+ */
 
 #include <iostream>
 #include <Accelerate/Accelerate.h>
@@ -292,7 +292,7 @@ int main(int argc, const char * argv[])
 	
     fftSetup = vDSP_create_fftsetup(log2n, FFT_RADIX2);
 	
-    /* Carry out a Forward and Inverse FFT transform. * /
+    /* Carry out a Forward and Inverse FFT transform. */
     vDSP_ctoz((COMPLEX *) input, 2, &A, 1, L/2);
     vDSP_fft_zrip(fftSetup, &A, 1, log2n, FFT_FORWARD);
 	
@@ -369,6 +369,6 @@ int main(int argc, const char * argv[])
 	
 }
 
-*/
-
+#endif
+ 
 @end

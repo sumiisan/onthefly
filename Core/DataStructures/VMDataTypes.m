@@ -1844,12 +1844,13 @@ VMOBLIGATORY_setWithData()
 						if ( ! f.type == vmObjectType_sequence ) {
 							//	(2) sum the duration of audiofragments and selectors inside.
 							
-
+							
 							//	(4) for sequences inside, clone the main route until this selector, make routes for sequences.
+							
+						}
 						
+						break;
 					}
-					
-					break;
 				}
 				case vmObjectType_audioFragment: {
 					//	audio
