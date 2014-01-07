@@ -62,7 +62,7 @@
 }
 
 - (void)dealloc {
-	self.playedFrags = nil;
+	VMNullify(playedFrags);
 	[super dealloc];
 }
 
@@ -569,11 +569,33 @@ BOOL verbose = NO;
 #pragma mark -
 #pragma mark loading
 
+//
+//	reload vms and merge livedata when vms file was updated
+//
+- (BOOL)update {
+    NSError *outError = nil;
+	VMHash *loadedSong = [self.songData retain];
+	self.songData = ARInstance( VMHash );
+	
+	BOOL success = [self readFromURL:self.fileURL error:&outError];
+	if ( ! success ) {
+		NSLog(@"VMSong: could not open %@", self.fileURL.path );
+		return NO;
+	}
+	
+	[DEFAULTPREPROCESSOR mergeLiveData:loadedSong];
+	
+	[loadedSong release];
+	return success;
+}
+
+
 //	returns YES on success, NO if failed.
 - (BOOL)readFromURL:(NSURL *)url error:(NSError **)outError {
     NSData *data = [NSData dataWithContentsOfURL:url options:NSDataReadingUncached error:outError];
 	if ( [self readFromData:data error:outError] ) {
 		self.fileURL = url;
+		self.fileTimeStamp = [[[NSFileManager defaultManager] attributesOfItemAtPath:url.path error:nil] fileModificationDate];
 		return YES;
 	}
 	return NO;
@@ -673,7 +695,8 @@ BOOL verbose = NO;
 	VMNullify(audioFileDirectory);
 	VMNullify(audioFileExtension);
 	VMNullify(vmsData);
-	
+	VMNullify(fileTimeStamp);
+
 #if VMP_LOGGING
 	VMNullify(log);
 #endif
@@ -689,6 +712,8 @@ BOOL verbose = NO;
 	if (self ) {
 		self = [self init];
 		float __unused dataVersion = [aDecoder decodeFloatForKey:@"dataVersion"];
+		self.fileURL = [aDecoder decodeObjectForKey:@"fileURL"];
+		if ( ! self.fileURL ) return nil;			//	possibly uninitialized. (data structure from older version)
 		self.songData = [aDecoder decodeObjectForKey:@"songData"];
 		self.history = [aDecoder decodeObjectForKey:@"history"];
 		self.defaultFragmentId = [aDecoder decodeObjectForKey:@"defaultFragmentId"];
@@ -696,8 +721,16 @@ BOOL verbose = NO;
 		self.audioFileDirectory = [aDecoder decodeObjectForKey:@"audioFileDirectory"];
 		self.audioFileExtension = [aDecoder decodeObjectForKey:@"audioFileExtension"];
 		self.songStatistics = [aDecoder decodeObjectForKey:@"songStatistics"];
+		self.fileTimeStamp = [aDecoder decodeObjectForKey:@"fileTimeStamp"];
 		DEFAULTEVALUATOR.variables = [aDecoder decodeObjectForKey:@"variables"];
 		NSLog(@"Variables: %@",DEFAULTEVALUATOR.variables);
+		
+		NSDate *fileTimeStamp = [[[NSFileManager defaultManager]
+								  attributesOfItemAtPath:self.fileURL.path error:nil]
+								 fileModificationDate];
+		if ( ! self.fileTimeStamp || [self.fileTimeStamp timeIntervalSinceDate:fileTimeStamp] < 0 ) {
+			[self update];
+		}
 
 	}
 	return self;
@@ -712,7 +745,8 @@ BOOL verbose = NO;
 	[aCoder encodeObject:self.audioFileDirectory forKey:@"audioFileDirectory"];
 	[aCoder encodeObject:self.audioFileExtension forKey:@"audioFileExtension"];
 	[aCoder encodeObject:self.songStatistics forKey:@"songStatistics"];
-	
+	[aCoder encodeObject:self.fileTimeStamp forKey:@"fileTimeStamp"];
+	[aCoder encodeObject:self.fileURL forKey:@"fileURL"];
 	[aCoder encodeObject:DEFAULTEVALUATOR.variables forKey:@"variables"];
 }
 
@@ -738,10 +772,10 @@ BOOL verbose = NO;
 	
 	NSKeyedUnarchiver *decoder = [[NSKeyedUnarchiver alloc] initForReadingWithData:data];
 	VMSong *song = [[VMSong alloc] initWithCoder:decoder];
+	if ( ! song ) return nil;
 	DEFAULTPREPROCESSOR.song = song;
 	[DEFAULTPREPROCESSOR setAudioInfoRefForAllAudioFragments];	//update link.
 	[decoder release];
-	song.fileURL = url;
 	return AutoRelease(song);
 }
 

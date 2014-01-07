@@ -243,6 +243,9 @@
 		16F77CCD1865802400B58BA7 /* VMRoute.m in Sources */ = {isa = PBXBuildFile; fileRef = 16F77CCB1865802400B58BA7 /* VMRoute.m */; };
 		16F77CCE1865802400B58BA7 /* VMRoute.m in Sources */ = {isa = PBXBuildFile; fileRef = 16F77CCB1865802400B58BA7 /* VMRoute.m */; };
 		16F77CCF1865802400B58BA7 /* VMRoute.m in Sources */ = {isa = PBXBuildFile; fileRef = 16F77CCB1865802400B58BA7 /* VMRoute.m */; };
+		16F77D24186BC71400B58BA7 /* VMAudioFFT.mm in Sources */ = {isa = PBXBuildFile; fileRef = 16F77D22186BC71400B58BA7 /* VMAudioFFT.mm */; };
+		16F77D26186BC71400B58BA7 /* VMAudioFFT.mm in Sources */ = {isa = PBXBuildFile; fileRef = 16F77D22186BC71400B58BA7 /* VMAudioFFT.mm */; };
+		16F77D28186D436700B58BA7 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16F77D27186D436700B58BA7 /* Accelerate.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXBuildRule section */
@@ -532,6 +535,9 @@
 		16DF1D9D184195B1005850B7 /* tb_new_osx.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = tb_new_osx.icns; sourceTree = "<group>"; };
 		16F77CCA1865802400B58BA7 /* VMRoute.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VMRoute.h; path = Core/DataStructures/VMRoute.h; sourceTree = SOURCE_ROOT; };
 		16F77CCB1865802400B58BA7 /* VMRoute.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VMRoute.m; path = Core/DataStructures/VMRoute.m; sourceTree = SOURCE_ROOT; };
+		16F77D22186BC71400B58BA7 /* VMAudioFFT.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = VMAudioFFT.mm; path = Core/DataStructures/VMAudioFFT.mm; sourceTree = SOURCE_ROOT; };
+		16F77D23186BC71400B58BA7 /* VMAudioFFT.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VMAudioFFT.h; path = Core/DataStructures/VMAudioFFT.h; sourceTree = SOURCE_ROOT; };
+		16F77D27186D436700B58BA7 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -539,6 +545,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				16F77D28186D436700B58BA7 /* Accelerate.framework in Frameworks */,
 				16A27F0016F9730F0081C1E8 /* AudioToolbox.framework in Frameworks */,
 				162F7B6616A1151B00420443 /* libicucore.dylib in Frameworks */,
 				162F7B1A16A0341900420443 /* Cocoa.framework in Frameworks */,
@@ -881,6 +888,8 @@
 			children = (
 				16623151173C9FA300F70FCB /* VMAudioObject.h */,
 				16623152173C9FA300F70FCB /* VMAudioObject.m */,
+				16F77D23186BC71400B58BA7 /* VMAudioFFT.h */,
+				16F77D22186BC71400B58BA7 /* VMAudioFFT.mm */,
 				16623153173C9FA300F70FCB /* VMLog.h */,
 				16623154173C9FA300F70FCB /* VMLog.m */,
 				16623155173C9FA300F70FCB /* VMPrimitives.h */,
@@ -946,6 +955,7 @@
 			isa = PBXGroup;
 			children = (
 				1624A7131644D8AC004AA351 /* libicucore.dylib */,
+				16F77D27186D436700B58BA7 /* Accelerate.framework */,
 				168CEBB5163186B400B721E2 /* AppKit.framework */,
 				168CEBB6163186B400B721E2 /* CoreData.framework */,
 				168CEBB7163186B400B721E2 /* Foundation.framework */,
@@ -1398,6 +1408,7 @@
 				1677781816C0D6A0007206CF /* VMPTrackView.m in Sources */,
 				1677781C16C0D6A0007206CF /* VMPEditorWindowController.m in Sources */,
 				1677782816C0D6A0007206CF /* VMPTrackStrip.m in Sources */,
+				16F77D24186BC71400B58BA7 /* VMAudioFFT.mm in Sources */,
 				1677782C16C0D6A0007206CF /* VMPCanvas.m in Sources */,
 				16347C1216C286C9002BE1FE /* VMPGraph.m in Sources */,
 				16C7677116DC83DE003636C3 /* VMPAnalyzer.m in Sources */,
@@ -1573,6 +1584,7 @@
 				16C074D117B2AF2800351113 /* CJSONScanner.m in Sources */,
 				16C074D217B2AF2D00351113 /* CJSONSerializer.m in Sources */,
 				16C074D317B2AF4500351113 /* VMTextPreprocessor.m in Sources */,
+				16F77D26186BC71400B58BA7 /* VMAudioFFT.mm in Sources */,
 				16C074D417B2AF4800351113 /* VMException.m in Sources */,
 				16C074D517B2AF4E00351113 /* boxmuller.c in Sources */,
 				16C074D617B2AF5600351113 /* VMPreprocessor.m in Sources */,

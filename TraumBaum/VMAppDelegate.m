@@ -124,7 +124,10 @@ static VMAppDelegate *appDelegate_singleton_;
 		[self loadSongFromVMS];
     }
 	
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(endOfSequence:) name:ENDOFSEQUENCE_NOTIFICATION object:nil];
+	[[NSNotificationCenter defaultCenter]
+	 addObserver:self selector:@selector(endOfSequence:)
+	 name:ENDOFSEQUENCE_NOTIFICATION
+	 object:nil];
 	
 	
     [DEFAULTSONGPLAYER warmUp];
@@ -151,6 +154,8 @@ static VMAppDelegate *appDelegate_singleton_;
 	if( self.song ) {
 		DEFAULTSONGPLAYER.song = self.song;		//	unsafe_unretained.
 		NSLog(@"**** load saved song");
+	} else {
+		NSLog(@"**** could not load saved song");
 	}
 	return (self.song != nil);
 }
@@ -366,7 +371,6 @@ static VMAppDelegate *appDelegate_singleton_;
 	NSLog(@"\n---------------------------------\n"
 		  "applicationWillEnterForeground"
 		  "\n---------------------------------\n");
-	
 	
 	if ( ! self.isBackgroundPlaybackEnabled ) {
 		[DEFAULTSONGPLAYER setFadeFrom:0 to:0 length:0];	//	set fader to zero

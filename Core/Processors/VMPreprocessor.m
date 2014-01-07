@@ -1476,6 +1476,32 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 	//	IMPLEMENT LATER
 }
 
+#pragma mark - merging
+
+- (BOOL)mergeLiveData:(VMHash *)songDataToMerge {
+	VMArray *keys = [songDataToMerge keys];
+	for( VMId *dataId in keys ) {
+		VMData *src = [songDataToMerge item:dataId];
+		switch ((int)src.type) {
+				// currently merge only selectors
+			case vmObjectType_selector: {
+				VMSelector *dst = [self data:dataId];
+				if ( dst ) {
+					if ( dst.type != vmObjectType_selector ) {
+						[VMException alert:@"Error"
+									format:@"%@ doesn't match type %@", dst.id, [self->stringForType item:VMIntObj(dst.type)]];
+					}
+					dst.liveData = ((VMSelector*)src).liveData;
+					NSLog(@"merged livedata of %@",dst.id);
+				}
+				break;
+			}
+		}
+	}
+	
+	return YES;
+}
+
 #pragma mark -
 #pragma mark init and dealloc
 

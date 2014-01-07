@@ -8,13 +8,12 @@
 
 #import "VMPInfoView.h"
 #import "MultiPlatform.h"
+#import "VMScoreEvaluator.h"
 #import "VMPSongPlayer.h"
 #import "VMAppDelegate.h"
 #import "VMPScrollViewClipper.h"
 #import "VMViewController.h"
 #import "VMPFrontView.h"
-//#import "KTOneFingerRotationGestureRecognizer-master/KTOneFingerRotationGestureRecognizer.h"
-//#import "VMPRainyView.h"
 #import "VMPMultiLanguage.h"
 
 @implementation VMPInfoView
@@ -23,36 +22,6 @@
 #define DROPBOX_MESSAGE_URL @"https://dl.dropboxusercontent.com/u/147605/tbmessage.txt"
 
 #define ARImageView(fileName) [[[UIImageView alloc] initWithImage:[UIImage imageNamed:fileName]] autorelease]
-
-/*
-- (void)newButtonAt:(CGPoint)position type:(NSString*)type tag:(NSInteger)tag {
-		
-	UIButton *bt = [UIButton buttonWithType:UIButtonTypeCustom];
-	
-	[bt setImage:[UIImage imageNamed:[NSString stringWithFormat:@"iPhone-UI/%@_button_up.png",type]]
-		forState:UIControlStateNormal];
-	UIImage *downImage = [UIImage imageNamed:[NSString stringWithFormat:@"iPhone-UI/%@_button_dn.png",type]];
-	[bt setImage:downImage forState:UIControlStateHighlighted];
-	[bt setImage:downImage forState:UIControlStateSelected];
-	
-	bt.frame = CGRectMake( position.x, position.y, downImage.size.width * 0.5, downImage.size.height * 0.5 );
-	bt.tag = tag;
-
-	[bt addTarget:self action:@selector(buttonTouched:) forControlEvents:UIControlEventTouchUpInside];
-	[self.view addSubview:bt];
-}
-
-- (void)selectButtonWithTag:(NSInteger)tag {
-	for( UIView *view in self.view.subviews ) {
-		if( ! [view isKindOfClass:[UIButton class]] ) continue;
-		if ( view.tag == tag ) {
-			[((UIButton*)view) setSelected: YES];
-		} else {
-			[((UIButton*)view) setSelected: NO];
-		}
-	}
-}
-*/
 
 - (void)setBackgroundMode:(BOOL)enabled {
 	NSLog(@"Setting background playback to:%@", (enabled ? @"YES" : @"NO"));
@@ -71,7 +40,10 @@
 			//
 		case 100:
 		case '_web':
-			[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://traumbaum.aframasda.com/"]];
+			[[UIApplication sharedApplication]
+			 openURL:[NSURL URLWithString:
+					  [NSString stringWithFormat:@"http://traumbaum.aframasda.com/?l=%@",
+					   [VMPMultiLanguage language]]]];
 			closeDialog = NO;
 			break;
 			
@@ -81,7 +53,7 @@
 		case 101:
 		case 'rset': {
 			closeDialog = NO;
-
+			self.statisticsLabel.hidden = NO;
 			UIAlertView *av = [[UIAlertView alloc] initWithTitle:[VMPMultiLanguage confirmTitle]
 														 message:[VMPMultiLanguage reallyRestartMessage]
 														delegate:self
@@ -113,19 +85,16 @@
 			closeDialog = NO;
 			break;
 		}
-/*
-		case 103:	{	//	dark ui
-			BOOL darkBG = self.darkBGSwitch.isOn;
-			[[NSUserDefaults standardUserDefaults] setBool:darkBG forKey:@"darkBgEnabled"];
-			[self.delegate setSkinIndex:(darkBG ? 1 : 0)];
-
-			closeDialog = NO;
-			break;
-		}
-*/
 		case 104:
 		case 'rtrn':
 			//	nothing to do.
+			break;
+			
+		case 112:
+			[[NSUserDefaults standardUserDefaults] setObject:b.titleLabel.text forKey:@"dismissedMessage"];
+			b.hidden = YES;
+			closeDialog = NO;
+			//	message
 			break;
 			
 	}
@@ -137,6 +106,7 @@
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+	self.statisticsLabel.hidden = YES;
 	if( buttonIndex == 1) {
 		self.statisticsLabel.text = @"";
 		[self closeView];
@@ -151,22 +121,21 @@
 	
 	self.backgroundPlaySwitch.on = [[NSUserDefaults standardUserDefaults] boolForKey:@"doesPlayInBackground"];
 	self.backgroundColor = [UIColor clearColor];
-	
-//	CGRect screenRect = [UIScreen mainScreen].bounds;
-//	CGFloat vOffset = ( screenRect.size.height - self.frame.size.height ) * 0.5;
-	
+		
 	self.frame = [UIScreen mainScreen].bounds;
-	NSLog(@"frame:%@",NSStringFromCGRect(self.frame));
+	//NSLog(@"frame:%@",NSStringFromCGRect(self.frame));
+	
+	CGFloat b = 1.;
+	[DEFAULTEVALUATOR.timeManager.backgroundColor getHue:nil saturation:nil brightness:&b alpha:nil];
+	BOOL isDarkBG = ( b < 0.3 );
 	
 	UIView		*bgSwitchBG		= [self viewWithTag:109];
 	UIView		*titlePane		= [self viewWithTag:110];
 	UIView		*controlPane	= [self viewWithTag:111];
-	UILabel		*infoField		= (UILabel*)[self viewWithTag:112];
+	UIButton	*infoButton		= (UIButton*)[self viewWithTag:112];
 	UIButton	*resetButton	= (UIButton*)[self viewWithTag:101];
 	UIButton	*backButton		= (UIButton*)[self viewWithTag:104];
-	
-	//	adjust titlePane postiion
-//	titlePane.center = [VMAppDelegate defaultAppDelegate].viewController.frontView.holeCenter;
+		
 	CGPoint center = [VMAppDelegate defaultAppDelegate].viewController.frontView.holeCenter;
 	titlePane.frame = CGRectMake(0,center.y-110,320,220);
 	controlPane.frame = CGRectMake(0, self.bounds.size.height-controlPane.frame.size.height,
@@ -174,65 +143,34 @@
 	
 	CAGradientLayer *g0 = [CAGradientLayer layer];
 	g0.frame = self.frame;
+	CGFloat bgBrightness = isDarkBG ? 0.13 : 0.87;
+	CGFloat textBrightness = isDarkBG ? 0.8 : 0.2;
+	CGFloat panelBGBrightness = isDarkBG ? 0.1 : 1.;
+	VMPColor *textColor = VMPColorBy(textBrightness, textBrightness, textBrightness, 1.);
+	VMPColor *panelColor = VMPColorBy(panelBGBrightness, panelBGBrightness, panelBGBrightness, 0.5 );
 	g0.colors = [NSArray arrayWithObjects:
-				 (id)[UIColor colorWithWhite:.87 alpha:.7].CGColor,
-				 (id)[UIColor colorWithWhite:.87 alpha:.6].CGColor,
-				 (id)[UIColor colorWithWhite:.87 alpha:.5].CGColor,
-				 (id)[UIColor colorWithWhite:.87 alpha:.4].CGColor,
+				 (id)[UIColor colorWithWhite:bgBrightness alpha:.5].CGColor,
+				 (id)[UIColor colorWithWhite:bgBrightness alpha:.6].CGColor,
+				 (id)[UIColor colorWithWhite:bgBrightness alpha:.7].CGColor,
+				 (id)[UIColor colorWithWhite:bgBrightness alpha:.5].CGColor,
 				 nil];
-	g0.locations = @[ @0.0, @0.1, @0.9, @1.0 ];
+	g0.locations = @[ @0.0, @0.03, @0.97, @1.0 ];
 	
 	[self.layer insertSublayer:g0 atIndex:0];
-	
-	CAGradientLayer *g1 = [CAGradientLayer layer];
-	g1.frame = CGRectMake( 0, -40, 320, titlePane.bounds.size.height + 80 );
-	g1.colors = [NSArray arrayWithObjects:
-				 (id)[UIColor colorWithWhite:.99 alpha:.0].CGColor,
-				 (id)[UIColor colorWithWhite:.99 alpha:.5].CGColor,
-				 (id)[UIColor colorWithWhite:.99 alpha:.6].CGColor,
-				 (id)[UIColor colorWithWhite:.99 alpha:.6].CGColor,
-				 (id)[UIColor colorWithWhite:.99 alpha:.5].CGColor,
-				 (id)[UIColor colorWithWhite:.99 alpha:.0].CGColor,
-				 nil];
-	g1.locations = @[ @0.0, @0.1, @0.2, @0.8, @0.9, @1.0 ];
-	
-//	[titlePane.layer insertSublayer:g1 atIndex:0];
-	
-	NSArray *ar = [NSArray arrayWithObjects:
-				   (id)[UIColor colorWithWhite:.70 alpha:.1].CGColor,
-				   (id)[UIColor colorWithWhite:.99 alpha:.3].CGColor,
-				   (id)[UIColor colorWithWhite:.99 alpha:.6].CGColor,
-				   (id)[UIColor colorWithWhite:.99 alpha:.6].CGColor,
-				   (id)[UIColor colorWithWhite:.99 alpha:.3].CGColor,
-				   (id)[UIColor colorWithWhite:.70 alpha:.1].CGColor,
-				   nil];
-	NSArray *lc = @[ @0.0, @0.03, @0.06, @0.94, @0.97, @1.0 ];
-	
-	CAGradientLayer *g2 = [CAGradientLayer layer];
-	CAGradientLayer *g3 = [CAGradientLayer layer];
-	CAGradientLayer *g4 = [CAGradientLayer layer];
-	CAGradientLayer *g5 = [CAGradientLayer layer];
-	g2.frame = bgSwitchBG.bounds;
-	g3.frame = resetButton.bounds;
-	g4.frame = backButton.bounds;
-	g5.frame = infoField.bounds;
-	g2.colors = ar;
-	g3.colors = ar;
-	g4.colors = ar;
-	g5.colors = ar;
-	g2.locations = lc;
-	g3.locations = lc;
-	g4.locations = lc;
-	g5.locations = lc;
 
-	[bgSwitchBG.layer insertSublayer:g2 atIndex:0];
-	[resetButton.layer insertSublayer:g3 atIndex:0];
-	[backButton.layer insertSublayer:g4 atIndex:0];
-	[infoField.layer insertSublayer:g5 atIndex:0];
-	infoField.hidden = YES;
+	infoButton.hidden = YES;
+	infoButton.titleLabel.textColor = textColor;
+	infoButton.titleLabel.textAlignment = NSTextAlignmentCenter;
+	infoButton.backgroundColor = panelColor;
+	resetButton.backgroundColor = panelColor;
+	backButton.backgroundColor = panelColor;
+	bgSwitchBG.backgroundColor = panelColor;
+
+	self.statisticsLabel.hidden = YES;
 	
-//	self.frame = CGRectMake(0, vOffset, self.frame.size.width, self.frame.size.height );
-//	NSLog(@"%@", NSStringFromCGRect(self.frame));
+    for (UIView *subview in titlePane.subviews) if( subview.class == [UILabel class] ) ((UILabel*)subview).textColor = textColor;
+    for (UIView *subview in bgSwitchBG.subviews) if( subview.class == [UILabel class] ) ((UILabel*)subview).textColor = textColor;
+
 	[UIView beginAnimations:nil context:nil];
 	[UIView setAnimationDuration:1.];
 	self.alpha = 1;
@@ -265,12 +203,13 @@
 		}
 	}
 	
-	UILabel	*infoField = (UILabel*)[self viewWithTag:112];
-	infoField.text = message;
+	UIButton *infoButton = (UIButton*)[self viewWithTag:112];
+	//NSLog(@"new:%@ dism:%@",message,dismissed);
 	if ( message.length > 0 && ! [message isEqualToString:dismissed] ) {
-		infoField.hidden = NO;
+		infoButton.hidden = NO;
+		[infoButton setTitle:message forState:UIControlStateNormal];
 	} else {
-		infoField.hidden = YES;
+		infoButton.hidden = YES;
 	}
 }
 
@@ -296,6 +235,7 @@
 
 - (void)closeView {
 	[DEFAULTSONGPLAYER setDimmed:NO];
+	[self hideTrackViewIfPresent];
 	[UIView animateWithDuration:1.0f
 					 animations:^(){
 						 self.alpha = 0.;
@@ -334,18 +274,7 @@
 	[self addGestureRecognizer:tgr];
 	Release(tgr);
 }
-/*
-- (void)tweetFetched:(NSNotification*)notification {
-	NSDictionary *tl = notification.userInfo;
-	UILabel		*infoField		= (UILabel*)[self viewWithTag:112];
-	infoField.text = tl.description;
-}
-*/
-/*
-- (void)rotating:(KTOneFingerRotationGestureRecognizer *)recognizer {
-	double angle = recognizer.rotation;
-	NSLog( @"angle: %.2f", angle );
-}*/
+
 
 - (void)willMoveToSuperview:(UIView *)newSuperview {
 
@@ -356,28 +285,34 @@
 	[super willMoveToSuperview:newSuperview];
 }
 
-- (void)toggleTrackView:(id)sender {
-	
-	if ( supressToggleTrackViewUntil > [NSDate timeIntervalSinceReferenceDate]) return;
-	supressToggleTrackViewUntil = [NSDate timeIntervalSinceReferenceDate] + 0.5;
-	
+
+- (BOOL)hideTrackViewIfPresent {
 	VMPTrackView *tv = (VMPTrackView*)[self viewWithTag:'trkV'];
 	if ( tv ) {
 		//	hide
 		DEFAULTSONGPLAYER.trackView = nil;
 		[tv removeFromSuperview];
-		return;
 	}
-	//	show;
-	tv = AutoRelease([[VMPTrackView alloc] initWithFrame:self.frame]);
-	tv.tag = 'trkV';
-	[self addSubview:tv];
-	[DEFAULTSONGPLAYER setDimmed:NO];
-	DEFAULTSONGPLAYER.trackView = tv;
+	return tv != nil;
+}
+
+- (void)toggleTrackView:(id)sender {
+	if ( supressToggleTrackViewUntil > [NSDate timeIntervalSinceReferenceDate]) return;
+	supressToggleTrackViewUntil = [NSDate timeIntervalSinceReferenceDate] + 0.5;
+	
+	if ( ! [self hideTrackViewIfPresent] ) {
+		//	show;
+		VMPTrackView *tv = AutoRelease([[VMPTrackView alloc] initWithFrame:self.frame]);
+		tv.tag = 'trkV';
+		[self addSubview:tv];
+		[DEFAULTSONGPLAYER setDimmed:NO];
+		DEFAULTSONGPLAYER.trackView = tv;
+	}
 }
 
 - (void)dealloc {
 //	VMNullify(scrollContentView);
+	DEFAULTSONGPLAYER.trackView = nil;
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	[super dealloc];
 }
@@ -406,15 +341,6 @@
 	return self;
 }
 
-/*
-- (id)initWithCoder:(NSCoder *)aDecoder {
-	self = [super initWithCoder:aDecoder];
-    if (self) {
-		[self attachGestureRecognizer];
-
-    }
-	return self;
-}*/
 /*
 - (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView {
     return self.scrollContentView;

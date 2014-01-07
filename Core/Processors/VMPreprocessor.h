@@ -74,6 +74,7 @@
 
 //	preprocess
 - (BOOL)preprocess:(NSString*)vmsText error:(NSError**)outError;
+- (BOOL)mergeLiveData:(VMHash*)songDataToMerge;
 
 //	databse access
 - (id)data:(VMId*)dataId;			//	this does resolve aliases.

@@ -58,6 +58,7 @@
 //	song data structure
 @property (nonatomic, VMStrong)		VMHash	 *songData;
 @property (nonatomic, VMStrong)		VMString *vmsData;
+@property (nonatomic, VMStrong)		NSDate	 *fileTimeStamp;
 
 //	static song properties
 @property (nonatomic, VMStrong)		VMString *songName;

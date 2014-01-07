@@ -179,7 +179,9 @@
 
 	static const VMFloat	secondsPreroll			= 0.3;
 	static const VMFloat	secondsPreparePlayer	= 3.;
-	static const VMFloat	secondsLookAhead		= secondsPreparePlayer + 7.;//	0.5;	changed ss131215
+	static const VMFloat	secondsLookAhead		= secondsPreparePlayer + 0.5;//7.;//	0.5;	changed ss131215
+												//	seems to have some bug: if you set this value higher, the player may
+												//	schedule multiple frags at once at the same time.	(review ss140101)
 	static const VMFloat	secondsAutoFadeOut		= 0.5;
 	static VMPSongPlayer 	*songPlayer_singleton_static_ = nil;
 
@@ -459,7 +461,7 @@
 	[player play];
 	
 	[DEFAULTSONG.songStatistics addAudioFrag:af];			//	runtime statistics.
-	LLog(@"(%.1f):%@",self.currentTime, af.id);
+	LLog(@"(%.2f):%@ (%.2f)",self.currentTime, af.id, af.duration);
 	
 	af.firedTimestamp = [NSDate timeIntervalSinceReferenceDate];
 	[self.playTimeAccumulator addAudioFragment:af];

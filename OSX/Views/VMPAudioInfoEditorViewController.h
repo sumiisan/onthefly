@@ -11,11 +11,14 @@
 #import "VMDataTypes.h"
 #import "VMAudioObject.h"
 #import "VMPAudioPlayer.h"
+#import "VMAudioFFT.h"
 
 //--------------------- VMPWaveView -----------------------------
 
 @interface VMPWaveView : VMPGraph
 @property (nonatomic, VMStrong)		VMAudioObject					*audioObject;
+@property (nonatomic, VMStrong)		VMAudioFFTWrapper				*audioFFTWrapper;
+
 @end
 
 /*---------------------------------------------------------------------------------

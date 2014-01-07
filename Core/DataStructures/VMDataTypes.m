@@ -1439,8 +1439,8 @@ static VMHash *scoreForFragment_static_ = nil;
 #if VMP_PLAYER
 	if ( ClassMatch( ch, VMId )) {
 		//	create chance on the fly. (because when suspended, they are stored as id reference )
-		VMChance *newChance = [[[[VMChance alloc] init] autorelease] setByString:ch];
-//		[newChance setByString:ch];
+		VMChance *newChance = [[[VMChance alloc] init] autorelease];
+		[newChance setByString:ch];
 		[self.fragments setItem:newChance at:pos];
 		return newChance;
 	}
@@ -1868,7 +1868,7 @@ VMOBLIGATORY_setWithData()
 		}
 		
 	}
-	
+	}
 	return routeList;
 }
 

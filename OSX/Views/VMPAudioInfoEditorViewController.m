@@ -13,6 +13,7 @@
 #import "VMPSongPlayer.h"
 #import "VMPNotification.h"
 #import "VMPSongPlayer.h"
+#import "VMAudioFFT.h"
 
 /*---------------------------------------------------------------------------------
  
@@ -25,6 +26,7 @@
 #pragma mark -
 
 @implementation VMPWaveView
+@synthesize audioFFTWrapper=audioFFTWrapper_;
 
 - (BOOL)isOpaque {
 	return YES;
@@ -35,6 +37,10 @@
 		[self.backgroundColor set];
 		NSRectFill(dirtyRect);
 	}
+	if ( ! self.audioFFTWrapper ) {
+		self.audioFFTWrapper = [[VMAudioFFTWrapper alloc] init];
+	}
+	
 	VMFloat w = self.frame.size.width;
 	VMFloat beginP			= dirtyRect.origin.x / w;
 	VMFloat lengthP			= dirtyRect.size.width / w;
@@ -45,16 +51,64 @@
 		
 	VMFloat pixelPerFrame	=  dirtyRect.size.width / frameLength;
 	
-	void	*waveData = [_audioObject dataAtFrame:beginFrame];
+	void	*waveData		= [_audioObject dataAtFrame:beginFrame];
 
-	VMFloat currentX = dirtyRect.origin.x;
-	int x = dirtyRect.origin.x;
+	int waveX				= dirtyRect.origin.x;
+	VMFloat currentX		= dirtyRect.origin.x;
+
+	/*
+	//
+	//	plot spectrum
+	//
+	CGFloat x0 = dirtyRect.origin.x;
+	CGFloat wd = pixelPerFrame * kHalfFFTLength;
+	CGFloat x1 = x0 + wd;
+	CGFloat h = self.frame.size.height;
+	CGFloat logMax = logf(1.01 / 0.01);
+	
+//	NSLog(@"wavedata:%p beginFrame:%ld frameLength:%ld x0:%.2f",_audioObject.waveData,beginFrame,frameLength,x0);
+	for( VMInt ofs = 0; ofs	< frameLength; ofs += kHalfFFTLength ) {
+		[audioFFTWrapper_ fft:_audioObject.waveData
+				   sampleRate:_audioObject.framesPerSecond
+					   frames:frameLength
+					   offset:ofs+beginFrame];
+		//NSDictionary *d = [audioFFTWrapper_ features];
+		float *mag = [audioFFTWrapper_ magnitude];
+		CGFloat y0 = h;
+		CGFloat y1;
+		
+		float min = INFINITY;
+		float max = 0;
+
+		for ( int bin = 0; bin < kHalfFFTLength; ++bin ) {
+			float r = bin / (float)kHalfFFTLength;
+			
+			y1 = h - h * ( 1 + ( log( r + 0.01 ) / logMax ) );
+			float m = mag[bin] * 0.01;
+			if ( m > max ) max = m;
+			if ( m < min ) min = m;
+			if ( m >   1 ) m   = 1;
+			//NSLog(@"%.4f %.2f=%.2f %.2f -- %.2f",m,r,1 + (log( r + 0.01 ) / logMax) ,y0, y1);
+			
+			[[NSColor colorWithCalibratedHue:r saturation:0.5 brightness:m alpha:1] setFill];
+			[NSBezierPath fillRect:NSMakeRect(x0, y0, x1, y1)];
+			y0 = y1;
+		}
+		NSLog(@"%.2f - %.2f",min,max);
+		x0 = x1;
+		x1 = x1 + wd;
+	}
+*/
+	//
+	//	plot wave
+	//
 	VMFloat m = self.frame.size.height * 0.5;
 	Float32 *waveDataBorder = waveData + _audioObject.bytesPerFrame * frameLength +1;
 	if ( (void*)waveDataBorder > _audioObject.waveDataBorder ) waveDataBorder = _audioObject.waveDataBorder;
 	Float32 min =  2;
 	Float32 max = -2;
-	 
+	currentX	= dirtyRect.origin.x;
+	
 	[self.foregroundColor setStroke];
 	for( Float32 *p = waveData; p < waveDataBorder; ) {
 		Float32 l = *p++;
@@ -64,17 +118,18 @@
 		if ( max >  1 ) max = min;
 		if ( min < -1 ) min = max;
 		currentX += pixelPerFrame;
-		if ( ((int)currentX) > x ) {
-			[NSBezierPath strokeLineFromPoint:NSMakePoint(x+0.5, m + m * min) toPoint:NSMakePoint(x+0.5, m + m * max )];
+		if ( ((int)currentX) > waveX ) {
+			[NSBezierPath strokeLineFromPoint:NSMakePoint(waveX+0.5, m + m * min) toPoint:NSMakePoint(waveX+0.5, m + m * max )];
 			min =  2;
 			max = -2;
-			++x;
+			++waveX;
 		}
 	}
 }
 
 - (void)dealloc {
-    VMNullify(audioObject);
+ 	VMNullify(audioFFTWrapper);
+	VMNullify(audioObject);
 	[super dealloc];
 }
 
@@ -115,7 +170,7 @@ static const CGFloat kWaveDisplayHorizontalMargin = 20;
 	VMNullify(audioPlayer);
 	VMNullify(audioInfo);
 	VMNullify(audioObject);
-	Dealloc( super );;
+	Dealloc( super );
 }
 
 - (void)awakeFromNib {
@@ -140,6 +195,7 @@ static const CGFloat kWaveDisplayHorizontalMargin = 20;
 	
 	self.waveView.foregroundColor = [NSColor colorWithCalibratedRed:.4 green:.4 blue:.4 alpha:1.];
 	self.waveView.backgroundColor = [NSColor colorWithCalibratedRed:.85 green:.85 blue:.85 alpha:1.];
+	
 	[self updateFieldsAndKnobs];
 	
 	[VMPNotificationCenter addObserver:self selector:@selector(audioFragmentFired:) name:VMPNotificationAudioFragmentFired object:nil];
