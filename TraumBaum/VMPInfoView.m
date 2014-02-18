@@ -19,6 +19,10 @@
 #import "VMTraumbaumUserDefaults.h"
 #import "VMPSongListView.h"
 
+@interface VMPInfoView()
+	@property (nonatomic,retain) NSString *messageText;
+@end
+
 @implementation VMPInfoView
 
 //static const int kNumberOfSkins = 4;
@@ -98,13 +102,15 @@
 			//	nothing to do.
 			break;
 			
-		case 112:
-			[VMTraumbaumUserDefaults setLastDismissedMessage:b.titleLabel.text];
+		case 112: {
+			[VMTraumbaumUserDefaults setLastDismissedMessage:self.messageText];
 			b.hidden = YES;
+			UIWebView	*infoText	= (UIWebView*)[self viewWithTag:115];
+			infoText.hidden = YES;
 			closeDialog = NO;
 			//	message
 			break;
-			
+		}
 		case 120: {
 			//	song list
 			CGFloat h = self.bounds.size.height - 51;
@@ -161,6 +167,7 @@
 	
 	UIView		*controlPane	= [self viewWithTag:111];
 	UIButton	*infoButton		= (UIButton*)[self viewWithTag:112];
+	UIWebView	*infoText		= (UIWebView*)[self viewWithTag:115];
 	UIButton	*songListButton	= (UIButton*)[self viewWithTag:120];
 	UIButton	*resetButton	= (UIButton*)[self viewWithTag:101];
 	UIButton	*backButton		= (UIButton*)[self viewWithTag:104];
@@ -201,10 +208,16 @@
 	
 	[self.layer insertSublayer:g0 atIndex:0];
 
+	infoText.delegate =self;
+	infoText.hidden = YES;
+	//infoText.backgroundColor = panelColor;
+	infoText.userInteractionEnabled = YES;
+	
 	infoButton.hidden = YES;
-	infoButton.titleLabel.textColor = textColor;
 	infoButton.titleLabel.textAlignment = NSTextAlignmentCenter;
+	infoButton.titleLabel.textColor = textColor;
 	infoButton.backgroundColor = panelColor;
+
 	resetButton.backgroundColor = panelColor;
 	
 	songListButton.hidden = [VMVmsarcManager defaultManager].vmsCacheTable.count < 2;
@@ -249,24 +262,54 @@
 	NSString *wholeText = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
 	NSArray *lines = [wholeText componentsSeparatedByString:@"\n"];
 	NSString *preferredLanguage = [VMPMultiLanguage language];
-	NSString *message = nil;
+	self.messageText = nil;
+	
 	for( NSString *line in lines) {
 		NSArray *c = [line componentsSeparatedByString:@"|"];
 		if ( [c[0] isEqualToString:preferredLanguage])  {
-			message = c[1];
+			self.messageText = c[1];
 			break;
 		}
 	}
 	
-	UIButton *infoButton = (UIButton*)[self viewWithTag:112];
+	UIButton	*infoButton = (UIButton*)[self viewWithTag:112];
+	UIWebView	*infoText	= (UIWebView*)[self viewWithTag:115];
 	//NSLog(@"new:%@ dism:%@",message,dismissed);
-	if ( message.length > 0 && ! [VMTraumbaumUserDefaults isEqualToLastDismissedMessage:message] ) {
+	if ( self.messageText.length > 0 && ! [VMTraumbaumUserDefaults isEqualToLastDismissedMessage:self.messageText] ) {
 		infoButton.hidden = NO;
-		[infoButton setTitle:message forState:UIControlStateNormal];
+		infoButton.center = CGPointMake(infoButton.center.x-40, infoButton.center.y);
+		infoText.hidden = NO;
+		infoText.center = CGPointMake(infoText.center.x+280, infoText.center.y);
+		
+		const CGFloat *cmp = CGColorGetComponents(infoButton.titleLabel.textColor.CGColor);
+		[infoText loadHTMLString:[NSString stringWithFormat:
+								  @"<html><head>"
+								  "<style>\n"
+								  "body {font:15px helevetica,sans-serif; color:#%02x%02x%02x; }"
+								  "a:link {color:#0080FF; text-decoration:none;}\n"
+								  "a:visited {color:#0080FF; text-decoration:none;}\n"
+								  "div.message {width:280px; height:50px; padding:5px; border:0px; margin:0px; }"
+								  "</style>"
+								  "</head><body><div class=\"message\">%@</div></body></html>",
+								  (int)roundf(cmp[0] * 255.0), (int)roundf(cmp[1] * 255.0), (int)roundf(cmp[2] * 255.0),
+								  self.messageText]
+						 baseURL:nil];
+		[UIView animateWithDuration:0.5 animations:^(){
+			infoButton.center = CGPointMake(infoButton.center.x+40, infoButton.center.y);
+			infoText.center = CGPointMake(infoText.center.x-280, infoText.center.y);
+		}];
 	} else {
 		infoButton.hidden = YES;
+		infoText.hidden = YES;
 	}
 	[wholeText release];
+}
+	
+- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
+	if( [request.URL.absoluteString hasPrefix:@"about"] ) return YES;
+	[[UIApplication sharedApplication] openURL:request.URL];
+	
+	return NO;
 }
 
 - (void)updateStats:(id)sender {
@@ -319,12 +362,6 @@
 }
 
 - (void)initViewAndRecognizer {
-/*	[[NSNotificationCenter defaultCenter] addObserver:self
-											 selector:@selector(tweetFetched:)
-												 name:TWITTERTIMELINEFETCHED_NOTIFICATION
-											   object:nil];
-*/
-	
 	UITapGestureRecognizer *tgr = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(toggleTrackView:)];
 	tgr.numberOfTouchesRequired =
 #if TARGET_IPHONE_SIMULATOR
@@ -373,6 +410,7 @@
 - (void)dealloc {
 //	VMNullify(scrollContentView);
 	DEFAULTSONGPLAYER.trackView = nil;
+	self.messageText = nil;
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	[super dealloc];
 }

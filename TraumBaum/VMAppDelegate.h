@@ -11,6 +11,7 @@
 
 #import "VMPInfoView.h"
 #import "VMSong.h"
+#import "VMVmsarcManager.h"
 
 #define PLAYERSTARTED_NOTIFICATION @"vmplayerStarted"
 #define PLAYERSTOPPED_NOTIFICATION @"vmplayerStopped"
@@ -18,17 +19,24 @@
 
 @class VMViewController;
 
-@interface VMAppDelegate : UIResponder <UIApplicationDelegate,AVAudioSessionDelegate> {
+@interface VMAppDelegate : UIResponder <UIApplicationDelegate,AVAudioSessionDelegate,VMVmsarcManagerDelegate> {
 	BOOL audioSessionInited;
+	BOOL loadingExternalVMS;
 }
 
 + (VMAppDelegate*)defaultAppDelegate;
 - (void)setAudioBackgroundMode;
 - (BOOL)openVMSDocumentFromURL:(NSURL *)documentURL error:(NSError**)error;
 
+- (BOOL)saveSong:(BOOL)forceForeground;
+- (void)savePlayerState;
+	
+- (BOOL)loadSong;
+	
 - (void)stop;
+- (void)disposeQueue;
 - (void)pause;
-- (void)resume;
+- (BOOL)resume;
 - (void)reset;
 
 @property (strong, nonatomic) UIWindow *window;
