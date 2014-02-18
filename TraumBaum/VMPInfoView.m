@@ -9,12 +9,15 @@
 #import "VMPInfoView.h"
 #import "MultiPlatform.h"
 #import "VMScoreEvaluator.h"
+#import "VMSong.h"
 #import "VMPSongPlayer.h"
 #import "VMAppDelegate.h"
 #import "VMPScrollViewClipper.h"
 #import "VMViewController.h"
 #import "VMPFrontView.h"
 #import "VMPMultiLanguage.h"
+#import "VMTraumbaumUserDefaults.h"
+#import "VMPSongListView.h"
 
 @implementation VMPInfoView
 
@@ -25,7 +28,7 @@
 
 - (void)setBackgroundMode:(BOOL)enabled {
 	NSLog(@"Setting background playback to:%@", (enabled ? @"YES" : @"NO"));
-	[[NSUserDefaults standardUserDefaults] setBool:enabled forKey:@"doesPlayInBackground"];
+	[VMTraumbaumUserDefaults setBackgroundPlayback:enabled];
 	[[VMAppDelegate defaultAppDelegate] setAudioBackgroundMode];
 }
 
@@ -39,14 +42,19 @@
 			//	open webpage
 			//
 		case 100:
-		case '_web':
-			[[UIApplication sharedApplication]
-			 openURL:[NSURL URLWithString:
-					  [NSString stringWithFormat:@"http://traumbaum.aframasda.com/?l=%@",
-					   [VMPMultiLanguage language]]]];
+		case '_web': {
+			if ( [[[VMVmsarcManager defaultManager] propertyOfCurrentVMS:VMSCacheKey_BuiltIn] boolValue] ) {
+				[[UIApplication sharedApplication]
+				 openURL:[NSURL URLWithString:
+						  [NSString stringWithFormat:@"http://traumbaum.aframasda.com/?l=%@",
+						   [VMPMultiLanguage language]]]];
+			} else {
+				[[UIApplication sharedApplication]
+				 openURL:[NSURL URLWithString:DEFAULTSONG.websiteURL]];
+			}
 			closeDialog = NO;
 			break;
-			
+		}
 			//
 			//	reset song
 			//
@@ -77,7 +85,7 @@
 		}
 			
 		case 'plyb': {	//	toggle button
-			BOOL doesPlayInBackGround = [[NSUserDefaults standardUserDefaults] boolForKey:@"doesPlayInBackground"];
+			BOOL doesPlayInBackGround = [VMTraumbaumUserDefaults backgroundPlayback];
 			doesPlayInBackGround = ! doesPlayInBackGround;
 			[self setBackgroundMode:doesPlayInBackGround];
 			b.selected = doesPlayInBackGround;
@@ -91,12 +99,31 @@
 			break;
 			
 		case 112:
-			[[NSUserDefaults standardUserDefaults] setObject:b.titleLabel.text forKey:@"dismissedMessage"];
+			[VMTraumbaumUserDefaults setLastDismissedMessage:b.titleLabel.text];
 			b.hidden = YES;
 			closeDialog = NO;
 			//	message
 			break;
 			
+		case 120: {
+			//	song list
+			CGFloat h = self.bounds.size.height - 51;
+			VMPSongListView *listView = [[[VMPSongListView alloc]
+										  initWithFrame:CGRectMake(320, 0, self.bounds.size.width, h)] autorelease];
+			listView.alpha = 0.5;
+			listView.tag = 700;
+			[self addSubview:listView];
+//			listView.frame = CGRectMake(320, 0, self.bounds.size.width, h);
+			[UIView beginAnimations:nil context:nil];
+			[UIView setAnimationDuration:.3];
+			listView.alpha = 1.;
+			listView.frame = CGRectMake(0, 0, self.bounds.size.width, h);
+			[UIView commitAnimations];
+///			[[VMAppDelegate defaultAppDelegate].viewController presentViewController:VMPSongListView animated:YES completion:nil];
+			closeDialog = NO;
+
+			break;
+		}
 	}
 	
 	if (closeDialog) {
@@ -119,11 +146,11 @@
 	
 	[self retrieveMessageFile];
 	
-	self.backgroundPlaySwitch.on = [[NSUserDefaults standardUserDefaults] boolForKey:@"doesPlayInBackground"];
+	self.backgroundPlaySwitch.on = [VMTraumbaumUserDefaults backgroundPlayback];
 	self.backgroundColor = [UIColor clearColor];
 		
 	self.frame = [UIScreen mainScreen].bounds;
-	//NSLog(@"frame:%@",NSStringFromCGRect(self.frame));
+	BOOL externalVMSMode = [[VMVmsarcManager defaultManager] externalVMSMode];
 	
 	CGFloat b = 1.;
 	[DEFAULTEVALUATOR.timeManager.backgroundColor getHue:nil saturation:nil brightness:&b alpha:nil];
@@ -131,13 +158,29 @@
 	
 	UIView		*bgSwitchBG		= [self viewWithTag:109];
 	UIView		*titlePane		= [self viewWithTag:110];
+	
 	UIView		*controlPane	= [self viewWithTag:111];
 	UIButton	*infoButton		= (UIButton*)[self viewWithTag:112];
+	UIButton	*songListButton	= (UIButton*)[self viewWithTag:120];
 	UIButton	*resetButton	= (UIButton*)[self viewWithTag:101];
 	UIButton	*backButton		= (UIButton*)[self viewWithTag:104];
+	
+	UIButton	*websiteButton	= (UIButton*)[self viewWithTag:100];
+	
+	if( externalVMSMode ) {
+		UILabel		*subtitleLabel	= (UILabel*)[self viewWithTag:600];
+		UILabel		*titleLabel		= (UILabel*)[self viewWithTag:601];
+		UILabel		*versionLabel	= (UILabel*)[self viewWithTag:602];
+		UILabel		*creditsLabel	= (UILabel*)[self viewWithTag:603];
+		
+		subtitleLabel.text = DEFAULTSONG.songDescription;
+		titleLabel.text = DEFAULTSONG.songName;
+		versionLabel.text = DEFAULTSONG.versionString;
+		creditsLabel.text = [NSString stringWithFormat:@"%@\n%@", DEFAULTSONG.artist, DEFAULTSONG.copyright];
+	}
 		
 	CGPoint center = [VMAppDelegate defaultAppDelegate].viewController.frontView.holeCenter;
-	titlePane.frame = CGRectMake(0,center.y-110,320,220);
+	titlePane.frame = CGRectMake(0,center.y-60,320,121);
 	controlPane.frame = CGRectMake(0, self.bounds.size.height-controlPane.frame.size.height,
 								   320, controlPane.frame.size.height);
 	
@@ -163,8 +206,21 @@
 	infoButton.titleLabel.textAlignment = NSTextAlignmentCenter;
 	infoButton.backgroundColor = panelColor;
 	resetButton.backgroundColor = panelColor;
+	
+	songListButton.hidden = [VMVmsarcManager defaultManager].vmsCacheTable.count < 2;
+	songListButton.backgroundColor = panelColor;
+	[songListButton setTitle:[VMPMultiLanguage songlistTitle] forState:UIControlStateNormal];
+	[songListButton setTitle:[VMPMultiLanguage songlistTitle] forState:UIControlStateSelected];
 	backButton.backgroundColor = panelColor;
 	bgSwitchBG.backgroundColor = panelColor;
+	
+	if( DEFAULTSONG.websiteURL.length > 0 ) {
+		NSURL *url = [NSURL URLWithString:DEFAULTSONG.websiteURL];
+		websiteButton.titleLabel.text = [url.host stringByAppendingPathComponent:url.path];
+		websiteButton.hidden = NO;
+	} else {
+		websiteButton.hidden = YES;
+	}
 
 	self.statisticsLabel.hidden = YES;
 	
@@ -191,7 +247,6 @@
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
 	NSString *wholeText = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-	NSString *dismissed = [[NSUserDefaults standardUserDefaults] stringForKey:@"dismissedMessage"];
 	NSArray *lines = [wholeText componentsSeparatedByString:@"\n"];
 	NSString *preferredLanguage = [VMPMultiLanguage language];
 	NSString *message = nil;
@@ -205,12 +260,13 @@
 	
 	UIButton *infoButton = (UIButton*)[self viewWithTag:112];
 	//NSLog(@"new:%@ dism:%@",message,dismissed);
-	if ( message.length > 0 && ! [message isEqualToString:dismissed] ) {
+	if ( message.length > 0 && ! [VMTraumbaumUserDefaults isEqualToLastDismissedMessage:message] ) {
 		infoButton.hidden = NO;
 		[infoButton setTitle:message forState:UIControlStateNormal];
 	} else {
 		infoButton.hidden = YES;
 	}
+	[wholeText release];
 }
 
 - (void)updateStats:(id)sender {
@@ -239,9 +295,15 @@
 	[UIView animateWithDuration:1.0f
 					 animations:^(){
 						 self.alpha = 0.;
+						 UIView *listView = [self viewWithTag:700];
+						 if(listView) {
+							 listView.center = CGPointMake( listView.center.x + 320, listView.center.y );
+						 }
 					 }
 					 completion:^(BOOL finished){
-						 if( finished ) [self removeFromSuperview];
+						 if( finished ) {
+							 [self removeFromSuperview];
+						 }
 					 }];
 	
 	
@@ -278,10 +340,8 @@
 
 - (void)willMoveToSuperview:(UIView *)newSuperview {
 
-	self.backgroundPlaySwitch.on = [[NSUserDefaults standardUserDefaults] boolForKey:@"doesPlayInBackground"];
-	self.backgroundColor = [UIColor colorWithWhite:1. alpha:0.6];
-//	self.darkBGSwitch.on         = [[NSUserDefaults standardUserDefaults] boolForKey:@"darkBgEnabled"];
-	
+	self.backgroundPlaySwitch.on = [VMTraumbaumUserDefaults backgroundPlayback];
+	self.backgroundColor = [UIColor colorWithWhite:1. alpha:0.6];	
 	[super willMoveToSuperview:newSuperview];
 }
 

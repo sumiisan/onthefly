@@ -34,6 +34,7 @@
 #endif
 
 #import "VMPFrontView.h"
+#import "VMSong.h"
 #import "VMPSongPlayer.h"
 #import "VMScoreEvaluator.h"
 
@@ -284,6 +285,10 @@ stemLength=stemLength_,refreshScreenCounter=refreshScreenCounter_,lastDayPhase=l
 	VMPPoint touchPoint = [self convertPoint:[theEvent locationInWindow] fromView:nil];
 #endif
 	
+	if ( ! DEFAULTSONG.supportsTimer ) {
+		return;		//	no timer support
+	}
+	
 	//double distance = Eucl_Distance( touchPoint, touchBeginPoint_ );
 	
 	CGFloat baseY = ( holeCenter_.y + standardRadius_ * 1.2 );
@@ -385,8 +390,9 @@ stemLength=stemLength_,refreshScreenCounter=refreshScreenCounter_,lastDayPhase=l
 		targetVelocity_ = 0;
 		[[VMAppDelegate defaultAppDelegate] pause];
 	} else {
-		targetVelocity_ = 1;
-		[[VMAppDelegate defaultAppDelegate] resume];
+		if( [[VMAppDelegate defaultAppDelegate] resume] ) {
+			targetVelocity_ = 1;
+		}
 	}
 #else
 	if ( [DEFAULTSONGPLAYER isRunning] ) {

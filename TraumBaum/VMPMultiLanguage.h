@@ -22,9 +22,13 @@ typedef enum {
 + (NSString*)language;
 + (VMPLanguageCode)languageCode;
 + (NSString*)reallyRestartMessage;
-
++ (NSString*)oopsMessage;
++ (NSString*)needUpdateMessage;
 + (NSString*)yesString;
 + (NSString*)noString;
 + (NSString*)confirmTitle;
++ (NSString*)songlistTitle;
+	+ (NSString*)updateArchiveMessage;
+	+ (NSString*)downloadingMessage;
 
 @end

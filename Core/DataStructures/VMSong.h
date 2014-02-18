@@ -62,9 +62,13 @@
 
 //	static song properties
 @property (nonatomic, VMStrong)		VMString *songName;
+@property (nonatomic, VMStrong)		VMString *songDescription;
+@property (nonatomic, VMStrong)		VMString *artist;
+@property (nonatomic, VMStrong)		VMString *copyright;
+@property (nonatomic, VMStrong)		VMString *versionString;
+@property (nonatomic, VMStrong)		VMString *websiteURL;
+@property (nonatomic, VMWeak)		BOOL	 supportsTimer;
 @property (nonatomic, VMStrong)		VMString *audioFileExtension;
-//@property (nonatomic, VMStrong)		VMString *vsFilePath;
-
 @property (nonatomic, VMStrong)		VMString *audioFileDirectory;
 @property (nonatomic, VMStrong)		VMId	 *defaultFragmentId;
 

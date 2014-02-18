@@ -164,6 +164,8 @@
 		1695A50F1805390800EEC1F5 /* VMPTimeManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1695A50B1805390800EEC1F5 /* VMPTimeManager.m */; };
 		16960589183B853B001C3551 /* VMPFrontView.m in Sources */ = {isa = PBXBuildFile; fileRef = 16A26C4E18010E4D00A91A46 /* VMPFrontView.m */; };
 		1696ADD6172E7344008362E5 /* VMPAudioInfoEditorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1696ADD3172E7344008362E5 /* VMPAudioInfoEditorViewController.m */; };
+		1698AD57188E6734006AF34E /* VMTraumbaumUserDefaults.m in Sources */ = {isa = PBXBuildFile; fileRef = 1698AD56188E6734006AF34E /* VMTraumbaumUserDefaults.m */; };
+		1698AD58188E6734006AF34E /* VMTraumbaumUserDefaults.m in Sources */ = {isa = PBXBuildFile; fileRef = 1698AD56188E6734006AF34E /* VMTraumbaumUserDefaults.m */; };
 		1698E49617CA208200D2130A /* VMPInsertFragmentWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1698E49517CA208200D2130A /* VMPInsertFragmentWindowController.m */; };
 		1698E49717CAC47300D2130A /* VMAudioObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 16623152173C9FA300F70FCB /* VMAudioObject.m */; };
 		1698E49817CAC47400D2130A /* VMAudioObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 16623152173C9FA300F70FCB /* VMAudioObject.m */; };
@@ -183,7 +185,6 @@
 		16A27F4A16FC1DF30081C1E8 /* VMPTrackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677780B16C0D6A0007206CF /* VMPTrackView.m */; };
 		16A27F4B16FC1DF30081C1E8 /* VMPTrackStrip.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677781316C0D6A0007206CF /* VMPTrackStrip.m */; };
 		16A27F4C16FC1F720081C1E8 /* VMPCanvas.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677781516C0D6A0007206CF /* VMPCanvas.m */; };
-		16A27F5016FC2EC90081C1E8 /* default.vms in Resources */ = {isa = PBXBuildFile; fileRef = 16A27F4F16FC2EC90081C1E8 /* default.vms */; };
 		16A27F5216FC2EC90081C1E8 /* default.vms in Resources */ = {isa = PBXBuildFile; fileRef = 16A27F4F16FC2EC90081C1E8 /* default.vms */; };
 		16A27F5F17006E720081C1E8 /* VMPProgressWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 16A27F5C17006E720081C1E8 /* VMPProgressWindowController.m */; };
 		16A27F6117006E720081C1E8 /* VMPProgressWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 16A27F5D17006E720081C1E8 /* VMPProgressWindow.xib */; };
@@ -232,6 +233,28 @@
 		16C90C7F1722774800F7E91F /* VMPHistogramView.m in Sources */ = {isa = PBXBuildFile; fileRef = 16C90C7B1722774800F7E91F /* VMPHistogramView.m */; };
 		16C90C8417241EF500F7E91F /* VMPLogView.m in Sources */ = {isa = PBXBuildFile; fileRef = 16C90C8117241EF500F7E91F /* VMPLogView.m */; };
 		16C90C8517241EF500F7E91F /* VMPLogView.m in Sources */ = {isa = PBXBuildFile; fileRef = 16C90C8117241EF500F7E91F /* VMPLogView.m */; };
+		16D1EA0318AEDE33001AB5C4 /* VMVmsarcManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 16D1EA0218AEDE33001AB5C4 /* VMVmsarcManager.m */; };
+		16D1EA0418AEDE33001AB5C4 /* VMVmsarcManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 16D1EA0218AEDE33001AB5C4 /* VMVmsarcManager.m */; };
+		16D1EA1218AF1F4E001AB5C4 /* ioapi.c in Sources */ = {isa = PBXBuildFile; fileRef = 16D1EA0818AF1F4E001AB5C4 /* ioapi.c */; };
+		16D1EA1318AF1F4E001AB5C4 /* ioapi.c in Sources */ = {isa = PBXBuildFile; fileRef = 16D1EA0818AF1F4E001AB5C4 /* ioapi.c */; };
+		16D1EA1418AF1F4E001AB5C4 /* ioapi.c in Sources */ = {isa = PBXBuildFile; fileRef = 16D1EA0818AF1F4E001AB5C4 /* ioapi.c */; };
+		16D1EA1518AF1F4E001AB5C4 /* mztools.c in Sources */ = {isa = PBXBuildFile; fileRef = 16D1EA0A18AF1F4E001AB5C4 /* mztools.c */; };
+		16D1EA1618AF1F4E001AB5C4 /* mztools.c in Sources */ = {isa = PBXBuildFile; fileRef = 16D1EA0A18AF1F4E001AB5C4 /* mztools.c */; };
+		16D1EA1718AF1F4E001AB5C4 /* mztools.c in Sources */ = {isa = PBXBuildFile; fileRef = 16D1EA0A18AF1F4E001AB5C4 /* mztools.c */; };
+		16D1EA1818AF1F4E001AB5C4 /* unzip.c in Sources */ = {isa = PBXBuildFile; fileRef = 16D1EA0C18AF1F4E001AB5C4 /* unzip.c */; };
+		16D1EA1918AF1F4E001AB5C4 /* unzip.c in Sources */ = {isa = PBXBuildFile; fileRef = 16D1EA0C18AF1F4E001AB5C4 /* unzip.c */; };
+		16D1EA1A18AF1F4E001AB5C4 /* unzip.c in Sources */ = {isa = PBXBuildFile; fileRef = 16D1EA0C18AF1F4E001AB5C4 /* unzip.c */; };
+		16D1EA1B18AF1F4E001AB5C4 /* zip.c in Sources */ = {isa = PBXBuildFile; fileRef = 16D1EA0E18AF1F4E001AB5C4 /* zip.c */; };
+		16D1EA1C18AF1F4E001AB5C4 /* zip.c in Sources */ = {isa = PBXBuildFile; fileRef = 16D1EA0E18AF1F4E001AB5C4 /* zip.c */; };
+		16D1EA1D18AF1F4E001AB5C4 /* zip.c in Sources */ = {isa = PBXBuildFile; fileRef = 16D1EA0E18AF1F4E001AB5C4 /* zip.c */; };
+		16D1EA1E18AF1F4E001AB5C4 /* SSZipArchive.m in Sources */ = {isa = PBXBuildFile; fileRef = 16D1EA1118AF1F4E001AB5C4 /* SSZipArchive.m */; };
+		16D1EA1F18AF1F4E001AB5C4 /* SSZipArchive.m in Sources */ = {isa = PBXBuildFile; fileRef = 16D1EA1118AF1F4E001AB5C4 /* SSZipArchive.m */; };
+		16D1EA2018AF1F4E001AB5C4 /* SSZipArchive.m in Sources */ = {isa = PBXBuildFile; fileRef = 16D1EA1118AF1F4E001AB5C4 /* SSZipArchive.m */; };
+		16D1EA2218AF1F94001AB5C4 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 16D1EA2118AF1F94001AB5C4 /* libz.dylib */; };
+		16D1EA2918B005C1001AB5C4 /* VMPProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 16D1EA2818B005C1001AB5C4 /* VMPProgressView.m */; };
+		16D1EA2A18B005C1001AB5C4 /* VMPProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 16D1EA2818B005C1001AB5C4 /* VMPProgressView.m */; };
+		16D1EA2D18B04893001AB5C4 /* VMPSongListView.m in Sources */ = {isa = PBXBuildFile; fileRef = 16D1EA2C18B04893001AB5C4 /* VMPSongListView.m */; };
+		16D1EA2E18B04893001AB5C4 /* VMPSongListView.m in Sources */ = {isa = PBXBuildFile; fileRef = 16D1EA2C18B04893001AB5C4 /* VMPSongListView.m */; };
 		16D7EB2B1861AB2800D0BCEB /* VMRouteComputer.m in Sources */ = {isa = PBXBuildFile; fileRef = 16D7EB2A1861AB2800D0BCEB /* VMRouteComputer.m */; };
 		16D7EB2C1861AB2800D0BCEB /* VMRouteComputer.m in Sources */ = {isa = PBXBuildFile; fileRef = 16D7EB2A1861AB2800D0BCEB /* VMRouteComputer.m */; };
 		16D7EB2D1861AB2800D0BCEB /* VMRouteComputer.m in Sources */ = {isa = PBXBuildFile; fileRef = 16D7EB2A1861AB2800D0BCEB /* VMRouteComputer.m */; };
@@ -470,6 +493,9 @@
 		1695BE841634D5A3009103F4 /* vmp.sdef */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = vmp.sdef; sourceTree = "<group>"; };
 		1696ADD2172E7344008362E5 /* VMPAudioInfoEditorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = VMPAudioInfoEditorViewController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		1696ADD3172E7344008362E5 /* VMPAudioInfoEditorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = VMPAudioInfoEditorViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		1698AD52188E0863006AF34E /* VMP3D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VMP3D.h; path = TraumBaum/VMP3D.h; sourceTree = SOURCE_ROOT; };
+		1698AD55188E6734006AF34E /* VMTraumbaumUserDefaults.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VMTraumbaumUserDefaults.h; path = TraumBaum/VMTraumbaumUserDefaults.h; sourceTree = SOURCE_ROOT; };
+		1698AD56188E6734006AF34E /* VMTraumbaumUserDefaults.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VMTraumbaumUserDefaults.m; path = TraumBaum/VMTraumbaumUserDefaults.m; sourceTree = SOURCE_ROOT; };
 		1698E49417CA208100D2130A /* VMPInsertFragmentWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VMPInsertFragmentWindowController.h; sourceTree = "<group>"; };
 		1698E49517CA208200D2130A /* VMPInsertFragmentWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VMPInsertFragmentWindowController.m; sourceTree = "<group>"; };
 		169913451818A8A300290B8D /* appicon120.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = appicon120.png; sourceTree = SOURCE_ROOT; };
@@ -528,6 +554,24 @@
 		16C90C7B1722774800F7E91F /* VMPHistogramView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = VMPHistogramView.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		16C90C8017241EF500F7E91F /* VMPLogView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = VMPLogView.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		16C90C8117241EF500F7E91F /* VMPLogView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = VMPLogView.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		16D1EA0118AEDE33001AB5C4 /* VMVmsarcManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VMVmsarcManager.h; path = TraumBaum/VMVmsarcManager.h; sourceTree = SOURCE_ROOT; };
+		16D1EA0218AEDE33001AB5C4 /* VMVmsarcManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VMVmsarcManager.m; path = TraumBaum/VMVmsarcManager.m; sourceTree = SOURCE_ROOT; };
+		16D1EA0718AF1F4E001AB5C4 /* crypt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = crypt.h; sourceTree = "<group>"; };
+		16D1EA0818AF1F4E001AB5C4 /* ioapi.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ioapi.c; sourceTree = "<group>"; };
+		16D1EA0918AF1F4E001AB5C4 /* ioapi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ioapi.h; sourceTree = "<group>"; };
+		16D1EA0A18AF1F4E001AB5C4 /* mztools.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mztools.c; sourceTree = "<group>"; };
+		16D1EA0B18AF1F4E001AB5C4 /* mztools.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mztools.h; sourceTree = "<group>"; };
+		16D1EA0C18AF1F4E001AB5C4 /* unzip.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = unzip.c; sourceTree = "<group>"; };
+		16D1EA0D18AF1F4E001AB5C4 /* unzip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = unzip.h; sourceTree = "<group>"; };
+		16D1EA0E18AF1F4E001AB5C4 /* zip.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zip.c; sourceTree = "<group>"; };
+		16D1EA0F18AF1F4E001AB5C4 /* zip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = zip.h; sourceTree = "<group>"; };
+		16D1EA1018AF1F4E001AB5C4 /* SSZipArchive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSZipArchive.h; sourceTree = "<group>"; };
+		16D1EA1118AF1F4E001AB5C4 /* SSZipArchive.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSZipArchive.m; sourceTree = "<group>"; };
+		16D1EA2118AF1F94001AB5C4 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.0.sdk/usr/lib/libz.dylib; sourceTree = DEVELOPER_DIR; };
+		16D1EA2718B005C1001AB5C4 /* VMPProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VMPProgressView.h; path = TraumBaum/VMPProgressView.h; sourceTree = SOURCE_ROOT; };
+		16D1EA2818B005C1001AB5C4 /* VMPProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VMPProgressView.m; path = TraumBaum/VMPProgressView.m; sourceTree = SOURCE_ROOT; };
+		16D1EA2B18B04893001AB5C4 /* VMPSongListView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VMPSongListView.h; path = TraumBaum/VMPSongListView.h; sourceTree = SOURCE_ROOT; };
+		16D1EA2C18B04893001AB5C4 /* VMPSongListView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VMPSongListView.m; path = TraumBaum/VMPSongListView.m; sourceTree = SOURCE_ROOT; };
 		16D7EB291861AB2800D0BCEB /* VMRouteComputer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VMRouteComputer.h; sourceTree = "<group>"; };
 		16D7EB2A1861AB2800D0BCEB /* VMRouteComputer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VMRouteComputer.m; sourceTree = "<group>"; };
 		16DC63E016B78D8D00E579AE /* play.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = play.png; sourceTree = "<group>"; };
@@ -572,6 +616,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				16D1EA2218AF1F94001AB5C4 /* libz.dylib in Frameworks */,
 				16C217D91846004900C3A995 /* Accounts.framework in Frameworks */,
 				16C217D71845F50E00C3A995 /* Social.framework in Frameworks */,
 				161CC6B217E55316001C869D /* UIKit.framework in Frameworks */,
@@ -727,6 +772,7 @@
 		160ED06F173B6F6F0009D04B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				16D1EA2118AF1F94001AB5C4 /* libz.dylib */,
 				16C217D81846004800C3A995 /* Accounts.framework */,
 				16C217D61845F50E00C3A995 /* Social.framework */,
 				161CC6B117E55315001C869D /* UIKit.framework */,
@@ -823,6 +869,7 @@
 		162FBB93173CA1C40060E003 /* Libs */ = {
 			isa = PBXGroup;
 			children = (
+				16D1EA0518AF1F4E001AB5C4 /* SSZipArchive */,
 				160ECFEE173B517A0009D04B /* RegexKitLite-4.0 */,
 				160ECFFC173B517A0009D04B /* TouchJSON-master */,
 			);
@@ -1047,8 +1094,8 @@
 		1696ADD1172E69AB008362E5 /* Projects */ = {
 			isa = PBXGroup;
 			children = (
-				16C074AF17B28C4A00351113 /* traumbaum mac */,
 				16A27F0E16FBB1A70081C1E8 /* Traumbaum iOS */,
+				16C074AF17B28C4A00351113 /* traumbaum mac */,
 				162F7B1B16A0341900420443 /* TraumBaum_VMP */,
 			);
 			name = Projects;
@@ -1088,6 +1135,8 @@
 		16A27F0E16FBB1A70081C1E8 /* Traumbaum iOS */ = {
 			isa = PBXGroup;
 			children = (
+				1698AD55188E6734006AF34E /* VMTraumbaumUserDefaults.h */,
+				1698AD56188E6734006AF34E /* VMTraumbaumUserDefaults.m */,
 				16C217D31845F2DD00C3A995 /* VMPTwitter.h */,
 				16C217D41845F2DD00C3A995 /* VMPTwitter.m */,
 				168F875517A283B400FCA42F /* VMPInfoView.xib */,
@@ -1101,14 +1150,21 @@
 				16A27F2116FBB1A70081C1E8 /* VMViewController.m */,
 				16A26C4D18010E4D00A91A46 /* VMPFrontView.h */,
 				16A26C4E18010E4D00A91A46 /* VMPFrontView.m */,
+				16D1EA2718B005C1001AB5C4 /* VMPProgressView.h */,
+				16D1EA2818B005C1001AB5C4 /* VMPProgressView.m */,
 				16933BFA170C32E2005381FC /* VMPInfoView.h */,
 				16933BFB170C32E2005381FC /* VMPInfoView.m */,
 				16C074A017B2750900351113 /* VMPRainyView.h */,
 				16C074A117B2750900351113 /* VMPRainyView.m */,
+				16D1EA2B18B04893001AB5C4 /* VMPSongListView.h */,
+				16D1EA2C18B04893001AB5C4 /* VMPSongListView.m */,
 				160ED06F173B6F6F0009D04B /* Frameworks */,
 				16A27F0F16FBB1A70081C1E8 /* Supporting Files */,
 				168A634E171902B700B08329 /* VMPScrollViewClipper.h */,
 				168A634F171902B700B08329 /* VMPScrollViewClipper.m */,
+				1698AD52188E0863006AF34E /* VMP3D.h */,
+				16D1EA0118AEDE33001AB5C4 /* VMVmsarcManager.h */,
+				16D1EA0218AEDE33001AB5C4 /* VMVmsarcManager.m */,
 			);
 			name = "Traumbaum iOS";
 			path = Traumbaum;
@@ -1192,6 +1248,33 @@
 				1624A6FE1642B7D0004AA351 /* vsPlayer.icns */,
 			);
 			path = Resources;
+			sourceTree = "<group>";
+		};
+		16D1EA0518AF1F4E001AB5C4 /* SSZipArchive */ = {
+			isa = PBXGroup;
+			children = (
+				16D1EA0618AF1F4E001AB5C4 /* minizip */,
+				16D1EA1018AF1F4E001AB5C4 /* SSZipArchive.h */,
+				16D1EA1118AF1F4E001AB5C4 /* SSZipArchive.m */,
+			);
+			name = SSZipArchive;
+			path = "Core/Libs/ssziparchive-master/SSZipArchive";
+			sourceTree = SOURCE_ROOT;
+		};
+		16D1EA0618AF1F4E001AB5C4 /* minizip */ = {
+			isa = PBXGroup;
+			children = (
+				16D1EA0718AF1F4E001AB5C4 /* crypt.h */,
+				16D1EA0818AF1F4E001AB5C4 /* ioapi.c */,
+				16D1EA0918AF1F4E001AB5C4 /* ioapi.h */,
+				16D1EA0A18AF1F4E001AB5C4 /* mztools.c */,
+				16D1EA0B18AF1F4E001AB5C4 /* mztools.h */,
+				16D1EA0C18AF1F4E001AB5C4 /* unzip.c */,
+				16D1EA0D18AF1F4E001AB5C4 /* unzip.h */,
+				16D1EA0E18AF1F4E001AB5C4 /* zip.c */,
+				16D1EA0F18AF1F4E001AB5C4 /* zip.h */,
+			);
+			path = minizip;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1324,7 +1407,6 @@
 				161C9A9E16A585F2001E7B46 /* MainMenu.xib in Resources */,
 				16DC63E616B78D8D00E579AE /* play.png in Resources */,
 				16DC63EE16B78E2B00E579AE /* stop.png in Resources */,
-				16A27F5016FC2EC90081C1E8 /* default.vms in Resources */,
 				16A27F6117006E720081C1E8 /* VMPProgressWindow.xib in Resources */,
 				165DAC23172D541D009708B3 /* VMPAudioInfoEditorView.xib in Resources */,
 				165DAC27172D545F009708B3 /* VMPTimeRangeEditorView.xib in Resources */,
@@ -1414,6 +1496,7 @@
 				16C7677116DC83DE003636C3 /* VMPAnalyzer.m in Sources */,
 				16A27F5F17006E720081C1E8 /* VMPProgressWindowController.m in Sources */,
 				16A27F6517008A550081C1E8 /* VMPRecordDetailPopover.m in Sources */,
+				16D1EA1518AF1F4E001AB5C4 /* mztools.c in Sources */,
 				16C90C7E1722774800F7E91F /* VMPHistogramView.m in Sources */,
 				16C90C8417241EF500F7E91F /* VMPLogView.m in Sources */,
 				165DAC2C172D54CE009708B3 /* VMPTimeRangeEditorView.m in Sources */,
@@ -1427,9 +1510,11 @@
 				160ECFD6173B51160009D04B /* VMPAudioPlayer.m in Sources */,
 				160ECFD9173B51160009D04B /* VMPlayerBase.m in Sources */,
 				160ECFDC173B51160009D04B /* VMPSongPlayer.m in Sources */,
+				16D1EA1818AF1F4E001AB5C4 /* unzip.c in Sources */,
 				160ED038173B517A0009D04B /* RegexKitLite.m in Sources */,
 				160ED044173B517A0009D04B /* CDataScanner.m in Sources */,
 				160ED047173B517A0009D04B /* CFilteringJSONSerializer.m in Sources */,
+				16D1EA1218AF1F4E001AB5C4 /* ioapi.c in Sources */,
 				160ED04A173B517A0009D04B /* CJSONDeserializer_BlocksExtensions.m in Sources */,
 				160ED04D173B517A0009D04B /* CJSONSerialization.m in Sources */,
 				160ED050173B517A0009D04B /* CJSONSerializedData.m in Sources */,
@@ -1444,10 +1529,12 @@
 				160ED06A173B52670009D04B /* boxmuller.c in Sources */,
 				160ED06C173B526B0009D04B /* VMTextPreprocessor.m in Sources */,
 				16623132173C81D700F70FCB /* UKSyntaxColoredTextDocument.m in Sources */,
+				16D1EA1E18AF1F4E001AB5C4 /* SSZipArchive.m in Sources */,
 				16623138173C823D00F70FCB /* NSArray+Color.m in Sources */,
 				16623139173C823D00F70FCB /* NSScanner+SkipUpToCharset.m in Sources */,
 				1662313C173C8A4A00F70FCB /* VMPCodeEditorView.m in Sources */,
 				16623144173C9F1A00F70FCB /* VMDataTypes.m in Sources */,
+				16D1EA1B18AF1F4E001AB5C4 /* zip.c in Sources */,
 				16623147173C9F1A00F70FCB /* VMFunction.m in Sources */,
 				1662314A173C9F1A00F70FCB /* VMSong.m in Sources */,
 				16623157173C9FA300F70FCB /* VMAudioObject.m in Sources */,
@@ -1532,22 +1619,31 @@
 				160ED03A173B517A0009D04B /* RegexKitLite.m in Sources */,
 				160ED046173B517A0009D04B /* CDataScanner.m in Sources */,
 				160ED049173B517A0009D04B /* CFilteringJSONSerializer.m in Sources */,
+				16D1EA2918B005C1001AB5C4 /* VMPProgressView.m in Sources */,
 				1629EAE01845D9A1009687F1 /* VMPMultiLanguage.m in Sources */,
 				160ED04C173B517A0009D04B /* CJSONDeserializer_BlocksExtensions.m in Sources */,
 				160ED04F173B517A0009D04B /* CJSONSerialization.m in Sources */,
 				160ED052173B517A0009D04B /* CJSONSerializedData.m in Sources */,
 				160ED055173B517A0009D04B /* CDataScanner_Extensions.m in Sources */,
 				160ED058173B517A0009D04B /* NSDictionary_JSONExtensions.m in Sources */,
+				16D1EA2D18B04893001AB5C4 /* VMPSongListView.m in Sources */,
+				16D1EA1F18AF1F4E001AB5C4 /* SSZipArchive.m in Sources */,
 				160ED05B173B517A0009D04B /* CJSONDeserializer.m in Sources */,
 				160ED05E173B517A0009D04B /* CJSONScanner.m in Sources */,
 				160ED061173B517A0009D04B /* CJSONSerializer.m in Sources */,
 				160ED064173B517A0009D04B /* VMPJSONDeserializer.m in Sources */,
+				16D1EA1918AF1F4E001AB5C4 /* unzip.c in Sources */,
 				160ED067173B517A0009D04B /* VMPJSONScanner.m in Sources */,
+				16D1EA1C18AF1F4E001AB5C4 /* zip.c in Sources */,
+				16D1EA0318AEDE33001AB5C4 /* VMVmsarcManager.m in Sources */,
 				160ED069173B52580009D04B /* VMException.m in Sources */,
 				160ED06B173B52680009D04B /* boxmuller.c in Sources */,
+				16D1EA1318AF1F4E001AB5C4 /* ioapi.c in Sources */,
+				1698AD57188E6734006AF34E /* VMTraumbaumUserDefaults.m in Sources */,
 				160ED06D173B526C0009D04B /* VMTextPreprocessor.m in Sources */,
 				16623146173C9F1A00F70FCB /* VMDataTypes.m in Sources */,
 				16623149173C9F1A00F70FCB /* VMFunction.m in Sources */,
+				16D1EA1618AF1F4E001AB5C4 /* mztools.c in Sources */,
 				1662314C173C9F1A00F70FCB /* VMSong.m in Sources */,
 				1662315F173C9FA300F70FCB /* VMPrimitives.m in Sources */,
 				16C074A217B2750900351113 /* VMPRainyView.m in Sources */,
@@ -1569,6 +1665,7 @@
 				16C074C517B2AEC300351113 /* VMPlayerBase.m in Sources */,
 				16C074C617B2AEC700351113 /* VMPSongPlayer.m in Sources */,
 				16C074C717B2AED500351113 /* VMDataTypes.m in Sources */,
+				16D1EA2E18B04893001AB5C4 /* VMPSongListView.m in Sources */,
 				16C074C817B2AED900351113 /* VMFunction.m in Sources */,
 				16C074C917B2AEDE00351113 /* VMSong.m in Sources */,
 				16C074CA17B2AEFA00351113 /* RegexKitLite.m in Sources */,
@@ -1584,18 +1681,26 @@
 				16C074D117B2AF2800351113 /* CJSONScanner.m in Sources */,
 				16C074D217B2AF2D00351113 /* CJSONSerializer.m in Sources */,
 				16C074D317B2AF4500351113 /* VMTextPreprocessor.m in Sources */,
+				16D1EA1718AF1F4E001AB5C4 /* mztools.c in Sources */,
+				16D1EA0418AEDE33001AB5C4 /* VMVmsarcManager.m in Sources */,
 				16F77D26186BC71400B58BA7 /* VMAudioFFT.mm in Sources */,
 				16C074D417B2AF4800351113 /* VMException.m in Sources */,
 				16C074D517B2AF4E00351113 /* boxmuller.c in Sources */,
 				16C074D617B2AF5600351113 /* VMPreprocessor.m in Sources */,
 				16C074D717B2AF5A00351113 /* VMScoreEvaluator.m in Sources */,
 				16C074DB17B2AFD500351113 /* VMPrimitives.m in Sources */,
+				16D1EA1A18AF1F4E001AB5C4 /* unzip.c in Sources */,
 				16C074E417B2C0DF00351113 /* VMPRainyView.m in Sources */,
 				16750A28183F8A280028195B /* VMPColorAnimation.m in Sources */,
+				16D1EA2018AF1F4E001AB5C4 /* SSZipArchive.m in Sources */,
+				16D1EA1D18AF1F4E001AB5C4 /* zip.c in Sources */,
 				16C074E517B2C3DC00351113 /* VMPCanvas.m in Sources */,
+				16D1EA1418AF1F4E001AB5C4 /* ioapi.c in Sources */,
 				16F77CCF1865802400B58BA7 /* VMRoute.m in Sources */,
 				163C02B317C9D5F300244A81 /* VMPDSP.m in Sources */,
+				1698AD58188E6734006AF34E /* VMTraumbaumUserDefaults.m in Sources */,
 				1698E49817CAC47400D2130A /* VMAudioObject.m in Sources */,
+				16D1EA2A18B005C1001AB5C4 /* VMPProgressView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

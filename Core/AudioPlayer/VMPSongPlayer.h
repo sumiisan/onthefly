@@ -88,11 +88,6 @@
 	//	volume
     VMVolume				globalVolume;
 
-	//	fade
-/*    VMTime					fadeDuration;
-    VMTime					fadeStartPoint;
-	VMFloat					fadeStartVolume;
-	VMFloat					fadeEndVolume;*/
 	BOOL					startPlayAfterSetFragment;
 
 	//	view

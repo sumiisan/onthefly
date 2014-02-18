@@ -1810,6 +1810,7 @@ VMOBLIGATORY_setWithData()
 //
 - (VMHash*)routeList {
 	VMHash *routeList = ARInstance(VMHash);
+	/*
 	if ( self.subsequent.useSubsequentOfBranchFragments ) {
 		//
 		//	the subseq is the only exit.
@@ -1868,7 +1869,7 @@ VMOBLIGATORY_setWithData()
 		}
 		
 	}
-	}
+	}*/
 	return routeList;
 }
 

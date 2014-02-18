@@ -14,11 +14,8 @@
 #import "VMPSongPlayer.h"
 #import "VMPTrackView.h"
 #import "VMScoreEvaluator.h"
-
-#define kDefaultVMSFileName @"default.vms"
-
-
-#pragma mark Audio session callbacks_______________________
+#import "VMTraumbaumUserDefaults.h"
+#import "VMVmsarcManager.h"
 
 /*---------------------------------------------------------------------------------
  *
@@ -51,7 +48,6 @@ void audioRouteChangeListenerCallback (
         if (routeChangeReason == kAudioSessionRouteChangeReason_OldDeviceUnavailable) {
 			[[VMAppDelegate defaultAppDelegate] stop];
 			NSLog(@"kAudioSessionRouteChangeReason_OldDeviceUnavailable");
-			[[NSNotificationCenter defaultCenter] postNotificationName:PLAYERSTOPPED_NOTIFICATION object:nil];
 
         }
     }
@@ -65,7 +61,6 @@ void audioRouteChangeListenerCallback (
  *
  *
  *---------------------------------------------------------------------------------*/
-
 
 @implementation VMAppDelegate
 
@@ -108,9 +103,8 @@ static VMAppDelegate *appDelegate_singleton_;
 }
 
 - (BOOL)isBackgroundPlaybackEnabled {
-	return [[NSUserDefaults standardUserDefaults] boolForKey:@"doesPlayInBackground"];
+	return [VMTraumbaumUserDefaults backgroundPlayback];
 }
-
 
 - (id)init {
 	self = [super init];
@@ -118,17 +112,10 @@ static VMAppDelegate *appDelegate_singleton_;
 	
 	appDelegate_singleton_ = self;
 	
-	//  open document
-	
-	if( ! [self loadUserSavedSong] ) {		//	load saved song if possible
-		[self loadSongFromVMS];
-    }
-	
 	[[NSNotificationCenter defaultCenter]
 	 addObserver:self selector:@selector(endOfSequence:)
 	 name:ENDOFSEQUENCE_NOTIFICATION
 	 object:nil];
-	
 	
     [DEFAULTSONGPLAYER warmUp];
 	return self;
@@ -136,26 +123,22 @@ static VMAppDelegate *appDelegate_singleton_;
 
 - (BOOL)loadSongFromVMS {
     NSError 	*outError = nil;
-	NSString 	*resourcePath = [[NSBundle bundleForClass: [self class]] resourcePath];
-    NSURL 		*songURL = [[[NSURL alloc] initFileURLWithPath:[NSString stringWithFormat:@"%@/%@/%@",
-															   resourcePath,kDefaultVMDirectory,kDefaultVMSFileName]
+    NSURL 		*songURL = [[[NSURL alloc] initFileURLWithPath:[[VMVmsarcManager defaultManager] vmsFilePath]
 											   isDirectory:NO] autorelease];
 	return [self openVMSDocumentFromURL:songURL error:&outError];
 }
 
 - (NSURL *)userSaveDataUrl {
-    NSArray *searchPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *documentPath = [searchPaths lastObject];
-    return [NSURL fileURLWithPath:[documentPath stringByAppendingPathComponent:@"usersave.data"]];
+	return [NSURL fileURLWithPath:[[VMVmsarcManager defaultManager] userSaveFilePath]];
 }
 
 - (BOOL)loadUserSavedSong {
 	self.song = [VMSong songWithDataFromUrl:[self userSaveDataUrl]];
 	if( self.song ) {
 		DEFAULTSONGPLAYER.song = self.song;		//	unsafe_unretained.
-		NSLog(@"**** load saved song");
+		NSLog(@"**** load saved song from %@", [[self userSaveDataUrl] path] );
 	} else {
-		NSLog(@"**** could not load saved song");
+		NSLog(@"**** could not load saved song from %@", [[self userSaveDataUrl] path] );
 	}
 	return (self.song != nil);
 }
@@ -166,9 +149,22 @@ static VMAppDelegate *appDelegate_singleton_;
 	return error != nil;
 }
 
-- (BOOL)saveSong {
-	[self.song performSelectorInBackground:@selector(saveToFile:) withObject:[self userSaveDataUrl]];
-	NSLog(@"**** song saved");
+- (BOOL)saveSong:(BOOL)forceForeground {
+	NSURL *saveUrl =[self userSaveDataUrl];
+	NSString *directoryPath = [[saveUrl path] stringByDeletingLastPathComponent];
+	if( ![[NSFileManager defaultManager] fileExistsAtPath:directoryPath isDirectory:nil] ) {
+		//	because we may not have created DOCUMENTDIRECTORY/defaultSong/ directory
+		[[NSFileManager defaultManager] createDirectoryAtPath:directoryPath
+								  withIntermediateDirectories:YES attributes:nil error:nil];
+	}
+	if (!forceForeground) {
+		//	usually, we want do it in background
+		[self.song performSelectorInBackground:@selector(saveToFile:) withObject:saveUrl];
+	} else {
+		//	on app termination, we might mave do it in foreground to ensure not to be aborted
+		[self.song saveToFile:saveUrl];
+	}
+	NSLog(@"**** song saved to %@", [saveUrl path] );
 	return YES;
 }
 
@@ -191,7 +187,7 @@ static VMAppDelegate *appDelegate_singleton_;
 
 - (void)savePlayerState {
 	NSData *playerData = [NSKeyedArchiver archivedDataWithRootObject:DEFAULTSONG.player];
-	[[NSUserDefaults standardUserDefaults] setObject:playerData forKey:@"lastPlayer"];
+	[VMTraumbaumUserDefaults savePlayer:playerData];
 	NSLog(@"Saving player state");
 }
 
@@ -199,18 +195,26 @@ static VMAppDelegate *appDelegate_singleton_;
 	NSLog(@"*stop");
 	[self savePlayerState];
 	[DEFAULTSONGPLAYER stop];
+	[[NSNotificationCenter defaultCenter] postNotificationName:PLAYERSTOPPED_NOTIFICATION object:nil];
+}
+	
+- (void)disposeQueue {
+	NSLog(@"*dispose queue");
+	[DEFAULTSONGPLAYER stopAndDisposeQueue];	//	player must be stopped to dispose queue.
 }
 
 - (void)pause {
 	NSLog(@"*pause");
 	[self savePlayerState];
 	[DEFAULTSONGPLAYER fadeoutAndStop:3.];
-	[self saveSong];
+	[self saveSong:NO];
 }
 
-- (void)resume {
+- (BOOL)resume {
+	if ( loadingExternalVMS ) return NO;
 	NSLog(@"*resume");
 	[self startup];
+	return YES;
 }
 
 //
@@ -222,11 +226,11 @@ static VMAppDelegate *appDelegate_singleton_;
 	[DEFAULTSONG reset];
 	[DEFAULTEVALUATOR reset];	
 	[self deleteUserSavedSong];
-	[self loadSongFromVMS];
-	[[NSNotificationCenter defaultCenter] postNotificationName:PLAYERSTARTED_NOTIFICATION object:self];
-    [DEFAULTSONGPLAYER reset];
+	if( [self loadSong] ) {
+		[[NSNotificationCenter defaultCenter] postNotificationName:PLAYERSTARTED_NOTIFICATION object:self];
+		[DEFAULTSONGPLAYER reset];
+	}
 }
-
 
 - (void)endOfSequence:(NSNotification*)notification {
 	//	we should clear players and save datas to disable resuming from old saved state.
@@ -234,10 +238,12 @@ static VMAppDelegate *appDelegate_singleton_;
 	[self savePlayerState];	
 }
 
-
 - (void)startup {	//	wait for warm up
 	VMPSongPlayer *songplayer = DEFAULTSONGPLAYER;
 	
+	if ( self.song == nil || loadingExternalVMS )
+		return;
+
 	if ( ! songplayer.isWarmedUp ) {
 		[self performSelector:@selector(startup) withObject:nil afterDelay:0.1];
 		return;
@@ -289,43 +295,69 @@ static VMAppDelegate *appDelegate_singleton_;
 	}
 	
 	//	try resume from saved data
-	NSData *playerData = [[NSUserDefaults standardUserDefaults] objectForKey:@"lastPlayer"];
+	NSData *playerData = [VMTraumbaumUserDefaults loadPlayer];
 	
 	if ( playerData ) {
 		VMPlayer *player = [NSKeyedUnarchiver unarchiveObjectWithData:playerData];
 		if ( player.fragments.count > 0 ) {
 			NSLog(@"Startup: trying to recover from saved state:%@",player.description);
 			DEFAULTSONG.player = player;
-			[[NSNotificationCenter defaultCenter] postNotificationName:PLAYERSTARTED_NOTIFICATION object:self];
 			[songplayer setFadeFrom:0.01 to:1 length:3.];
 			[songplayer startWithFragmentId:nil];
+			[[NSNotificationCenter defaultCenter] postNotificationName:PLAYERSTARTED_NOTIFICATION object:self];
 			return;
 		}
 	}
-	NSLog(@"Startup: no data for recovery found. start new fron beginning.");
-	[[NSNotificationCenter defaultCenter] postNotificationName:PLAYERSTARTED_NOTIFICATION object:self];
+	NSLog(@"Startup: no data for recovery found. start new from beginning.");
 	[songplayer start];
+	[[NSNotificationCenter defaultCenter] postNotificationName:PLAYERSTARTED_NOTIFICATION object:self];
 }
-
-- (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
-    // Startup!
-	[DEFAULTSONGPLAYER warmUp];
-	DEFAULTSONG.showReport.current = @YES;
+	
+	
+- (BOOL)loadSong {
+	if( ! [self loadUserSavedSong] ) {		//	load saved song if possible
+		if( ! [self loadSongFromVMS] ) {
+			NSLog(@"Could not load %@", [[VMVmsarcManager defaultManager] vmsFilePath]);
+			return NO;
+		}
+	}
+	if( self.song ) {
+		NSLog(@"*song loaded: %@",self.song.songName);
+		[[VMVmsarcManager defaultManager] setPropertyOfCurrentVMS:VMSCacheKey_SongName to:self.song.songName];
+		[[VMVmsarcManager defaultManager] setPropertyOfCurrentVMS:VMSCacheKey_Artist to:self.song.artist];
+		[[VMVmsarcManager defaultManager] setPropertyOfCurrentVMS:VMSCacheKey_Website to:self.song.websiteURL];
+	} else {
+		NSLog(@"loadSong: no errors reported from the loader, but we have an empty song!");
+		return NO;
+	}
+	return YES;
 }
-
-- (void)applicationWillFinishLaunching:(NSNotification *)notification {
-}
+	
 
 #pragma mark -
 #pragma mark app state change
 //
 //	app state change
 //
+	
+-(BOOL)application:(UIApplication *)application willFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+	if( ! [launchOptions objectForKey:UIApplicationLaunchOptionsURLKey] ) {
+		// Startup!
+		//	test : loading sequence moved from -init
+		[self loadSong];
+		[DEFAULTSONGPLAYER warmUp];
+		DEFAULTSONG.showReport.current = @YES;
+	}
+	return YES;
+}
+
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
- 	NSLog(@"\n---------------------------------\n"
+
+	NSLog(@"\n---------------------------------\n"
 		  "didFinishLaunchingWithOptions"
 		  "\n---------------------------------\n");
+ 	[VMTraumbaumUserDefaults initializeDefaults];		//	note: we must update this to support url-scheme supplied external files.
    self.window = [[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease];
     // Override point for customization after application launch.
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
@@ -342,26 +374,22 @@ static VMAppDelegate *appDelegate_singleton_;
 	NSLog(@"\n---------------------------------\n"
 		  "applicationWillResignActive"
 		  "\n---------------------------------\n");
-    // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
-    // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
 	if ( ! self.isBackgroundPlaybackEnabled )
 		[DEFAULTSONGPLAYER setFadeFrom:-1 to:0 length:.1];	//	prevent garbage audio at next startup.	ss1311123
 	
 	if ( [self.viewController.view.subviews containsObject:self.viewController.infoView] ) {
 		[self.viewController.infoView closeView];
 	}
-
 }
+	
 
 - (void)applicationDidEnterBackground:(UIApplication *)application {
 	NSLog(@"\n---------------------------------\n"
 		  "applicationDidEnterBackground"
 		  "\n---------------------------------\n");
-    // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
-    // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
 	[self savePlayerState];
 	if ( !self.isBackgroundPlaybackEnabled || DEFAULTSONGPLAYER.isPaused ) {
-		[self saveSong];
+		[self saveSong:YES];
 	}
 	[self.viewController.infoView removeFromSuperview];
 
@@ -373,7 +401,7 @@ static VMAppDelegate *appDelegate_singleton_;
 		  "\n---------------------------------\n");
 	
 	if ( ! self.isBackgroundPlaybackEnabled ) {
-		[DEFAULTSONGPLAYER setFadeFrom:0 to:0 length:0];	//	set fader to zero
+		[DEFAULTSONGPLAYER setFadeFrom:0 to:0 length:.01];	//	set fader to zero
 		[DEFAULTSONGPLAYER setGlobalVolume:1.];	//	dummy call to make sure fader volume is set.
 		[self performSelector:@selector(startup) withObject:nil afterDelay:0.1];
 	}
@@ -385,29 +413,55 @@ static VMAppDelegate *appDelegate_singleton_;
 		  "\n---------------------------------\n");
 	if ( ! self.isBackgroundPlaybackEnabled )
 		[self performSelector:@selector(startup) withObject:nil afterDelay:0.1];
-	//
-    // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
-	//[self performSelector:@selector(startup) withObject:nil afterDelay:0.1];
-
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application {
 	NSLog(@"\n---------------------------------\n"
 		  "applicationWillTerminate"
 		  "\n---------------------------------\n");
-    // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+
 	[self savePlayerState];
-	[self saveSong];
+	[self saveSong:YES];
 	NSLog(@"stop player");
 	[DEFAULTSONGPLAYER stop];
 	[DEFAULTSONGPLAYER coolDown];
 }
+	
+	
+/*
+ *
+ *	external vms files
+ *
+ */
+#pragma mark - Handle vmsarc URL scheme
+	
+- (BOOL)application:(UIApplication *)application
+			openURL:(NSURL *)url
+  sourceApplication:(NSString *)sourceApplication
+		 annotation:(id)annotation {
+	[VMVmsarcManager defaultManager].delegate = self;
+	loadingExternalVMS = [[VMVmsarcManager defaultManager] openURL:url checkUpdatesOnly:NO];	//	asynchronous loading
+	[DEFAULTSONGPLAYER stop];
+	[[NSNotificationCenter defaultCenter] postNotificationName:PLAYERSTOPPED_NOTIFICATION object:nil];
+	return loadingExternalVMS;
+}
 
-
+- (void)vmsarcLoadingFailed {
+	loadingExternalVMS = NO;
+}
+	
+- (void)vmsarcLoaded {
+	NSLog(@"vmsarc loaded. archiveId:%@",[VMVmsarcManager defaultManager].currentArchiveId);
+	loadingExternalVMS = false;
+	if( [self loadSong] ) {
+		[DEFAULTSONGPLAYER warmUp];
+		DEFAULTSONG.showReport.current = @YES;
+		[self startup];
+	}
+}
 
 #pragma mark -
 #pragma mark AVAudioSession delegate
-
 
 - (void)handleInterruption:(NSNotification*)notification {
 	switch ([notification.userInfo[AVAudioSessionInterruptionTypeKey] intValue]) {

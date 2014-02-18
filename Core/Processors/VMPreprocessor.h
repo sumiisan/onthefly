@@ -44,6 +44,7 @@
 #import "VMSong.h"
 
 #define DEFAULTPREPROCESSOR [VMPreprocessor defaultPreprocessor]
+#define MAX_SUPPORTED_VMS_VERSION 1.0
 
 @interface VMPreprocessor : NSObject {
 @public

@@ -112,7 +112,7 @@ va_end(args)
 	UIAlertView * av = [[UIAlertView alloc] initWithTitle:name
 												  message:message
 												 delegate:nil
-										cancelButtonTitle:nil
+										cancelButtonTitle:@"OK"
 										otherButtonTitles:nil ];
 	[av show];
 #endif

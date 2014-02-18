@@ -10,7 +10,17 @@
 
 @implementation VMPMultiLanguage
 
-
++ (NSString*)songlistTitle {
+	NSDictionary *m = [NSDictionary dictionaryWithObjectsAndKeys:
+					   @"Song List",@"en",
+					   @"曲のリスト",@"ja",
+					   @"Song-Liste",@"de",
+					   @"Liste de Plages Musicales",@"fr",
+					   @"Lista de Canciones",@"es",
+					   nil];
+	return [m objectForKey:[self language]];
+}
+	
 + (NSString*)confirmTitle {
 	NSDictionary *m = [NSDictionary dictionaryWithObjectsAndKeys:
 					   @"Confirmation",@"en",
@@ -32,7 +42,6 @@
 					   nil];
 	return [m objectForKey:[self language]];
 }
-
 
 + (NSString*)noString {
 	NSDictionary *m = [NSDictionary dictionaryWithObjectsAndKeys:
@@ -56,6 +65,53 @@
 	return [m objectForKey:[self language]];
 }
 
++ (NSString*)oopsMessage {
+	NSDictionary *m = [NSDictionary dictionaryWithObjectsAndKeys:
+					   @"Oops!",@"en",
+					   @"あれま!",@"ja",
+					   @"Hoppla!",@"de",
+					   @"Oups!",@"fr",
+					   @"¡Vaya!",@"es",
+					   nil];
+	return [m objectForKey:[self language]];
+}
+
++ (NSString*)needUpdateMessage {
+	NSDictionary *m = [NSDictionary dictionaryWithObjectsAndKeys:
+					   @"Please update the app to latest version.",@"en",
+					   @"アプリを最新バージョンにアップデートしてください。",@"ja",
+					   @"Bitte aktualisieren Sie die App auf neueste Version.",@"de",
+					   @"S'il vous plaît mettre à jour l'application à la dernière version.",@"fr",
+					   @"Por favor, actualice la aplicación a la última versión.",@"es",
+					   nil];
+	return [m objectForKey:[self language]];
+}
+	
++ (NSString*)updateArchiveMessage {
+	NSDictionary *m = [NSDictionary dictionaryWithObjectsAndKeys:
+					   @"Download New Version",@"en",
+					   @"新しいバージョンをダウンロードする",@"ja",
+					   @"Neue Version Herunterladen",@"de",
+					   @"Télécharger la Nouvelle Version",@"fr",
+					   @"Descarga la Nueva Versión",@"es",
+					   nil];
+	return [m objectForKey:[self language]];
+}
+
++ (NSString*)downloadingMessage {
+	NSDictionary *m = [NSDictionary dictionaryWithObjectsAndKeys:
+					   @"downloading vms archive...",@"en",
+					   @"vmsアーカイブをダウンロード中...",@"ja",
+					   @"vms Archiv herunterladen...",@"de",
+					   @"téléchargeons archive de vms...",@"fr",
+					   @"descargando archivo de vms...",@"es",
+					   nil];
+	return [m objectForKey:[self language]];
+}
+
+	
+	
+
 + (VMPLanguageCode)languageCode {
 	NSString *l = [VMPMultiLanguage language];
 	if ( [l isEqualToString:@"en" ] )
@@ -73,16 +129,28 @@
 }
 
 + (NSString*)language {
-	return [[[NSBundle mainBundle] preferredLocalizations] objectAtIndex:0];
-	/*
-	 
-	 en
-	 ja
-	 de
-	 fr
-	 es
-	 
-	 
-	 */
+	NSArray *supportedLanguages = [NSArray arrayWithObjects:
+								   @"en",
+								   @"ja",
+								   @"de",
+								   @"fr",
+								   @"es",
+								   nil];
+	
+	NSArray *localizations = [[NSBundle mainBundle] preferredLocalizations];
+	
+	//
+	//	find out the first supported language from preferred localization
+	//
+	for( NSString *localization in localizations ) {
+		for( NSString *lang in supportedLanguages ) {
+			if ( [localization isEqualToString:lang] ) {
+				return localization;
+			}
+		}
+	}
+	
+	
+	return @"en";
 }
 @end

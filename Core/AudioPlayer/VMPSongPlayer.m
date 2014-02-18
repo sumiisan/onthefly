@@ -17,6 +17,10 @@
 #import "VMPlayerOSXDelegate.h"
 #endif
 
+#if VMP_IPHONE
+#import "VMVmsarcManager.h"
+#endif
+
 //#include <math.h>
 
 /*---------------------------------------------------------------------------------
@@ -423,18 +427,24 @@
 	NSString *filePath;
 
 #if VMP_IPHONE
+	NSString *dataDirectory = [[VMVmsarcManager defaultManager] dataDirectory];
+	
+	filePath = [[[dataDirectory stringByAppendingPathComponent:song_.audioFileDirectory]
+				 stringByAppendingPathComponent:fileId]
+				stringByAppendingPathExtension:song_.audioFileExtension];
+/*
 	filePath = [[NSBundle bundleForClass: [self class]]
 				pathForResource:fileId
 				ofType:song_.audioFileExtension
-				inDirectory:kDefaultVMDirectory];
-	
+				inDirectory:[dataDirectory stringByAppendingPathComponent:song_.audioFileDirectory]];
+*/
 #elif VMP_OSX
 	//filePath = [[NSBundle mainBundle] pathForResource:fileId ofType:song_.audioFileExtension inDirectory:kDefaultVMDirectory];
 	//
 	filePath = [[[[[song_.fileURL 
 					path] stringByDeletingLastPathComponent]
 				  stringByAppendingPathComponent:song_.audioFileDirectory]
-				 stringByAppendingPathComponent:fileId ]
+				 stringByAppendingPathComponent:fileId]
 				stringByAppendingPathExtension:song_.audioFileExtension];
 
 #endif
@@ -657,9 +667,9 @@
 		if ( ! [self fillQueueAt:-9999 ] ) {
 			//	failed: set default frag.
 			[self setFragmentId:song_.defaultFragmentId fadeOut:NO restartAfterFadeOut:NO];
-			NSLog(@"--- song player set default frag id ---\n" );
+			NSLog(@"--- song player set default frag id = %@ ---\n", song_.defaultFragmentId );
 		} else {
-			NSLog(@"--- song player restored queues---%@\n---------\n",self.description);
+			NSLog(@"--- song player restored queues---%@\n---------\n", self.description);
 		}
 	}
 	
@@ -861,7 +871,7 @@
 	VMNullify(mainFader);
 	VMNullify(dimmer);
 	VMNullify(song);
-	Dealloc( super );;
+	Dealloc(super);
 }
 
 + (VMPSongPlayer*)defaultPlayer {

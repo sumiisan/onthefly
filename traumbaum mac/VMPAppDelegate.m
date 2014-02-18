@@ -11,6 +11,7 @@
 #import "VMPSongPlayer.h"
 #import "VMPRainyView.h"
 #import "VMPFrontView.h"
+#import "VMTraumbaumUserDefaults.h"
 
 #define kDefaultVMSFileName @"default.vms"
 
@@ -52,8 +53,7 @@ darkBackgroundMenuItem=darkBackgroundMenuItem_, backgroundImage=backgroundImage_
 	//	save current song position
 	NSLog(@"app will terminate");
 	NSData *playerData = [NSKeyedArchiver archivedDataWithRootObject:DEFAULTSONG.player];
-	[[NSUserDefaults standardUserDefaults] setObject:playerData forKey:@"lastPlayer"];
-
+	[VMTraumbaumUserDefaults savePlayer:playerData];
 }
 
 - (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)sender {
@@ -63,13 +63,9 @@ darkBackgroundMenuItem=darkBackgroundMenuItem_, backgroundImage=backgroundImage_
 
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
-
+	[VMTraumbaumUserDefaults initializeDefaults];
 	self.window.delegate = self;
-//	BOOL darkBG = [[NSUserDefaults standardUserDefaults] boolForKey:@"useDarkBackground"];
-//	self.darkBackgroundMenuItem.state = darkBG;
-//	if( darkBG ) [self.backgroundImage setImage:[NSImage imageNamed:@"skin1_phone.jpg"]];
-	
-	self.fogMenuItem.state			  = [[NSUserDefaults standardUserDefaults] boolForKey:@"useFog"];
+	self.fogMenuItem.state	= [[VMTraumbaumUserDefaults standardUserDefaults] boolForKey:@"useFog"];
 	
 	NSError 	*outError = nil;//AutoRelease([[NSError alloc] init]);
 	NSString 	*resourcePath = [[NSBundle bundleForClass: [self class]] resourcePath];
@@ -95,7 +91,7 @@ darkBackgroundMenuItem=darkBackgroundMenuItem_, backgroundImage=backgroundImage_
 	self.rainyView = [[[VMPRainyView alloc] initWithFrame:NSMakeRect(-30, -30, 380, 540)] autorelease];
 	rainyView_.wantsLayer = YES;
 	rainyView_.alphaValue = 0.2;
-	rainyView_.enabled = [[NSUserDefaults standardUserDefaults] boolForKey:@"useFog"];
+	rainyView_.enabled = [[VMTraumbaumUserDefaults standardUserDefaults] boolForKey:@"useFog"];
 	
 	CIFilter *filter =  [CIFilter filterWithName:@"CIGaussianBlur"];
 	[filter setDefaults];	
@@ -167,7 +163,7 @@ darkBackgroundMenuItem=darkBackgroundMenuItem_, backgroundImage=backgroundImage_
 	}
 	
 	//	try resume from saved data
-	NSData *playerData = [[NSUserDefaults standardUserDefaults] objectForKey:@"lastPlayer"];
+	NSData *playerData = [VMTraumbaumUserDefaults loadPLayer];
 	
 	if ( playerData ) {
 		VMPlayer *player = [NSKeyedUnarchiver unarchiveObjectWithData:playerData];
@@ -193,7 +189,7 @@ darkBackgroundMenuItem=darkBackgroundMenuItem_, backgroundImage=backgroundImage_
 
 - (void)savePlayerState {
 	NSData *playerData = [NSKeyedArchiver archivedDataWithRootObject:DEFAULTSONG.player];
-	[[NSUserDefaults standardUserDefaults] setObject:playerData forKey:@"lastPlayer"];
+	[VMTraumbaumUserDefaults savePlayer:playerData];
 	NSLog(@"Saving player state");
 }
 
@@ -244,20 +240,7 @@ darkBackgroundMenuItem=darkBackgroundMenuItem_, backgroundImage=backgroundImage_
 - (IBAction)toggleFog:(id)sender {
 	NSMenuItem *menuItem = sender;
 	menuItem.state = NSOnState - menuItem.state;
-	[[NSUserDefaults standardUserDefaults] setBool:menuItem.state forKey:@"useFog"];
+	[[VMTraumbaumUserDefaults standardUserDefaults] setBool:menuItem.state forKey:@"useFog"];
 	self.rainyView.enabled = menuItem.state;
 }
-/*
-- (IBAction)toggleBackground:(id)sender {
-	NSMenuItem *menuItem = sender;
-	menuItem.state = NSOnState - menuItem.state;
-	[[NSUserDefaults standardUserDefaults] setBool:menuItem.state forKey:@"useDarkBackground"];
-	
-	if( menuItem.state ) {
-		[self.backgroundImage setImage:[NSImage imageNamed:@"s1_phone.jpg"]];
-	} else {
-		[self.backgroundImage setImage:[NSImage imageNamed:@"skin0_phone.jpg"]];
-	}
-}
- */
 @end

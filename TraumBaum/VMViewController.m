@@ -9,6 +9,7 @@
 #import "VMViewController.h"
 #import "VMPTrackView.h"
 #import "VMPSongPlayer.h"
+#import "VMScoreEvaluator.h"
 #import "VMPInfoView.h"
 #import <AVFoundation/AVFoundation.h>
 #import "VMAppDelegate.h"
@@ -19,6 +20,10 @@
 
 @implementation VMViewController
 
+
+- (BOOL)prefersStatusBarHidden {
+    return YES;//(DEFAULTEVALUATOR.timeManager.nightNess>0.5);
+}
 
 - (void)setSkin:(int)index {
 	
@@ -40,7 +45,6 @@
 //	delegate
 - (void)setSkinIndex:(int)skinIndex {
 	[self setSkin:skinIndex];
-	[[NSUserDefaults standardUserDefaults] setInteger:skinIndex forKey:@"skinIndex"];
 }
 
 - (void)viewDidLoad {
@@ -49,15 +53,10 @@
 	self.view.frame = CGRectMake(0, 0, 320, Is4InchIPhone ? 568 : 480 );
 	
 	self.trackView = [[[VMPTrackView alloc] initWithFrame:self.view.frame] autorelease];
-//    [self.view addSubview:trackView];
     DEFAULTSONGPLAYER.trackView = self.trackView;
 		
 	self.view.backgroundColor = [UIColor grayColor];
-	//	background
-//	NSInteger skinIndex = [[NSUserDefaults standardUserDefaults] integerForKey:@"skinIndex"];
-//	[self setSkin: skinIndex];
 	
-	//	testing:
 	self.frontView = [[[VMPFrontView alloc]
 					   initWithFrame:CGRectMake(0,
 												0,
@@ -116,6 +115,20 @@
 	[self.view addSubview:self.infoView];
 	[(VMPInfoView*)self.infoView showView];
 }
+	
+- (VMPProgressView*)showProgressView {
+	VMPProgressView *p = (VMPProgressView*)[self.view viewWithTag:899];
+	if ( !p ) {
+		p = [[[VMPProgressView alloc] initWithFrame:CGRectMake(0, 0, 300, 80)] autorelease];
+		p.tag = 899;
+		[self.view addSubview:p];
+	}
+	return p;
+}
+
+- (void)hideProgressView {
+	[[self.view viewWithTag:899] removeFromSuperview];
+}
 
 - (void)awakeFromNib {
 //	self.frontView.backgroundColor = [UIColor blueColor];	//test
@@ -124,14 +137,23 @@
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-	if( ![self.view.subviews containsObject:self.infoView] )
+	if( ![self.view.subviews containsObject:self.infoView] ) {
+		[self.infoView removeFromSuperview];
 		self.infoView = nil;
-//	self.trackView = nil;
-
-    // Dispose of any resources that can be recreated.
+	}
 }
 
+	
+	
+- (void)setEditing:(BOOL)editing animated:(BOOL)animated {
+	[super setEditing:editing animated:animated];
 
+	UITableView *tv = (UITableView*)[self.view viewWithTag:888];
+	[tv setEditing:editing animated:YES];
+
+}
+
+	
 - (void)dealloc {
 	VMNullify(infoView);
 	VMNullify(trackView);

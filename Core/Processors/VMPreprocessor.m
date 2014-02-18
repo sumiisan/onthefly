@@ -16,6 +16,8 @@
 
 #if VMP_EDITOR
 #import "VMPlayerOSXDelegate.h"
+#else
+#import "VMPMultiLanguage.h"
 #endif
 
 #define VMPP VMPreprocessor
@@ -480,9 +482,25 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 	//
 	VMHash	*vmsHash = [self preprocessPhase1:vmsText error:outError];
 	if ( !vmsHash ) return NO;
+	//
+	//	(1.10)	check version whether supported
+	//
+	VMFloat vmsVersion = [vmsHash itemAsFloat:@"vmsVersion"];
+	if ( vmsVersion > MAX_SUPPORTED_VMS_VERSION ) {
+#if VMP_EDITOR
+		[VMException alert:@"Oops!" format:@"You need update app to play this song. \n (Variable Media Player version %.1f needed, you have version %.1f)",
+		 vmsVersion, MAX_SUPPORTED_VMS_VERSION];
+#else
+		[VMException alert:[VMPMultiLanguage oopsMessage] format:@"%@\n (Variable Media Player version %.1f needed, you have version %.1f)", [VMPMultiLanguage needUpdateMessage],
+		 vmsVersion, MAX_SUPPORTED_VMS_VERSION];
+		
+#endif
+		return NO;
+	}
+
 	
 	VMArray *dataArray = [VMArray arrayWithArray: [vmsHash item:@"data"]];
-	
+		
 	//
 	//	(2.00)	pre-process hash
 	//
