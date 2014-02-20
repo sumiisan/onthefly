@@ -224,9 +224,6 @@
 		16C074DF17B2B27100351113 /* defaultSong in Resources */ = {isa = PBXBuildFile; fileRef = 16A27F0116F9736F0081C1E8 /* defaultSong */; };
 		16C074E417B2C0DF00351113 /* VMPRainyView.m in Sources */ = {isa = PBXBuildFile; fileRef = 16C074A117B2750900351113 /* VMPRainyView.m */; };
 		16C074E517B2C3DC00351113 /* VMPCanvas.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677781516C0D6A0007206CF /* VMPCanvas.m */; };
-		16C217D51845F2DD00C3A995 /* VMPTwitter.m in Sources */ = {isa = PBXBuildFile; fileRef = 16C217D41845F2DD00C3A995 /* VMPTwitter.m */; };
-		16C217D71845F50E00C3A995 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16C217D61845F50E00C3A995 /* Social.framework */; };
-		16C217D91846004900C3A995 /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16C217D81846004800C3A995 /* Accounts.framework */; };
 		16C7677116DC83DE003636C3 /* VMPAnalyzer.m in Sources */ = {isa = PBXBuildFile; fileRef = 16C7676E16DC83DE003636C3 /* VMPAnalyzer.m */; };
 		16C7677216DC83DE003636C3 /* VMPAnalyzer.m in Sources */ = {isa = PBXBuildFile; fileRef = 16C7676E16DC83DE003636C3 /* VMPAnalyzer.m */; };
 		16C90C7E1722774800F7E91F /* VMPHistogramView.m in Sources */ = {isa = PBXBuildFile; fileRef = 16C90C7B1722774800F7E91F /* VMPHistogramView.m */; };
@@ -620,8 +617,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				16D1EA2218AF1F94001AB5C4 /* libz.dylib in Frameworks */,
-				16C217D91846004900C3A995 /* Accounts.framework in Frameworks */,
-				16C217D71845F50E00C3A995 /* Social.framework in Frameworks */,
 				161CC6B217E55316001C869D /* UIKit.framework in Frameworks */,
 				161CC6B017E5530E001C869D /* AudioToolbox.framework in Frameworks */,
 				161CC6AE17E55305001C869D /* CoreGraphics.framework in Frameworks */,
@@ -1651,7 +1646,6 @@
 				1662314C173C9F1A00F70FCB /* VMSong.m in Sources */,
 				1662315F173C9FA300F70FCB /* VMPrimitives.m in Sources */,
 				16C074A217B2750900351113 /* VMPRainyView.m in Sources */,
-				16C217D51845F2DD00C3A995 /* VMPTwitter.m in Sources */,
 				163C02B217C9D5F300244A81 /* VMPDSP.m in Sources */,
 				1698E49717CAC47300D2130A /* VMAudioObject.m in Sources */,
 				1695A50E1805390800EEC1F5 /* VMPTimeManager.m in Sources */,
