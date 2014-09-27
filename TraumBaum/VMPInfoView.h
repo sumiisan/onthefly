@@ -11,7 +11,7 @@
 - (void)setSkinIndex:(int)skinIndex;
 @end
 
-@interface VMPInfoView : UIView <UIAlertViewDelegate,NSURLConnectionDataDelegate>/*<UIScrollViewDelegate>*/ {
+@interface VMPInfoView : UIView <UIAlertViewDelegate,NSURLConnectionDataDelegate,UIWebViewDelegate>/*<UIScrollViewDelegate>*/ {
 	NSTimeInterval	supressToggleTrackViewUntil;
 }
 

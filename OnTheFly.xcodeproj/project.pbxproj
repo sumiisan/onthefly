@@ -516,7 +516,7 @@
 		16A27F1816FBB1A70081C1E8 /* VMAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = VMAppDelegate.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		16A27F2016FBB1A70081C1E8 /* VMViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VMViewController.h; sourceTree = "<group>"; };
 		16A27F2116FBB1A70081C1E8 /* VMViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VMViewController.m; sourceTree = "<group>"; };
-		16A27F4F16FC2EC90081C1E8 /* default.vms */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; lineEnding = 0; name = default.vms; path = ../../defaultSong/default.vms; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.javascript; };
+		16A27F4F16FC2EC90081C1E8 /* default.vms */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; lineEnding = 0; name = default.vms; path = ../../defaultSong/default.vms; sourceTree = "<group>"; };
 		16A27F5B17006E710081C1E8 /* VMPProgressWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = VMPProgressWindowController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		16A27F5C17006E720081C1E8 /* VMPProgressWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VMPProgressWindowController.m; sourceTree = "<group>"; };
 		16A27F5D17006E720081C1E8 /* VMPProgressWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VMPProgressWindow.xib; sourceTree = "<group>"; };
@@ -1316,7 +1316,7 @@
 			name = "OTF Tests";
 			productName = TraumBaumTests;
 			productReference = 162F7B3516A0341D00420443 /* OTF Tests.octest */;
-			productType = "com.apple.product-type.bundle";
+			productType = "com.apple.product-type.bundle.ocunit-test";
 		};
 		16A27F0616FBB1A70081C1E8 /* traumbaum iOS */ = {
 			isa = PBXNativeTarget;
