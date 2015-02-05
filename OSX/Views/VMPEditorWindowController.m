@@ -392,8 +392,12 @@ static VMPObjectCell		*typeColumnCell = nil;
 }
 
 
-- (NSArray *)control:(NSControl *)control textView:(NSTextView *)textView completions:(NSArray *)words
- forPartialWordRange:(NSRange)charRange indexOfSelectedItem:(int*)index {
+- (NSArray *)control:(NSControl *)control
+			textView:(NSTextView *)textView
+		 completions:(NSArray *)words
+ forPartialWordRange:(NSRange)charRange
+ indexOfSelectedItem:(NSInteger*)index {
+	
     NSMutableArray	*matches = NULL;
     NSArray			*keywords;
     NSInteger		i,count;

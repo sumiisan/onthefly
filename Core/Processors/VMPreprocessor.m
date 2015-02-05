@@ -3,7 +3,7 @@
 //  VariableMusicPlayer
 //
 //  Created by  on 12/11/19.
-//  Copyright (c) 2012 sumiisan (aframasda.com). All rights reserved.
+//  Copyright (c) 2012 sumiisan (sumiisan.com). All rights reserved.
 //
 
 #import "VMPreprocessor.h"

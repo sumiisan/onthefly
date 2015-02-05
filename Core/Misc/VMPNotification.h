@@ -16,8 +16,9 @@ static NSString *VMPNotificationVMSDataLoaded __unused			= @"VMSDataLoaded";
 //	log
 static NSString *VMPNotificationLogAdded __unused				= @"LogAdded";
 
-//	song player
+//	song
 
+//	song player
 static NSString *VMPNotificationAudioFragmentQueued __unused	= @"AudioFragmentQueued";
 static NSString *VMPNotificationAudioFragmentFired  __unused	= @"AudioFragmentFired";
 static NSString *VMPNotificationStartChaseSequence __unused		= @"StartChaseSequence";

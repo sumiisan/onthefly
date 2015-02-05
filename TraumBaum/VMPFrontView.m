@@ -50,7 +50,7 @@
 @implementation VMPFrontView
 
 static const int numOfCircles = 5;
-static const CGFloat dragThreshold = 30;
+static const __unused CGFloat dragThreshold = 30;
 static CGFloat holeHotSpotRadius = 0;
 
 @synthesize frontViewWasVisibleAtLastCall = frontViewWasVisibleAtLastCall_,standardRadius=standardRadius_,holeCenter=holeCenter_,dragOffsetY=dragOffsetY_,angle=angle_,hueOffset=hueOffset_,speed=speed_,velocity=velocity_,targetVelocity=targetVelocity_,stem=stem_,blendMode=blendMode_,shouldRecognizeTap=shouldRecognizeTap_,timeIndicator=timeIndicator_,touchBeginPoint=touchBeginPoint_,

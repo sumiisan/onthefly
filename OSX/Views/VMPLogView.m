@@ -451,8 +451,8 @@ static const VMFloat kDefaultLogItemViewHeight = 14.0;
 		logView.textField.stringValue = action;
 		NSDate *date = [NSDate dateWithTimeIntervalSinceReferenceDate:rl.timestamp];
 		logView.timeStampField.stringValue = [NSDateFormatter localizedStringFromDate:date
-																			dateStyle:kCFDateFormatterNoStyle
-																			timeStyle:kCFDateFormatterMediumStyle];
+																			dateStyle:NSDateFormatterNoStyle
+																			timeStyle:NSDateFormatterMediumStyle];
 		logView.discosureButton.state = rl.isExpanded ? NSOnState : NSOffState;
 		
 		

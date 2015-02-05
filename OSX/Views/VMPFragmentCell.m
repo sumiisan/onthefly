@@ -389,9 +389,9 @@ static NSShadow		*smallShadow_static_			= nil;
 													   yRadius:vmpCellCornerRadius];
 			cellPath.lineWidth = 3.;
 		}
-		if ( ! self.isPlaying )
+		if ( ! self.isPlaying ) {
 			[self.backgroundGradient drawInBezierPath:cellPath angle:60];
-		else {
+		} else {
 			NSGradient *pg = [[NSGradient alloc]
 			 initWithStartingColor:[baseColor colorModifiedByHueOffset:0.01 saturationFactor:0.5 brightnessFactor:1.5]
 			 endingColor:[baseColor colorModifiedByHueOffset:-0.01 saturationFactor:0.5 brightnessFactor:1.2]];

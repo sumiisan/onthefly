@@ -104,8 +104,8 @@
 }
 
 - (void)updateTimeFields {
-	self.time1Field.floatValue = [self timeAsFieldFloatValue:value1 unit:self.unitSelector1.selectedItem.tag];
-	self.time2Field.floatValue = [self timeAsFieldFloatValue:value2 unit:self.unitSelector2.selectedItem.tag];
+	self.time1Field.floatValue = [self timeAsFieldFloatValue:value1 unit:(VMPTimeUnitType)self.unitSelector1.selectedItem.tag];
+	self.time2Field.floatValue = [self timeAsFieldFloatValue:value2 unit:(VMPTimeUnitType)self.unitSelector2.selectedItem.tag];
 }
 
 - (VMString*)time1 {

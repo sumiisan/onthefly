@@ -3,7 +3,7 @@
 //  VariableMusicPlayer
 //
 //  Created by cboy on 12/11/08.
-//  Copyright 2012 sumiisan (aframasda.com). All rights reserved.
+//  Copyright 2012 sumiisan (sumiisan.com). All rights reserved.
 //
 
 #import "VMPrimitives.h"
@@ -970,7 +970,7 @@ if ( lastIndex == 0 ) {\
 	NSArray *arr = ( ClassMatch(VMArray, array) ? ((VMArray*)array).array : array );
 	VMInt p = 0;
 	VMInt index = startIndex;
-	for (id val in arr )
+	for (id __unused val in arr )
 		[self setItem:[arr objectAtIndex:p++] at:index++];
 	keysUpToDate = NO;
 	lastIndex = 0;

@@ -98,7 +98,7 @@ static VMAppDelegate *appDelegate_singleton_;
 		//	set route change listener
 		OSStatus state = AudioSessionAddPropertyListener( kAudioSessionProperty_AudioRouteChange,
 														 audioRouteChangeListenerCallback, self );
-		NSLog(@"AudioSessionAddPropertyListener:%ld",state);
+		NSLog(@"AudioSessionAddPropertyListener:%d",(int)state);
 	}
 }
 

@@ -3,7 +3,7 @@
 //  VariableMusicPlayer
 //
 //  Created by cboy on 12/10/19.
-//  Copyright 2012 sumiisan (aframasda.com). All rights reserved.
+//  Copyright 2012 sumiisan (sumiisan.com). All rights reserved.
 //
 
 #define TEST 0

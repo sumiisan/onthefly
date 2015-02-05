@@ -13,6 +13,7 @@
 #import "VMPSongPlayer.h"
 #include "KeyCodes.h"
 #import "VMPNotification.h"
+#import "VMPProgressWindowController.h"
 #import "VMAudioObject.h"
 
 
@@ -211,6 +212,9 @@ static const int	kLengthOfPartTraceRoute					= 10000;	//	gives up after 10000 ti
 		analyzer_singleton_static_ = self;
 		self.progressWC = AutoRelease([[VMPProgressWindowController alloc] initWithWindow:nil] );
 		[NSBundle loadNibNamed: @"VMPProgressWindow" owner: self.progressWC];
+//		NSBundle *bundle = [NSBundle bundleWithIdentifier:@"VMPProgressWindow"];
+//		[bundle loadNibNamed:@"VMPProgressWindow" owner:self.progressWC topLevelObjects:nil];
+		
 		self.progressWC.delegate = self;
 		
 		[VMPNotificationCenter addObserver:self selector:@selector(vmsDataLoaded:) name:VMPNotificationVMSDataLoaded object:nil];
@@ -801,10 +805,10 @@ static const int	kLengthOfPartTraceRoute					= 10000;	//	gives up after 10000 ti
 			if ( (( ai.duration + standardReleaseTime ) < ao.fileDuration ) ||
 				 (  ai.duration > ao.fileDuration + 2. )) {
 				VMLogRecord *record = [VMLogRecord recordWithAction:@"Warning" data:ai
-															subInfo:[NSString stringWithFormat:
+															subInfo:[VMHash hashWithDictionary: @{@"message":[NSString stringWithFormat:
 																	 @"%@ fileId:%@ (dur:%.2fsecs) has file length of %.2fsecs",
-																	 ai.duration > ao.fileDuration ? @"S" : @"L",
-																	 ai.fileId, ai.duration, ao.fileDuration]
+																			   ai.duration > ao.fileDuration ? @"S" : @"L",
+																			   ai.fileId, ai.duration, ao.fileDuration] }]
 															  owner:VMLogOwner_Statistics
 												 usePersistentStore:NO];
 				

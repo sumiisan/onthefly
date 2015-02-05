@@ -330,7 +330,7 @@ static VMVmsarcManager *vmsarcmanager_singleton__ = nil;
 	}
 	
 	bytesRead += data.length;
-	NSLog(@"Download progress %ul/%ul",bytesRead,dataSize);
+	NSLog(@"Download progress %lul/%lul",(unsigned long)bytesRead,(unsigned long)dataSize);
 	
 	if( dataSize > 0 ) {
 		self.progressView.progress = (double)bytesRead / (double)dataSize;

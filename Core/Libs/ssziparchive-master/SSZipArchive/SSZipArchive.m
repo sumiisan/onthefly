@@ -293,8 +293,8 @@
 	BOOL success = NO;
 	SSZipArchive *zipArchive = [[SSZipArchive alloc] initWithPath:path];
 	if ([zipArchive open]) {
-		for (NSString *path in paths) {
-			[zipArchive writeFile:path];
+		for (NSString *arcPath in paths) {
+			[zipArchive writeFile:arcPath];
 		}
 		success = [zipArchive close];
 	}

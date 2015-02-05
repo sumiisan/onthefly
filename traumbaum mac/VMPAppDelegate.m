@@ -234,7 +234,7 @@ darkBackgroundMenuItem=darkBackgroundMenuItem_, backgroundImage=backgroundImage_
 }
 
 - (IBAction)openWebsite:(id)sender {
-	[[NSWorkspace sharedWorkspace] openURL: [NSURL URLWithString:@"http://traumbaum.aframasda.com/"]];
+	[[NSWorkspace sharedWorkspace] openURL: [NSURL URLWithString:@"http://sumiisan.com/"]];
 }
 
 - (IBAction)toggleFog:(id)sender {

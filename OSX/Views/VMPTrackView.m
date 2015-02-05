@@ -3,7 +3,7 @@
 //  OnTheFly
 //
 //  Created by cboy on 10/04/18.
-//  Copyright 2010 sumiisan (aframasda.com). All rights reserved.
+//  Copyright 2010 sumiisan (sumiisan.com). All rights reserved.
 //
 
 #import "VMPTrackView.h"

@@ -386,7 +386,7 @@
 	VMHash *hash = ClassCastIfMatch(item, VMHash);
 	if ( hash ) {
 		[hash setItem:@([self issueIndex]) for:@"vmlog_index"];
-		[hash setItem:@([[NSDate date] timestamp]) for:@"vmlog_timestamp"];
+		[hash setItem:@([[NSDate date] timeIntervalSince1970]) for:@"vmlog_timestamp"];
 		return;
 	}
 	

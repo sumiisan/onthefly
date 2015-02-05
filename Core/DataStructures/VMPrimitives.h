@@ -3,7 +3,7 @@
 //  VariableMusicPlayer
 //
 //  Created by cboy on 12/11/08.
-//  Copyright 2012 sumiisan (aframasda.com). All rights reserved.
+//  Copyright 2012 sumiisan (sumiisan.com). All rights reserved.
 //
 
 #import <Foundation/Foundation.h>

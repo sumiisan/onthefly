@@ -3,7 +3,7 @@
 //  VariableMusicPlayer
 //
 //  Created by  on 12/11/24.
-//  Copyright (c) 2012 sumiisan (aframasda.com). All rights reserved.
+//  Copyright (c) 2012 sumiisan (sumiisan.com). All rights reserved.
 //
 
 #import "VMARC.h"

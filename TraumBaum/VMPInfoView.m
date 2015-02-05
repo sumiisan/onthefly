@@ -50,7 +50,7 @@
 			if ( [[[VMVmsarcManager defaultManager] propertyOfCurrentVMS:VMSCacheKey_BuiltIn] boolValue] ) {
 				[[UIApplication sharedApplication]
 				 openURL:[NSURL URLWithString:
-						  [NSString stringWithFormat:@"http://traumbaum.aframasda.com/?l=%@",
+						  [NSString stringWithFormat:@"http://sumiisan.com/?l=%@",
 						   [VMPMultiLanguage language]]]];
 			} else {
 				[[UIApplication sharedApplication]
