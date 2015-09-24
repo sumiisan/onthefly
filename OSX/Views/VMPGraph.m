@@ -242,6 +242,7 @@ static 	VMHash *bgColorForType_static_ = nil;
 @implementation VMPGraph
 @synthesize graphDelegate = _graphDelegate;
 @synthesize animating = _animating;
+@synthesize tag = _tag;
 
 
 - (void)init_internal {
@@ -267,6 +268,16 @@ static 	VMHash *bgColorForType_static_ = nil;
 	VMNullify(backgroundColor);
 	VMNullify(foregroundColor);
 	Dealloc( super );;
+}
+
+//	override
+
+- (void)setTag:(NSInteger)tag {
+	_tag =tag;
+}
+
+- (NSInteger)tag {
+	return _tag;
 }
 
 - (id)taggedWith:(NSInteger)aTag {

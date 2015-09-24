@@ -14,6 +14,7 @@
 //	iphone
 //
 #import "VMAppDelegate.h"
+
 #define vmpTextValue text
 #define vmpAlphaValue alpha
 #define quartzPath CGPath

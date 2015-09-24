@@ -7,24 +7,37 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <QuartzCore/CALayer.h>
 #import "VMPrimitives.h"
 #import "VMPSongPlayer.h"
+#import "VMSong.h"
 
-@interface VMPVine : CAShape
-
-@property (nonatomic, retain) VMFragment *fragment;
-@property (nonatomic) VMTime startTime;
-@property (nonatomic) VMFloat angle;
+@interface VMPVinePart : CAShapeLayer
 
 @end
 
-@interface VMPVineView : UIView {
-	static VMPSongPlayer *songPlayer;
-}
+@interface VMPLeaf : VMPVinePart
 
-@property (nonatomic, retain) UIView *basePane;
+@end
 
-- (void)setBranches;
+@interface VMPCane : VMPVinePart
+@property (nonatomic)			CGPoint topPoint;
+@property (nonatomic)			VMFloat topAngle;
+@property (nonatomic, retain)	VMId *fragId;
+@property (nonatomic)			VMFloat angleOffset;
+
+- (id)initWithId:(VMId*)inId
+		   angle:(VMFloat)inAngle
+		duration:(VMFloat)inDuration
+		  weight:(VMFloat)inWeight
+		selected:(BOOL)selected
+			 hue:(VMFloat)hue;
+- (void)calculatePointsForTime:(VMTime)elapsed;
+
+@end
+
+@interface VMPVineView : UIView
+
 
 
 @end

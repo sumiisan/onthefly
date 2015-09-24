@@ -174,6 +174,7 @@ static VMPObjectCell		*typeColumnCell = nil;
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
 	assert(0);		//	designated initializer is init
+	[super initWithCoder:aDecoder];
 	return nil;
 }
 

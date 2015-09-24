@@ -56,7 +56,7 @@ static inline VMRange VMRangeMake(VMFloat min, VMFloat max) {
 
 
 //	encoding
-#define vmFileEncoding NSASCIIStringEncoding
+#define vmFileEncoding NSASCIIStringEncoding /*NSUTF8StringEncoding*/ 
 
 /*---------------------------------------------------------------------------------
  
@@ -87,6 +87,9 @@ typedef enum {
 	VMSortDirection_ascending = 1,
 	VMSortDirection_descending,
 } VMSortDirection;
+
+#define VMHashKeyType id
+
 
 @interface VMArrayBase : NSObject
 - (BOOL)object:(id)obj1 isEqualTo:(id)obj2;
@@ -178,6 +181,8 @@ typedef enum {
 
 //	sort
 - (void)sort:(VMSortDirection)direction;
+- (void)sortByHashContentKey:(VMHashKeyType)sortKey;
+
 
 //	misc
 - (void)swapItem:(VMInt)p withItem:(VMInt)q;
@@ -204,7 +209,6 @@ typedef enum {
 
 #pragma mark -
 #pragma mark *** hash ***
-#define VMHashKeyType id
 
 /*---------------------------------------------------------------------------------
  *
@@ -226,6 +230,7 @@ typedef enum {
 - (VMString*)itemAsString:(VMHashKeyType)key;
 - (int)itemAsInt:(VMHashKeyType)key;
 - (VMFloat)itemAsFloat:(VMHashKeyType)key;
+- (BOOL)itemAsBool:(VMHashKeyType)key;
 - (VMHash*)itemAsHash:(VMHashKeyType)key;
 - (id)itemAsObject:(VMHashKeyType)key;
 
@@ -257,9 +262,12 @@ typedef enum {
 
 //	keys and values;
 - (VMArray*)keys;
+- (VMArray*)values;
+
+//	sort
 - (VMArray*)sortedKeys;
 - (VMArray*)keysSortedByValue;
-- (VMArray*)values;
+- (VMArray*)keysSortedByHashContentKey:(VMHashKeyType)sortKey;
 
 @end
 

@@ -180,6 +180,7 @@
 - (void)setSourceCode:(NSString*)sourceCode {	
 	if ( ! self.vmsDocument )
 		self.vmsDocument = AutoRelease([[VMPSyntaxColoredtextDocument alloc] init] );
+	self.textView.automaticQuoteSubstitutionEnabled = NO;
 	[self.vmsDocument setTextView:self.textView sourceCode:sourceCode];
 	VMNullify(scanner);
 }

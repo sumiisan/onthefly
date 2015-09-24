@@ -13,6 +13,8 @@
 #import "VMPInfoView.h"
 #import <AVFoundation/AVFoundation.h>
 #import "VMAppDelegate.h"
+#import "VMPVineView.h"
+
 
 @interface VMViewController ()
 
@@ -65,6 +67,13 @@
 					   ] autorelease];
 	[self.view addSubview:self.frontView];
 	[self attachConfigButton];
+	
+	
+	//	test code:
+#if VMP_VISUALIZER
+	VMPVineView *vv = [[[VMPVineView alloc] initWithFrame:self.view.frame] autorelease];
+	[self.view addSubview:vv];
+#endif
 }
 
 - (void)attachConfigButton {

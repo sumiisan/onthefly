@@ -26,6 +26,7 @@
 #define VMP_IPHONE 1
 #undef VMP_LOGGING
 #define VMP_LOGGING 0
+#define VMP_VISUALIZER 0
 static const float kTimerInterval = 0.01;			//  1/1000 sec interruption for audio
 static const int kTrackViewRedrawInterval = 10;		//  0.01 * 10   = 0.1sec
 #if enableDSP
@@ -49,6 +50,7 @@ static const BOOL kUseNotification = NO;
 //  aliases
 #define VMPDocument UIDocument
 #define VMPPoint CGPoint
+#define VMPPointZero CGPointZero
 #define VMPSize	CGSize
 #define VMPRect  CGRect
 #define VMPRectZero	 CGRectZero

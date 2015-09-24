@@ -32,7 +32,7 @@
 - (void)fillCircle_x:(float)x y:(float)y w:(float)w h:(float)h;
 
 #if VMP_OSX
-@property (nonatomic, assign) NSInteger tag;		//	override
+@property (atomic, assign) NSInteger tag;		//	override
 @property (nonatomic, VMStrong) VMPColor *backgroundColor;
 #endif
 

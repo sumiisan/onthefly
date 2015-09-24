@@ -1420,6 +1420,11 @@ static VMHash *scoreForFragment_static_ = nil;
 		} else {
 			//	leaf node: increment score
 			[scoreForFragment_static_ add:score ontoItem:chance.targetId];
+			//	review 150210: shouldn't it be
+			//	[scoreForFragment_static_ add:score ontoItem:frag.id] ?
+			//												 =======
+			//	currently, this method collects sequences too,
+			//	but shouldn't it resolve them to audio fragments?
 		}
 	}
 	
@@ -1438,7 +1443,7 @@ static VMHash *scoreForFragment_static_ = nil;
 	
 #if VMP_PLAYER
 	if ( ClassMatch( ch, VMId )) {
-		//	create chance on the fly. (because when suspended, they are stored as id reference )
+		//	create chance objects on the fly. (because when suspended, they are stored as id reference )
 		VMChance *newChance = [[[VMChance alloc] init] autorelease];
 		[newChance setByString:ch];
 		[self.fragments setItem:newChance at:pos];
@@ -1463,6 +1468,21 @@ static VMHash *scoreForFragment_static_ = nil;
 //	NOTE:
 //	set scoreForFragments = nil to use cached score of latest evaluation.
 //
+
+- (VMHash*)collectCurrentScores {
+	VMHash *h = ARInstance(VMHash);
+	if( [self shouldSelectTemporary] ) {
+		for( VMChance *ch in self.fragments ) {
+			if( !ClassMatch(ch, VMChance)) continue;
+			[h setItem:VMFloatObj(ch.cachedScore) for:ch.targetId];
+		}
+	} else {
+		for( VMFragment *f in self.liveData.fragments ) {
+			[h add:1. ontoItem:f.id];
+		}
+	}
+	return h;
+}
 
 - (VMFragment*)selectOneTemporaryUsingScores:(VMHash*)scoreForFragments sumOfScores:(VMFloat)sum {
 	if( [self.fragments count] <= 0 ) return nil;
@@ -1504,8 +1524,6 @@ static VMHash *scoreForFragment_static_ = nil;
 			}
 		} else {
 			//	use default internal frags and cached score
-			
-	//		for ( VMChance *c in self.fragments ) {
 			VMInt count = self.length;
 			for ( VMInt i = 0; i < count; ++i ) {
 				VMChance *c = [self chanceAtIndex:i];
@@ -1513,20 +1531,14 @@ static VMHash *scoreForFragment_static_ = nil;
 				s += c.cachedScore;
 				if ( s > xi ) { 
 					//if (verbose) NSLog(@"    SEL %@ : -> selected: CHA targ:%@, resolve frag -->", self.id, c.targetId );
+
 #if VMP_LOGGING
-					
 					//
 					// collect score for logging
 					//
-					VMHash *scoreForLog = ARInstance(VMHash);
+					VMHash *scoreForLog = [self collectCurrentScores];
 					[scoreForLog setItem:@"scores" for:@"vmlog_type"];
-					for( VMChance *ch in self.fragments ) {
-						if( !ClassMatch(ch, VMChance)) continue;
-						[scoreForLog setItem:VMFloatObj(ch.cachedScore) for:ch.targetId];
-					}
 					[DEFAULTEVALUATOR trackObjectOnResolvePath:scoreForLog];	//	for debug
-					
-					//
 #endif
 					selectedChance_ = c;
 					frag = [DEFAULTEVALUATOR resolveDataWithTracking:c toType:vmObjectCategory_fragment];
@@ -1706,6 +1718,10 @@ static VMHash *scoreForFragment_static_ = nil;
 }
 
 
+//	selected fragment
+- (VMId*)selectedFragmentId {
+	return selectedChance_.targetId;
+}
 
 
 

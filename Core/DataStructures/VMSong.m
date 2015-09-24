@@ -232,7 +232,7 @@ BOOL verbose = NO;
 
 /*---------------------------------------------------------------------------------
  
- try to resolve data having a sepecified type with route tracking.
+ try to resolve data having a specified type with route tracking.
  
  ---------------------------------------------------------------------------------*/
 
@@ -354,7 +354,7 @@ BOOL verbose = NO;
 	//
 	//	2a)	no sequence found: empty fragment. cannot continue playing. (possibly an error of vm structure)
 	//	2b)	found a sequence, but no audioFragment was inside. cannot continue playing. (possibly an error of vm structure)
-	//	2c)	did'nt find a sequence, but an audioFragment: okay, why not use it. (maybe we can find a seq at next frag in sequence)
+	//	2c)	didn't find a sequence, but an audioFragment: okay, why not use it. (maybe we can find a seq at next frag in sequence)
 	//
 	if( !cc ) {
 		//
@@ -412,7 +412,7 @@ BOOL verbose = NO;
  *
  *	playerFrom:someObject (PF)
  *
- *		try to make a VMPlayerfrom given object.
+ *		try to make a VMPlayer from given object.
  *
  *		1)	resolve a frag
  *			a)	object is VMPlayer:				advance, if the end of seq was reached, resolve subsequent.
@@ -448,9 +448,7 @@ BOOL verbose = NO;
 		VerboseLog(@" PF 1b : select frag");
 
 	//	TEST:	we want track seqence of subseq as well.
-		fragObj = [DEFAULTEVALUATOR resolveDataWithTracking:(VMSelector*)someObj toType:vmObjectCategory_fragment];
-
-		
+		fragObj = [DEFAULTEVALUATOR resolveDataWithTracking:(VMSelector*)someObj toType:vmObjectCategory_fragment];		
 		//fragObj = [(VMSelector*)someObj resolveUntilType:vmObjectCategory_fragment];
 		
 	} else if ( ClassMatch(someObj, VMFragment)) {
@@ -560,13 +558,6 @@ BOOL verbose = NO;
 }
 
 
-
-
-
-
-
-
-
 #pragma mark -
 #pragma mark loading
 
@@ -622,7 +613,8 @@ BOOL verbose = NO;
 
 //	returns YES on success, NO if failed.
 - (BOOL)readFromString:(VMString *)string error:(NSError **)outError {
-	if( string ) self.vmsData = string;
+	if( string )
+		self.vmsData = string;
 	[self.songData clear];
 	self.showReport.current = NO;
 	
@@ -650,7 +642,7 @@ BOOL verbose = NO;
 		return NO;
 	}
 	NSData *data = [self.vmsData dataUsingEncoding:vmFileEncoding];
-	if ( [data writeToURL:url atomically:YES] ) {
+	if ( [data writeToURL:url options:NSDataWritingAtomic error:outError] ) {//[data writeToURL:url atomically:YES] ) {
 		self.fileURL = url;
 		return YES;
 	}
@@ -717,7 +709,7 @@ BOOL verbose = NO;
 - (id)initWithCoder:(NSCoder *)aDecoder {
 	self = [super init];
 	if (self ) {
-		self = [self init];
+		self = [self init];	//	REVIEW 150301 ??? is that correct ? just creating NSObject twice?
 		float __unused dataVersion = [aDecoder decodeFloatForKey:@"dataVersion"];
 		self.fileURL = [aDecoder decodeObjectForKey:@"fileURL"];
 		if ( ! self.fileURL ) return nil;			//	possibly uninitialized. (data structure from older version)

@@ -408,6 +408,14 @@ VMFloat limitedSNDRand(VMFloat min, VMFloat max) {
 	}
 }
 
+- (void)sortByHashContentKey:(VMHashKeyType)sortKey {
+	[array_ sortUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+		return [self object:[((VMHash*)obj1) item:sortKey]
+					compare:[((VMHash*)obj2) item:sortKey]];
+	}];
+
+}
+
 
 
 //	statistics
@@ -654,6 +662,10 @@ VMFloat limitedSNDRand(VMFloat min, VMFloat max) {
 	return [[self item:key] intValue];	
 }
 
+- (BOOL)itemAsBool:(VMHashKeyType)key {
+	return [[self item:key] boolValue];
+}
+
 - (VMFloat)itemAsFloat:(VMHashKeyType)key {
 	return [[self item:key] doubleValue];	
 }
@@ -736,8 +748,12 @@ VMFloat limitedSNDRand(VMFloat min, VMFloat max) {
 				obj1 = cpy;
 				[self setItem:obj1 for:key];
 			} else if ( ![obj1 isKindOfClass:[obj2 class]] ) {
-				[VMException raise:@"Type mismatch." format:@"Cannot deep-merge key %@ in VMHash", key];
-				return;
+				if( (![obj1 isKindOfClass:[NSString class]]) && ( ![obj2 isKindOfClass:[NSString class]] ) ) {
+					[VMException raise:@"Type mismatch." format:@"Cannot deep-merge key %@ in VMHash", key];
+					return;
+				} else {
+					// let it through. because we have __NSCFString amd NSTaggedPointerString and so on..  ss150730
+				}
 			}
 			if ( ClassMatch( obj1, VMHash ) ) {
 				[(VMHash*)obj1 deepMerge:(VMHash*)obj2];	//	recursive  
@@ -779,6 +795,14 @@ VMFloat limitedSNDRand(VMFloat min, VMFloat max) {
 - (VMArray*)keysSortedByValue {
 	NSArray *keys = [hash_ keysSortedByValueUsingComparator:^NSComparisonResult(id obj1, id obj2) {
 		return [self object:obj1 compare:obj2];
+	}];
+	return [VMArray arrayWithArray:keys];
+}
+
+- (VMArray*)keysSortedByHashContentKey:(VMHashKeyType)sortKey {
+	NSArray *keys = [hash_ keysSortedByValueUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+		return [self object:[((VMHash*)obj1) item:sortKey]
+					compare:[((VMHash*)obj2) item:sortKey]];
 	}];
 	return [VMArray arrayWithArray:keys];
 }

@@ -185,8 +185,10 @@ static const CGFloat kWaveDisplayHorizontalMargin = 20;
 	regionRangeEditorView.	flippedYCoordinate = NO;
 	cueRangeEditorView.		autoresizingMask = NSViewMinXMargin;
 	regionRangeEditorView.	autoresizingMask = NSViewMinXMargin;
-	[self.view addSubview:cueRangeEditorView];
-	[self.view addSubview:regionRangeEditorView];
+	if( cueRangeEditorView )
+		[self.view addSubview:cueRangeEditorView];
+	if( regionRangeEditorView )
+		[self.view addSubview:regionRangeEditorView];
 	[self.cueRangeEditor	setTitle:@"Cue Position" caption1:@"offset" caption2:@"duration"];
 	[self.regionRangeEditor setTitle:@"Region" caption1:@"start" caption2:@"length"];
 

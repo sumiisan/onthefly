@@ -454,8 +454,6 @@ shouldLog=shouldLog_,shouldNotify=shouldNotify_;
 #pragma mark -
 #pragma mark resolve path tracking
 	
-	
-	
 	/*---------------------------------------------------------------------------------
 	 *
 	 *
@@ -514,9 +512,12 @@ shouldLog=shouldLog_,shouldNotify=shouldNotify_;
 			VMData *d = ClassCastIfMatch( data, VMData );
 			if ( !d ) continue;
 			switch ((int) d.type ) {
-				case vmObjectType_selector: {
+				case vmObjectType_selector:
+//				case vmObjectType_sequence;
+				case vmObjectType_audioFragment:				{
 					[objectsToProcess push:d];
 					break;
+					
 				}
 			}
 		}
@@ -539,6 +540,20 @@ shouldLog=shouldLog_,shouldNotify=shouldNotify_;
 				if (!sel.liveData) [sel prepareLiveData];
 				sel.liveData.counter++;
 				[sel interpreteInstructionsWithAction:vmAction_play];	//	for executing 'set' instructions
+				
+				
+#if VMP_VISUALIZER
+				[VMPNotificationCenter postNotificationName:VMPNotificationProcessObject
+													 object:self userInfo:@{@"fragment":d}];
+				
+#endif
+				break;
+				
+			case vmObjectType_audioFragment:
+#if VMP_VISUALIZER
+				[VMPNotificationCenter postNotificationName:VMPNotificationProcessObject
+													 object:self userInfo:@{@"fragment":d}];
+#endif
 				break;
 			}
 		}

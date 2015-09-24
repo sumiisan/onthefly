@@ -168,7 +168,7 @@ enum {
 @interface VMPGraph : NSView
 
 @property (nonatomic, assign)	BOOL					flippedYCoordinate;
-@property (nonatomic, assign)	NSInteger				tag;
+@property (atomic, assign)	NSInteger					tag;
 @property (nonatomic, VMStrong)	NSColor					*backgroundColor;
 @property (nonatomic, VMStrong)	NSColor					*foregroundColor;	//	unused, subclass may use it
 @property (nonatomic, VMStrong)	VMPGraph				*topOverlay;

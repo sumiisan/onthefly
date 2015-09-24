@@ -303,13 +303,14 @@ NSDictionary		*windowNames_static_ = nil;
 
 - (IBAction)saveDocument:(id)sender {
 	NSError *error = nil;
-	DEFAULTSONG.vmsData = self.editorWindowController.codeEditorView.textView.string;
+	NSString *vmsData = self.editorWindowController.codeEditorView.textView.string;
+	DEFAULTSONG.vmsData = vmsData;
 	[self saveVMSDocumentToURL:self.currentDocumentURL];	//	FIRST! save anyway.
 	[DEFAULTSONGPLAYER stopAndDisposeQueue];				//	NEXT:  stopping audio can cause error, hang of device, etc.
 															//	LAST:  validate vms, it can produce bunch of errors.
 	//	set editor's songData to nil, because it attempts to display deallocated frags on json parse error.
 	[self.editorWindowController clearSongData];
-	if( [DEFAULTSONG readFromString:nil error:&error] )
+	if( [DEFAULTSONG readFromString:vmsData error:&error] )
 		[self showLogPanelIfNewSystemLogsAreAdded];
 	
 	self.documentModified = NO;
@@ -387,7 +388,7 @@ NSDictionary		*windowNames_static_ = nil;
 		[VMPNotificationCenter postNotificationName:VMPNotificationVMSDataLoaded object:self userInfo:nil];
 	} else {
 		//	handle error
-		[VMException logError:@"Failed to load VMS" format:@"URL:%@ Error:%@ Reason:%@",
+		[VMException logError:@"Failed to save VMS" format:@"URL:%@ Error:%@ Reason:%@",
 		 [documentURL absoluteString], error.localizedDescription, error.localizedFailureReason
 		 ];
 	}

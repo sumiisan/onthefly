@@ -292,7 +292,7 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 		if ( ! selector.fragments ) selector.fragments = ARInstance(VMArray);
 		[selector.fragments push:ch];
 	} else {
-		[DEFAULTPREPROCESSOR logWarning:@"Preprocessor: modifying score." withData:[ch description]];
+		[DEFAULTPREPROCESSOR logWarning:@"Preprocessor: modifying score. %@" withData:[ch description]];
 		if( isnan( ch.primaryFactor ) ) 
 			ch.primaryFactor = score;
 		else
@@ -936,7 +936,7 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 			SetHashItem(type, VMIntObj(vmObjectType_selector));
 		}
 		
-		if ( hash ) {
+		if ( hash != nil ) {
 			
 			//	add parentDataToCopy to hash.
 			[hash deepMerge:parentDataToCopy];

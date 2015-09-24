@@ -576,11 +576,14 @@ typedef enum {
 - (VMChance*)chanceAtIndex:(VMInt)pos;
 - (VMFragment*)selectOne;
 - (VMFragment*)selectOneTemporaryUsingScores:(VMHash*)scoreForFragments sumOfScores:(VMFloat)sum;
+- (VMHash*)collectCurrentScores;
 - (VMFloat)sumOfInnerScores;
 - (VMInt)counter;
 - (void)prepareLiveData;
 - (void)prepareSelection;
 - (BOOL)useSubsequentOfBranchFragments;
+- (VMId*)selectedFragmentId;
+
 //	return value is reference to a static VMHash.	copy if you want hold the result.
 - (VMHash*)collectScoresOfFragments:(VMFloat)parentScore frameOffset:(VMInt)counterOffset normalize:(BOOL)normalize;
 - (VMFloat)ratioOfDeadEndBranchesWithScores:(VMHash*)scoreForFragments sumOfScores:(VMFloat)sum;

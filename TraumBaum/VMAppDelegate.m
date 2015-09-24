@@ -99,6 +99,8 @@ static VMAppDelegate *appDelegate_singleton_;
 		OSStatus state = AudioSessionAddPropertyListener( kAudioSessionProperty_AudioRouteChange,
 														 audioRouteChangeListenerCallback, self );
 		NSLog(@"AudioSessionAddPropertyListener:%d",(int)state);
+		
+		audioSessionInited = YES;	//	added 150301: audioSessionInited was never set true. BUG FIX
 	}
 }
 
