@@ -1,27 +1,33 @@
 
-/* Class = "IBUIButton"; normalTitle = "Open Webpage"; ObjectID = "9"; */
-"9.normalTitle" = "Open Webpage";
-
-/* Class = "IBUIButton"; normalTitle = "Reset Song"; ObjectID = "34"; */
+/* Class = "UIButton"; normalTitle = "Reset"; ObjectID = "34"; */
 "34.normalTitle" = "Reset";
 
-/* Class = "IBUILabel"; text = "Play in Background"; ObjectID = "36"; */
+/* Class = "UILabel"; text = "Play in Background"; ObjectID = "36"; */
 "36.text" = "Play in Background";
 
-/* Class = "IBUILabel"; text = "Dark Background"; ObjectID = "38"; */
-"38.text" = "Dark Background";
-
-/* Class = "IBUIButton"; normalTitle = "Back"; ObjectID = "40"; */
+/* Class = "UIButton"; normalTitle = "Back"; ObjectID = "40"; */
 "40.normalTitle" = "Back";
 
-/* Class = "IBUILabel"; text = "(draft, 2013)"; ObjectID = "5yY-61-x0g"; */
-"5yY-61-x0g.text" = "(spring, 2014)";
+/* Class = "UILabel"; text = "(terminable, 2013)"; ObjectID = "5yY-61-x0g"; */
+"5yY-61-x0g.text" = "(autumn, 2015)";
 
-/* Class = "IBUILabel"; text = "infinite ambient piano piece"; ObjectID = "PoM-CR-coa"; */
-"PoM-CR-coa.text" = "ambient piano of transience";
+/* Class = "UIButton"; normalTitle = "sumiisan.com"; ObjectID = "77R-KW-e1h"; */
+"77R-KW-e1h.normalTitle" = "sumiisan.com";
 
-/* Class = "IBUILabel"; text = "Composed, performed, recorded, designed and programmed by afra masda (sumiisan)."; ObjectID = "Ujm-Rv-q5I"; */
+/* Class = "UILabel"; text = "infinite ambient piano piece"; ObjectID = "PoM-CR-coa"; */
+"PoM-CR-coa.text" = "infinite ambient piano piece";
+
+/* Class = "UIButton"; normalTitle = "X"; ObjectID = "RTe-rz-seT"; */
+"RTe-rz-seT.normalTitle" = "X";
+
+/* Class = "UILabel"; text = "Composed, performed, recorded, designed and programmed by afra masda (sumiisan)."; ObjectID = "Ujm-Rv-q5I"; */
 "Ujm-Rv-q5I.text" = "Composed, performed, recorded, designed and programmed by afra masda (sumiisan).";
 
-/* Class = "IBUILabel"; text = "'traumbaum'"; ObjectID = "qCi-hj-aOL"; */
+/* Class = "UILabel"; text = "0000000000"; ObjectID = "bpJ-rk-Qj2"; */
+"bpJ-rk-Qj2.text" = "0000000000";
+
+/* Class = "UILabel"; text = "'traumbaum'"; ObjectID = "qCi-hj-aOL"; */
 "qCi-hj-aOL.text" = "'traumbaum'";
+
+/* Class = "UIButton"; normalTitle = "Song List"; ObjectID = "qUT-kb-ee0"; */
+"qUT-kb-ee0.normalTitle" = "Song List";

@@ -53,9 +53,15 @@
 
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id <UIViewControllerTransitionCoordinator>)coordinator {
+	NSLog(@"transition to size:%@",NSStringFromCGSize(size));
 	[super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
 	[self placeConfigButton:size];
 	[self.frontView calculateDimensions:size];
+
+	if( [self.view.subviews indexOfObject:self.infoViewController.view] != NSNotFound ) {
+		[self.infoViewController viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+		//	because this VC is never presented (just loaded and view-added), we must pass event explicitly
+	}
 }
 
 - (void)placeConfigButton:(CGSize)size {

@@ -155,12 +155,8 @@
 		1677782D16C0D6A0007206CF /* VMPCanvas.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677781516C0D6A0007206CF /* VMPCanvas.m */; };
 		168A6350171902B700B08329 /* VMPScrollViewClipper.m in Sources */ = {isa = PBXBuildFile; fileRef = 168A634F171902B700B08329 /* VMPScrollViewClipper.m */; };
 		168C5AA817C9786D00AA8916 /* VMPInsertFragmentWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 168C5AA717C9786D00AA8916 /* VMPInsertFragmentWindow.xib */; };
-		168F875717A283B500FCA42F /* VMPInfoViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 168F875517A283B400FCA42F /* VMPInfoViewController.xib */; };
 		16933BFC170C32E2005381FC /* VMPInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 16933BFB170C32E2005381FC /* VMPInfoViewController.m */; };
 		16933C00170C389F005381FC /* VMPIHole.m in Sources */ = {isa = PBXBuildFile; fileRef = 16933BFE170C389F005381FC /* VMPIHole.m */; };
-		1693CBD717166596005846E6 /* iPhone-UI in Resources */ = {isa = PBXBuildFile; fileRef = 1693CBD617166596005846E6 /* iPhone-UI */; };
-		1693CBD9171665DA005846E6 /* appicon.png in Resources */ = {isa = PBXBuildFile; fileRef = 1693CBD8171665D9005846E6 /* appicon.png */; };
-		1693CBDB171665EA005846E6 /* appicon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1693CBDA171665EA005846E6 /* appicon@2x.png */; };
 		1695A50C1805390800EEC1F5 /* VMPTimeManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1695A50B1805390800EEC1F5 /* VMPTimeManager.m */; };
 		1695A50D1805390800EEC1F5 /* VMPTimeManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1695A50B1805390800EEC1F5 /* VMPTimeManager.m */; };
 		1695A50E1805390800EEC1F5 /* VMPTimeManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1695A50B1805390800EEC1F5 /* VMPTimeManager.m */; };
@@ -173,14 +169,10 @@
 		1698E49717CAC47300D2130A /* VMAudioObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 16623152173C9FA300F70FCB /* VMAudioObject.m */; };
 		1698E49817CAC47400D2130A /* VMAudioObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 16623152173C9FA300F70FCB /* VMAudioObject.m */; };
 		169913461818A8A300290B8D /* appicon120.png in Resources */ = {isa = PBXBuildFile; fileRef = 169913451818A8A300290B8D /* appicon120.png */; };
-		1699134A18190C2900290B8D /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1699134718190C2900290B8D /* Default-568h@2x.png */; };
-		1699134B18190C2900290B8D /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 1699134818190C2900290B8D /* Default.png */; };
-		1699134C18190C2900290B8D /* Default~iphone.png in Resources */ = {isa = PBXBuildFile; fileRef = 1699134918190C2900290B8D /* Default~iphone.png */; };
 		16A2030D17474F4700CD2A57 /* VMPFragmentCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 16A2030C17474F4600CD2A57 /* VMPFragmentCell.m */; };
 		16A2030E17474F4700CD2A57 /* VMPFragmentCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 16A2030C17474F4600CD2A57 /* VMPFragmentCell.m */; };
 		16A26C4F18010E4D00A91A46 /* VMPFrontView.m in Sources */ = {isa = PBXBuildFile; fileRef = 16A26C4E18010E4D00A91A46 /* VMPFrontView.m */; };
 		16A27F0016F9730F0081C1E8 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16A27EFF16F9730F0081C1E8 /* AudioToolbox.framework */; };
-		16A27F1316FBB1A70081C1E8 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 16A27F1116FBB1A70081C1E8 /* InfoPlist.strings */; };
 		16A27F1516FBB1A70081C1E8 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 16A27F1416FBB1A70081C1E8 /* main.m */; };
 		16A27F1916FBB1A70081C1E8 /* VMAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 16A27F1816FBB1A70081C1E8 /* VMAppDelegate.m */; };
 		16A27F2216FBB1A70081C1E8 /* VMViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 16A27F2116FBB1A70081C1E8 /* VMViewController.m */; };
@@ -263,6 +255,7 @@
 		16DC63E616B78D8D00E579AE /* play.png in Resources */ = {isa = PBXBuildFile; fileRef = 16DC63E016B78D8D00E579AE /* play.png */; };
 		16DC63EE16B78E2B00E579AE /* stop.png in Resources */ = {isa = PBXBuildFile; fileRef = 16DC63EB16B78E2A00E579AE /* stop.png */; };
 		16DF1D9E184195B1005850B7 /* tb_new_osx.icns in Resources */ = {isa = PBXBuildFile; fileRef = 16DF1D9D184195B1005850B7 /* tb_new_osx.icns */; };
+		16E928A61BB53E3300BA59E1 /* VMPInfoViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 16E928A81BB53E3300BA59E1 /* VMPInfoViewController.xib */; };
 		16F77CCC1865802400B58BA7 /* VMRoute.m in Sources */ = {isa = PBXBuildFile; fileRef = 16F77CCB1865802400B58BA7 /* VMRoute.m */; };
 		16F77CCD1865802400B58BA7 /* VMRoute.m in Sources */ = {isa = PBXBuildFile; fileRef = 16F77CCB1865802400B58BA7 /* VMRoute.m */; };
 		16F77CCE1865802400B58BA7 /* VMRoute.m in Sources */ = {isa = PBXBuildFile; fileRef = 16F77CCB1865802400B58BA7 /* VMRoute.m */; };
@@ -382,13 +375,7 @@
 		160ED01A173B517A0009D04B /* VMPJSONDeserializer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = VMPJSONDeserializer.m; path = "Core/Libs/TouchJSON-master/VMPJSONDeserializer.m"; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		160ED01B173B517A0009D04B /* VMPJSONScanner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VMPJSONScanner.h; sourceTree = "<group>"; };
 		160ED01C173B517A0009D04B /* VMPJSONScanner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = VMPJSONScanner.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		16150B0519D6F0AE00FD0DE6 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = "traumbaum iOS/Images.xcassets"; sourceTree = "<group>"; };
-		161CC69817E51B74001C869D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/VMPInfoViewController.xib; sourceTree = "<group>"; };
-		161CC6A417E52945001C869D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/VMPInfoViewController.strings; sourceTree = "<group>"; };
-		161CC6A517E52948001C869D /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/VMPInfoViewController.strings; sourceTree = "<group>"; };
-		161CC6A617E5294A001C869D /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/VMPInfoViewController.strings; sourceTree = "<group>"; };
-		161CC6A717E5294C001C869D /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/VMPInfoViewController.strings; sourceTree = "<group>"; };
-		161CC6A817E5294E001C869D /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/VMPInfoViewController.strings; sourceTree = "<group>"; };
+		16150B0519D6F0AE00FD0DE6 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = "../traumbaum iOS/Images.xcassets"; sourceTree = "<group>"; };
 		1624A6FB1642B76B004AA351 /* vsDocIcon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = vsDocIcon.icns; sourceTree = "<group>"; };
 		1624A6FE1642B7D0004AA351 /* vsPlayer.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = vsPlayer.icns; sourceTree = "<group>"; };
 		1624A7131644D8AC004AA351 /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = usr/lib/libicucore.dylib; sourceTree = SDKROOT; };
@@ -491,8 +478,6 @@
 		16933BFD170C389F005381FC /* VMPIHole.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VMPIHole.h; sourceTree = "<group>"; };
 		16933BFE170C389F005381FC /* VMPIHole.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = VMPIHole.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		1693CBD617166596005846E6 /* iPhone-UI */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "iPhone-UI"; path = "TraumBaum/iPhone-UI"; sourceTree = SOURCE_ROOT; };
-		1693CBD8171665D9005846E6 /* appicon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = appicon.png; path = ../appicon.png; sourceTree = "<group>"; };
-		1693CBDA171665EA005846E6 /* appicon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "appicon@2x.png"; path = "../appicon@2x.png"; sourceTree = "<group>"; };
 		1695A50A1805390800EEC1F5 /* VMPTimeManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VMPTimeManager.h; sourceTree = "<group>"; };
 		1695A50B1805390800EEC1F5 /* VMPTimeManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VMPTimeManager.m; sourceTree = "<group>"; };
 		1695BE841634D5A3009103F4 /* vmp.sdef */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = vmp.sdef; sourceTree = "<group>"; };
@@ -504,9 +489,6 @@
 		1698E49417CA208100D2130A /* VMPInsertFragmentWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VMPInsertFragmentWindowController.h; sourceTree = "<group>"; };
 		1698E49517CA208200D2130A /* VMPInsertFragmentWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VMPInsertFragmentWindowController.m; sourceTree = "<group>"; };
 		169913451818A8A300290B8D /* appicon120.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = appicon120.png; sourceTree = SOURCE_ROOT; };
-		1699134718190C2900290B8D /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
-		1699134818190C2900290B8D /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
-		1699134918190C2900290B8D /* Default~iphone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default~iphone.png"; sourceTree = "<group>"; };
 		16A2030A174632B700CD2A57 /* VMARC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VMARC.h; path = Core/Misc/VMARC.h; sourceTree = SOURCE_ROOT; };
 		16A2030B17474F4500CD2A57 /* VMPFragmentCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VMPFragmentCell.h; sourceTree = "<group>"; };
 		16A2030C17474F4600CD2A57 /* VMPFragmentCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VMPFragmentCell.m; sourceTree = "<group>"; };
@@ -516,7 +498,6 @@
 		16A27F0116F9736F0081C1E8 /* defaultSong */ = {isa = PBXFileReference; lastKnownFileType = folder; name = defaultSong; path = ../../defaultSong; sourceTree = "<group>"; };
 		16A27F0716FBB1A70081C1E8 /* traumbaum for iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "traumbaum for iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		16A27F1016FBB1A70081C1E8 /* Traumbaum-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Traumbaum-Info.plist"; sourceTree = "<group>"; };
-		16A27F1216FBB1A70081C1E8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		16A27F1416FBB1A70081C1E8 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		16A27F1616FBB1A70081C1E8 /* Traumbaum-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Traumbaum-Prefix.pch"; sourceTree = "<group>"; };
 		16A27F1716FBB1A70081C1E8 /* VMAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VMAppDelegate.h; sourceTree = "<group>"; };
@@ -583,6 +564,12 @@
 		16DC63E016B78D8D00E579AE /* play.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = play.png; sourceTree = "<group>"; };
 		16DC63EB16B78E2A00E579AE /* stop.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = stop.png; sourceTree = "<group>"; };
 		16DF1D9D184195B1005850B7 /* tb_new_osx.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = tb_new_osx.icns; sourceTree = "<group>"; };
+		16E928A71BB53E3300BA59E1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/VMPInfoViewController.xib; sourceTree = "<group>"; };
+		16E928AA1BB53E3700BA59E1 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/VMPInfoViewController.strings; sourceTree = "<group>"; };
+		16E928AC1BB53E3900BA59E1 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/VMPInfoViewController.strings; sourceTree = "<group>"; };
+		16E928AE1BB53E3C00BA59E1 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/VMPInfoViewController.strings; sourceTree = "<group>"; };
+		16E928B01BB53E3E00BA59E1 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/VMPInfoViewController.strings; sourceTree = "<group>"; };
+		16E928B21BB53E4000BA59E1 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/VMPInfoViewController.strings; sourceTree = "<group>"; };
 		16F77CCA1865802400B58BA7 /* VMRoute.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VMRoute.h; path = Core/DataStructures/VMRoute.h; sourceTree = SOURCE_ROOT; };
 		16F77CCB1865802400B58BA7 /* VMRoute.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VMRoute.m; path = Core/DataStructures/VMRoute.m; sourceTree = SOURCE_ROOT; };
 		16F77D22186BC71400B58BA7 /* VMAudioFFT.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = VMAudioFFT.mm; path = Core/DataStructures/VMAudioFFT.mm; sourceTree = SOURCE_ROOT; };
@@ -778,6 +765,15 @@
 		160ED06F173B6F6F0009D04B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				163178AD1BB4AE8E007D6B11 /* QuartzCore.framework */,
+				163178AB1BB4AE56007D6B11 /* libz.tbd */,
+				163178A91BB4AE34007D6B11 /* CoreAudio.framework */,
+				163178A71BB4AE10007D6B11 /* AudioUnit.framework */,
+				163178A51BB4AD89007D6B11 /* UIKit.framework */,
+				163178A31BB4AD66007D6B11 /* CoreGraphics.framework */,
+				163178A11BB4AD4F007D6B11 /* AudioToolbox.framework */,
+				1631789F1BB4AD38007D6B11 /* AVFoundation.framework */,
+				16BDD0691A82FB8000031FEA /* QuartzCore.framework */,
 				162FBBC3174061FE0060E003 /* libicucore.dylib */,
 			);
 			name = Frameworks;
@@ -971,16 +967,6 @@
 		168CEBA3163186B300B721E2 = {
 			isa = PBXGroup;
 			children = (
-				163178AD1BB4AE8E007D6B11 /* QuartzCore.framework */,
-				163178AB1BB4AE56007D6B11 /* libz.tbd */,
-				163178A91BB4AE34007D6B11 /* CoreAudio.framework */,
-				163178A71BB4AE10007D6B11 /* AudioUnit.framework */,
-				163178A51BB4AD89007D6B11 /* UIKit.framework */,
-				163178A31BB4AD66007D6B11 /* CoreGraphics.framework */,
-				163178A11BB4AD4F007D6B11 /* AudioToolbox.framework */,
-				1631789F1BB4AD38007D6B11 /* AVFoundation.framework */,
-				16BDD0691A82FB8000031FEA /* QuartzCore.framework */,
-				16150B0519D6F0AE00FD0DE6 /* Images.xcassets */,
 				16DF1D9D184195B1005850B7 /* tb_new_osx.icns */,
 				16750A2918409D8D0028195B /* tb_new_artwork.png */,
 				16750A26183F8A280028195B /* VMPColorAnimation.h */,
@@ -1148,9 +1134,11 @@
 				1698AD56188E6734006AF34E /* VMTraumbaumUserDefaults.m */,
 				16C217D31845F2DD00C3A995 /* VMPTwitter.h */,
 				16C217D41845F2DD00C3A995 /* VMPTwitter.m */,
+				16150B0519D6F0AE00FD0DE6 /* Images.xcassets */,
 				1693CBD617166596005846E6 /* iPhone-UI */,
 				16A27F1716FBB1A70081C1E8 /* VMAppDelegate.h */,
 				1629EADE1845D9A1009687F1 /* VMPMultiLanguage.h */,
+				16E928A81BB53E3300BA59E1 /* VMPInfoViewController.xib */,
 				1629EADF1845D9A1009687F1 /* VMPMultiLanguage.m */,
 				16A27F1816FBB1A70081C1E8 /* VMAppDelegate.m */,
 				16A27F2016FBB1A70081C1E8 /* VMViewController.h */,
@@ -1159,7 +1147,6 @@
 				16A26C4E18010E4D00A91A46 /* VMPFrontView.m */,
 				16D1EA2718B005C1001AB5C4 /* VMPProgressView.h */,
 				16D1EA2818B005C1001AB5C4 /* VMPProgressView.m */,
-				168F875517A283B400FCA42F /* VMPInfoViewController.xib */,
 				16933BFA170C32E2005381FC /* VMPInfoViewController.h */,
 				16933BFB170C32E2005381FC /* VMPInfoViewController.m */,
 				16C074A017B2750900351113 /* VMPRainyView.h */,
@@ -1185,16 +1172,10 @@
 			isa = PBXGroup;
 			children = (
 				160E51AB1738AF2800C3D9BB /* TraumBaum.entitlements */,
-				1693CBDA171665EA005846E6 /* appicon@2x.png */,
-				1693CBD8171665D9005846E6 /* appicon.png */,
 				169913451818A8A300290B8D /* appicon120.png */,
 				16A27F1016FBB1A70081C1E8 /* Traumbaum-Info.plist */,
-				16A27F1116FBB1A70081C1E8 /* InfoPlist.strings */,
 				16A27F1416FBB1A70081C1E8 /* main.m */,
 				16A27F1616FBB1A70081C1E8 /* Traumbaum-Prefix.pch */,
-				1699134718190C2900290B8D /* Default-568h@2x.png */,
-				1699134818190C2900290B8D /* Default.png */,
-				1699134918190C2900290B8D /* Default~iphone.png */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -1440,22 +1421,15 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				16A27F1316FBB1A70081C1E8 /* InfoPlist.strings in Resources */,
 				16150B0619D6F0AE00FD0DE6 /* Images.xcassets in Resources */,
 				163178B01BB4B7F5007D6B11 /* Launch Screen.storyboard in Resources */,
-				1699134A18190C2900290B8D /* Default-568h@2x.png in Resources */,
 				169913461818A8A300290B8D /* appicon120.png in Resources */,
 				16A27F4716FC14460081C1E8 /* defaultSong in Resources */,
-				1699134C18190C2900290B8D /* Default~iphone.png in Resources */,
 				16A27F5216FC2EC90081C1E8 /* default.vms in Resources */,
-				1693CBD717166596005846E6 /* iPhone-UI in Resources */,
-				1693CBD9171665DA005846E6 /* appicon.png in Resources */,
+				16E928A61BB53E3300BA59E1 /* VMPInfoViewController.xib in Resources */,
 				161CC69A17E51F97001C869D /* TraumBaum.entitlements in Resources */,
-				1693CBDB171665EA005846E6 /* appicon@2x.png in Resources */,
 				160ED034173B517A0009D04B /* License.rtf in Resources */,
 				160ED043173B517A0009D04B /* README.markdown in Resources */,
-				1699134B18190C2900290B8D /* Default.png in Resources */,
-				168F875717A283B500FCA42F /* VMPInfoViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1770,27 +1744,6 @@
 			path = ../../Core;
 			sourceTree = "<group>";
 		};
-		168F875517A283B400FCA42F /* VMPInfoViewController.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				161CC69817E51B74001C869D /* Base */,
-				161CC6A417E52945001C869D /* en */,
-				161CC6A517E52948001C869D /* de */,
-				161CC6A617E5294A001C869D /* ja */,
-				161CC6A717E5294C001C869D /* fr */,
-				161CC6A817E5294E001C869D /* es */,
-			);
-			name = VMPInfoViewController.xib;
-			sourceTree = "<group>";
-		};
-		16A27F1116FBB1A70081C1E8 /* InfoPlist.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				16A27F1216FBB1A70081C1E8 /* en */,
-			);
-			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
 		16C074B217B28C4A00351113 /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -1813,6 +1766,19 @@
 				16C074BF17B28C4B00351113 /* en */,
 			);
 			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
+		16E928A81BB53E3300BA59E1 /* VMPInfoViewController.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				16E928A71BB53E3300BA59E1 /* Base */,
+				16E928AA1BB53E3700BA59E1 /* en */,
+				16E928AC1BB53E3900BA59E1 /* ja */,
+				16E928AE1BB53E3C00BA59E1 /* de */,
+				16E928B01BB53E3E00BA59E1 /* fr */,
+				16E928B21BB53E4000BA59E1 /* es */,
+			);
+			name = VMPInfoViewController.xib;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

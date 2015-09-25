@@ -61,7 +61,7 @@ static VMFloat nightnessOfHour[] = { 1., 1., 1., 1., .7, .5, .3, 0., 0., 0., 0.,
 - (VMInt)hourOfDay {
 	NSDate *now = [NSDate date];
 	NSCalendar *calendar = [NSCalendar currentCalendar];
-    NSDateComponents *components = [calendar components:NSHourCalendarUnit fromDate:now];
+    NSDateComponents *components = [calendar components:NSCalendarUnitHour fromDate:now];
 	return components.hour;
 }
 

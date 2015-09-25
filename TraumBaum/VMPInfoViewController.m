@@ -20,7 +20,8 @@
 #import "VMPSongListView.h"
 
 @interface VMPInfoViewController()
-	@property (nonatomic,retain) NSString *messageText;
+@property (nonatomic,retain) NSString *messageText;
+@property (nonatomic,retain) CAGradientLayer *gradientLayer;
 @end
 
 @implementation VMPInfoViewController
@@ -36,6 +37,13 @@
 	[[VMAppDelegate defaultAppDelegate] setAudioBackgroundMode];
 }
 
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+	[super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+	_gradientLayer.frame = CGRectMake(0, 0, size.width, size.height);
+	VMPSongListView *slv = (VMPSongListView*)[self.view viewWithTag:700];
+	[slv resetMetricsToSize:CGSizeMake(size.width, size.height-51/*back button height*/)];
+}
+	
 - (IBAction)buttonTouched:(id)sender {
 	UIButton *b = sender;
 	BOOL closeDialog = YES;
@@ -115,17 +123,16 @@
 			//	song list
 			CGFloat h = self.view.bounds.size.height - 51;
 			VMPSongListView *listView = [[[VMPSongListView alloc]
-										  initWithFrame:CGRectMake(320, 0, self.view.bounds.size.width, h)] autorelease];
+										  initWithFrame:CGRectMake(self.view.bounds.size.width, 0, self.view.bounds.size.width, h)] autorelease];
 			listView.alpha = 0.5;
 			listView.tag = 700;
 			[self.view addSubview:listView];
-//			listView.frame = CGRectMake(320, 0, self.bounds.size.width, h);
+
 			[UIView beginAnimations:nil context:nil];
 			[UIView setAnimationDuration:.3];
 			listView.alpha = 1.;
 			listView.frame = CGRectMake(0, 0, self.view.bounds.size.width, h);
 			[UIView commitAnimations];
-///			[[VMAppDelegate defaultAppDelegate].viewController presentViewController:VMPSongListView animated:YES completion:nil];
 			closeDialog = NO;
 
 			break;
@@ -152,10 +159,10 @@
 
 	[self retrieveMessageFile];
 	
-	self.backgroundPlaySwitch.on = [VMTraumbaumUserDefaults backgroundPlayback];
+	BOOL backgroundPlayback = [VMTraumbaumUserDefaults backgroundPlayback];
+	self.backgroundPlaySwitch.on = backgroundPlayback;
 	self.view.backgroundColor = [UIColor clearColor];
 		
-//	self.frame = [UIScreen mainScreen].bounds;
 	BOOL externalVMSMode = [[VMVmsarcManager defaultManager] externalVMSMode];
 	
 	CGFloat b = 1.;
@@ -191,22 +198,22 @@
 //	controlPane.frame = CGRectMake(0, self.bounds.size.height-controlPane.frame.size.height,
 //								   320, controlPane.frame.size.height);
 	
-	CAGradientLayer *g0 = [CAGradientLayer layer];
-	g0.frame = self.view.frame;
+	self.gradientLayer = [CAGradientLayer layer];
+	_gradientLayer.frame = self.view.frame;
 	CGFloat bgBrightness = isDarkBG ? 0.13 : 0.87;
 	CGFloat textBrightness = isDarkBG ? 0.8 : 0.2;
 	CGFloat panelBGBrightness = isDarkBG ? 0.1 : 1.;
 	VMPColor *textColor = VMPColorBy(textBrightness, textBrightness, textBrightness, 1.);
 	VMPColor *panelColor = VMPColorBy(panelBGBrightness, panelBGBrightness, panelBGBrightness, 0.5 );
-	g0.colors = [NSArray arrayWithObjects:
+	_gradientLayer.colors = [NSArray arrayWithObjects:
 				 (id)[UIColor colorWithWhite:bgBrightness alpha:.5].CGColor,
 				 (id)[UIColor colorWithWhite:bgBrightness alpha:.6].CGColor,
 				 (id)[UIColor colorWithWhite:bgBrightness alpha:.7].CGColor,
 				 (id)[UIColor colorWithWhite:bgBrightness alpha:.5].CGColor,
 				 nil];
-	g0.locations = @[ @0.0, @0.03, @0.97, @1.0 ];
+	_gradientLayer.locations = @[ @0.0, @0.03, @0.97, @1.0 ];
 	
-	[self.view.layer insertSublayer:g0 atIndex:0];
+	[self.view.layer insertSublayer:_gradientLayer atIndex:0];
 
 	infoText.delegate =self;
 	infoText.hidden = YES;
@@ -413,6 +420,7 @@
 //	VMNullify(scrollContentView);
 	DEFAULTSONGPLAYER.trackView = nil;
 	self.messageText = nil;
+	VMNullify(gradientLayer);
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	[super dealloc];
 }

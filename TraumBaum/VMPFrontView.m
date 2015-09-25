@@ -92,35 +92,41 @@ stemLength=stemLength_,refreshScreenCounter=refreshScreenCounter_,lastDayPhase=l
 	}
 }
 
-- (void)initializeShapes {
-	if( useCALayer ) {
-		for ( int i = 0; i < numOfCircles + 1; ++i ) {
-			VMPBezierPath *path;
-			if( i < numOfCircles )
-				path = [VMPBezierPath bezierPathWithOvalInRect:VMPMakeRect(-standardRadius_, - standardRadius_,
-																		   standardRadius_*2, standardRadius_*2)];
-			else
-				path = [VMPBezierPath bezierPathWithOvalInRect:VMPMakeRect(-standardRadius_*0.95, - standardRadius_*0.95,
-																		   standardRadius_*1.9, standardRadius_*1.9)];
-			
-			CAShapeLayer *circle = [CAShapeLayer layer];
-			circle.path = path.quartzPath;
-			[self.circles addObject:circle];
-#if VMP_OSX
-			circle.fillColor = [self CGColorFromNSColor:[VMPColor clearColor]];
-#else
-			circle.fillColor = [VMPColor clearColor].CGColor;
-#endif
-			circle.frame = CGRectMake(holeCenter_.x, holeCenter_.y, 0, 0);
-#if CALayerCompositingFilterAvailable
-			if( self.blendMode == kCGBlendModeMultiply )
-				circle.compositingFilter = [CIFilter filterWithName:@"CIMultiplyBlendMode"];
-			else
-				circle.compositingFilter = [CIFilter filterWithName:@"CIScreenBlendMode"];
-#endif
-			[self.layer addSublayer:circle];
-		}
+- (void)makeCircles {
+	for (CAShapeLayer *c in circles_) {
+		[c removeFromSuperlayer];
 	}
+	[self.circles removeAllObjects];
+	for ( int i = 0; i < numOfCircles + 1; ++i ) {
+		VMPBezierPath *path;
+		if( i < numOfCircles )
+			path = [VMPBezierPath bezierPathWithOvalInRect:VMPMakeRect(-standardRadius_, - standardRadius_,
+																	   standardRadius_*2, standardRadius_*2)];
+		else
+			path = [VMPBezierPath bezierPathWithOvalInRect:VMPMakeRect(-standardRadius_*0.95, - standardRadius_*0.95,
+																	   standardRadius_*1.9, standardRadius_*1.9)];
+		
+		CAShapeLayer *circle = [CAShapeLayer layer];
+		circle.path = path.quartzPath;
+		[self.circles addObject:circle];
+#if VMP_OSX
+		circle.fillColor = [self CGColorFromNSColor:[VMPColor clearColor]];
+#else
+		circle.fillColor = [VMPColor clearColor].CGColor;
+#endif
+		circle.frame = CGRectMake(holeCenter_.x, holeCenter_.y, 0, 0);
+#if CALayerCompositingFilterAvailable
+		if( self.blendMode == kCGBlendModeMultiply )
+			circle.compositingFilter = [CIFilter filterWithName:@"CIMultiplyBlendMode"];
+		else
+			circle.compositingFilter = [CIFilter filterWithName:@"CIScreenBlendMode"];
+#endif
+		[self.layer addSublayer:circle];
+	}
+}
+
+- (void)initializeShapes {
+	if( useCALayer ) [self makeCircles];
 	self.stem = [CAShapeLayer layer];
 	stem_.path = [VMPBezierPath bezierPath].quartzPath;
 	stem_.hidden = YES;
@@ -214,9 +220,13 @@ stemLength=stemLength_,refreshScreenCounter=refreshScreenCounter_,lastDayPhase=l
 - (void)calculateDimensions:(CGSize)size {
 	CGFloat narrowerSide = MIN( size.height, size.width );
 	
-	standardRadius_ = narrowerSide * 0.21;//0.21;v1.1
+	standardRadius_ = narrowerSide * 0.21;
 	holeHotSpotRadius = narrowerSide * 0.27;
 	holeCenter_ = CGPointMake( size.width * 0.5, size.height * 0.33 );
+	
+	NSLog(@"std rad:%f",standardRadius_);
+	[self makeCircles];
+	refreshScreenCounter_ = 99999;
 
 	self.frame = CGRectMake(0,0,size.width,size.height);
 }
