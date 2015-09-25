@@ -8,16 +8,17 @@
 
 #import <UIKit/UIKit.h>
 #import <AVFoundation/AVFoundation.h>
-#import "VMPInfoView.h"
+#import "VMPInfoViewController.h"
 #import "VMPTrackView.h"
 #import "VMPFrontView.h"
 #import "VMPProgressView.h"
 
-@interface VMViewController : UIViewController <VMPInfoViewDelegate,AVAudioSessionDelegate>
+@interface VMViewController : UIViewController <AVAudioSessionDelegate>
 
 @property (retain, nonatomic)				VMPTrackView *trackView;
-@property (nonatomic, retain)	IBOutlet	VMPInfoView *infoView;
+@property (nonatomic, retain)				VMPInfoViewController *infoViewController;
 @property (nonatomic, retain)				VMPFrontView *frontView;
+@property (nonatomic, retain)				UIButton *configButton;
 
 - (VMPProgressView*)showProgressView;
 - (void)hideProgressView;

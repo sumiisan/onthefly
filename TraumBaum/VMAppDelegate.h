@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <AVFoundation/AVFoundation.h>
 
-#import "VMPInfoView.h"
+#import "VMPInfoViewController.h"
 #import "VMSong.h"
 #import "VMVmsarcManager.h"
 

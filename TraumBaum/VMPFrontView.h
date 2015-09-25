@@ -87,4 +87,6 @@ UIView
 @property (nonatomic)			VMTime		transitionRemain;
 #endif
 
+- (void)calculateDimensions:(CGSize)size;
+
 @end

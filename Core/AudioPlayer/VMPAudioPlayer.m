@@ -389,24 +389,24 @@ static VMHash *processPhaseNames_static_ = nil;
 	}
 	
 #else
-	UInt32 bytesRead;
+	UInt32 maxBytesToRead = kAudioPlayer_BufferSize;
 	
-	AudioFileReadPackets
+	AudioFileReadPacketData
 	(
-	 audioFile, 
+	 audioFile,
 	 NO,
-	 &bytesRead,
-	 packetDescs, 
-	 packetIndex, 
+	 &maxBytesToRead,
+	 packetDescs,
+	 packetIndex,
 	 &packetsToRead,
-	 inBuffer->mAudioData );
+	 inBuffer->mAudioData);
 
     if (packetsToRead > 0)	{
         // - End Of File has not been reached yet since we read some packets, so enqueue the buffer we just read into
         // the audio queue, to be played next
         // - (packetDescs ? numPackets : 0) means that if there are packet descriptions (which are used only for Variable
         // BitRate data (VBR)) we'll have to send one for each packet, otherwise zero
-        inBuffer->mAudioDataByteSize = bytesRead;
+        inBuffer->mAudioDataByteSize = maxBytesToRead;
         AudioQueueEnqueueBuffer(queue, inBuffer, (packetDescs ? packetsToRead : 0), packetDescs);
         
         // move ahead to be ready for next time we need to read from the file
@@ -570,8 +570,9 @@ static VMHash *processPhaseNames_static_ = nil;
 
 - (void)stop {
     UInt32 running;
+	UInt32 datasize;	//	unused
 	if ( queue ) {
-		AudioQueueGetProperty( queue, kAudioQueueProperty_IsRunning, &running, nil);
+		AudioQueueGetProperty( queue, kAudioQueueProperty_IsRunning, &running, &datasize);
 #if enableDSP
 		if( audioObject_->audioFile) AudioQueueStop( queue, YES );
 		[audioObject_ close];

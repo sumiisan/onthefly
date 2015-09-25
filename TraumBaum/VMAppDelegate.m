@@ -20,12 +20,12 @@
 /*---------------------------------------------------------------------------------
  *
  *
- *	handle audio route change
+ *	handle audio route change	--	 depreciated
  *
  *
  *---------------------------------------------------------------------------------*/
 
-
+/*
 void audioRouteChangeListenerCallback (
 									   void                      *inUserData,
 									   AudioSessionPropertyID    inPropertyID,
@@ -52,6 +52,7 @@ void audioRouteChangeListenerCallback (
         }
     }
 }
+ */
 
 
 /*---------------------------------------------------------------------------------
@@ -95,10 +96,12 @@ static VMAppDelegate *appDelegate_singleton_;
 													 name: AVAudioSessionInterruptionNotification
 												   object: audioSession ];
 
-		//	set route change listener
-		OSStatus state = AudioSessionAddPropertyListener( kAudioSessionProperty_AudioRouteChange,
+		//	set route change listener	-- depreciated: we use notification instead:
+		
+/*		OSStatus state = AudioSessionAddPropertyListener( kAudioSessionProperty_AudioRouteChange,
 														 audioRouteChangeListenerCallback, self );
 		NSLog(@"AudioSessionAddPropertyListener:%d",(int)state);
+*/
 		
 		audioSessionInited = YES;	//	added 150301: audioSessionInited was never set true. BUG FIX
 	}
@@ -108,11 +111,23 @@ static VMAppDelegate *appDelegate_singleton_;
 	return [VMTraumbaumUserDefaults backgroundPlayback];
 }
 
+- (void)audioRouteChanged:(NSNotification*)notification {
+	if ( DEFAULTSONGPLAYER.isRunning ) {
+		NSInteger  reason = [[[notification userInfo] objectForKey:AVAudioSessionRouteChangeReasonKey] integerValue];
+		if (reason == kAudioSessionRouteChangeReason_OldDeviceUnavailable) {
+			[[VMAppDelegate defaultAppDelegate] stop];
+			NSLog(@"kAudioSessionRouteChangeReason_OldDeviceUnavailable");
+		}
+	}
+}
+
 - (id)init {
 	self = [super init];
 	if(! self )return nil;
 	
 	appDelegate_singleton_ = self;
+	
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(audioRouteChanged:) name:AVAudioSessionRouteChangeNotification object:nil];
 	
 	[[NSNotificationCenter defaultCenter]
 	 addObserver:self selector:@selector(endOfSequence:)
@@ -180,6 +195,8 @@ static VMAppDelegate *appDelegate_singleton_;
 }
 
 - (void)dealloc {
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:AVAudioSessionRouteChangeNotification object:nil];
+
 	[DEFAULTSONGPLAYER coolDown];
     Release(_window);
     Release(_viewController);
@@ -360,13 +377,9 @@ static VMAppDelegate *appDelegate_singleton_;
 		  "didFinishLaunchingWithOptions"
 		  "\n---------------------------------\n");
  	[VMTraumbaumUserDefaults initializeDefaults];		//	note: we must update this to support url-scheme supplied external files.
-   self.window = [[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease];
-    // Override point for customization after application launch.
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
-        self.viewController = [[[VMViewController alloc] initWithNibName:@"VMViewController_iPhone" bundle:nil] autorelease];
-    } else {
-        self.viewController = [[[VMViewController alloc] initWithNibName:@"VMViewController_iPad" bundle:nil] autorelease];
-    }
+	self.window = [[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease];
+
+	self.viewController = [[[VMViewController alloc] init] autorelease];
     self.window.rootViewController = self.viewController;
     [self.window makeKeyAndVisible];
     return YES;
@@ -379,8 +392,8 @@ static VMAppDelegate *appDelegate_singleton_;
 	if ( ! self.isBackgroundPlaybackEnabled )
 		[DEFAULTSONGPLAYER setFadeFrom:-1 to:0 length:.1];	//	prevent garbage audio at next startup.	ss1311123
 	
-	if ( [self.viewController.view.subviews containsObject:self.viewController.infoView] ) {
-		[self.viewController.infoView closeView];
+	if ( [self.viewController.view.subviews containsObject:self.viewController.infoViewController.view] ) {
+		[self.viewController.infoViewController closeView];
 	}
 }
 	
@@ -393,7 +406,7 @@ static VMAppDelegate *appDelegate_singleton_;
 	if ( !self.isBackgroundPlaybackEnabled || DEFAULTSONGPLAYER.isPaused ) {
 		[self saveSong:YES];
 	}
-	[self.viewController.infoView removeFromSuperview];
+	[self.viewController.infoViewController.view removeFromSuperview];
 
 }
 

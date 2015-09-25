@@ -6,7 +6,7 @@
 //
 #import <AVFoundation/AVFoundation.h>
 
-#import "VMPInfoView.h"
+#import "VMPInfoViewController.h"
 #import "MultiPlatform.h"
 #import "VMScoreEvaluator.h"
 #import "VMSong.h"
@@ -19,11 +19,11 @@
 #import "VMTraumbaumUserDefaults.h"
 #import "VMPSongListView.h"
 
-@interface VMPInfoView()
+@interface VMPInfoViewController()
 	@property (nonatomic,retain) NSString *messageText;
 @end
 
-@implementation VMPInfoView
+@implementation VMPInfoViewController
 
 //static const int kNumberOfSkins = 4;
 #define DROPBOX_MESSAGE_URL @"https://dl.dropboxusercontent.com/u/147605/tbmessage.txt"
@@ -50,7 +50,7 @@
 			if ( [[[VMVmsarcManager defaultManager] propertyOfCurrentVMS:VMSCacheKey_BuiltIn] boolValue] ) {
 				[[UIApplication sharedApplication]
 				 openURL:[NSURL URLWithString:
-						  [NSString stringWithFormat:@"http://sumiisan.com/?l=%@",
+						  [NSString stringWithFormat:@"http://sumiisan.com/traumbaum/?l=%@",
 						   [VMPMultiLanguage language]]]];
 			} else {
 				[[UIApplication sharedApplication]
@@ -93,7 +93,7 @@
 			doesPlayInBackGround = ! doesPlayInBackGround;
 			[self setBackgroundMode:doesPlayInBackGround];
 			b.selected = doesPlayInBackGround;
-			[self viewWithTag:'chck'].hidden = ( ! doesPlayInBackGround );
+			[self.view viewWithTag:'chck'].hidden = ( ! doesPlayInBackGround );
 			closeDialog = NO;
 			break;
 		}
@@ -105,7 +105,7 @@
 		case 112: {
 			[VMTraumbaumUserDefaults setLastDismissedMessage:self.messageText];
 			b.hidden = YES;
-			UIWebView	*infoText	= (UIWebView*)[self viewWithTag:115];
+			UIWebView	*infoText	= (UIWebView*)[self.view viewWithTag:115];
 			infoText.hidden = YES;
 			closeDialog = NO;
 			//	message
@@ -113,17 +113,17 @@
 		}
 		case 120: {
 			//	song list
-			CGFloat h = self.bounds.size.height - 51;
+			CGFloat h = self.view.bounds.size.height - 51;
 			VMPSongListView *listView = [[[VMPSongListView alloc]
-										  initWithFrame:CGRectMake(320, 0, self.bounds.size.width, h)] autorelease];
+										  initWithFrame:CGRectMake(320, 0, self.view.bounds.size.width, h)] autorelease];
 			listView.alpha = 0.5;
 			listView.tag = 700;
-			[self addSubview:listView];
+			[self.view addSubview:listView];
 //			listView.frame = CGRectMake(320, 0, self.bounds.size.width, h);
 			[UIView beginAnimations:nil context:nil];
 			[UIView setAnimationDuration:.3];
 			listView.alpha = 1.;
-			listView.frame = CGRectMake(0, 0, self.bounds.size.width, h);
+			listView.frame = CGRectMake(0, 0, self.view.bounds.size.width, h);
 			[UIView commitAnimations];
 ///			[[VMAppDelegate defaultAppDelegate].viewController presentViewController:VMPSongListView animated:YES completion:nil];
 			closeDialog = NO;
@@ -148,37 +148,37 @@
 }
 
 - (void)showView {
-	self.alpha = 0;
-	
+	self.view.alpha = 0;
+
 	[self retrieveMessageFile];
 	
 	self.backgroundPlaySwitch.on = [VMTraumbaumUserDefaults backgroundPlayback];
-	self.backgroundColor = [UIColor clearColor];
+	self.view.backgroundColor = [UIColor clearColor];
 		
-	self.frame = [UIScreen mainScreen].bounds;
+//	self.frame = [UIScreen mainScreen].bounds;
 	BOOL externalVMSMode = [[VMVmsarcManager defaultManager] externalVMSMode];
 	
 	CGFloat b = 1.;
 	[DEFAULTEVALUATOR.timeManager.backgroundColor getHue:nil saturation:nil brightness:&b alpha:nil];
 	BOOL isDarkBG = ( b < 0.3 );
 	
-	UIView		*bgSwitchBG		= [self viewWithTag:109];
-	UIView		*titlePane		= [self viewWithTag:110];
+	UIView		*bgSwitchBG		= [self.view viewWithTag:109];
+	UIView		*titlePane		= [self.view viewWithTag:110];
 	
-	UIView		*controlPane	= [self viewWithTag:111];
-	UIButton	*infoButton		= (UIButton*)[self viewWithTag:112];
-	UIWebView	*infoText		= (UIWebView*)[self viewWithTag:115];
-	UIButton	*songListButton	= (UIButton*)[self viewWithTag:120];
-	UIButton	*resetButton	= (UIButton*)[self viewWithTag:101];
-	UIButton	*backButton		= (UIButton*)[self viewWithTag:104];
+//	UIView		*controlPane	= [self viewWithTag:111];
+	UIButton	*infoButton		= (UIButton*)[self.view viewWithTag:112];
+	UIWebView	*infoText		= (UIWebView*)[self.view viewWithTag:115];
+	UIButton	*songListButton	= (UIButton*)[self.view viewWithTag:120];
+	UIButton	*resetButton	= (UIButton*)[self.view viewWithTag:101];
+	UIButton	*backButton		= (UIButton*)[self.view viewWithTag:104];
 	
-	UIButton	*websiteButton	= (UIButton*)[self viewWithTag:100];
+	UIButton	*websiteButton	= (UIButton*)[self.view viewWithTag:100];
 	
 	if( externalVMSMode ) {
-		UILabel		*subtitleLabel	= (UILabel*)[self viewWithTag:600];
-		UILabel		*titleLabel		= (UILabel*)[self viewWithTag:601];
-		UILabel		*versionLabel	= (UILabel*)[self viewWithTag:602];
-		UILabel		*creditsLabel	= (UILabel*)[self viewWithTag:603];
+		UILabel		*subtitleLabel	= (UILabel*)[self.view viewWithTag:600];
+		UILabel		*titleLabel		= (UILabel*)[self.view viewWithTag:601];
+		UILabel		*versionLabel	= (UILabel*)[self.view viewWithTag:602];
+		UILabel		*creditsLabel	= (UILabel*)[self.view viewWithTag:603];
 		
 		subtitleLabel.text = DEFAULTSONG.songDescription;
 		titleLabel.text = DEFAULTSONG.songName;
@@ -186,13 +186,13 @@
 		creditsLabel.text = [NSString stringWithFormat:@"%@\n%@", DEFAULTSONG.artist, DEFAULTSONG.copyright];
 	}
 		
-	CGPoint center = [VMAppDelegate defaultAppDelegate].viewController.frontView.holeCenter;
-	titlePane.frame = CGRectMake(0,center.y-60,320,121);
-	controlPane.frame = CGRectMake(0, self.bounds.size.height-controlPane.frame.size.height,
-								   320, controlPane.frame.size.height);
+//	CGPoint center = [VMAppDelegate defaultAppDelegate].viewController.frontView.holeCenter;
+//	titlePane.frame = CGRectMake(0,center.y-60,320,121);
+//	controlPane.frame = CGRectMake(0, self.bounds.size.height-controlPane.frame.size.height,
+//								   320, controlPane.frame.size.height);
 	
 	CAGradientLayer *g0 = [CAGradientLayer layer];
-	g0.frame = self.frame;
+	g0.frame = self.view.frame;
 	CGFloat bgBrightness = isDarkBG ? 0.13 : 0.87;
 	CGFloat textBrightness = isDarkBG ? 0.8 : 0.2;
 	CGFloat panelBGBrightness = isDarkBG ? 0.1 : 1.;
@@ -206,7 +206,7 @@
 				 nil];
 	g0.locations = @[ @0.0, @0.03, @0.97, @1.0 ];
 	
-	[self.layer insertSublayer:g0 atIndex:0];
+	[self.view.layer insertSublayer:g0 atIndex:0];
 
 	infoText.delegate =self;
 	infoText.hidden = YES;
@@ -242,7 +242,7 @@
 
 	[UIView beginAnimations:nil context:nil];
 	[UIView setAnimationDuration:1.];
-	self.alpha = 1;
+	self.view.alpha = 1;
 	[UIView commitAnimations];
 	[DEFAULTSONGPLAYER setDimmed:YES];
 	[self updateStats:nil];
@@ -272,8 +272,8 @@
 		}
 	}
 	
-	UIButton	*infoButton = (UIButton*)[self viewWithTag:112];
-	UIWebView	*infoText	= (UIWebView*)[self viewWithTag:115];
+	UIButton	*infoButton = (UIButton*)[self.view viewWithTag:112];
+	UIWebView	*infoText	= (UIWebView*)[self.view viewWithTag:115];
 	//NSLog(@"new:%@ dism:%@",message,dismissed);
 	if ( self.messageText.length > 0 && ! [VMTraumbaumUserDefaults isEqualToLastDismissedMessage:self.messageText] ) {
 		infoButton.hidden = NO;
@@ -337,15 +337,15 @@
 	[self hideTrackViewIfPresent];
 	[UIView animateWithDuration:1.0f
 					 animations:^(){
-						 self.alpha = 0.;
-						 UIView *listView = [self viewWithTag:700];
+						 self.view.alpha = 0.;
+						 UIView *listView = [self.view viewWithTag:700];
 						 if(listView) {
 							 listView.center = CGPointMake( listView.center.x + 320, listView.center.y );
 						 }
 					 }
 					 completion:^(BOOL finished){
 						 if( finished ) {
-							 [self removeFromSuperview];
+							 [self.view removeFromSuperview];
 						 }
 					 }];
 	
@@ -370,21 +370,23 @@
 	3;
 #endif
 	tgr.numberOfTapsRequired = 3;
-	[self addGestureRecognizer:tgr];
+	[self.view addGestureRecognizer:tgr];
 	Release(tgr);
 }
 
-
-- (void)willMoveToSuperview:(UIView *)newSuperview {
-
-	self.backgroundPlaySwitch.on = [VMTraumbaumUserDefaults backgroundPlayback];
-	self.backgroundColor = [UIColor colorWithWhite:1. alpha:0.6];	
-	[super willMoveToSuperview:newSuperview];
+- (void)viewDidLoad {
+	[super viewDidLoad];
+	[self initViewAndRecognizer];
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+	self.backgroundPlaySwitch.on = [VMTraumbaumUserDefaults backgroundPlayback];
+	self.view.backgroundColor = [UIColor colorWithWhite:1. alpha:0.6];
+	[super viewWillAppear:animated];
+}
 
 - (BOOL)hideTrackViewIfPresent {
-	VMPTrackView *tv = (VMPTrackView*)[self viewWithTag:'trkV'];
+	VMPTrackView *tv = (VMPTrackView*)[self.view viewWithTag:'trkV'];
 	if ( tv ) {
 		//	hide
 		DEFAULTSONGPLAYER.trackView = nil;
@@ -399,9 +401,9 @@
 	
 	if ( ! [self hideTrackViewIfPresent] ) {
 		//	show;
-		VMPTrackView *tv = AutoRelease([[VMPTrackView alloc] initWithFrame:self.frame]);
+		VMPTrackView *tv = AutoRelease([[VMPTrackView alloc] initWithFrame:self.view.frame]);
 		tv.tag = 'trkV';
-		[self addSubview:tv];
+		[self.view addSubview:tv];
 		[DEFAULTSONGPLAYER setDimmed:NO];
 		DEFAULTSONGPLAYER.trackView = tv;
 	}
@@ -416,26 +418,9 @@
 }
 
 
-//	delegate
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-//	int centerSkin = ( scrollView.contentOffset.x +70 ) / 140;
-/*	for( int skin = 0; skin < kNumberOfSkins; ++skin ) {
-		UIImageView *skinView = (UIImageView*)[self viewWithTag:'skn0'+skin];
-		double dist = fabs( skinView.frame.origin.x - scrollView.contentOffset.x );
-		skinView.alpha = dist > 200 ? 0. : 1 - dist * 0.005;
-	}*/
-}
 
-- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
-	int selectedSkin = scrollView.contentOffset.x / 140;
-	[self.delegate setSkinIndex:selectedSkin];
-}
-
-- (id)initWithFrame:(CGRect)frame {
-	self = [super initWithFrame:frame];
-	if ( self ) {
-		[self initViewAndRecognizer];
-	}
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
+	self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
 	return self;
 }
 

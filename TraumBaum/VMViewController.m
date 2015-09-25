@@ -10,7 +10,7 @@
 #import "VMPTrackView.h"
 #import "VMPSongPlayer.h"
 #import "VMScoreEvaluator.h"
-#import "VMPInfoView.h"
+#import "VMPInfoViewController.h"
 #import <AVFoundation/AVFoundation.h>
 #import "VMAppDelegate.h"
 #import "VMPVineView.h"
@@ -24,46 +24,21 @@
 
 
 - (BOOL)prefersStatusBarHidden {
-    return YES;//(DEFAULTEVALUATOR.timeManager.nightNess>0.5);
+	return YES;
 }
 
-- (void)setSkin:(int)index {
-	
-	//	skin obsoleted in ver 1.1
-	
-/*	UIImageView *bg = (UIImageView*)[self.view viewWithTag:'__bg'];
-	if ( !bg ) {
-		bg = [[UIImageView alloc] initWithFrame:CGRectMake(0, ( Is4InchIPhone ? 0 : -40 ), 320, 568 )];
-		bg.tag = '__bg';
-		[self.view addSubview:bg];
-		Release(bg);
-	}
-	bg.image = [UIImage imageNamed:[NSString stringWithFormat:@"iPhone-UI/skin%d_phone.jpg", index]];
- */
-//	self.view.backgroundColor = ( index == 0 ? [UIColor whiteColor] : [UIColor blackColor] );
-	
-}
-
-//	delegate
-- (void)setSkinIndex:(int)skinIndex {
-	[self setSkin:skinIndex];
-}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
 	[[VMAppDelegate defaultAppDelegate] setAudioBackgroundMode];
-	self.view.frame = CGRectMake(0, 0, 320, Is4InchIPhone ? 568 : 480 );
 	
+	self.view.frame = [[UIScreen mainScreen] bounds];
 	self.trackView = [[[VMPTrackView alloc] initWithFrame:self.view.frame] autorelease];
     DEFAULTSONGPLAYER.trackView = self.trackView;
 		
-	self.view.backgroundColor = [UIColor grayColor];
-	
+	self.view.backgroundColor = [UIColor clearColor];
 	self.frontView = [[[VMPFrontView alloc]
-					   initWithFrame:CGRectMake(0,
-												0,
-												320,
-												self.view.bounds.size.height)
+					   initWithFrame:self.view.bounds
 					   ] autorelease];
 	[self.view addSubview:self.frontView];
 	[self attachConfigButton];
@@ -76,11 +51,24 @@
 #endif
 }
 
+
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id <UIViewControllerTransitionCoordinator>)coordinator {
+	[super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+	[self placeConfigButton:size];
+	[self.frontView calculateDimensions:size];
+}
+
+- (void)placeConfigButton:(CGSize)size {
+	CGFloat radius = 19;//9 + MIN(size.width,size.height) * 0.03;
+
+	_configButton.frame = CGRectMake( size.width * 0.5 - radius, size.height * 0.78, radius*2, radius*2 );
+
+}
+
 - (void)attachConfigButton {
 	
 	//	config button
-	UIButton *bt = [UIButton buttonWithType:UIButtonTypeCustom];
-	
+	self.configButton = [UIButton buttonWithType:UIButtonTypeCustom];
 	
     // draw original image into the context
 	
@@ -104,25 +92,24 @@
 	UIGraphicsEndImageContext();
 	if (originalContext) UIGraphicsPopContext();
 	
-	[bt setImage:image forState:UIControlStateNormal];
+	[_configButton setImage:image forState:UIControlStateNormal];
+	//	y * 0.827	-- 3.5"iphone
+	//	y * 0.778	-- 4" iphone
+	[_configButton addTarget:self action:@selector(configButtonTouched:) forControlEvents:UIControlEventTouchUpInside];
+	[self.view addSubview:_configButton];
 	
-	CGFloat radius = 19;
-	bt.frame = CGRectMake( 162 - radius, 397 + ( Is4InchIPhone ? 45 : 0 ), radius*2, radius*2 );
-	[bt addTarget:self action:@selector(configButtonTouched:) forControlEvents:UIControlEventTouchUpInside];
-	[self.view addSubview:bt];
+	[self placeConfigButton:self.view.bounds.size];
 	
 }
 
 
 - (void)configButtonTouched:(id)sender {
-	self.infoView = [[[VMPInfoView alloc] initWithFrame:CGRectMake(0, (self.view.bounds.size.height - 480)*0.5,
-																   320, 480)] autorelease];
 	
-	UIView *view = [[[NSBundle mainBundle] loadNibNamed:@"VMPInfoView" owner:self.infoView options:nil] objectAtIndex:0];
-	[self.infoView addSubview: view];
-
-	[self.view addSubview:self.infoView];
-	[(VMPInfoView*)self.infoView showView];
+	
+	self.infoViewController = [[[VMPInfoViewController alloc] initWithNibName:@"VMPInfoViewController" bundle:nil] autorelease];
+	self.infoViewController.view.frame = self.view.bounds;
+	[self.view addSubview:self.infoViewController.view];
+	[self.infoViewController showView];
 }
 	
 - (VMPProgressView*)showProgressView {
@@ -146,9 +133,9 @@
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-	if( ![self.view.subviews containsObject:self.infoView] ) {
-		[self.infoView removeFromSuperview];
-		self.infoView = nil;
+	if( ![self.view.subviews containsObject:self.infoViewController.view] ) {
+		[self.infoViewController.view removeFromSuperview];
+		self.infoViewController = nil;
 	}
 }
 
@@ -164,9 +151,10 @@
 
 	
 - (void)dealloc {
-	VMNullify(infoView);
+	VMNullify(infoViewController);
 	VMNullify(trackView);
 	VMNullify(frontView);
+	VMNullify(configButton);
 	Dealloc(super);
 }
 

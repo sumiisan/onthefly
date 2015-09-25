@@ -194,9 +194,7 @@ stemLength=stemLength_,refreshScreenCounter=refreshScreenCounter_,lastDayPhase=l
 		//
 		
 		self.circles = [NSMutableArray array];
-		standardRadius_ = screenSize.width * 0.21;//0.21;v1.1
-		holeHotSpotRadius = screenSize.width * 0.27;
-		holeCenter_ = CGPointMake( screenSize.width * 0.5, screenSize.height * 0.33 );
+		[self calculateDimensions:self.bounds.size];
 		
 		[self initializeShapes];
 		
@@ -211,6 +209,16 @@ stemLength=stemLength_,refreshScreenCounter=refreshScreenCounter_,lastDayPhase=l
     }
 	
     return self;
+}
+
+- (void)calculateDimensions:(CGSize)size {
+	CGFloat narrowerSide = MIN( size.height, size.width );
+	
+	standardRadius_ = narrowerSide * 0.21;//0.21;v1.1
+	holeHotSpotRadius = narrowerSide * 0.27;
+	holeCenter_ = CGPointMake( size.width * 0.5, size.height * 0.33 );
+
+	self.frame = CGRectMake(0,0,size.width,size.height);
 }
 
 - (BOOL)isOpaque {
@@ -354,7 +362,7 @@ stemLength=stemLength_,refreshScreenCounter=refreshScreenCounter_,lastDayPhase=l
 		//
 		//	time indicator
 		//
-		timeIndicator_.frame = VMPMakeRect( 0, baseY + stemLength_, 320, 30 );
+		timeIndicator_.frame = VMPMakeRect( 0, baseY + stemLength_, self.bounds.size.width, 30 );
 		if ( min > 5 * 60 )
 			min = round( min / 30. ) * 30;
 		else if ( min > 3 * 60 )
