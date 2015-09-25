@@ -16,6 +16,7 @@
 #import "VMPTimeManager.h"
 
 
+#define DAYPHASE_CHANGED_NOTIFICATION @"DAYPHASE_CHANGED_NOTIFICATION"
 
 
 @interface VMPFrontView :

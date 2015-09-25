@@ -24,7 +24,7 @@
 
 
 - (BOOL)prefersStatusBarHidden {
-	return YES;
+	return NO;
 }
 
 
@@ -36,13 +36,14 @@
 	self.trackView = [[[VMPTrackView alloc] initWithFrame:self.view.frame] autorelease];
     DEFAULTSONGPLAYER.trackView = self.trackView;
 		
-	self.view.backgroundColor = [UIColor clearColor];
+	[self dayPhaseChanged:nil];
 	self.frontView = [[[VMPFrontView alloc]
 					   initWithFrame:self.view.bounds
 					   ] autorelease];
 	[self.view addSubview:self.frontView];
 	[self attachConfigButton];
 	
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(dayPhaseChanged:) name:DAYPHASE_CHANGED_NOTIFICATION object:nil];
 	
 	//	test code:
 #if VMP_VISUALIZER
@@ -53,7 +54,7 @@
 
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id <UIViewControllerTransitionCoordinator>)coordinator {
-	NSLog(@"transition to size:%@",NSStringFromCGSize(size));
+	//NSLog(@"transition to size:%@",NSStringFromCGSize(size));
 	[super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
 	[self placeConfigButton:size];
 	[self.frontView calculateDimensions:size];
@@ -132,11 +133,6 @@
 	[[self.view viewWithTag:899] removeFromSuperview];
 }
 
-- (void)awakeFromNib {
-//	self.frontView.backgroundColor = [UIColor blueColor];	//test
-	
-}
-
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
 	if( ![self.view.subviews containsObject:self.infoViewController.view] ) {
@@ -145,7 +141,10 @@
 	}
 }
 
-	
+- (void)dayPhaseChanged:(NSNotification*)notification {
+	self.view.backgroundColor = DEFAULTEVALUATOR.timeManager.backgroundColor;
+}
+
 	
 - (void)setEditing:(BOOL)editing animated:(BOOL)animated {
 	[super setEditing:editing animated:animated];
@@ -157,6 +156,7 @@
 
 	
 - (void)dealloc {
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	VMNullify(infoViewController);
 	VMNullify(trackView);
 	VMNullify(frontView);

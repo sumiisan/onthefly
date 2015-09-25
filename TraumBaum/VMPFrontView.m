@@ -9,6 +9,8 @@
 #include <sys/types.h>
 #include <sys/sysctl.h>
 
+
+
 #if VMP_IPHONE
 //
 //	iphone
@@ -218,13 +220,14 @@ stemLength=stemLength_,refreshScreenCounter=refreshScreenCounter_,lastDayPhase=l
 }
 
 - (void)calculateDimensions:(CGSize)size {
+	screenSize = size;
 	CGFloat narrowerSide = MIN( size.height, size.width );
 	
 	standardRadius_ = narrowerSide * 0.21;
 	holeHotSpotRadius = narrowerSide * 0.27;
 	holeCenter_ = CGPointMake( size.width * 0.5, size.height * 0.33 );
 	
-	NSLog(@"std rad:%f",standardRadius_);
+	//NSLog(@"std rad:%f",standardRadius_);
 	[self makeCircles];
 	refreshScreenCounter_ = 99999;
 
@@ -480,10 +483,12 @@ stemLength=stemLength_,refreshScreenCounter=refreshScreenCounter_,lastDayPhase=l
 	
 	
 - (void)updateCALayers {
+	CGFloat narrowSide = MIN(screenSize.width,screenSize.height);
 	CGFloat brightness = touchBeginPoint_.x >= 0 ? 0.7 : 1.0 - ( velocity_ * 0.2 );
-	CGFloat radius = screenSize.width * 0.22 + (( 1 - velocity_ ) * screenSize.width * 0.3 );
+	CGFloat radius = narrowSide * 0.22 + (( 1 - velocity_ ) * narrowSide * 0.3 );
 	CGFloat r2 = radius*2;
-	CGFloat gap = radius * 0.2 - ( radius * velocity_ * 0.1 );
+	CGFloat gapBaseRadius = radius < 160.0 ? radius : 160.0;
+	CGFloat gap = gapBaseRadius * 0.2 - ( radius * velocity_ * 0.1 );
 	CGFloat baseRad = ( 2 * M_PI / numOfCircles );
 	CGFloat hueInterval = 1.0 / numOfCircles;
 	CGFloat offsetRad = angle_ * 2 * M_PI;
@@ -575,6 +580,7 @@ stemLength=stemLength_,refreshScreenCounter=refreshScreenCounter_,lastDayPhase=l
 		VMDayPhase dp = DEFAULTEVALUATOR.timeManager.dayPhase;
 		if ( dp != lastDayPhase_ ) {
 			NSLog(@"dayPhase changed %d -> %d", lastDayPhase_, dp );
+			[[NSNotificationCenter defaultCenter] postNotificationName:DAYPHASE_CHANGED_NOTIFICATION object:self];
 
 #if VMP_IPHONE
 			[UIView animateWithDuration:5.0f animations:^()
