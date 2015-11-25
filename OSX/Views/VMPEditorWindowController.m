@@ -222,7 +222,7 @@ static VMPObjectCell		*typeColumnCell = nil;
 	[self.window.contentView addSubview:self.editorSplitterView];
 	self.editorSplitterView.x = 0;
 	self.editorSplitterView.width = self.window.frame.size.width;
-	[self splitViewDidResizeSubviews:nil];	//adjust editorSplitterView position
+	[self splitViewDidResizeSubviewsToHeight:0.];	//adjust editorSplitterView position
 
 	self.infoView.backgroundColor = [NSColor colorForDataType:vmObjectType_unknown];
 	self.infoView.needsDisplay = YES;
@@ -800,6 +800,10 @@ forDoubleClickOnDividerAtIndex:(NSInteger)dividerIndex  {
 	CGFloat graphViewHeight = ([((VMPEditorWindowSplitter*)notification.object) isSubviewCollapsed:self.graphView ]
 							   ? 0
 							   : self.graphView.height );
+	[self splitViewDidResizeSubviewsToHeight:graphViewHeight];
+}
+
+- (void)splitViewDidResizeSubviewsToHeight:(CGFloat)graphViewHeight {
 	self.editorSplitterView.y = ((NSView*)self.window.contentView).frame.size.height - graphViewHeight - 47;
 }
 

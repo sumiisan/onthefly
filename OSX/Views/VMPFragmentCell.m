@@ -423,7 +423,7 @@ static NSShadow		*smallShadow_static_			= nil;
 }
 
 - (NSRect)rectForText:(VMString*)text attributes:(NSDictionary*)attributes maxWidth:(CGFloat)maxWidth {
-	NSAttributedString *str = [[NSAttributedString alloc] initWithString:text attributes:attributes];
+	NSAttributedString *str = [[NSAttributedString alloc] initWithString:text ? text : @"" attributes:attributes];
 	NSRect textFrameRect = [str boundingRectWithSize:NSMakeSize( maxWidth, CGFLOAT_MAX )
 											 options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading];
 	Release( str );

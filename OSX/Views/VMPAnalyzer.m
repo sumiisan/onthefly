@@ -185,8 +185,8 @@
 static VMPAnalyzer		*analyzer_singleton_static_		= nil;
 static VMPRecordCell	*recordCell_defaultCell_static_	= nil;
 
-//	100000 times
-static const int	kNumberOfIterationsOfGlobalTraceRoute   =  1000;
+//	150000 times
+static const int	kNumberOfIterationsOfGlobalTraceRoute   =  1500;
 static const int	kLengthOfGlobalTraceRoute				=   100;
 
 //	300 entries
@@ -211,9 +211,8 @@ static const int	kLengthOfPartTraceRoute					= 10000;	//	gives up after 10000 ti
 	if (self) {
 		analyzer_singleton_static_ = self;
 		self.progressWC = AutoRelease([[VMPProgressWindowController alloc] initWithWindow:nil] );
-		[NSBundle loadNibNamed: @"VMPProgressWindow" owner: self.progressWC];
-//		NSBundle *bundle = [NSBundle bundleWithIdentifier:@"VMPProgressWindow"];
-//		[bundle loadNibNamed:@"VMPProgressWindow" owner:self.progressWC topLevelObjects:nil];
+//		[NSBundle loadNibNamed: @"VMPProgressWindow" owner: self.progressWC]; --depreciated
+		[[NSBundle mainBundle] loadNibNamed:@"VMPProgressWindow" owner:self.progressWC topLevelObjects:nil];
 		
 		self.progressWC.delegate = self;
 		

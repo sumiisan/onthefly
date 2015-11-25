@@ -82,7 +82,6 @@
 		162EFC41173026230000A4FB /* VMPSelectorEditorView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 162EFC3E173026230000A4FB /* VMPSelectorEditorView.xib */; };
 		162EFC451730CE3F0000A4FB /* VMPVariablesPanel.xib in Resources */ = {isa = PBXBuildFile; fileRef = 162EFC421730CE3F0000A4FB /* VMPVariablesPanel.xib */; };
 		162F7B1A16A0341900420443 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 168CEBB2163186B400B721E2 /* Cocoa.framework */; };
-		162F7B2016A0341C00420443 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 162F7B1E16A0341C00420443 /* InfoPlist.strings */; };
 		162F7B2616A0341C00420443 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 162F7B2416A0341C00420443 /* Credits.rtf */; };
 		162F7B3816A0341D00420443 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 168CEBB2163186B400B721E2 /* Cocoa.framework */; };
 		162F7B4316A0341E00420443 /* TraumBaumTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 162F7B4216A0341E00420443 /* TraumBaumTests.m */; };
@@ -92,7 +91,6 @@
 		162F7B5516A1135600420443 /* VMPEditor.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 168CEBCA163186B400B721E2 /* VMPEditor.xcdatamodeld */; };
 		162F7B6616A1151B00420443 /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1624A7131644D8AC004AA351 /* libicucore.dylib */; };
 		162F7B6916A1167D00420443 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 168CEBD41631871400B721E2 /* CoreAudio.framework */; };
-		162F7B6B16A1171300420443 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 162F7B6A16A1171200420443 /* SenTestingKit.framework */; };
 		162FBB95173CB5460060E003 /* SyntaxDefinition.plist in Resources */ = {isa = PBXBuildFile; fileRef = 162FBB94173CB5460060E003 /* SyntaxDefinition.plist */; };
 		162FBBC017405A360060E003 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 168CEBD41631871400B721E2 /* CoreAudio.framework */; };
 		162FBBC117405A410060E003 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16A27EFF16F9730F0081C1E8 /* AudioToolbox.framework */; };
@@ -394,7 +392,6 @@
 		162F7B3F16A0341E00420443 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		162F7B4116A0341E00420443 /* TraumBaumTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TraumBaumTests.h; sourceTree = "<group>"; };
 		162F7B4216A0341E00420443 /* TraumBaumTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TraumBaumTests.m; sourceTree = "<group>"; };
-		162F7B6A16A1171200420443 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
 		162FBB94173CB5460060E003 /* SyntaxDefinition.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = SyntaxDefinition.plist; sourceTree = "<group>"; };
 		162FBBC3174061FE0060E003 /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = ../../../../../usr/lib/libicucore.dylib; sourceTree = "<group>"; };
 		162FBBCB174071F90060E003 /* VMPTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VMPTest.h; path = OSX/Tests/VMPTest.h; sourceTree = "<group>"; };
@@ -504,13 +501,12 @@
 		16A27F1816FBB1A70081C1E8 /* VMAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = VMAppDelegate.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		16A27F2016FBB1A70081C1E8 /* VMViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VMViewController.h; sourceTree = "<group>"; };
 		16A27F2116FBB1A70081C1E8 /* VMViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VMViewController.m; sourceTree = "<group>"; };
-		16A27F4F16FC2EC90081C1E8 /* default.vms */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; lineEnding = 0; name = default.vms; path = ../../defaultSong/default.vms; sourceTree = "<group>"; };
+		16A27F4F16FC2EC90081C1E8 /* default.vms */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; lineEnding = 0; name = default.vms; path = ../../defaultSong/default.vms; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.javascript; };
 		16A27F5B17006E710081C1E8 /* VMPProgressWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = VMPProgressWindowController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		16A27F5C17006E720081C1E8 /* VMPProgressWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VMPProgressWindowController.m; sourceTree = "<group>"; };
 		16A27F5D17006E720081C1E8 /* VMPProgressWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VMPProgressWindow.xib; sourceTree = "<group>"; };
 		16A27F6217008A540081C1E8 /* VMPRecordDetailPopover.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = VMPRecordDetailPopover.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		16A27F6317008A540081C1E8 /* VMPRecordDetailPopover.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VMPRecordDetailPopover.m; sourceTree = "<group>"; };
-		16A27F6E1709AD680081C1E8 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/System/Library/Frameworks/QuartzCore.framework; sourceTree = DEVELOPER_DIR; };
 		16B8E1CD1A833D8100191689 /* VMPVineView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VMPVineView.h; path = TraumBaum/VMPVineView.h; sourceTree = SOURCE_ROOT; };
 		16B8E1CE1A833D8100191689 /* VMPVineView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VMPVineView.m; path = TraumBaum/VMPVineView.m; sourceTree = SOURCE_ROOT; };
 		16BDD0691A82FB8000031FEA /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
@@ -595,7 +591,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				162F7B6B16A1171300420443 /* SenTestingKit.framework in Frameworks */,
 				162F7B3816A0341D00420443 /* Cocoa.framework in Frameworks */,
 				162FBBC017405A360060E003 /* CoreAudio.framework in Frameworks */,
 				162FBBC117405A410060E003 /* AudioToolbox.framework in Frameworks */,
@@ -1001,9 +996,7 @@
 				168CEBB5163186B400B721E2 /* AppKit.framework */,
 				168CEBB6163186B400B721E2 /* CoreData.framework */,
 				168CEBB7163186B400B721E2 /* Foundation.framework */,
-				16A27F6E1709AD680081C1E8 /* QuartzCore.framework */,
 				16A27EFF16F9730F0081C1E8 /* AudioToolbox.framework */,
-				162F7B6A16A1171200420443 /* SenTestingKit.framework */,
 				168CEBD41631871400B721E2 /* CoreAudio.framework */,
 				168CEBB2163186B400B721E2 /* Cocoa.framework */,
 			);
@@ -1392,7 +1385,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				162F7B2016A0341C00420443 /* InfoPlist.strings in Resources */,
 				162F7B2616A0341C00420443 /* Credits.rtf in Resources */,
 				162F7B5016A1132700420443 /* vmp.sdef in Resources */,
 				1636DF8916A11C5300100130 /* vsDocIcon.icns in Resources */,

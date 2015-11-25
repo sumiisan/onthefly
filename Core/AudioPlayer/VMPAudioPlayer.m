@@ -226,7 +226,7 @@ static VMHash *processPhaseNames_static_ = nil;
 	NSURL		*url;
 
 	if (path == nil)
-        return;
+        return NO;
 
 #if enableDSP
 	if ( self.audioObject ) {
@@ -251,7 +251,7 @@ static VMHash *processPhaseNames_static_ = nil;
 #if ! enableDSP
 		audioFile = nil;
 #endif
-		return;
+		return NO;
 	}
 
 #if enableDSP
@@ -267,6 +267,8 @@ static VMHash *processPhaseNames_static_ = nil;
 	//waveformSampleInterval = ( fileDuration * dataFormat.mSampleRate ) / kWaveFormCacheFrames;
 #endif
 	if ( fragDuration == 0 ) fragDuration = fileDuration;
+	
+	return YES;
 }
 
 - (void)preloadAudio:(NSString *)path atTime:(float)inTime {
@@ -316,7 +318,8 @@ static VMHash *processPhaseNames_static_ = nil;
 #else
 	char		*cookie;
 	UInt32		size;
-	[self openAudio:filePathToRead];
+	BOOL success = [self openAudio:filePathToRead];
+	if( ! success ) return;
     
     //  read packet count
     size = sizeof(numTotalPackets);

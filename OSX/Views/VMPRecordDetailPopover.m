@@ -63,32 +63,31 @@ static NSColor *limeColor = nil, *skyColor = nil, *limeColor2 = nil, *skyColor2 
 static VMArray *colorForCategory = nil;
 static VMArray *indicatorForCategory = nil;
 
-- (id)initWithCoder:(NSCoder *)aDecoder {
-	if ( aDecoder )
-		self = [super initWithCoder:aDecoder];
-	else
-		self = [super init];
-	
-	if (self) {
-		recordCell_defaultCell__ = [[VMPRecordCell alloc] initTextCell:@""];
-		if( ! limeColor ) {
-			skyColor2		 = Retain([NSColor colorWithCalibratedRed:0.5 green:0.4 blue:0.9 alpha:0.9] );
-			skyColor		 = Retain([NSColor colorWithCalibratedRed:0.3 green:0.6 blue:0.9 alpha:0.9] );
-			limeColor		 = Retain([NSColor colorWithCalibratedRed:0.7 green:0.6 blue:0.1 alpha:0.9] );
-			limeColor2		 = Retain([NSColor colorWithCalibratedRed:0.9 green:0.4 blue:0.1 alpha:0.9] );
-			colorForCategory = [VMArray arrayWithObjects:skyColor2,skyColor,limeColor,limeColor2,nil];
-			Retain(colorForCategory);
-		}
-		if ( ! indicatorForCategory ) {
-			indicatorForCategory = [VMArray arrayWithObjects:@"⇉⦿",@"→⦿",@"⦿→",@"⦿⇉"];
-			Retain(indicatorForCategory);
-		}
-	}
 
+- (void)initialize {
+	recordCell_defaultCell__ = [[VMPRecordCell alloc] initTextCell:@""];
+	if( ! limeColor ) {
+		skyColor2		 = Retain([NSColor colorWithCalibratedRed:0.5 green:0.4 blue:0.9 alpha:0.9] );
+		skyColor		 = Retain([NSColor colorWithCalibratedRed:0.3 green:0.6 blue:0.9 alpha:0.9] );
+		limeColor		 = Retain([NSColor colorWithCalibratedRed:0.7 green:0.6 blue:0.1 alpha:0.9] );
+		limeColor2		 = Retain([NSColor colorWithCalibratedRed:0.9 green:0.4 blue:0.1 alpha:0.9] );
+		colorForCategory = [VMArray arrayWithObjects:skyColor2,skyColor,limeColor,limeColor2,nil];
+		Retain(colorForCategory);
+	}
+	if ( ! indicatorForCategory ) {
+		indicatorForCategory = [VMArray arrayWithObjects:@"⇉⦿",@"→⦿",@"⦿→",@"⦿⇉"];
+		Retain(indicatorForCategory);
+	}
+}
+
+- (id)initWithCoder:(NSCoder *)aDecoder {
+	self = [super initWithCoder:aDecoder];
+	[self initialize];
 	return self;
 }
 - (id)init {
-	self = [self initWithCoder:nil];
+	self = [super init];
+	[self initialize];
 	return self;
 }
 

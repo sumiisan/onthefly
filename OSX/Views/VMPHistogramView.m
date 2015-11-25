@@ -126,7 +126,7 @@
 	
 	
 	//
-	// baackground
+	// background
 	//
 	[self setLineWidth:1.];
 	[self setColor_r:.9 g:.9 b:.9];
@@ -136,7 +136,9 @@
 	//	sd
 	//
 	VMFloat height      = graphHeight - 4;
-	VMFloat valPerPix   = graphWidth / ( range.maximum - range.minimum );
+	VMFloat len			= range.maximum - range.minimum;
+	
+	VMFloat valPerPix   = len > 0 ? graphWidth / len : 0;
 	
 	[self setColor_r:1. g:1. b:.8];
 	[self fillRect_x:valPerPix * ( mean - sd - range.minimum) + graphLeft
