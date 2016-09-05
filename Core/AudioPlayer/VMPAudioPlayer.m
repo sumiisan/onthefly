@@ -221,7 +221,7 @@ static VMHash *processPhaseNames_static_ = nil;
 #pragma mark -
 #pragma mark audio file
 
-- (void)openAudio:(NSString *)path {
+- (BOOL)openAudio:(NSString *)path {
 	OSStatus	status;
 	NSURL		*url;
 

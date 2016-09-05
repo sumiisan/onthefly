@@ -22,3 +22,10 @@
 - (void)redraw: (int)idx player:(VMPAudioPlayer*)audioPlayer;
 - (void)reLayout;
 @end
+
+
+@interface VMPCoolTrackView : VMPTrackView {
+	
+}
+
+@end

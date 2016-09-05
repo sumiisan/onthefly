@@ -140,7 +140,6 @@ static const BOOL kUseNotification = YES;
 
 
 static const Float32 kDefaultFadeoutTime = 5.;
-//static NSString *kDefaultVMDirectory __unused = @"defaultSong";
 
 #endif //_multiplatformh_
 

@@ -6,6 +6,8 @@
 //
 //
 
+
+
 #import "VMPAppDelegate.h"
 #import "VMScoreEvaluator.h"
 #import "VMPSongPlayer.h"
@@ -14,6 +16,10 @@
 #import "VMTraumbaumUserDefaults.h"
 
 #define kDefaultVMSFileName @"default.vms"
+static NSString *kDefaultVMDirectory __unused = @"defaultSong";
+static NSString *kMainWindowId = @"MainWindow";
+
+
 
 
 @implementation VMPAppDelegate
@@ -27,6 +33,15 @@ darkBackgroundMenuItem=darkBackgroundMenuItem_, backgroundImage=backgroundImage_
 	return singleton__static__;
 }
 
++ (void)restoreWindowWithIdentifier:(NSString *)identifier state:(NSCoder *)state completionHandler:(void (^)(NSWindow *, NSError *))completionHandler {
+	
+	if ([identifier isEqualToString:kMainWindowId]) {
+		VMPAppDelegate *appDelegate = (VMPAppDelegate *)NSApplication.sharedApplication.delegate;
+		NSWindow *myWindow = appDelegate.window;
+		
+		completionHandler(myWindow, nil);
+	}
+}
 
 - (id)init {
 	self = [super init];
@@ -62,31 +77,32 @@ darkBackgroundMenuItem=darkBackgroundMenuItem_, backgroundImage=backgroundImage_
 }
 
 
+- (void)openDefaultSong {
+	NSError 	*outError = nil;//AutoRelease([[NSError alloc] init]);
+	NSString 	*resourcePath = [[NSBundle bundleForClass: [self class]] resourcePath];
+	NSURL 		*songURL = [[NSURL alloc] initFileURLWithPath:[NSString stringWithFormat:@"%@/%@/%@",
+															   resourcePath,kDefaultVMDirectory,kDefaultVMSFileName]
+											  isDirectory:NO];
+	
+	[self openVMSDocumentFromURL:songURL error:&outError];
+	Release(songURL);
+}
+
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
 	[VMTraumbaumUserDefaults initializeDefaults];
 	self.window.delegate = self;
 	self.fogMenuItem.state	= [[VMTraumbaumUserDefaults standardUserDefaults] boolForKey:@"useFog"];
 	
-	NSError 	*outError = nil;//AutoRelease([[NSError alloc] init]);
-	NSString 	*resourcePath = [[NSBundle bundleForClass: [self class]] resourcePath];
-    NSURL 		*songURL = [[NSURL alloc] initFileURLWithPath:[NSString stringWithFormat:@"%@/%@/%@",
-															   resourcePath,kDefaultVMDirectory,kDefaultVMSFileName]
-											  isDirectory:NO];
-	
-	[self openVMSDocumentFromURL:songURL error:&outError];
+	[self openDefaultSong];
 	
 	self.frontView = AutoRelease([[VMPFrontView alloc] initWithFrame:NSMakeRect(0, 0, 320, 480)]);
 	[self.window.contentView addSubview:self.frontView];
     
     DEFAULTSONGPLAYER.song = self.song;	//	unsafe_unretained.
 	
-    Release(songURL);
-	
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(endOfSequence:)
 												 name:ENDOFSEQUENCE_NOTIFICATION object:nil];
-
     [DEFAULTSONGPLAYER warmUp];
-	
 	
 	self.rainyView = [[[VMPRainyView alloc] initWithFrame:NSMakeRect(-30, -30, 380, 540)] autorelease];
 	rainyView_.wantsLayer = YES;
@@ -98,9 +114,13 @@ darkBackgroundMenuItem=darkBackgroundMenuItem_, backgroundImage=backgroundImage_
 	[rainyView_ setContentFilters:[NSArray arrayWithObject:filter]];
 	 
 	[self.window.contentView addSubview:rainyView_];
+	
+	self.window.restorationClass = self.class;
+	self.window.identifier = kMainWindowId;
+	
+	
 	[self startup];
 }
-
 
 - (void)endOfSequence:(NSNotification*)notification {
 	//	we should clear players and save datas to disable resuming from old saved state.
@@ -132,14 +152,24 @@ darkBackgroundMenuItem=darkBackgroundMenuItem_, backgroundImage=backgroundImage_
 		  [songplayer numberOfUnfiredFragments]
 		  );
 	
+	
+	if (![[VMTraumbaumUserDefaults standardUserDefaults] boolForKey:VMP_PlaybackStateKey]) {
+		NSLog(@"last time when app was shut down, playback was stopped.");
+		return;
+	}
+	
+	
 	if ( songplayer.isPaused ) [songplayer resume];
+		
 	[songplayer setFadeFrom:-1 to:1 length:.1];	//	dummy set to prevent the player stopped in update call.
 	[songplayer update];
+	
 	
 	//	awake from suspension
 	if ( songplayer.isRunning ) {
 		if ( [songplayer numberOfUnfiredFragments] > 0 ) {
 			NSLog( @"Startup: songplayer is running. no extra startup required.\n%@", songplayer.description );
+			[VMTraumbaumUserDefaults setPlaying:YES];
 			[[NSNotificationCenter defaultCenter] postNotificationName:PLAYERSTARTED_NOTIFICATION object:self];
 			[songplayer setFadeFrom:-1 to:1 length:2.];
 			return;
@@ -148,6 +178,7 @@ darkBackgroundMenuItem=darkBackgroundMenuItem_, backgroundImage=backgroundImage_
 	
 	if ( [songplayer numberOfUnfiredFragments] > 0 ) {
 		[songplayer adjustCurrentTimeToQueuedFragment];
+		[VMTraumbaumUserDefaults setPlaying:YES];
 		NSLog( @"Startup: songplayer has frags in queue. let them fire now!\n%@", songplayer.description );
 		[[NSNotificationCenter defaultCenter] postNotificationName:PLAYERSTARTED_NOTIFICATION object:self];
 		[songplayer setFadeFrom:-1 to:1 length:2.];
@@ -157,19 +188,21 @@ darkBackgroundMenuItem=darkBackgroundMenuItem_, backgroundImage=backgroundImage_
 	if ( DEFAULTSONG.player ) {
 		if ( songplayer.isPaused ) [songplayer resume];
 		NSLog( @"Startup: player data is still on memory. let's fill the queue with them.\n%@", DEFAULTSONG.player.description );
+		[VMTraumbaumUserDefaults setPlaying:YES];
 		[[NSNotificationCenter defaultCenter] postNotificationName:PLAYERSTARTED_NOTIFICATION object:self];
 		[songplayer setFadeFrom:-1 to:1 length:2.];
 		return;
 	}
 	
 	//	try resume from saved data
-	NSData *playerData = [VMTraumbaumUserDefaults loadPLayer];
+	NSData *playerData = [VMTraumbaumUserDefaults loadPlayer];
 	
 	if ( playerData ) {
 		VMPlayer *player = [NSKeyedUnarchiver unarchiveObjectWithData:playerData];
 		if ( player.fragments.count > 0 ) {
 			NSLog(@"Startup: trying to recover from saved state:%@",player.description);
 			DEFAULTSONG.player = player;
+			[VMTraumbaumUserDefaults setPlaying:YES];
 			[[NSNotificationCenter defaultCenter] postNotificationName:PLAYERSTARTED_NOTIFICATION object:self];
 			[songplayer setFadeFrom:0.01 to:1 length:3.];
 			[songplayer startWithFragmentId:nil];
@@ -177,6 +210,7 @@ darkBackgroundMenuItem=darkBackgroundMenuItem_, backgroundImage=backgroundImage_
 		}
 	}
 	NSLog(@"Startup: no data for recovery found. start new fron beginning.");
+	[VMTraumbaumUserDefaults setPlaying:YES];
 	[[NSNotificationCenter defaultCenter] postNotificationName:PLAYERSTARTED_NOTIFICATION object:self];
 	[songplayer start];
 }
@@ -193,20 +227,24 @@ darkBackgroundMenuItem=darkBackgroundMenuItem_, backgroundImage=backgroundImage_
 	NSLog(@"Saving player state");
 }
 
+
 - (IBAction)stop:(id)sender {
 	NSLog(@"*stop");
 	[self savePlayerState];
+	[VMTraumbaumUserDefaults setPlaying:NO];
 	[DEFAULTSONGPLAYER stop];
 }
 
 - (IBAction)pause:(id)sender {
 	NSLog(@"*pause");
 	[self savePlayerState];
+	[VMTraumbaumUserDefaults setPlaying:NO];
 	[DEFAULTSONGPLAYER fadeoutAndStop:3.];
 }
 
 - (IBAction)resume:(id)sender {
 	NSLog(@"*resume");
+	[VMTraumbaumUserDefaults setPlaying:YES];	//	we must set the flag before we call startup()
 	[self startup];
 }
 
@@ -215,11 +253,15 @@ darkBackgroundMenuItem=darkBackgroundMenuItem_, backgroundImage=backgroundImage_
 	[DEFAULTSONGPLAYER stopAndDisposeQueue];
 	[DEFAULTSONG reset];
 	[DEFAULTEVALUATOR reset];
-	[self deleteUserSavedSong];
-	[self loadSongFromVMS];
+
+	[self savePlayerState];
+
+	//	reset starts playback:
 	[[NSNotificationCenter defaultCenter] postNotificationName:PLAYERSTARTED_NOTIFICATION object:self];
+	[VMTraumbaumUserDefaults setPlaying:YES];
     [DEFAULTSONGPLAYER reset];
 }
+
 
 - (IBAction)resetSong:(id)sender {
 	[self reset:sender];

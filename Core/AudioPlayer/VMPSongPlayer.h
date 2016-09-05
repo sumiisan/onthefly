@@ -49,7 +49,11 @@
 	__strong	VMAudioFragmentPlayer	*audioFragmentPlayer;
 				VMTime					cueTime;
 				VMTimeRange				cuePoints;		//	store modulated dur / offs
+#if VMP_IPHONE
 	__weak		VMPAudioPlayer			*player;
+#elif VMP_OSX
+	__unsafe_unretained	VMPAudioPlayer			*player;
+#endif
 }
 @end
 

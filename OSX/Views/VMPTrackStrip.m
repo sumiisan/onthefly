@@ -136,3 +136,16 @@
 }
 #endif
 @end
+
+
+@implementation VMPCoolTrackStrip
+
+- (void)drawRect:(CGRect)rect {
+	//	don't draw anything
+	[self reLayout];		//	just set children
+}
+
+- (void)reLayout {
+}
+
+@end

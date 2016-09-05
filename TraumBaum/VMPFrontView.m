@@ -50,6 +50,7 @@
  ----------------------------------------------------------------------------------*/
 
 
+
 @implementation VMPFrontView
 
 static const int numOfCircles = 5;
@@ -439,10 +440,7 @@ stemLength=stemLength_,refreshScreenCounter=refreshScreenCounter_,lastDayPhase=l
 	CGFloat baseRad = ( 2 * M_PI / numOfCircles );
 	CGFloat hueInterval = 1.0 / numOfCircles;
 	CGFloat offsetRad = angle_ * 2 * M_PI;
-	CGContextRef context = UIGraphicsGetCurrentContext();
-#if VMP_OSX
 	CGContextRef context = [[NSGraphicsContext currentContext] graphicsPort];
-#endif
 	//	circles
 	VMPBezierPath *bezierPath;
 	for( int i = 0; i < numOfCircles; ++i ) {
@@ -460,7 +458,7 @@ stemLength=stemLength_,refreshScreenCounter=refreshScreenCounter_,lastDayPhase=l
 #else
 		CGContextSetBlendMode( context, self.blendMode );
 		[bezierPath fill];
-#endif
+#endif //VMP_IPHONE
 	}
 	
 	if( stemLength_ > 0 ) {
@@ -475,12 +473,13 @@ stemLength=stemLength_,refreshScreenCounter=refreshScreenCounter_,lastDayPhase=l
 		path.lineCapStyle = NSRoundLineCapStyle;
 #else
 		path.lineCapStyle = kCGLineCapRound;
-#endif
+#endif //VMP_OSX
 		[[VMPColor lightGrayColor] setStroke];
 		[path stroke];
 	}
-#endif
-	
+}
+#endif //VMP_OSX
+
 	
 - (void)updateCALayers {
 	CGFloat narrowSide = MIN(screenSize.width,screenSize.height);

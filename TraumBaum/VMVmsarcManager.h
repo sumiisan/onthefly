@@ -7,7 +7,6 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "VMPProgressView.h"
 
 @protocol VMVmsarcManagerDelegate<NSObject>
 	- (void)vmsarcLoaded;

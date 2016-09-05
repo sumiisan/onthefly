@@ -7,7 +7,6 @@
 //
 
 #import "VMPSongPlayer.h"
-#import "MultiPlatform.h"
 #import "VMException.h"
 #import "VMPMacros.h"
 #import "VMScoreEvaluator.h"
@@ -530,7 +529,7 @@
 //
 //  runloop
 //
--(void)timerCall:(NSTimer*)theTimer {
+-(void)timerCall:(NSTimer*)theTimer {	//	TODO: replace NSTimer with GCD.
 	if ( self.isPaused ) return;
 	++frameCounter;
 	

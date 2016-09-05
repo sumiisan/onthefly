@@ -6,7 +6,6 @@
 //
 //
 
-
 #import "VMAppDelegate.h"
 
 #import "VMViewController.h"
@@ -20,48 +19,12 @@
 /*---------------------------------------------------------------------------------
  *
  *
- *	handle audio route change	--	 depreciated
- *
- *
- *---------------------------------------------------------------------------------*/
-
-/*
-void audioRouteChangeListenerCallback (
-									   void                      *inUserData,
-									   AudioSessionPropertyID    inPropertyID,
-									   UInt32                    inPropertyValueSize,
-									   const void                *inPropertyValue
-									   ) {
-    
-    // ensure that this callback was invoked for a route change
-    if (inPropertyID != kAudioSessionProperty_AudioRouteChange) return;
-	
-    if ( DEFAULTSONGPLAYER.isRunning ) {
-        // Determines the reason for the route change, to ensure that it is not
-        //      because of a category change.
-        CFDictionaryRef routeChangeDictionary = inPropertyValue;
-        CFNumberRef routeChangeReasonRef =
-			CFDictionaryGetValue ( routeChangeDictionary, CFSTR (kAudioSession_AudioRouteChangeKey_Reason) );
-		
-        SInt32 routeChangeReason;
-        CFNumberGetValue ( routeChangeReasonRef, kCFNumberSInt32Type, &routeChangeReason );
-        if (routeChangeReason == kAudioSessionRouteChangeReason_OldDeviceUnavailable) {
-			[[VMAppDelegate defaultAppDelegate] stop];
-			NSLog(@"kAudioSessionRouteChangeReason_OldDeviceUnavailable");
-
-        }
-    }
-}
- */
-
-
-/*---------------------------------------------------------------------------------
- *
- *
  *	VMAppDelegate
  *
  *
  *---------------------------------------------------------------------------------*/
+
+
 
 @implementation VMAppDelegate
 
@@ -90,19 +53,11 @@ static VMAppDelegate *appDelegate_singleton_;
 	
 	if ( ! audioSessionInited ) {
 		//	set interruption listener
-		//	audioSession.delegate = self;
 		[[NSNotificationCenter defaultCenter] addObserver: self
 												 selector: @selector(handleInterruption:)
 													 name: AVAudioSessionInterruptionNotification
 												   object: audioSession ];
 
-		//	set route change listener	-- depreciated: we use notification instead:
-		
-/*		OSStatus state = AudioSessionAddPropertyListener( kAudioSessionProperty_AudioRouteChange,
-														 audioRouteChangeListenerCallback, self );
-		NSLog(@"AudioSessionAddPropertyListener:%d",(int)state);
-*/
-		
 		audioSessionInited = YES;	//	added 150301: audioSessionInited was never set true. BUG FIX
 	}
 }
@@ -365,25 +320,34 @@ static VMAppDelegate *appDelegate_singleton_;
 		//	test : loading sequence moved from -init
 		[self loadSong];
 		[DEFAULTSONGPLAYER warmUp];
-		DEFAULTSONG.showReport.current = @YES;
+		DEFAULTSONG.showReport.current = @NO;
 	}
 	return YES;
 }
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+	
+	//
+	//	check if launched from notification
+	//
+	
+	
 
 	NSLog(@"\n---------------------------------\n"
 		  "didFinishLaunchingWithOptions"
 		  "\n---------------------------------\n");
- 	[VMTraumbaumUserDefaults initializeDefaults];		//	note: we must update this to support url-scheme supplied external files.
+ 	[VMTraumbaumUserDefaults initializeDefaults];	//	note: we must update default settings
+													//	to support url-scheme supplied external files.
 	self.window = [[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease];
 
 	self.viewController = [[[VMViewController alloc] init] autorelease];
     self.window.rootViewController = self.viewController;
     [self.window makeKeyAndVisible];
-    return YES;
+
+	return YES;
 }
+
 
 - (void)applicationWillResignActive:(UIApplication *)application {
 	NSLog(@"\n---------------------------------\n"
@@ -442,7 +406,7 @@ static VMAppDelegate *appDelegate_singleton_;
 	[DEFAULTSONGPLAYER coolDown];
 }
 	
-	
+
 /*
  *
  *	external vms files

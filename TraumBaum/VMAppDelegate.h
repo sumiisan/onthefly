@@ -30,7 +30,7 @@
 
 - (BOOL)saveSong:(BOOL)forceForeground;
 - (void)savePlayerState;
-	
+
 - (BOOL)loadSong;
 	
 - (void)stop;
@@ -44,5 +44,4 @@
 @property (strong, nonatomic) VMViewController *viewController;
 
 @property (nonatomic, readonly) BOOL isBackgroundPlaybackEnabled;
-
 @end

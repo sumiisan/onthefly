@@ -7,6 +7,8 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import <AppKit/NSWindowRestoration.h>
+
 #import "VMSong.h"
 #import "VMPFrontView.h"
 #import "VMPRainyView.h"
@@ -15,7 +17,7 @@
 #define PLAYERSTOPPED_NOTIFICATION @"vmplayerStopped"
 
 
-@interface VMPAppDelegate : NSObject <NSApplicationDelegate, NSWindowDelegate> {
+@interface VMPAppDelegate : NSObject <NSApplicationDelegate, NSWindowDelegate, NSWindowRestoration> {
 	NSWindow		*window_;
 	NSMenuItem		*fogMenuItem_;
 	NSMenuItem		*darkBackgroundMenuItem_;

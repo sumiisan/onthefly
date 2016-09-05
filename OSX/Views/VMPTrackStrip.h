@@ -19,13 +19,15 @@
     NSTimeInterval  offset;
 }
 
-#if VMP_OSX
-@property (nonatomic, VMStrong) NSTextField *caption;
-#elif VMP_IPHONE
-@property (nonatomic, VMStrong) UILabel *caption;
-#endif
+@property (nonatomic, VMStrong) VMPLabel *caption;
 @property (nonatomic, VMStrong) NSString *audioFragmentId;
 
 - (void)setInfoString:(NSString *)infoString;
+
+@end
+
+
+@interface VMPCoolTrackStrip : VMPTrackStrip {
+}
 
 @end

@@ -9,7 +9,11 @@
 #import "VMVmsarcManager.h"
 #import "VMTraumbaumUserDefaults.h"
 #import "SSZipArchive.h"
+
+#if VMP_IPHONE
 #import "VMAppDelegate.h"
+#endif
+
 #import "VMViewController.h"
 
 NSString *const VMSCacheKey_DataVersion	= @"DataVersion";
