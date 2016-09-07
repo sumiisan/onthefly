@@ -125,7 +125,7 @@ static VMAppDelegate *appDelegate_singleton_;
 	NSURL *saveUrl =[self userSaveDataUrl];
 	NSString *directoryPath = [[saveUrl path] stringByDeletingLastPathComponent];
 	if( ![[NSFileManager defaultManager] fileExistsAtPath:directoryPath isDirectory:nil] ) {
-		//	because we may not have created DOCUMENTDIRECTORY/defaultSong/ directory
+		//	because we may not have created DOCUMENTDIRECTORY/defaultSong/ directory yet
 		[[NSFileManager defaultManager] createDirectoryAtPath:directoryPath
 								  withIntermediateDirectories:YES attributes:nil error:nil];
 	}
@@ -133,7 +133,7 @@ static VMAppDelegate *appDelegate_singleton_;
 		//	usually, we want do it in background
 		[self.song performSelectorInBackground:@selector(saveToFile:) withObject:saveUrl];
 	} else {
-		//	on app termination, we might mave do it in foreground to ensure not to be aborted
+		//	on app termination ( we might have already done it in foreground )
 		[self.song saveToFile:saveUrl];
 	}
 	NSLog(@"**** song saved to %@", [saveUrl path] );
@@ -190,6 +190,7 @@ static VMAppDelegate *appDelegate_singleton_;
 	[self startup];
 	return YES;
 }
+
 
 //
 //	reset button was touched.
@@ -327,12 +328,6 @@ static VMAppDelegate *appDelegate_singleton_;
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-	
-	//
-	//	check if launched from notification
-	//
-	
-	
 
 	NSLog(@"\n---------------------------------\n"
 		  "didFinishLaunchingWithOptions"

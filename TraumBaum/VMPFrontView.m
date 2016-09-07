@@ -520,6 +520,10 @@ stemLength=stemLength_,refreshScreenCounter=refreshScreenCounter_,lastDayPhase=l
 	
 }
 
+//	handle remote control
+- (void)handleRemoteControl {
+	[self togglePlayState:nil];
+}
 
 - (void)animate:(id)whatever {
 	BOOL frontviewIsVisible;

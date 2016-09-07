@@ -15,6 +15,8 @@
 #import "VMAppDelegate.h"
 #import "VMPVineView.h"
 
+@import MediaPlayer;
+
 
 @interface VMViewController ()
 
@@ -41,6 +43,20 @@
 					   initWithFrame:self.view.bounds
 					   ] autorelease];
 	[self.view addSubview:self.frontView];
+	[[MPRemoteCommandCenter sharedCommandCenter].togglePlayPauseCommand
+	 addTarget:self.frontView action:@selector(handleRemoteControl)];
+
+	[[MPRemoteCommandCenter sharedCommandCenter].playCommand
+	 addTarget:self.frontView action:@selector(handleRemoteControl)];
+
+	[[MPRemoteCommandCenter sharedCommandCenter].stopCommand
+	 addTarget:self.frontView action:@selector(handleRemoteControl)];
+
+	[[MPRemoteCommandCenter sharedCommandCenter].pauseCommand
+	 addTarget:self.frontView action:@selector(handleRemoteControl)];
+
+	
+	
 	[self attachConfigButton];
 	
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(dayPhaseChanged:) name:DAYPHASE_CHANGED_NOTIFICATION object:nil];

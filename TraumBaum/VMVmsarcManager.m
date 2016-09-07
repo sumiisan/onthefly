@@ -6,6 +6,7 @@
 //
 //
 
+#import "Multiplatform.h"
 #import "VMVmsarcManager.h"
 #import "VMTraumbaumUserDefaults.h"
 #import "SSZipArchive.h"

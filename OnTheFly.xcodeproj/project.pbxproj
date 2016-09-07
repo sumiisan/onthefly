@@ -152,6 +152,7 @@
 		1677782916C0D6A0007206CF /* VMPTrackStrip.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677781316C0D6A0007206CF /* VMPTrackStrip.m */; };
 		1677782C16C0D6A0007206CF /* VMPCanvas.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677781516C0D6A0007206CF /* VMPCanvas.m */; };
 		1677782D16C0D6A0007206CF /* VMPCanvas.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677781516C0D6A0007206CF /* VMPCanvas.m */; };
+		16830BF91D7EAD29003541A8 /* tb_new_osx.icns in Resources */ = {isa = PBXBuildFile; fileRef = 16830BF81D7EAD29003541A8 /* tb_new_osx.icns */; };
 		168A6350171902B700B08329 /* VMPScrollViewClipper.m in Sources */ = {isa = PBXBuildFile; fileRef = 168A634F171902B700B08329 /* VMPScrollViewClipper.m */; };
 		168C5AA817C9786D00AA8916 /* VMPInsertFragmentWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 168C5AA717C9786D00AA8916 /* VMPInsertFragmentWindow.xib */; };
 		16933BFC170C32E2005381FC /* VMPInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 16933BFB170C32E2005381FC /* VMPInfoViewController.m */; };
@@ -246,7 +247,6 @@
 		16D7EB2E1861AB2800D0BCEB /* VMRouteComputer.m in Sources */ = {isa = PBXBuildFile; fileRef = 16D7EB2A1861AB2800D0BCEB /* VMRouteComputer.m */; };
 		16DC63E616B78D8D00E579AE /* play.png in Resources */ = {isa = PBXBuildFile; fileRef = 16DC63E016B78D8D00E579AE /* play.png */; };
 		16DC63EE16B78E2B00E579AE /* stop.png in Resources */ = {isa = PBXBuildFile; fileRef = 16DC63EB16B78E2A00E579AE /* stop.png */; };
-		16DF1D9E184195B1005850B7 /* tb_new_osx.icns in Resources */ = {isa = PBXBuildFile; fileRef = 16DF1D9D184195B1005850B7 /* tb_new_osx.icns */; };
 		16E928A61BB53E3300BA59E1 /* VMPInfoViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 16E928A81BB53E3300BA59E1 /* VMPInfoViewController.xib */; };
 		16F77CCC1865802400B58BA7 /* VMRoute.m in Sources */ = {isa = PBXBuildFile; fileRef = 16F77CCB1865802400B58BA7 /* VMRoute.m */; };
 		16F77CCD1865802400B58BA7 /* VMRoute.m in Sources */ = {isa = PBXBuildFile; fileRef = 16F77CCB1865802400B58BA7 /* VMRoute.m */; };
@@ -449,6 +449,7 @@
 		1677781316C0D6A0007206CF /* VMPTrackStrip.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = VMPTrackStrip.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		1677781416C0D6A0007206CF /* VMPCanvas.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = VMPCanvas.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		1677781516C0D6A0007206CF /* VMPCanvas.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = VMPCanvas.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		16830BF81D7EAD29003541A8 /* tb_new_osx.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = tb_new_osx.icns; path = "traumbaum mac/tb_new_osx.icns"; sourceTree = "<group>"; };
 		168A634E171902B700B08329 /* VMPScrollViewClipper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = VMPScrollViewClipper.h; path = TraumBaum/VMPScrollViewClipper.h; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		168A634F171902B700B08329 /* VMPScrollViewClipper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VMPScrollViewClipper.m; path = TraumBaum/VMPScrollViewClipper.m; sourceTree = SOURCE_ROOT; };
 		168C5AA717C9786D00AA8916 /* VMPInsertFragmentWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VMPInsertFragmentWindow.xib; sourceTree = "<group>"; };
@@ -552,7 +553,6 @@
 		16D7EB2A1861AB2800D0BCEB /* VMRouteComputer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VMRouteComputer.m; sourceTree = "<group>"; };
 		16DC63E016B78D8D00E579AE /* play.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = play.png; sourceTree = "<group>"; };
 		16DC63EB16B78E2A00E579AE /* stop.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = stop.png; sourceTree = "<group>"; };
-		16DF1D9D184195B1005850B7 /* tb_new_osx.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = tb_new_osx.icns; sourceTree = "<group>"; };
 		16E928A71BB53E3300BA59E1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/VMPInfoViewController.xib; sourceTree = "<group>"; };
 		16E928AA1BB53E3700BA59E1 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/VMPInfoViewController.strings; sourceTree = "<group>"; };
 		16E928AC1BB53E3900BA59E1 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/VMPInfoViewController.strings; sourceTree = "<group>"; };
@@ -956,7 +956,7 @@
 			isa = PBXGroup;
 			children = (
 				160B72CE1D7D8837001CAC17 /* traumbaum.entitlements */,
-				16DF1D9D184195B1005850B7 /* tb_new_osx.icns */,
+				16830BF81D7EAD29003541A8 /* tb_new_osx.icns */,
 				16750A2918409D8D0028195B /* tb_new_artwork.png */,
 				16750A26183F8A280028195B /* VMPColorAnimation.h */,
 				16750A27183F8A280028195B /* VMPColorAnimation.m */,
@@ -1427,12 +1427,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				16830BF91D7EAD29003541A8 /* tb_new_osx.icns in Resources */,
 				16750A2A18409D8D0028195B /* tb_new_artwork.png in Resources */,
 				16C074B417B28C4A00351113 /* InfoPlist.strings in Resources */,
 				16C074BA17B28C4A00351113 /* Credits.rtf in Resources */,
 				16C074DF17B2B27100351113 /* defaultSong in Resources */,
 				16C074C017B28C4B00351113 /* MainMenu.xib in Resources */,
-				16DF1D9E184195B1005850B7 /* tb_new_osx.icns in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1927,6 +1927,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
 				CLANG_CXX_LIBRARY = "compiler-default";
+				CLANG_ENABLE_MODULES = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -1956,6 +1957,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
 				CLANG_CXX_LIBRARY = "compiler-default";
+				CLANG_ENABLE_MODULES = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
