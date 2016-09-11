@@ -616,7 +616,7 @@ BOOL verbose = NO;
 	if( string )
 		self.vmsData = string;
 	[self.songData clear];
-	self.showReport.current = NO;
+	self.showReport.current = @NO;
 	
 	DEFAULTPREPROCESSOR.song = self;
 	BOOL success = [DEFAULTPREPROCESSOR preprocess:self.vmsData error:outError];

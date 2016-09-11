@@ -28,10 +28,6 @@
 		160ECFDC173B51160009D04B /* VMPSongPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ECFD5173B51160009D04B /* VMPSongPlayer.m */; };
 		160ECFDD173B51160009D04B /* VMPSongPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ECFD5173B51160009D04B /* VMPSongPlayer.m */; };
 		160ECFDE173B51160009D04B /* VMPSongPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ECFD5173B51160009D04B /* VMPSongPlayer.m */; };
-		160ED034173B517A0009D04B /* License.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 160ECFF8173B517A0009D04B /* License.rtf */; };
-		160ED038173B517A0009D04B /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ECFFB173B517A0009D04B /* RegexKitLite.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		160ED039173B517A0009D04B /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ECFFB173B517A0009D04B /* RegexKitLite.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		160ED03A173B517A0009D04B /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ECFFB173B517A0009D04B /* RegexKitLite.m */; };
 		160ED043173B517A0009D04B /* README.markdown in Resources */ = {isa = PBXBuildFile; fileRef = 160ECFFF173B517A0009D04B /* README.markdown */; };
 		160ED044173B517A0009D04B /* CDataScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ED002173B517A0009D04B /* CDataScanner.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		160ED045173B517A0009D04B /* CDataScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ED002173B517A0009D04B /* CDataScanner.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -94,20 +90,12 @@
 		162FBB95173CB5460060E003 /* SyntaxDefinition.plist in Resources */ = {isa = PBXBuildFile; fileRef = 162FBB94173CB5460060E003 /* SyntaxDefinition.plist */; };
 		162FBBC017405A360060E003 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 168CEBD41631871400B721E2 /* CoreAudio.framework */; };
 		162FBBC117405A410060E003 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16A27EFF16F9730F0081C1E8 /* AudioToolbox.framework */; };
-		162FBBC4174061FE0060E003 /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 162FBBC3174061FE0060E003 /* libicucore.dylib */; };
 		162FBBC5174065C90060E003 /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1624A7131644D8AC004AA351 /* libicucore.dylib */; };
 		162FBBC717406D5B0060E003 /* libicucore.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1624A7131644D8AC004AA351 /* libicucore.dylib */; };
 		162FBBC817406DA40060E003 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 168CEBB5163186B400B721E2 /* AppKit.framework */; };
 		162FBBC917406DB50060E003 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 168CEBB6163186B400B721E2 /* CoreData.framework */; };
 		162FBBCA17406DB80060E003 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 168CEBB7163186B400B721E2 /* Foundation.framework */; };
 		162FBBCD174071FE0060E003 /* VMPTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 162FBBCC174071FB0060E003 /* VMPTest.m */; };
-		163178A01BB4AD38007D6B11 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1631789F1BB4AD38007D6B11 /* AVFoundation.framework */; };
-		163178A21BB4AD4F007D6B11 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 163178A11BB4AD4F007D6B11 /* AudioToolbox.framework */; };
-		163178A41BB4AD66007D6B11 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 163178A31BB4AD66007D6B11 /* CoreGraphics.framework */; };
-		163178A61BB4AD8A007D6B11 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 163178A51BB4AD89007D6B11 /* UIKit.framework */; };
-		163178AA1BB4AE34007D6B11 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 163178A91BB4AE34007D6B11 /* CoreAudio.framework */; };
-		163178AC1BB4AE56007D6B11 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 163178AB1BB4AE56007D6B11 /* libz.tbd */; };
-		163178AE1BB4AE8E007D6B11 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 163178AD1BB4AE8E007D6B11 /* QuartzCore.framework */; };
 		163178B01BB4B7F5007D6B11 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 163178AF1BB4B7F5007D6B11 /* Launch Screen.storyboard */; };
 		16347C1216C286C9002BE1FE /* VMPGraph.m in Sources */ = {isa = PBXBuildFile; fileRef = 16347C0F16C286C9002BE1FE /* VMPGraph.m */; };
 		16347C1316C286C9002BE1FE /* VMPGraph.m in Sources */ = {isa = PBXBuildFile; fileRef = 16347C0F16C286C9002BE1FE /* VMPGraph.m */; };
@@ -184,6 +172,18 @@
 		16A27F5F17006E720081C1E8 /* VMPProgressWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 16A27F5C17006E720081C1E8 /* VMPProgressWindowController.m */; };
 		16A27F6117006E720081C1E8 /* VMPProgressWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 16A27F5D17006E720081C1E8 /* VMPProgressWindow.xib */; };
 		16A27F6517008A550081C1E8 /* VMPRecordDetailPopover.m in Sources */ = {isa = PBXBuildFile; fileRef = 16A27F6317008A540081C1E8 /* VMPRecordDetailPopover.m */; };
+		16ABBE0C1D83B36F006D1F69 /* VM2AudioPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F726FA1D8174D700A0CA69 /* VM2AudioPlayer.swift */; };
+		16ABBE0E1D83B572006D1F69 /* AudioKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16ABBE0D1D83B572006D1F69 /* AudioKit.framework */; };
+		16ABBE101D83B589006D1F69 /* libicucore.A.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 16ABBE0F1D83B589006D1F69 /* libicucore.A.tbd */; };
+		16ABBE121D83B592006D1F69 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16ABBE111D83B592006D1F69 /* AVFoundation.framework */; };
+		16ABBE141D83B59C006D1F69 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16ABBE131D83B59C006D1F69 /* AudioToolbox.framework */; };
+		16ABBE161D83B5A2006D1F69 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16ABBE151D83B5A2006D1F69 /* CoreGraphics.framework */; };
+		16ABBE181D83B5AC006D1F69 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16ABBE171D83B5AC006D1F69 /* UIKit.framework */; };
+		16ABBE1A1D83B5B3006D1F69 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16ABBE191D83B5B3006D1F69 /* CoreAudio.framework */; };
+		16ABBE1C1D83B5BB006D1F69 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 16ABBE1B1D83B5BB006D1F69 /* libz.tbd */; };
+		16ABBE1E1D83B5C4006D1F69 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16ABBE1D1D83B5C4006D1F69 /* QuartzCore.framework */; };
+		16ABBE211D83D207006D1F69 /* AudioKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16ABBE1F1D83D1FA006D1F69 /* AudioKit.framework */; };
+		16ABBE221D83D207006D1F69 /* AudioKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 16ABBE1F1D83D1FA006D1F69 /* AudioKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		16B8E1CF1A833D8100191689 /* VMPVineView.m in Sources */ = {isa = PBXBuildFile; fileRef = 16B8E1CE1A833D8100191689 /* VMPVineView.m */; };
 		16BDD06A1A82FB8000031FEA /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16BDD0691A82FB8000031FEA /* QuartzCore.framework */; };
 		16C074A217B2750900351113 /* VMPRainyView.m in Sources */ = {isa = PBXBuildFile; fileRef = 16C074A117B2750900351113 /* VMPRainyView.m */; };
@@ -199,7 +199,6 @@
 		16C074C717B2AED500351113 /* VMDataTypes.m in Sources */ = {isa = PBXBuildFile; fileRef = 1662313F173C9F1A00F70FCB /* VMDataTypes.m */; };
 		16C074C817B2AED900351113 /* VMFunction.m in Sources */ = {isa = PBXBuildFile; fileRef = 16623141173C9F1A00F70FCB /* VMFunction.m */; };
 		16C074C917B2AEDE00351113 /* VMSong.m in Sources */ = {isa = PBXBuildFile; fileRef = 16623143173C9F1A00F70FCB /* VMSong.m */; };
-		16C074CA17B2AEFA00351113 /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ECFFB173B517A0009D04B /* RegexKitLite.m */; };
 		16C074CB17B2AF0B00351113 /* VMPJSONDeserializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ED01A173B517A0009D04B /* VMPJSONDeserializer.m */; };
 		16C074CC17B2AF0E00351113 /* VMPJSONScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ED01C173B517A0009D04B /* VMPJSONScanner.m */; };
 		16C074CD17B2AF1500351113 /* CDataScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = 160ED002173B517A0009D04B /* CDataScanner.m */; };
@@ -227,17 +226,6 @@
 		16C90C8417241EF500F7E91F /* VMPLogView.m in Sources */ = {isa = PBXBuildFile; fileRef = 16C90C8117241EF500F7E91F /* VMPLogView.m */; };
 		16C90C8517241EF500F7E91F /* VMPLogView.m in Sources */ = {isa = PBXBuildFile; fileRef = 16C90C8117241EF500F7E91F /* VMPLogView.m */; };
 		16D1EA0318AEDE33001AB5C4 /* VMVmsarcManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 16D1EA0218AEDE33001AB5C4 /* VMVmsarcManager.m */; };
-		16D1EA1218AF1F4E001AB5C4 /* ioapi.c in Sources */ = {isa = PBXBuildFile; fileRef = 16D1EA0818AF1F4E001AB5C4 /* ioapi.c */; };
-		16D1EA1318AF1F4E001AB5C4 /* ioapi.c in Sources */ = {isa = PBXBuildFile; fileRef = 16D1EA0818AF1F4E001AB5C4 /* ioapi.c */; };
-		16D1EA1518AF1F4E001AB5C4 /* mztools.c in Sources */ = {isa = PBXBuildFile; fileRef = 16D1EA0A18AF1F4E001AB5C4 /* mztools.c */; };
-		16D1EA1618AF1F4E001AB5C4 /* mztools.c in Sources */ = {isa = PBXBuildFile; fileRef = 16D1EA0A18AF1F4E001AB5C4 /* mztools.c */; };
-		16D1EA1718AF1F4E001AB5C4 /* mztools.c in Sources */ = {isa = PBXBuildFile; fileRef = 16D1EA0A18AF1F4E001AB5C4 /* mztools.c */; };
-		16D1EA1818AF1F4E001AB5C4 /* unzip.c in Sources */ = {isa = PBXBuildFile; fileRef = 16D1EA0C18AF1F4E001AB5C4 /* unzip.c */; };
-		16D1EA1918AF1F4E001AB5C4 /* unzip.c in Sources */ = {isa = PBXBuildFile; fileRef = 16D1EA0C18AF1F4E001AB5C4 /* unzip.c */; };
-		16D1EA1B18AF1F4E001AB5C4 /* zip.c in Sources */ = {isa = PBXBuildFile; fileRef = 16D1EA0E18AF1F4E001AB5C4 /* zip.c */; };
-		16D1EA1C18AF1F4E001AB5C4 /* zip.c in Sources */ = {isa = PBXBuildFile; fileRef = 16D1EA0E18AF1F4E001AB5C4 /* zip.c */; };
-		16D1EA1E18AF1F4E001AB5C4 /* SSZipArchive.m in Sources */ = {isa = PBXBuildFile; fileRef = 16D1EA1118AF1F4E001AB5C4 /* SSZipArchive.m */; };
-		16D1EA1F18AF1F4E001AB5C4 /* SSZipArchive.m in Sources */ = {isa = PBXBuildFile; fileRef = 16D1EA1118AF1F4E001AB5C4 /* SSZipArchive.m */; };
 		16D1EA2918B005C1001AB5C4 /* VMPProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 16D1EA2818B005C1001AB5C4 /* VMPProgressView.m */; };
 		16D1EA2D18B04893001AB5C4 /* VMPSongListView.m in Sources */ = {isa = PBXBuildFile; fileRef = 16D1EA2C18B04893001AB5C4 /* VMPSongListView.m */; };
 		16D1EA3118B36B27001AB5C4 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 16D1EA3018B36B27001AB5C4 /* libz.dylib */; };
@@ -254,6 +242,9 @@
 		16F77CCF1865802400B58BA7 /* VMRoute.m in Sources */ = {isa = PBXBuildFile; fileRef = 16F77CCB1865802400B58BA7 /* VMRoute.m */; };
 		16F77D24186BC71400B58BA7 /* VMAudioFFT.mm in Sources */ = {isa = PBXBuildFile; fileRef = 16F77D22186BC71400B58BA7 /* VMAudioFFT.mm */; };
 		16F77D28186D436700B58BA7 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16F77D27186D436700B58BA7 /* Accelerate.framework */; };
+		5947BB045B333A7B8DC99F3D /* libPods-traumbaum mac.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 67D77B00B52E04B0FD6B8682 /* libPods-traumbaum mac.a */; };
+		86340AA4174CB2CBF58B7D2F /* libPods-OnTheFly Editor OSX.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FA690EF394C060C9FFBC9A9F /* libPods-OnTheFly Editor OSX.a */; };
+		D29C2525819B0B198EFBC1AA /* libPods-traumbaum iOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 88756FF3ED6A2FF75CC77C94 /* libPods-traumbaum iOS.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXBuildRule section */
@@ -302,9 +293,21 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		16ABBE231D83D207006D1F69 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				16ABBE221D83D207006D1F69 /* AudioKit.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		00212F02A9BEFDA737E5E553 /* Pods-traumbaum mac.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-traumbaum mac.release.xcconfig"; path = "Pods/Target Support Files/Pods-traumbaum mac/Pods-traumbaum mac.release.xcconfig"; sourceTree = "<group>"; };
 		160B72CE1D7D8837001CAC17 /* traumbaum.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = traumbaum.entitlements; path = "traumbaum mac/traumbaum.entitlements"; sourceTree = "<group>"; };
 		160E51901732783000C3D9BB /* VMPVariablesPanelController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = VMPVariablesPanelController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		160E51911732783000C3D9BB /* VMPVariablesPanelController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = VMPVariablesPanelController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
@@ -329,16 +332,6 @@
 		160ECFD3173B51160009D04B /* VMPlayerBase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = VMPlayerBase.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		160ECFD4173B51160009D04B /* VMPSongPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = VMPSongPlayer.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		160ECFD5173B51160009D04B /* VMPSongPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = VMPSongPlayer.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		160ECFF1173B517A0009D04B /* for_in.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = for_in.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		160ECFF2173B517A0009D04B /* link_example.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = link_example.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		160ECFF3173B517A0009D04B /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = main.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		160ECFF4173B517A0009D04B /* NSString-HexConversion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString-HexConversion.h"; sourceTree = "<group>"; };
-		160ECFF5173B517A0009D04B /* NSString-HexConversion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString-HexConversion.m"; sourceTree = "<group>"; };
-		160ECFF7173B517A0009D04B /* License.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; lineEnding = 0; path = License.html; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.html; };
-		160ECFF8173B517A0009D04B /* License.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = License.rtf; sourceTree = "<group>"; };
-		160ECFF9173B517A0009D04B /* RegexKitLite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = RegexKitLite.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		160ECFFA173B517A0009D04B /* RegexKitLite.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; lineEnding = 0; path = RegexKitLite.html; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.html; };
-		160ECFFB173B517A0009D04B /* RegexKitLite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = RegexKitLite.m; path = "Core/Libs/RegexKitLite-4.0/RegexKitLite.m"; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		160ECFFD173B517A0009D04B /* .gitignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		160ECFFE173B517A0009D04B /* Config.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 		160ECFFF173B517A0009D04B /* README.markdown */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; lineEnding = 0; path = README.markdown; sourceTree = "<group>"; };
@@ -367,6 +360,14 @@
 		160ED01A173B517A0009D04B /* VMPJSONDeserializer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = VMPJSONDeserializer.m; path = "Core/Libs/TouchJSON-master/VMPJSONDeserializer.m"; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		160ED01B173B517A0009D04B /* VMPJSONScanner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VMPJSONScanner.h; sourceTree = "<group>"; };
 		160ED01C173B517A0009D04B /* VMPJSONScanner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = VMPJSONScanner.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		161329381D82ADC60007AA72 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS10.0.sdk/System/Library/Frameworks/QuartzCore.framework; sourceTree = DEVELOPER_DIR; };
+		1613293A1D82ADDA0007AA72 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS10.0.sdk/usr/lib/libz.tbd; sourceTree = DEVELOPER_DIR; };
+		1613293C1D82ADE40007AA72 /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS10.0.sdk/System/Library/Frameworks/CoreAudio.framework; sourceTree = DEVELOPER_DIR; };
+		1613293E1D82ADEC0007AA72 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS10.0.sdk/System/Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
+		161329401D82ADF50007AA72 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS10.0.sdk/System/Library/Frameworks/CoreGraphics.framework; sourceTree = DEVELOPER_DIR; };
+		161329421D82ADFC0007AA72 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS10.0.sdk/System/Library/Frameworks/AudioToolbox.framework; sourceTree = DEVELOPER_DIR; };
+		161329441D82AE030007AA72 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS10.0.sdk/System/Library/Frameworks/AVFoundation.framework; sourceTree = DEVELOPER_DIR; };
+		161329461D82AE0F0007AA72 /* libicucore.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libicucore.tbd; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS10.0.sdk/usr/lib/libicucore.tbd; sourceTree = DEVELOPER_DIR; };
 		16150B0519D6F0AE00FD0DE6 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = "../traumbaum iOS/Images.xcassets"; sourceTree = "<group>"; };
 		1624A6FB1642B76B004AA351 /* vsDocIcon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = vsDocIcon.icns; sourceTree = "<group>"; };
 		1624A6FE1642B7D0004AA351 /* vsPlayer.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = vsPlayer.icns; sourceTree = "<group>"; };
@@ -390,14 +391,6 @@
 		162FBBC3174061FE0060E003 /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = ../../../../../usr/lib/libicucore.dylib; sourceTree = "<group>"; };
 		162FBBCB174071F90060E003 /* VMPTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VMPTest.h; path = OSX/Tests/VMPTest.h; sourceTree = "<group>"; };
 		162FBBCC174071FB0060E003 /* VMPTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VMPTest.m; path = OSX/Tests/VMPTest.m; sourceTree = "<group>"; };
-		1631789F1BB4AD38007D6B11 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.0.sdk/System/Library/Frameworks/AVFoundation.framework; sourceTree = DEVELOPER_DIR; };
-		163178A11BB4AD4F007D6B11 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.0.sdk/System/Library/Frameworks/AudioToolbox.framework; sourceTree = DEVELOPER_DIR; };
-		163178A31BB4AD66007D6B11 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.0.sdk/System/Library/Frameworks/CoreGraphics.framework; sourceTree = DEVELOPER_DIR; };
-		163178A51BB4AD89007D6B11 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.0.sdk/System/Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
-		163178A71BB4AE10007D6B11 /* AudioUnit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioUnit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.0.sdk/System/Library/Frameworks/AudioUnit.framework; sourceTree = DEVELOPER_DIR; };
-		163178A91BB4AE34007D6B11 /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.0.sdk/System/Library/Frameworks/CoreAudio.framework; sourceTree = DEVELOPER_DIR; };
-		163178AB1BB4AE56007D6B11 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.0.sdk/usr/lib/libz.tbd; sourceTree = DEVELOPER_DIR; };
-		163178AD1BB4AE8E007D6B11 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.0.sdk/System/Library/Frameworks/QuartzCore.framework; sourceTree = DEVELOPER_DIR; };
 		163178AF1BB4B7F5007D6B11 /* Launch Screen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = "Launch Screen.storyboard"; path = "TraumBaum/iPhone-UI/Launch Screen.storyboard"; sourceTree = SOURCE_ROOT; };
 		16347C0E16C286C9002BE1FE /* VMPGraph.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = VMPGraph.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		16347C0F16C286C9002BE1FE /* VMPGraph.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = VMPGraph.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
@@ -501,6 +494,16 @@
 		16A27F5D17006E720081C1E8 /* VMPProgressWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VMPProgressWindow.xib; sourceTree = "<group>"; };
 		16A27F6217008A540081C1E8 /* VMPRecordDetailPopover.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = VMPRecordDetailPopover.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		16A27F6317008A540081C1E8 /* VMPRecordDetailPopover.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VMPRecordDetailPopover.m; sourceTree = "<group>"; };
+		16ABBE0D1D83B572006D1F69 /* AudioKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioKit.framework; path = Pods/AudioKit/iOS/AudioKit.framework; sourceTree = "<group>"; };
+		16ABBE0F1D83B589006D1F69 /* libicucore.A.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libicucore.A.tbd; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.3.sdk/usr/lib/libicucore.A.tbd; sourceTree = DEVELOPER_DIR; };
+		16ABBE111D83B592006D1F69 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.3.sdk/System/Library/Frameworks/AVFoundation.framework; sourceTree = DEVELOPER_DIR; };
+		16ABBE131D83B59C006D1F69 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.3.sdk/System/Library/Frameworks/AudioToolbox.framework; sourceTree = DEVELOPER_DIR; };
+		16ABBE151D83B5A2006D1F69 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.3.sdk/System/Library/Frameworks/CoreGraphics.framework; sourceTree = DEVELOPER_DIR; };
+		16ABBE171D83B5AC006D1F69 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.3.sdk/System/Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
+		16ABBE191D83B5B3006D1F69 /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.3.sdk/System/Library/Frameworks/CoreAudio.framework; sourceTree = DEVELOPER_DIR; };
+		16ABBE1B1D83B5BB006D1F69 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.3.sdk/usr/lib/libz.tbd; sourceTree = DEVELOPER_DIR; };
+		16ABBE1D1D83B5C4006D1F69 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.3.sdk/System/Library/Frameworks/QuartzCore.framework; sourceTree = DEVELOPER_DIR; };
+		16ABBE1F1D83D1FA006D1F69 /* AudioKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioKit.framework; path = Pods/AudioKit/iOS/AudioKit.framework; sourceTree = SOURCE_ROOT; };
 		16B8E1CD1A833D8100191689 /* VMPVineView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VMPVineView.h; path = TraumBaum/VMPVineView.h; sourceTree = SOURCE_ROOT; };
 		16B8E1CE1A833D8100191689 /* VMPVineView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VMPVineView.m; path = TraumBaum/VMPVineView.m; sourceTree = SOURCE_ROOT; };
 		16BDD0691A82FB8000031FEA /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
@@ -533,17 +536,6 @@
 		16C90C8117241EF500F7E91F /* VMPLogView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = VMPLogView.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		16D1EA0118AEDE33001AB5C4 /* VMVmsarcManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VMVmsarcManager.h; path = TraumBaum/VMVmsarcManager.h; sourceTree = SOURCE_ROOT; };
 		16D1EA0218AEDE33001AB5C4 /* VMVmsarcManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VMVmsarcManager.m; path = TraumBaum/VMVmsarcManager.m; sourceTree = SOURCE_ROOT; };
-		16D1EA0718AF1F4E001AB5C4 /* crypt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = crypt.h; sourceTree = "<group>"; };
-		16D1EA0818AF1F4E001AB5C4 /* ioapi.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ioapi.c; sourceTree = "<group>"; };
-		16D1EA0918AF1F4E001AB5C4 /* ioapi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ioapi.h; sourceTree = "<group>"; };
-		16D1EA0A18AF1F4E001AB5C4 /* mztools.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mztools.c; sourceTree = "<group>"; };
-		16D1EA0B18AF1F4E001AB5C4 /* mztools.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mztools.h; sourceTree = "<group>"; };
-		16D1EA0C18AF1F4E001AB5C4 /* unzip.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = unzip.c; sourceTree = "<group>"; };
-		16D1EA0D18AF1F4E001AB5C4 /* unzip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = unzip.h; sourceTree = "<group>"; };
-		16D1EA0E18AF1F4E001AB5C4 /* zip.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zip.c; sourceTree = "<group>"; };
-		16D1EA0F18AF1F4E001AB5C4 /* zip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = zip.h; sourceTree = "<group>"; };
-		16D1EA1018AF1F4E001AB5C4 /* SSZipArchive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSZipArchive.h; sourceTree = "<group>"; };
-		16D1EA1118AF1F4E001AB5C4 /* SSZipArchive.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSZipArchive.m; sourceTree = "<group>"; };
 		16D1EA2718B005C1001AB5C4 /* VMPProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VMPProgressView.h; path = TraumBaum/VMPProgressView.h; sourceTree = SOURCE_ROOT; };
 		16D1EA2818B005C1001AB5C4 /* VMPProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VMPProgressView.m; path = TraumBaum/VMPProgressView.m; sourceTree = SOURCE_ROOT; };
 		16D1EA2B18B04893001AB5C4 /* VMPSongListView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VMPSongListView.h; path = TraumBaum/VMPSongListView.h; sourceTree = SOURCE_ROOT; };
@@ -559,11 +551,22 @@
 		16E928AE1BB53E3C00BA59E1 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/VMPInfoViewController.strings; sourceTree = "<group>"; };
 		16E928B01BB53E3E00BA59E1 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/VMPInfoViewController.strings; sourceTree = "<group>"; };
 		16E928B21BB53E4000BA59E1 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/VMPInfoViewController.strings; sourceTree = "<group>"; };
+		16F726F31D813A4B00A0CA69 /* Podfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; };
+		16F726F91D8174D600A0CA69 /* traumbaum iOS-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "traumbaum iOS-Bridging-Header.h"; path = "Core/AudioPlayer/traumbaum iOS-Bridging-Header.h"; sourceTree = "<group>"; };
+		16F726FA1D8174D700A0CA69 /* VM2AudioPlayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VM2AudioPlayer.swift; sourceTree = "<group>"; };
 		16F77CCA1865802400B58BA7 /* VMRoute.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VMRoute.h; path = Core/DataStructures/VMRoute.h; sourceTree = SOURCE_ROOT; };
 		16F77CCB1865802400B58BA7 /* VMRoute.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VMRoute.m; path = Core/DataStructures/VMRoute.m; sourceTree = SOURCE_ROOT; };
 		16F77D22186BC71400B58BA7 /* VMAudioFFT.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = VMAudioFFT.mm; path = Core/DataStructures/VMAudioFFT.mm; sourceTree = SOURCE_ROOT; };
 		16F77D23186BC71400B58BA7 /* VMAudioFFT.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VMAudioFFT.h; path = Core/DataStructures/VMAudioFFT.h; sourceTree = SOURCE_ROOT; };
 		16F77D27186D436700B58BA7 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
+		228A65B1075E6072E47DC188 /* Pods-traumbaum mac.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-traumbaum mac.debug.xcconfig"; path = "Pods/Target Support Files/Pods-traumbaum mac/Pods-traumbaum mac.debug.xcconfig"; sourceTree = "<group>"; };
+		41A4BE05DF1935E6A2C64C27 /* Pods-traumbaum iOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-traumbaum iOS.release.xcconfig"; path = "Pods/Target Support Files/Pods-traumbaum iOS/Pods-traumbaum iOS.release.xcconfig"; sourceTree = "<group>"; };
+		67D77B00B52E04B0FD6B8682 /* libPods-traumbaum mac.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-traumbaum mac.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		7E066B4B2C9FB64B8724A4BA /* Pods-traumbaum iOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-traumbaum iOS.debug.xcconfig"; path = "Pods/Target Support Files/Pods-traumbaum iOS/Pods-traumbaum iOS.debug.xcconfig"; sourceTree = "<group>"; };
+		88756FF3ED6A2FF75CC77C94 /* libPods-traumbaum iOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-traumbaum iOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		8A9E8453CD3EC30E98E99116 /* Pods-OnTheFly Editor OSX.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OnTheFly Editor OSX.release.xcconfig"; path = "Pods/Target Support Files/Pods-OnTheFly Editor OSX/Pods-OnTheFly Editor OSX.release.xcconfig"; sourceTree = "<group>"; };
+		996FBEB1001091257B125BDE /* Pods-OnTheFly Editor OSX.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OnTheFly Editor OSX.debug.xcconfig"; path = "Pods/Target Support Files/Pods-OnTheFly Editor OSX/Pods-OnTheFly Editor OSX.debug.xcconfig"; sourceTree = "<group>"; };
+		FA690EF394C060C9FFBC9A9F /* libPods-OnTheFly Editor OSX.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OnTheFly Editor OSX.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -577,6 +580,7 @@
 				162F7B6616A1151B00420443 /* libicucore.dylib in Frameworks */,
 				162F7B1A16A0341900420443 /* Cocoa.framework in Frameworks */,
 				162F7B6916A1167D00420443 /* CoreAudio.framework in Frameworks */,
+				86340AA4174CB2CBF58B7D2F /* libPods-OnTheFly Editor OSX.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -598,14 +602,17 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				163178AE1BB4AE8E007D6B11 /* QuartzCore.framework in Frameworks */,
-				163178AC1BB4AE56007D6B11 /* libz.tbd in Frameworks */,
-				163178AA1BB4AE34007D6B11 /* CoreAudio.framework in Frameworks */,
-				163178A61BB4AD8A007D6B11 /* UIKit.framework in Frameworks */,
-				163178A41BB4AD66007D6B11 /* CoreGraphics.framework in Frameworks */,
-				163178A21BB4AD4F007D6B11 /* AudioToolbox.framework in Frameworks */,
-				163178A01BB4AD38007D6B11 /* AVFoundation.framework in Frameworks */,
-				162FBBC4174061FE0060E003 /* libicucore.dylib in Frameworks */,
+				16ABBE1E1D83B5C4006D1F69 /* QuartzCore.framework in Frameworks */,
+				16ABBE1C1D83B5BB006D1F69 /* libz.tbd in Frameworks */,
+				16ABBE1A1D83B5B3006D1F69 /* CoreAudio.framework in Frameworks */,
+				16ABBE181D83B5AC006D1F69 /* UIKit.framework in Frameworks */,
+				16ABBE161D83B5A2006D1F69 /* CoreGraphics.framework in Frameworks */,
+				16ABBE211D83D207006D1F69 /* AudioKit.framework in Frameworks */,
+				16ABBE141D83B59C006D1F69 /* AudioToolbox.framework in Frameworks */,
+				16ABBE121D83B592006D1F69 /* AVFoundation.framework in Frameworks */,
+				16ABBE101D83B589006D1F69 /* libicucore.A.tbd in Frameworks */,
+				16ABBE0E1D83B572006D1F69 /* AudioKit.framework in Frameworks */,
+				D29C2525819B0B198EFBC1AA /* libPods-traumbaum iOS.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -618,6 +625,7 @@
 				16C074D817B2AFAA00351113 /* libicucore.dylib in Frameworks */,
 				16C074D917B2AFB400351113 /* AudioToolbox.framework in Frameworks */,
 				16C074DA17B2AFB900351113 /* CoreAudio.framework in Frameworks */,
+				5947BB045B333A7B8DC99F3D /* libPods-traumbaum mac.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -643,44 +651,12 @@
 		160ECFCF173B51160009D04B /* MediaPlayer */ = {
 			isa = PBXGroup;
 			children = (
-				163C02B917C9DFAF00244A81 /* VMPDSP.h */,
-				163C02B017C9D5F300244A81 /* VMPDSP.m */,
-				160ECFD0173B51160009D04B /* VMPAudioPlayer.h */,
-				160ECFD1173B51160009D04B /* VMPAudioPlayer.m */,
-				160ECFD2173B51160009D04B /* VMPlayerBase.h */,
-				160ECFD3173B51160009D04B /* VMPlayerBase.m */,
-				160ECFD4173B51160009D04B /* VMPSongPlayer.h */,
-				160ECFD5173B51160009D04B /* VMPSongPlayer.m */,
+				16F726F81D81746500A0CA69 /* VMP */,
+				16F726FA1D8174D700A0CA69 /* VM2AudioPlayer.swift */,
 			);
 			name = MediaPlayer;
 			path = Core/AudioPlayer;
 			sourceTree = SOURCE_ROOT;
-		};
-		160ECFEE173B517A0009D04B /* RegexKitLite-4.0 */ = {
-			isa = PBXGroup;
-			children = (
-				160ECFEF173B517A0009D04B /* examples */,
-				160ECFF7173B517A0009D04B /* License.html */,
-				160ECFF8173B517A0009D04B /* License.rtf */,
-				160ECFF9173B517A0009D04B /* RegexKitLite.h */,
-				160ECFFA173B517A0009D04B /* RegexKitLite.html */,
-				160ECFFB173B517A0009D04B /* RegexKitLite.m */,
-			);
-			name = "RegexKitLite-4.0";
-			path = "Core/Libs/RegexKitLite-4.0";
-			sourceTree = SOURCE_ROOT;
-		};
-		160ECFEF173B517A0009D04B /* examples */ = {
-			isa = PBXGroup;
-			children = (
-				160ECFF1173B517A0009D04B /* for_in.m */,
-				160ECFF2173B517A0009D04B /* link_example.m */,
-				160ECFF3173B517A0009D04B /* main.m */,
-				160ECFF4173B517A0009D04B /* NSString-HexConversion.h */,
-				160ECFF5173B517A0009D04B /* NSString-HexConversion.m */,
-			);
-			path = examples;
-			sourceTree = "<group>";
 		};
 		160ECFFC173B517A0009D04B /* TouchJSON-master */ = {
 			isa = PBXGroup;
@@ -753,14 +729,7 @@
 		160ED06F173B6F6F0009D04B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				163178AD1BB4AE8E007D6B11 /* QuartzCore.framework */,
-				163178AB1BB4AE56007D6B11 /* libz.tbd */,
-				163178A91BB4AE34007D6B11 /* CoreAudio.framework */,
-				163178A71BB4AE10007D6B11 /* AudioUnit.framework */,
-				163178A51BB4AD89007D6B11 /* UIKit.framework */,
-				163178A31BB4AD66007D6B11 /* CoreGraphics.framework */,
-				163178A11BB4AD4F007D6B11 /* AudioToolbox.framework */,
-				1631789F1BB4AD38007D6B11 /* AVFoundation.framework */,
+				16ABBE1F1D83D1FA006D1F69 /* AudioKit.framework */,
 				16BDD0691A82FB8000031FEA /* QuartzCore.framework */,
 				162FBBC3174061FE0060E003 /* libicucore.dylib */,
 			);
@@ -851,8 +820,6 @@
 		162FBB93173CA1C40060E003 /* Libs */ = {
 			isa = PBXGroup;
 			children = (
-				16D1EA0518AF1F4E001AB5C4 /* SSZipArchive */,
-				160ECFEE173B517A0009D04B /* RegexKitLite-4.0 */,
 				160ECFFC173B517A0009D04B /* TouchJSON-master */,
 			);
 			name = Libs;
@@ -956,10 +923,12 @@
 			isa = PBXGroup;
 			children = (
 				160B72CE1D7D8837001CAC17 /* traumbaum.entitlements */,
+				16F726F31D813A4B00A0CA69 /* Podfile */,
 				16830BF81D7EAD29003541A8 /* tb_new_osx.icns */,
 				16750A2918409D8D0028195B /* tb_new_artwork.png */,
 				16750A26183F8A280028195B /* VMPColorAnimation.h */,
 				16750A27183F8A280028195B /* VMPColorAnimation.m */,
+				16F726F91D8174D600A0CA69 /* traumbaum iOS-Bridging-Header.h */,
 				16C074E317B2BC9D00351113 /* traumbaum mac.entitlements */,
 				16C074E117B2BC8E00351113 /* traumbaum.icns */,
 				168CEBB8163186B400B721E2 /* Core */,
@@ -967,6 +936,8 @@
 				1696ADD1172E69AB008362E5 /* Projects */,
 				162F7B3B16A0341D00420443 /* Tests */,
 				168CEBAF163186B400B721E2 /* Products */,
+				9AFAF3D2964BCC54258D423F /* Pods */,
+				386019D75ED6CEBFF185A281 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -1228,31 +1199,59 @@
 			path = Resources;
 			sourceTree = "<group>";
 		};
-		16D1EA0518AF1F4E001AB5C4 /* SSZipArchive */ = {
+		16F726F81D81746500A0CA69 /* VMP */ = {
 			isa = PBXGroup;
 			children = (
-				16D1EA0618AF1F4E001AB5C4 /* minizip */,
-				16D1EA1018AF1F4E001AB5C4 /* SSZipArchive.h */,
-				16D1EA1118AF1F4E001AB5C4 /* SSZipArchive.m */,
+				163C02B917C9DFAF00244A81 /* VMPDSP.h */,
+				163C02B017C9D5F300244A81 /* VMPDSP.m */,
+				160ECFD0173B51160009D04B /* VMPAudioPlayer.h */,
+				160ECFD1173B51160009D04B /* VMPAudioPlayer.m */,
+				160ECFD2173B51160009D04B /* VMPlayerBase.h */,
+				160ECFD3173B51160009D04B /* VMPlayerBase.m */,
+				160ECFD4173B51160009D04B /* VMPSongPlayer.h */,
+				160ECFD5173B51160009D04B /* VMPSongPlayer.m */,
 			);
-			name = SSZipArchive;
-			path = "Core/Libs/ssziparchive-master/SSZipArchive";
-			sourceTree = SOURCE_ROOT;
+			name = VMP;
+			sourceTree = "<group>";
 		};
-		16D1EA0618AF1F4E001AB5C4 /* minizip */ = {
+		386019D75ED6CEBFF185A281 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				16D1EA0718AF1F4E001AB5C4 /* crypt.h */,
-				16D1EA0818AF1F4E001AB5C4 /* ioapi.c */,
-				16D1EA0918AF1F4E001AB5C4 /* ioapi.h */,
-				16D1EA0A18AF1F4E001AB5C4 /* mztools.c */,
-				16D1EA0B18AF1F4E001AB5C4 /* mztools.h */,
-				16D1EA0C18AF1F4E001AB5C4 /* unzip.c */,
-				16D1EA0D18AF1F4E001AB5C4 /* unzip.h */,
-				16D1EA0E18AF1F4E001AB5C4 /* zip.c */,
-				16D1EA0F18AF1F4E001AB5C4 /* zip.h */,
+				16ABBE1D1D83B5C4006D1F69 /* QuartzCore.framework */,
+				16ABBE1B1D83B5BB006D1F69 /* libz.tbd */,
+				16ABBE191D83B5B3006D1F69 /* CoreAudio.framework */,
+				16ABBE171D83B5AC006D1F69 /* UIKit.framework */,
+				16ABBE151D83B5A2006D1F69 /* CoreGraphics.framework */,
+				16ABBE131D83B59C006D1F69 /* AudioToolbox.framework */,
+				16ABBE111D83B592006D1F69 /* AVFoundation.framework */,
+				16ABBE0F1D83B589006D1F69 /* libicucore.A.tbd */,
+				16ABBE0D1D83B572006D1F69 /* AudioKit.framework */,
+				161329461D82AE0F0007AA72 /* libicucore.tbd */,
+				161329441D82AE030007AA72 /* AVFoundation.framework */,
+				161329421D82ADFC0007AA72 /* AudioToolbox.framework */,
+				161329401D82ADF50007AA72 /* CoreGraphics.framework */,
+				1613293E1D82ADEC0007AA72 /* UIKit.framework */,
+				1613293C1D82ADE40007AA72 /* CoreAudio.framework */,
+				1613293A1D82ADDA0007AA72 /* libz.tbd */,
+				161329381D82ADC60007AA72 /* QuartzCore.framework */,
+				FA690EF394C060C9FFBC9A9F /* libPods-OnTheFly Editor OSX.a */,
+				67D77B00B52E04B0FD6B8682 /* libPods-traumbaum mac.a */,
+				88756FF3ED6A2FF75CC77C94 /* libPods-traumbaum iOS.a */,
 			);
-			path = minizip;
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		9AFAF3D2964BCC54258D423F /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				7E066B4B2C9FB64B8724A4BA /* Pods-traumbaum iOS.debug.xcconfig */,
+				41A4BE05DF1935E6A2C64C27 /* Pods-traumbaum iOS.release.xcconfig */,
+				996FBEB1001091257B125BDE /* Pods-OnTheFly Editor OSX.debug.xcconfig */,
+				8A9E8453CD3EC30E98E99116 /* Pods-OnTheFly Editor OSX.release.xcconfig */,
+				228A65B1075E6072E47DC188 /* Pods-traumbaum mac.debug.xcconfig */,
+				00212F02A9BEFDA737E5E553 /* Pods-traumbaum mac.release.xcconfig */,
+			);
+			name = Pods;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1262,9 +1261,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 162F7B4416A0341E00420443 /* Build configuration list for PBXNativeTarget "OnTheFly Editor OSX" */;
 			buildPhases = (
+				C84E40414FA6BCFD679247DA /* Check Pods Manifest.lock */,
 				162F7B1416A0341900420443 /* Sources */,
 				162F7B1516A0341900420443 /* Frameworks */,
 				162F7B1616A0341900420443 /* Resources */,
+				CBC86BA0D66A01B7A4C9764F /* Embed Pods Frameworks */,
+				2D2BEFB3CF202FE7CADA6D6F /* Copy Pods Resources */,
 			);
 			buildRules = (
 				1677772716C0C777007206CF /* PBXBuildRule */,
@@ -1301,9 +1303,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 16A27F2916FBB1A70081C1E8 /* Build configuration list for PBXNativeTarget "traumbaum iOS" */;
 			buildPhases = (
+				7A98C70993C0579CE286EC11 /* Check Pods Manifest.lock */,
 				16A27F0316FBB1A70081C1E8 /* Sources */,
 				16A27F0416FBB1A70081C1E8 /* Frameworks */,
 				16A27F0516FBB1A70081C1E8 /* Resources */,
+				68134E6C7214D6D468BC8ED0 /* Embed Pods Frameworks */,
+				0DAF76EEE937D0EA4893D017 /* Copy Pods Resources */,
+				16ABBE231D83D207006D1F69 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -1318,9 +1324,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 16C074C117B28C4B00351113 /* Build configuration list for PBXNativeTarget "traumbaum mac" */;
 			buildPhases = (
+				A54A953A1643499416EFA2DC /* Check Pods Manifest.lock */,
 				16C074A317B28C4900351113 /* Sources */,
 				16C074A417B28C4900351113 /* Frameworks */,
 				16C074A517B28C4900351113 /* Resources */,
+				783BF689CE74F97AAB7DAACC /* Embed Pods Frameworks */,
+				0AFA40A4174F0DB8925E7DAD /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -1337,11 +1346,13 @@
 		168CEBA5163186B300B721E2 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftUpdateCheck = 0730;
 				LastTestingUpgradeCheck = 0700;
-				LastUpgradeCheck = 0700;
+				LastUpgradeCheck = 0800;
 				TargetAttributes = {
 					16A27F0616FBB1A70081C1E8 = {
 						DevelopmentTeam = 8476FPU6X3;
+						LastSwiftMigration = 0800;
 					};
 					16C074A617B28C4900351113 = {
 						DevelopmentTeam = 8476FPU6X3;
@@ -1418,7 +1429,6 @@
 				16A27F5216FC2EC90081C1E8 /* default.vms in Resources */,
 				16E928A61BB53E3300BA59E1 /* VMPInfoViewController.xib in Resources */,
 				161CC69A17E51F97001C869D /* TraumBaum.entitlements in Resources */,
-				160ED034173B517A0009D04B /* License.rtf in Resources */,
 				160ED043173B517A0009D04B /* README.markdown in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1439,6 +1449,36 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		0AFA40A4174F0DB8925E7DAD /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-traumbaum mac/Pods-traumbaum mac-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		0DAF76EEE937D0EA4893D017 /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-traumbaum iOS/Pods-traumbaum iOS-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		162F7B3316A0341D00420443 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1451,6 +1491,111 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "# Run the unit tests in this test bundle.\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
+		};
+		2D2BEFB3CF202FE7CADA6D6F /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-OnTheFly Editor OSX/Pods-OnTheFly Editor OSX-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		68134E6C7214D6D468BC8ED0 /* Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-traumbaum iOS/Pods-traumbaum iOS-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		783BF689CE74F97AAB7DAACC /* Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-traumbaum mac/Pods-traumbaum mac-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		7A98C70993C0579CE286EC11 /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		A54A953A1643499416EFA2DC /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		C84E40414FA6BCFD679247DA /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		CBC86BA0D66A01B7A4C9764F /* Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-OnTheFly Editor OSX/Pods-OnTheFly Editor OSX-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -1473,7 +1618,6 @@
 				16C7677116DC83DE003636C3 /* VMPAnalyzer.m in Sources */,
 				16A27F5F17006E720081C1E8 /* VMPProgressWindowController.m in Sources */,
 				16A27F6517008A550081C1E8 /* VMPRecordDetailPopover.m in Sources */,
-				16D1EA1518AF1F4E001AB5C4 /* mztools.c in Sources */,
 				16C90C7E1722774800F7E91F /* VMPHistogramView.m in Sources */,
 				16C90C8417241EF500F7E91F /* VMPLogView.m in Sources */,
 				165DAC2C172D54CE009708B3 /* VMPTimeRangeEditorView.m in Sources */,
@@ -1487,11 +1631,8 @@
 				160ECFD6173B51160009D04B /* VMPAudioPlayer.m in Sources */,
 				160ECFD9173B51160009D04B /* VMPlayerBase.m in Sources */,
 				160ECFDC173B51160009D04B /* VMPSongPlayer.m in Sources */,
-				16D1EA1818AF1F4E001AB5C4 /* unzip.c in Sources */,
-				160ED038173B517A0009D04B /* RegexKitLite.m in Sources */,
 				160ED044173B517A0009D04B /* CDataScanner.m in Sources */,
 				160ED047173B517A0009D04B /* CFilteringJSONSerializer.m in Sources */,
-				16D1EA1218AF1F4E001AB5C4 /* ioapi.c in Sources */,
 				160ED04A173B517A0009D04B /* CJSONDeserializer_BlocksExtensions.m in Sources */,
 				160ED04D173B517A0009D04B /* CJSONSerialization.m in Sources */,
 				160ED050173B517A0009D04B /* CJSONSerializedData.m in Sources */,
@@ -1506,12 +1647,10 @@
 				160ED06A173B52670009D04B /* boxmuller.c in Sources */,
 				160ED06C173B526B0009D04B /* VMTextPreprocessor.m in Sources */,
 				16623132173C81D700F70FCB /* UKSyntaxColoredTextDocument.m in Sources */,
-				16D1EA1E18AF1F4E001AB5C4 /* SSZipArchive.m in Sources */,
 				16623138173C823D00F70FCB /* NSArray+Color.m in Sources */,
 				16623139173C823D00F70FCB /* NSScanner+SkipUpToCharset.m in Sources */,
 				1662313C173C8A4A00F70FCB /* VMPCodeEditorView.m in Sources */,
 				16623144173C9F1A00F70FCB /* VMDataTypes.m in Sources */,
-				16D1EA1B18AF1F4E001AB5C4 /* zip.c in Sources */,
 				16623147173C9F1A00F70FCB /* VMFunction.m in Sources */,
 				1662314A173C9F1A00F70FCB /* VMSong.m in Sources */,
 				16623157173C9FA300F70FCB /* VMAudioObject.m in Sources */,
@@ -1550,7 +1689,6 @@
 				160ECFDA173B51160009D04B /* VMPlayerBase.m in Sources */,
 				160ECFDD173B51160009D04B /* VMPSongPlayer.m in Sources */,
 				1695A50D1805390800EEC1F5 /* VMPTimeManager.m in Sources */,
-				160ED039173B517A0009D04B /* RegexKitLite.m in Sources */,
 				160ED045173B517A0009D04B /* CDataScanner.m in Sources */,
 				160ED048173B517A0009D04B /* CFilteringJSONSerializer.m in Sources */,
 				160ED04B173B517A0009D04B /* CJSONDeserializer_BlocksExtensions.m in Sources */,
@@ -1594,7 +1732,6 @@
 				160ECFD8173B51160009D04B /* VMPAudioPlayer.m in Sources */,
 				160ECFDB173B51160009D04B /* VMPlayerBase.m in Sources */,
 				160ECFDE173B51160009D04B /* VMPSongPlayer.m in Sources */,
-				160ED03A173B517A0009D04B /* RegexKitLite.m in Sources */,
 				160ED046173B517A0009D04B /* CDataScanner.m in Sources */,
 				160ED049173B517A0009D04B /* CFilteringJSONSerializer.m in Sources */,
 				16D1EA2918B005C1001AB5C4 /* VMPProgressView.m in Sources */,
@@ -1604,24 +1741,20 @@
 				160ED052173B517A0009D04B /* CJSONSerializedData.m in Sources */,
 				160ED055173B517A0009D04B /* CDataScanner_Extensions.m in Sources */,
 				160ED058173B517A0009D04B /* NSDictionary_JSONExtensions.m in Sources */,
+				16ABBE0C1D83B36F006D1F69 /* VM2AudioPlayer.swift in Sources */,
 				16D1EA2D18B04893001AB5C4 /* VMPSongListView.m in Sources */,
-				16D1EA1F18AF1F4E001AB5C4 /* SSZipArchive.m in Sources */,
 				160ED05B173B517A0009D04B /* CJSONDeserializer.m in Sources */,
 				160ED05E173B517A0009D04B /* CJSONScanner.m in Sources */,
 				160ED061173B517A0009D04B /* CJSONSerializer.m in Sources */,
 				160ED064173B517A0009D04B /* VMPJSONDeserializer.m in Sources */,
-				16D1EA1918AF1F4E001AB5C4 /* unzip.c in Sources */,
 				160ED067173B517A0009D04B /* VMPJSONScanner.m in Sources */,
-				16D1EA1C18AF1F4E001AB5C4 /* zip.c in Sources */,
 				16D1EA0318AEDE33001AB5C4 /* VMVmsarcManager.m in Sources */,
 				160ED069173B52580009D04B /* VMException.m in Sources */,
 				160ED06B173B52680009D04B /* boxmuller.c in Sources */,
-				16D1EA1318AF1F4E001AB5C4 /* ioapi.c in Sources */,
 				1698AD57188E6734006AF34E /* VMTraumbaumUserDefaults.m in Sources */,
 				160ED06D173B526C0009D04B /* VMTextPreprocessor.m in Sources */,
 				16623146173C9F1A00F70FCB /* VMDataTypes.m in Sources */,
 				16623149173C9F1A00F70FCB /* VMFunction.m in Sources */,
-				16D1EA1618AF1F4E001AB5C4 /* mztools.c in Sources */,
 				1662314C173C9F1A00F70FCB /* VMSong.m in Sources */,
 				1662315F173C9FA300F70FCB /* VMPrimitives.m in Sources */,
 				16C074A217B2750900351113 /* VMPRainyView.m in Sources */,
@@ -1644,7 +1777,6 @@
 				16C074C717B2AED500351113 /* VMDataTypes.m in Sources */,
 				16C074C817B2AED900351113 /* VMFunction.m in Sources */,
 				16C074C917B2AEDE00351113 /* VMSong.m in Sources */,
-				16C074CA17B2AEFA00351113 /* RegexKitLite.m in Sources */,
 				16C074CB17B2AF0B00351113 /* VMPJSONDeserializer.m in Sources */,
 				16C074CC17B2AF0E00351113 /* VMPJSONScanner.m in Sources */,
 				16960589183B853B001C3551 /* VMPFrontView.m in Sources */,
@@ -1658,7 +1790,6 @@
 				16C074D117B2AF2800351113 /* CJSONScanner.m in Sources */,
 				16C074D217B2AF2D00351113 /* CJSONSerializer.m in Sources */,
 				16C074D317B2AF4500351113 /* VMTextPreprocessor.m in Sources */,
-				16D1EA1718AF1F4E001AB5C4 /* mztools.c in Sources */,
 				16C074D417B2AF4800351113 /* VMException.m in Sources */,
 				16C074D517B2AF4E00351113 /* boxmuller.c in Sources */,
 				16C074D617B2AF5600351113 /* VMPreprocessor.m in Sources */,
@@ -1769,6 +1900,7 @@
 /* Begin XCBuildConfiguration section */
 		162F7B4516A0341E00420443 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 996FBEB1001091257B125BDE /* Pods-OnTheFly Editor OSX.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CODE_SIGN_IDENTITY = "Developer ID Application";
@@ -1795,6 +1927,7 @@
 		};
 		162F7B4616A0341E00420443 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 8A9E8453CD3EC30E98E99116 /* Pods-OnTheFly Editor OSX.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CODE_SIGN_IDENTITY = "Developer ID Application";
@@ -1876,21 +2009,36 @@
 		168CEBCD163186B400B721E2 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ENABLE_OBJC_ARC = NO;
+				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				DEFINES_MODULE = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = s;
-				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					DEBUG,
+				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
 				GCC_WARN_SHADOW = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
@@ -1902,27 +2050,41 @@
 		168CEBCE163186B400B721E2 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ENABLE_OBJC_ARC = NO;
+				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				DEFINES_MODULE = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
 				GCC_WARN_SHADOW = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				ONLY_ACTIVE_ARCH = NO;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				WARNING_CFLAGS = "";
 			};
 			name = Release;
 		};
 		16A27F2A16FBB1A70081C1E8 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7E066B4B2C9FB64B8724A4BA /* Pods-traumbaum iOS.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
@@ -1935,24 +2097,31 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SYSTEM_APPS_DIR)/Xcode.app/Contents/Developer/Library/Frameworks\"",
+					"$(PROJECT_DIR)/Pods/AudioKit/iOS",
+					"$(PROJECT_DIR)",
 				);
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Traumbaum/Traumbaum-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = $inherited;
 				INFOPLIST_FILE = "Traumbaum/Traumbaum-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MACH_O_TYPE = mh_execute;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.aframasda.traumbaum-iOS";
 				PRODUCT_NAME = "traumbaum for iOS";
 				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
+				SWIFT_OBJC_BRIDGING_HEADER = "Core/AudioPlayer/traumbaum iOS-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 2.3;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
 		16A27F2B16FBB1A70081C1E8 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 41A4BE05DF1935E6A2C64C27 /* Pods-traumbaum iOS.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
@@ -1965,19 +2134,27 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SYSTEM_APPS_DIR)/Xcode.app/Contents/Developer/Library/Frameworks\"",
+					"$(PROJECT_DIR)/Pods/AudioKit/iOS",
+					"$(PROJECT_DIR)",
 				);
 				GCC_OPTIMIZATION_LEVEL = s;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Traumbaum/Traumbaum-Prefix.pch";
 				INFOPLIST_FILE = "Traumbaum/Traumbaum-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MACH_O_TYPE = mh_execute;
 				ONLY_ACTIVE_ARCH = NO;
-				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				OTHER_CFLAGS = (
+					"-DNS_BLOCK_ASSERTIONS=1",
+					"$(inherited)",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.aframasda.traumbaum-iOS";
 				PRODUCT_NAME = "traumbaum for iOS";
 				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
+				SWIFT_OBJC_BRIDGING_HEADER = "Core/AudioPlayer/traumbaum iOS-Bridging-Header.h";
+				SWIFT_VERSION = 2.3;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};
@@ -1985,6 +2162,7 @@
 		};
 		16C074C217B28C4B00351113 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 228A65B1075E6072E47DC188 /* Pods-traumbaum mac.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
@@ -2017,6 +2195,7 @@
 		};
 		16C074C317B28C4B00351113 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 00212F02A9BEFDA737E5E553 /* Pods-traumbaum mac.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";

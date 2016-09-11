@@ -9,6 +9,8 @@
 #import "VMPTrackView.h"
 #import "MultiPlatform.h"
 #import "VMPMacros.h"
+#import "traumbaum_for_iOS-Swift.h"
+
 
 @implementation VMPTrackView
 
@@ -70,7 +72,7 @@
     Dealloc( super );;
 }
 
-- (void)redraw: (int)idx player:(VMPAudioPlayer*)audioPlayer {
+- (void)redraw: (int)idx player:(VMPlayerType*)audioPlayer {
     tracks[idx]->playing    = [audioPlayer currentTime] / audioPlayer.fileDuration;
 	tracks[idx]->loading    = [audioPlayer loadedRatio];
     tracks[idx]->duration   = audioPlayer.fragDuration / audioPlayer.fileDuration;

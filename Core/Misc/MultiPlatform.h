@@ -27,7 +27,8 @@
 #undef VMP_LOGGING
 #define VMP_LOGGING 0
 #define VMP_VISUALIZER 0
-static const float kTimerInterval = 0.01;			//  1/1000 sec interruption for audio
+#define USE_AUDIOKIT 1
+static const float kTimerInterval = 0.005;			//  5msec interruption for audio
 static const int kTrackViewRedrawInterval = 10;		//  0.01 * 10   = 0.1sec
 #if enableDSP
 static const int kAudioPlayer_BufferSize = 0x80000;	//  512k buffer
@@ -48,6 +49,7 @@ static const BOOL kUseNotification = NO;
 #define kEstimatedMemorySize ( kAudioPlayer_BufferSize * kNumberOfQueueBuffers * kNumberOfAudioPlayers )
 
 //  aliases
+
 #define VMPDocument UIDocument
 #define VMPPoint CGPoint
 #define VMPPointZero CGPointZero
@@ -78,8 +80,10 @@ static const BOOL kUseNotification = NO;
 //-------------------------------------------------------------
 
 #define VMP_OSX 1
+#define USE_AUDIOKIT 0
 
-static const float kTimerInterval = 0.005;			//  1/2000 sec interruption for audio
+
+static const float kTimerInterval = 0.005;			//  5msec interruption for audio
 static const int kTrackViewRedrawInterval = 6;		//  0.005 * 6   = 0.03sec
 #if enableDSP
 static const int kAudioPlayer_BufferSize = 0x80000;	//  512k buffer
@@ -101,6 +105,7 @@ static const BOOL kUseNotification = YES;
 #define APPDELEGATE	[VMPlayerOSXDelegate singleton]
 
 //  aliases
+
 #define VMPDocument NSDocument
 #define VMPPoint NSPoint
 #define VMPSize NSSize
@@ -142,6 +147,13 @@ static const BOOL kUseNotification = YES;
 static const Float32 kDefaultFadeoutTime = 5.;
 
 #endif //_multiplatformh_
+
+#if USE_AUDIOKIT
+#define VMPlayerType VM2AudioPlayer
+#else
+#define VMPlayerType VMPAudioPlayer
+#endif
+
 
 #import "VMARC.h"
 

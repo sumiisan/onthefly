@@ -26,6 +26,14 @@ col.redComponent,col.greenComponent,col.blueComponent,col.hueComponent,col.satur
 #define LogRect(rect) NSLog(@"origin(%.2f,%.2f) size:(%.2f,%.2f)",\
 rect.origin.x, rect.origin.y, rect.size.width, rect.size.height );
 
+/*
+#pragma mark -
+#pragma mark conventional tag for views
+//--------------------- conventional tag for views -----------------------------
+enum {
+	vmpg_background			=	'bg__',
+} vmpg_conventional_tags;
+*/
 #endif
 
 //-------------------------	CGGeometry extension -------------------------
@@ -69,12 +77,6 @@ typedef enum {
 
 
 
-#pragma mark -
-#pragma mark conventional tag for views
-//--------------------- conventional tag for views -----------------------------
-enum {
-	vmpg_background			=	'bg__',
-} vmpg_conventional_tags;
 
 
 #pragma mark -
