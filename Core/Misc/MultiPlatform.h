@@ -27,7 +27,7 @@
 #undef VMP_LOGGING
 #define VMP_LOGGING 0
 #define VMP_VISUALIZER 0
-#define USE_AUDIOKIT 1
+#define USE_AUDIOKIT 0
 static const float kTimerInterval = 0.005;			//  5msec interruption for audio
 static const int kTrackViewRedrawInterval = 10;		//  0.01 * 10   = 0.1sec
 #if enableDSP

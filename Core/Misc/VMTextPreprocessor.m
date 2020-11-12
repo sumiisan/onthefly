@@ -7,17 +7,28 @@
 //
 
 #import "VMTextPreprocessor.h"
-#import "RegexKitLite.h"
 #import "VMPMacros.h"
 
 @implementation VMTextPreprocessor
 
 + (void)replaceKeyNamesIn:(NSMutableString*)data with:(VMHash*)table {
 	VMArray *keys = [table keys];
-	for( NSString *key in keys ) {
-        [data replaceOccurrencesOfRegex:[NSString stringWithFormat:@"([,\\s\\{\\[])%@:",key] 
-							 withString:[NSString stringWithFormat:@"$1%@:",[table item:key]]];
-    }
+  NSError *error = nil;
+  for( NSString *key in keys ) {
+    NSRegularExpression *regex = [NSRegularExpression
+                                  regularExpressionWithPattern:[NSString stringWithFormat:@"([,\\s\\{\\[])%@:",key]
+                                  options:0
+                                  error:&error];
+    [regex replaceMatchesInString:data
+                          options:0
+                            range:NSMakeRange(0, data.length)
+                     withTemplate:[NSString stringWithFormat:@"$1%@:",[table item:key]]];
+    
+    /*
+    [data replaceOccurrencesOfRegex:[NSString stringWithFormat:@"([,\\s\\{\\[])%@:",key]
+                         withString:[NSString stringWithFormat:@"$1%@:",[table item:key]]];
+     */
+  }
 }
 
 + (void)stripCommentsAndCRLF:(NSMutableString*)data {
@@ -35,10 +46,24 @@
 
 + (void)putPropertyNames:(VMArray*)propNames IntoDoubleQuote:(NSMutableString*)data {
     for( NSString *p in propNames ) {   //  put prop names into ""
+      NSError *error = nil;
+      NSRegularExpression *regex = [NSRegularExpression
+                                    regularExpressionWithPattern:[NSString stringWithFormat:@"\\s%@:",p]
+                                    options:0
+                                    error:&error];
+      [regex replaceMatchesInString:data
+                            options:0
+                              range:NSMakeRange(0, data.length)
+                       withTemplate:[NSString stringWithFormat:@" \"%@\":",p]];
+
+      
+      /*
         [data replaceOccurrencesOfRegex:[NSString stringWithFormat:@"\\s%@:",p] 
 							 withString:[NSString stringWithFormat:@" \"%@\":",p]];
+       */
     }
-	[data replaceOccurrencesOfRegex:@"\t" withString:@""]; 		//	strip TAB
+  [data replaceOccurrencesOfString:@"\t" withString:@"" options:0 range:NSMakeRange(0, data.length)];
+//	[data replaceOccurrencesOfRegex:@"\t" withString:@""]; 		//	strip TAB
 }
 
 

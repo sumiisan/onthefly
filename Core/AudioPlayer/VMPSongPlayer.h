@@ -103,7 +103,8 @@
 
 	//	view
 	UInt64					frameCounter;
-	__unsafe_unretained		VMSong		*song_;
+  __weak        VMSong *song_;
+//	__unsafe_unretained		VMSong		*song_;
 	
 	
 #if SUPPORT_32BIT_MAC
@@ -161,7 +162,7 @@
 - (void)setNextFragmentId:(VMId*)fragId;
 
 - (void)setLimiterState:(BOOL)state;
-- (UIView*)limiterIndicator;
+- (VMPView*)limiterIndicator;
 
 //	queue
 - (void)flushFiredFragments;	

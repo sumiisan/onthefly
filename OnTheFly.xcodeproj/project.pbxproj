@@ -173,7 +173,6 @@
 		16A27F6117006E720081C1E8 /* VMPProgressWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 16A27F5D17006E720081C1E8 /* VMPProgressWindow.xib */; };
 		16A27F6517008A550081C1E8 /* VMPRecordDetailPopover.m in Sources */ = {isa = PBXBuildFile; fileRef = 16A27F6317008A540081C1E8 /* VMPRecordDetailPopover.m */; };
 		16ABBE0C1D83B36F006D1F69 /* VM2AudioPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F726FA1D8174D700A0CA69 /* VM2AudioPlayer.swift */; };
-		16ABBE0E1D83B572006D1F69 /* AudioKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16ABBE0D1D83B572006D1F69 /* AudioKit.framework */; };
 		16ABBE101D83B589006D1F69 /* libicucore.A.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 16ABBE0F1D83B589006D1F69 /* libicucore.A.tbd */; };
 		16ABBE121D83B592006D1F69 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16ABBE111D83B592006D1F69 /* AVFoundation.framework */; };
 		16ABBE141D83B59C006D1F69 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16ABBE131D83B59C006D1F69 /* AudioToolbox.framework */; };
@@ -182,8 +181,6 @@
 		16ABBE1A1D83B5B3006D1F69 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16ABBE191D83B5B3006D1F69 /* CoreAudio.framework */; };
 		16ABBE1C1D83B5BB006D1F69 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 16ABBE1B1D83B5BB006D1F69 /* libz.tbd */; };
 		16ABBE1E1D83B5C4006D1F69 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16ABBE1D1D83B5C4006D1F69 /* QuartzCore.framework */; };
-		16ABBE211D83D207006D1F69 /* AudioKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16ABBE1F1D83D1FA006D1F69 /* AudioKit.framework */; };
-		16ABBE221D83D207006D1F69 /* AudioKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 16ABBE1F1D83D1FA006D1F69 /* AudioKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		16B8E1CF1A833D8100191689 /* VMPVineView.m in Sources */ = {isa = PBXBuildFile; fileRef = 16B8E1CE1A833D8100191689 /* VMPVineView.m */; };
 		16BDD06A1A82FB8000031FEA /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16BDD0691A82FB8000031FEA /* QuartzCore.framework */; };
 		16C074A217B2750900351113 /* VMPRainyView.m in Sources */ = {isa = PBXBuildFile; fileRef = 16C074A117B2750900351113 /* VMPRainyView.m */; };
@@ -244,6 +241,9 @@
 		16F77D28186D436700B58BA7 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16F77D27186D436700B58BA7 /* Accelerate.framework */; };
 		5947BB045B333A7B8DC99F3D /* libPods-traumbaum mac.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 67D77B00B52E04B0FD6B8682 /* libPods-traumbaum mac.a */; };
 		86340AA4174CB2CBF58B7D2F /* libPods-OnTheFly Editor OSX.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FA690EF394C060C9FFBC9A9F /* libPods-OnTheFly Editor OSX.a */; };
+		C7C8493A255AB8CE00E5C326 /* NSRegularExpression+String.m in Sources */ = {isa = PBXBuildFile; fileRef = C7C84939255AB8CE00E5C326 /* NSRegularExpression+String.m */; };
+		C7C8493B255AB8CE00E5C326 /* NSRegularExpression+String.m in Sources */ = {isa = PBXBuildFile; fileRef = C7C84939255AB8CE00E5C326 /* NSRegularExpression+String.m */; };
+		C7C8493C255AB8CE00E5C326 /* NSRegularExpression+String.m in Sources */ = {isa = PBXBuildFile; fileRef = C7C84939255AB8CE00E5C326 /* NSRegularExpression+String.m */; };
 		D29C2525819B0B198EFBC1AA /* libPods-traumbaum iOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 88756FF3ED6A2FF75CC77C94 /* libPods-traumbaum iOS.a */; };
 /* End PBXBuildFile section */
 
@@ -253,6 +253,8 @@
 			compilerSpec = com.apple.compilers.proxy.script;
 			filePatterns = "*.m4";
 			fileType = pattern.proxy;
+			inputFiles = (
+			);
 			isEditable = 1;
 			outputFiles = (
 				"$(DERIVED_FILES_DIR)/$(INPUT_FILE_BASE)",
@@ -264,6 +266,8 @@
 			compilerSpec = com.apple.compilers.proxy.script;
 			filePatterns = "*.m4";
 			fileType = pattern.proxy;
+			inputFiles = (
+			);
 			isEditable = 1;
 			outputFiles = (
 				"$(DERIVED_FILES_DIR)/$(INPUT_FILE_BASE)",
@@ -291,17 +295,6 @@
 			files = (
 				162FBBC717406D5B0060E003 /* libicucore.dylib in CopyFiles */,
 			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		16ABBE231D83D207006D1F69 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				16ABBE221D83D207006D1F69 /* AudioKit.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -551,7 +544,7 @@
 		16E928AE1BB53E3C00BA59E1 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/VMPInfoViewController.strings; sourceTree = "<group>"; };
 		16E928B01BB53E3E00BA59E1 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/VMPInfoViewController.strings; sourceTree = "<group>"; };
 		16E928B21BB53E4000BA59E1 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/VMPInfoViewController.strings; sourceTree = "<group>"; };
-		16F726F31D813A4B00A0CA69 /* Podfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; };
+		16F726F31D813A4B00A0CA69 /* Podfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		16F726F91D8174D600A0CA69 /* traumbaum iOS-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "traumbaum iOS-Bridging-Header.h"; path = "Core/AudioPlayer/traumbaum iOS-Bridging-Header.h"; sourceTree = "<group>"; };
 		16F726FA1D8174D700A0CA69 /* VM2AudioPlayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VM2AudioPlayer.swift; sourceTree = "<group>"; };
 		16F77CCA1865802400B58BA7 /* VMRoute.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VMRoute.h; path = Core/DataStructures/VMRoute.h; sourceTree = SOURCE_ROOT; };
@@ -566,6 +559,8 @@
 		88756FF3ED6A2FF75CC77C94 /* libPods-traumbaum iOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-traumbaum iOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8A9E8453CD3EC30E98E99116 /* Pods-OnTheFly Editor OSX.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OnTheFly Editor OSX.release.xcconfig"; path = "Pods/Target Support Files/Pods-OnTheFly Editor OSX/Pods-OnTheFly Editor OSX.release.xcconfig"; sourceTree = "<group>"; };
 		996FBEB1001091257B125BDE /* Pods-OnTheFly Editor OSX.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OnTheFly Editor OSX.debug.xcconfig"; path = "Pods/Target Support Files/Pods-OnTheFly Editor OSX/Pods-OnTheFly Editor OSX.debug.xcconfig"; sourceTree = "<group>"; };
+		C7C84938255AB8CE00E5C326 /* NSRegularExpression+String.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "NSRegularExpression+String.h"; path = "Core/Misc/NSRegularExpression+String.h"; sourceTree = SOURCE_ROOT; };
+		C7C84939255AB8CE00E5C326 /* NSRegularExpression+String.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "NSRegularExpression+String.m"; path = "Core/Misc/NSRegularExpression+String.m"; sourceTree = SOURCE_ROOT; };
 		FA690EF394C060C9FFBC9A9F /* libPods-OnTheFly Editor OSX.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OnTheFly Editor OSX.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -607,11 +602,9 @@
 				16ABBE1A1D83B5B3006D1F69 /* CoreAudio.framework in Frameworks */,
 				16ABBE181D83B5AC006D1F69 /* UIKit.framework in Frameworks */,
 				16ABBE161D83B5A2006D1F69 /* CoreGraphics.framework in Frameworks */,
-				16ABBE211D83D207006D1F69 /* AudioKit.framework in Frameworks */,
 				16ABBE141D83B59C006D1F69 /* AudioToolbox.framework in Frameworks */,
 				16ABBE121D83B592006D1F69 /* AVFoundation.framework in Frameworks */,
 				16ABBE101D83B589006D1F69 /* libicucore.A.tbd in Frameworks */,
-				16ABBE0E1D83B572006D1F69 /* AudioKit.framework in Frameworks */,
 				D29C2525819B0B198EFBC1AA /* libPods-traumbaum iOS.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -853,6 +846,8 @@
 			isa = PBXGroup;
 			children = (
 				160ECFB7173B50B70009D04B /* boxmuller.c */,
+				C7C84938255AB8CE00E5C326 /* NSRegularExpression+String.h */,
+				C7C84939255AB8CE00E5C326 /* NSRegularExpression+String.m */,
 				160ECFB8173B50B70009D04B /* boxmuller.h */,
 				160ECFB9173B50B70009D04B /* VMException.h */,
 				160ECFBA173B50B70009D04B /* VMException.m */,
@@ -1261,12 +1256,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 162F7B4416A0341E00420443 /* Build configuration list for PBXNativeTarget "OnTheFly Editor OSX" */;
 			buildPhases = (
+				F27ED2360E48D311A36DC8E5 /* [CP] Check Pods Manifest.lock */,
 				C84E40414FA6BCFD679247DA /* Check Pods Manifest.lock */,
 				162F7B1416A0341900420443 /* Sources */,
 				162F7B1516A0341900420443 /* Frameworks */,
 				162F7B1616A0341900420443 /* Resources */,
-				CBC86BA0D66A01B7A4C9764F /* Embed Pods Frameworks */,
-				2D2BEFB3CF202FE7CADA6D6F /* Copy Pods Resources */,
 			);
 			buildRules = (
 				1677772716C0C777007206CF /* PBXBuildRule */,
@@ -1303,13 +1297,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 16A27F2916FBB1A70081C1E8 /* Build configuration list for PBXNativeTarget "traumbaum iOS" */;
 			buildPhases = (
+				22243AA1E43DCE135F5AE98C /* [CP] Check Pods Manifest.lock */,
 				7A98C70993C0579CE286EC11 /* Check Pods Manifest.lock */,
 				16A27F0316FBB1A70081C1E8 /* Sources */,
 				16A27F0416FBB1A70081C1E8 /* Frameworks */,
 				16A27F0516FBB1A70081C1E8 /* Resources */,
-				68134E6C7214D6D468BC8ED0 /* Embed Pods Frameworks */,
-				0DAF76EEE937D0EA4893D017 /* Copy Pods Resources */,
-				16ABBE231D83D207006D1F69 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -1324,12 +1316,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 16C074C117B28C4B00351113 /* Build configuration list for PBXNativeTarget "traumbaum mac" */;
 			buildPhases = (
+				79A92D5BDF8DD3969608323C /* [CP] Check Pods Manifest.lock */,
 				A54A953A1643499416EFA2DC /* Check Pods Manifest.lock */,
 				16C074A317B28C4900351113 /* Sources */,
 				16C074A417B28C4900351113 /* Frameworks */,
 				16C074A517B28C4900351113 /* Resources */,
-				783BF689CE74F97AAB7DAACC /* Embed Pods Frameworks */,
-				0AFA40A4174F0DB8925E7DAD /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -1348,7 +1339,7 @@
 			attributes = {
 				LastSwiftUpdateCheck = 0730;
 				LastTestingUpgradeCheck = 0700;
-				LastUpgradeCheck = 0800;
+				LastUpgradeCheck = 1200;
 				TargetAttributes = {
 					16A27F0616FBB1A70081C1E8 = {
 						DevelopmentTeam = 8476FPU6X3;
@@ -1369,6 +1360,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				ja,
 				de,
@@ -1449,36 +1441,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		0AFA40A4174F0DB8925E7DAD /* Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-traumbaum mac/Pods-traumbaum mac-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		0DAF76EEE937D0EA4893D017 /* Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-traumbaum iOS/Pods-traumbaum iOS-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		162F7B3316A0341D00420443 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1492,49 +1454,48 @@
 			shellPath = /bin/sh;
 			shellScript = "# Run the unit tests in this test bundle.\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
 		};
-		2D2BEFB3CF202FE7CADA6D6F /* Copy Pods Resources */ = {
+		22243AA1E43DCE135F5AE98C /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputPaths = (
+			inputFileListPaths = (
 			);
-			name = "Copy Pods Resources";
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
 			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-traumbaum iOS-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-OnTheFly Editor OSX/Pods-OnTheFly Editor OSX-resources.sh\"\n";
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		68134E6C7214D6D468BC8ED0 /* Embed Pods Frameworks */ = {
+		79A92D5BDF8DD3969608323C /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputPaths = (
+			inputFileListPaths = (
 			);
-			name = "Embed Pods Frameworks";
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
 			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-traumbaum mac-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-traumbaum iOS/Pods-traumbaum iOS-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		783BF689CE74F97AAB7DAACC /* Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Embed Pods Frameworks";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-traumbaum mac/Pods-traumbaum mac-frameworks.sh\"\n";
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
 		7A98C70993C0579CE286EC11 /* Check Pods Manifest.lock */ = {
@@ -1582,19 +1543,26 @@
 			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
-		CBC86BA0D66A01B7A4C9764F /* Embed Pods Frameworks */ = {
+		F27ED2360E48D311A36DC8E5 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputPaths = (
+			inputFileListPaths = (
 			);
-			name = "Embed Pods Frameworks";
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
 			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-OnTheFly Editor OSX-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-OnTheFly Editor OSX/Pods-OnTheFly Editor OSX-frameworks.sh\"\n";
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -1607,6 +1575,7 @@
 				162F7B4E16A1130300420443 /* VMPlayerOSXDelegate.m in Sources */,
 				162F7B5516A1135600420443 /* VMPEditor.xcdatamodeld in Sources */,
 				162F7B4D16A112D300420443 /* main.m in Sources */,
+				C7C8493A255AB8CE00E5C326 /* NSRegularExpression+String.m in Sources */,
 				16F77CCC1865802400B58BA7 /* VMRoute.m in Sources */,
 				1677774016C0D600007206CF /* VMPApplescriptReceiver.m in Sources */,
 				1677781816C0D6A0007206CF /* VMPTrackView.m in Sources */,
@@ -1733,6 +1702,7 @@
 				160ECFDB173B51160009D04B /* VMPlayerBase.m in Sources */,
 				160ECFDE173B51160009D04B /* VMPSongPlayer.m in Sources */,
 				160ED046173B517A0009D04B /* CDataScanner.m in Sources */,
+				C7C8493B255AB8CE00E5C326 /* NSRegularExpression+String.m in Sources */,
 				160ED049173B517A0009D04B /* CFilteringJSONSerializer.m in Sources */,
 				16D1EA2918B005C1001AB5C4 /* VMPProgressView.m in Sources */,
 				1629EAE01845D9A1009687F1 /* VMPMultiLanguage.m in Sources */,
@@ -1789,6 +1759,7 @@
 				164CD5FF1D7D5754009363B6 /* VMPMultiLanguage.m in Sources */,
 				16C074D117B2AF2800351113 /* CJSONScanner.m in Sources */,
 				16C074D217B2AF2D00351113 /* CJSONSerializer.m in Sources */,
+				C7C8493C255AB8CE00E5C326 /* NSRegularExpression+String.m in Sources */,
 				16C074D317B2AF4500351113 /* VMTextPreprocessor.m in Sources */,
 				16C074D417B2AF4800351113 /* VMException.m in Sources */,
 				16C074D517B2AF4E00351113 /* boxmuller.c in Sources */,
@@ -1903,9 +1874,11 @@
 			baseConfigurationReference = 996FBEB1001091257B125BDE /* Pods-OnTheFly Editor OSX.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				CODE_SIGN_IDENTITY = "Developer ID Application";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
+				ENABLE_HARDENED_RUNTIME = YES;
 				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
@@ -1918,6 +1891,7 @@
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				INFOPLIST_FILE = "OSX/OnTheFlyEditor-Info.plist";
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.aframasda.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
@@ -1930,10 +1904,12 @@
 			baseConfigurationReference = 8A9E8453CD3EC30E98E99116 /* Pods-OnTheFly Editor OSX.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				CODE_SIGN_IDENTITY = "Developer ID Application";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_HARDENED_RUNTIME = YES;
 				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -1942,6 +1918,7 @@
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				INFOPLIST_FILE = "OSX/OnTheFlyEditor-Info.plist";
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.aframasda.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
@@ -1954,6 +1931,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/TraumBaum.app/Contents/MacOS/TraumBaum";
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1984,6 +1962,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/TraumBaum.app/Contents/MacOS/TraumBaum";
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
@@ -2012,12 +1991,21 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ENABLE_OBJC_ARC = NO;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -2026,7 +2014,7 @@
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
 				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_OPTIMIZATION_LEVEL = s;
+				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
 					DEBUG,
@@ -2040,7 +2028,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				ONLY_ACTIVE_ARCH = YES;
 				WARNING_CFLAGS = "";
@@ -2053,12 +2041,21 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ENABLE_OBJC_ARC = NO;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -2074,7 +2071,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				ONLY_ACTIVE_ARCH = NO;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
@@ -2090,6 +2087,7 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
 				CLANG_CXX_LIBRARY = "compiler-default";
 				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -2105,7 +2103,7 @@
 				GCC_PREFIX_HEADER = "Traumbaum/Traumbaum-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = $inherited;
 				INFOPLIST_FILE = "Traumbaum/Traumbaum-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MACH_O_TYPE = mh_execute;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.aframasda.traumbaum-iOS";
@@ -2127,6 +2125,7 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
 				CLANG_CXX_LIBRARY = "compiler-default";
 				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -2141,7 +2140,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Traumbaum/Traumbaum-Prefix.pch";
 				INFOPLIST_FILE = "Traumbaum/Traumbaum-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MACH_O_TYPE = mh_execute;
 				ONLY_ACTIVE_ARCH = NO;
@@ -2167,12 +2166,14 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CODE_SIGN_ENTITLEMENTS = "traumbaum mac/traumbaum.entitlements";
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Mac Developer";
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
+				ENABLE_HARDENED_RUNTIME = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
@@ -2200,6 +2201,7 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CODE_SIGN_ENTITLEMENTS = "traumbaum mac/traumbaum.entitlements";
 				CODE_SIGN_IDENTITY = "Mac Developer";
@@ -2207,6 +2209,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_HARDENED_RUNTIME = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;

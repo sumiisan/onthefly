@@ -683,7 +683,7 @@
 #endif
 }
 
-- (UIView*)limiterIndicator {
+- (VMPView*)limiterIndicator {
 #if USE_AUDIOKIT
 	return [multiTrackPlayer limiterIndicator];
 #else
