@@ -9,7 +9,7 @@
 #import "VMPTrackView.h"
 #import "MultiPlatform.h"
 #import "VMPMacros.h"
-#import "traumbaum_for_iOS-Swift.h"
+//#import "traumbaum_for_iOS-Swift.h"
 
 
 @implementation VMPTrackView

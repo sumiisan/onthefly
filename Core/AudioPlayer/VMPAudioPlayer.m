@@ -245,9 +245,8 @@ static VMHash *processPhaseNames_static_ = nil;
 #endif
 	
 	// try to open up the file using the specified path
-	
 	if ( status ) {
-		[VMException alert:@"Failed to open audio file." format:@"Audio file at path %@ status=%d", url, status];
+		[VMException alert:@"Failed to open audio file." format:@"Audio file at path %@ status=%d", [url lastPathComponent], status];
 #if ! enableDSP
 		audioFile = nil;
 #endif
@@ -309,7 +308,7 @@ static VMHash *processPhaseNames_static_ = nil;
 	// try to open up the file using the specified path
 	
 	if ( noErr != status ) {
-		[VMException alert:@"Failed to open audio file." format:@"Audio file at path %@ status=%d", audioObject_.url, status];
+		[VMException alert:@"Failed to read info of audio file." format:@"Audio file at path %@ status=%d", audioObject_.url, status];
 		return;
 	}
 	fileDuration = audioObject_.fileDuration;

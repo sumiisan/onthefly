@@ -172,7 +172,6 @@
 		16A27F5F17006E720081C1E8 /* VMPProgressWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 16A27F5C17006E720081C1E8 /* VMPProgressWindowController.m */; };
 		16A27F6117006E720081C1E8 /* VMPProgressWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 16A27F5D17006E720081C1E8 /* VMPProgressWindow.xib */; };
 		16A27F6517008A550081C1E8 /* VMPRecordDetailPopover.m in Sources */ = {isa = PBXBuildFile; fileRef = 16A27F6317008A540081C1E8 /* VMPRecordDetailPopover.m */; };
-		16ABBE0C1D83B36F006D1F69 /* VM2AudioPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F726FA1D8174D700A0CA69 /* VM2AudioPlayer.swift */; };
 		16ABBE101D83B589006D1F69 /* libicucore.A.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 16ABBE0F1D83B589006D1F69 /* libicucore.A.tbd */; };
 		16ABBE121D83B592006D1F69 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16ABBE111D83B592006D1F69 /* AVFoundation.framework */; };
 		16ABBE141D83B59C006D1F69 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16ABBE131D83B59C006D1F69 /* AudioToolbox.framework */; };
@@ -546,7 +545,6 @@
 		16E928B21BB53E4000BA59E1 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/VMPInfoViewController.strings; sourceTree = "<group>"; };
 		16F726F31D813A4B00A0CA69 /* Podfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		16F726F91D8174D600A0CA69 /* traumbaum iOS-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "traumbaum iOS-Bridging-Header.h"; path = "Core/AudioPlayer/traumbaum iOS-Bridging-Header.h"; sourceTree = "<group>"; };
-		16F726FA1D8174D700A0CA69 /* VM2AudioPlayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VM2AudioPlayer.swift; sourceTree = "<group>"; };
 		16F77CCA1865802400B58BA7 /* VMRoute.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VMRoute.h; path = Core/DataStructures/VMRoute.h; sourceTree = SOURCE_ROOT; };
 		16F77CCB1865802400B58BA7 /* VMRoute.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VMRoute.m; path = Core/DataStructures/VMRoute.m; sourceTree = SOURCE_ROOT; };
 		16F77D22186BC71400B58BA7 /* VMAudioFFT.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = VMAudioFFT.mm; path = Core/DataStructures/VMAudioFFT.mm; sourceTree = SOURCE_ROOT; };
@@ -645,7 +643,6 @@
 			isa = PBXGroup;
 			children = (
 				16F726F81D81746500A0CA69 /* VMP */,
-				16F726FA1D8174D700A0CA69 /* VM2AudioPlayer.swift */,
 			);
 			name = MediaPlayer;
 			path = Core/AudioPlayer;
@@ -1711,7 +1708,6 @@
 				160ED052173B517A0009D04B /* CJSONSerializedData.m in Sources */,
 				160ED055173B517A0009D04B /* CDataScanner_Extensions.m in Sources */,
 				160ED058173B517A0009D04B /* NSDictionary_JSONExtensions.m in Sources */,
-				16ABBE0C1D83B36F006D1F69 /* VM2AudioPlayer.swift in Sources */,
 				16D1EA2D18B04893001AB5C4 /* VMPSongListView.m in Sources */,
 				160ED05B173B517A0009D04B /* CJSONDeserializer.m in Sources */,
 				160ED05E173B517A0009D04B /* CJSONScanner.m in Sources */,
@@ -2112,7 +2108,7 @@
 				SDKROOT = iphoneos;
 				SWIFT_OBJC_BRIDGING_HEADER = "Core/AudioPlayer/traumbaum iOS-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 2.3;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -2153,7 +2149,7 @@
 				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
 				SWIFT_OBJC_BRIDGING_HEADER = "Core/AudioPlayer/traumbaum iOS-Bridging-Header.h";
-				SWIFT_VERSION = 2.3;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};

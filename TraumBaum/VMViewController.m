@@ -45,16 +45,15 @@
 					   initWithFrame:self.view.bounds
 					   ] autorelease];
 	[self.view addSubview:self.frontView];
-	[[MPRemoteCommandCenter sharedCommandCenter].togglePlayPauseCommand
+    [MPRemoteCommandCenter.sharedCommandCenter.togglePlayPauseCommand addTarget:self.frontView action:@selector(handleRemoteControl)];
+
+	[MPRemoteCommandCenter.sharedCommandCenter.playCommand
 	 addTarget:self.frontView action:@selector(handleRemoteControl)];
 
-	[[MPRemoteCommandCenter sharedCommandCenter].playCommand
+	[MPRemoteCommandCenter.sharedCommandCenter.stopCommand
 	 addTarget:self.frontView action:@selector(handleRemoteControl)];
 
-	[[MPRemoteCommandCenter sharedCommandCenter].stopCommand
-	 addTarget:self.frontView action:@selector(handleRemoteControl)];
-
-	[[MPRemoteCommandCenter sharedCommandCenter].pauseCommand
+	[MPRemoteCommandCenter.sharedCommandCenter.pauseCommand
 	 addTarget:self.frontView action:@selector(handleRemoteControl)];
 
 	
