@@ -8,7 +8,14 @@
 
 #import <Foundation/Foundation.h>
 #import "VMSong.h"
+
+#if USE_AUDIOKIT
+@class VM2AudioPlayer;
+@class VM2MultiTrackPlayer;
+#else
 #import "VMPAudioPlayer.h"
+#endif 
+
 #import "VMPTrackView.h"
 #import "VMPlayerBase.h"
 
@@ -49,7 +56,7 @@
 	__strong	VMAudioFragmentPlayer	*audioFragmentPlayer;
 				VMTime					cueTime;
 				VMTimeRange				cuePoints;		//	store modulated dur / offs
-	__unsafe_unretained		VMPAudioPlayer			*player;
+	__unsafe_unretained		VMPlayerType			*player;
 }
 @end
 
@@ -80,7 +87,11 @@
 
 @interface VMPSongPlayer : VMPlayerBase {	
 	//	audio players
+#if USE_AUDIOKIT
+	VM2MultiTrackPlayer		*multiTrackPlayer;
+#else
 	VMArray					*audioPlayerList;
+#endif
 	//	cue queueing
 	VMArray					*fragQueue;
 	VMAudioFragmentPlayer	*lastFiredFragment_;
@@ -92,7 +103,8 @@
 
 	//	view
 	UInt64					frameCounter;
-	__unsafe_unretained		VMSong		*song_;
+  __weak        VMSong *song_;
+//	__unsafe_unretained		VMSong		*song_;
 	
 	
 #if SUPPORT_32BIT_MAC
@@ -130,7 +142,7 @@
 
 //	audio player
 - (int)numberOfAudioPlayers;
-- (VMPAudioPlayer*)audioPlayerForFileId:(VMId*)fileId;
+- (VMPlayerType*)audioPlayerForFileId:(VMId*)fileId;
 
 //	player control
 - (void)warmUp;
@@ -148,6 +160,9 @@
 
 - (void)setFragmentId:(VMId*)fragId fadeOut:(BOOL)fadeFlag restartAfterFadeOut:(BOOL)inRestartAfterFadeOut;
 - (void)setNextFragmentId:(VMId*)fragId;
+
+- (void)setLimiterState:(BOOL)state;
+- (VMPView*)limiterIndicator;
 
 //	queue
 - (void)flushFiredFragments;	

@@ -9,8 +9,6 @@
 #include <sys/types.h>
 #include <sys/sysctl.h>
 
-
-
 #if VMP_IPHONE
 //
 //	iphone
@@ -521,8 +519,9 @@ stemLength=stemLength_,refreshScreenCounter=refreshScreenCounter_,lastDayPhase=l
 }
 
 //	handle remote control
-- (void)handleRemoteControl {
+- (MPRemoteCommandHandlerStatus)handleRemoteControl {
 	[self togglePlayState:nil];
+    return MPRemoteCommandHandlerStatusSuccess;
 }
 
 - (void)animate:(id)whatever {

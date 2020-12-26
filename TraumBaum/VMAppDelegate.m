@@ -9,7 +9,7 @@
 #import "VMAppDelegate.h"
 
 #import "VMViewController.h"
-#import "VMPAudioPlayer.h"
+//#import "VMPAudioPlayer.h"
 #import "VMPSongPlayer.h"
 #import "VMPTrackView.h"
 #import "VMScoreEvaluator.h"

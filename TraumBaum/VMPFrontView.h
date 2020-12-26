@@ -8,7 +8,8 @@
 
 #include "MultiPlatform.h"
 #if VMP_IPHONE
-#import <UIKit/UIKit.h>
+@import UIKit;
+@import MediaPlayer;
 #else
 #import <QuartzCore/QuartzCore.h>
 #import "VMPCanvas.h"
@@ -89,5 +90,6 @@ UIView
 #endif
 
 - (void)calculateDimensions:(CGSize)size;
+- (MPRemoteCommandHandlerStatus)handleRemoteControl;
 
 @end

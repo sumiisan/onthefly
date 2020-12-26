@@ -18,7 +18,9 @@
 @import MediaPlayer;
 
 
-@interface VMViewController ()
+@interface VMViewController () {
+	BOOL limiterSwitch;
+}
 
 @end
 
@@ -43,21 +45,35 @@
 					   initWithFrame:self.view.bounds
 					   ] autorelease];
 	[self.view addSubview:self.frontView];
-	[[MPRemoteCommandCenter sharedCommandCenter].togglePlayPauseCommand
+    [MPRemoteCommandCenter.sharedCommandCenter.togglePlayPauseCommand addTarget:self.frontView action:@selector(handleRemoteControl)];
+
+	[MPRemoteCommandCenter.sharedCommandCenter.playCommand
 	 addTarget:self.frontView action:@selector(handleRemoteControl)];
 
-	[[MPRemoteCommandCenter sharedCommandCenter].playCommand
+	[MPRemoteCommandCenter.sharedCommandCenter.stopCommand
 	 addTarget:self.frontView action:@selector(handleRemoteControl)];
 
-	[[MPRemoteCommandCenter sharedCommandCenter].stopCommand
-	 addTarget:self.frontView action:@selector(handleRemoteControl)];
-
-	[[MPRemoteCommandCenter sharedCommandCenter].pauseCommand
+	[MPRemoteCommandCenter.sharedCommandCenter.pauseCommand
 	 addTarget:self.frontView action:@selector(handleRemoteControl)];
 
 	
-	
+	limiterSwitch = YES;
 	[self attachConfigButton];
+
+#if USE_AUDIOKIT
+	UILabel *limiterLabel = [[[UILabel alloc] init] autorelease];
+	limiterLabel.text = @"Limiter";
+	limiterLabel.frame = CGRectMake(20, 20, 200, 50);
+	limiterLabel.backgroundColor = [UIColor yellowColor];
+	[self.view addSubview: limiterLabel];
+	UITapGestureRecognizer *tgr = [[[UITapGestureRecognizer alloc] init] autorelease];
+	[tgr addTarget:self action:@selector(switchLimiter)];
+	[limiterLabel addGestureRecognizer:tgr];
+	limiterLabel.tag = 'limt';
+	limiterLabel.userInteractionEnabled = YES;
+	
+	[self.view addSubview: DEFAULTSONGPLAYER.limiterIndicator];
+#endif
 	
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(dayPhaseChanged:) name:DAYPHASE_CHANGED_NOTIFICATION object:nil];
 	
@@ -66,6 +82,14 @@
 	VMPVineView *vv = [[[VMPVineView alloc] initWithFrame:self.view.frame] autorelease];
 	[self.view addSubview:vv];
 #endif
+}
+
+
+- (void)switchLimiter {
+	limiterSwitch = !limiterSwitch;
+	[DEFAULTSONGPLAYER setLimiterState:limiterSwitch];
+	UILabel *limiterLabel = [self.view viewWithTag:'limt'];
+	limiterLabel.text = limiterSwitch ? @"ON" : @"OFF";
 }
 
 

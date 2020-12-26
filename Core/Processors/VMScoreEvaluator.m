@@ -16,14 +16,13 @@
 
 #import "MultiPlatform.h"
 #import "VMPMacros.h"
-#import "RegexKitLite.h"
 
 #import "VMScoreEvaluator.h"
 #import "VMSong.h"
 #import "VMPSongPlayer.h"
 #import "VMException.h"
 #import "VMPNotification.h"
-
+#import "NSRegularExpression+String.h"
 
 @implementation VMScoreEvaluator
 
@@ -167,6 +166,39 @@ shouldLog=shouldLog_,shouldNotify=shouldNotify_;
 }
 	
 - (VMArray*)dissolute:(VMString*)expression {
+  NSError *error = nil;
+  NSRegularExpression *regex = [NSRegularExpression
+                                regularExpressionWithPattern:
+                                @""
+                                "^"              //  begin of expression
+                                "("              //  $1 -->
+                                "[^\\+\\-\\/\\*%><=&|!]"  //  not operator chars
+                                "+"              //  match 1 or more times
+                                ")"              //  $1 <--
+                                "("              //  $2 -->
+                                "[\\+\\-\\/\\*%><=&|!]"    //  operator chars
+                                "*"              //  match 0 or more times
+                                ")"              //  $2 <--
+                                "("              //  $3 -->
+                                "[^\\+\\-\\/\\*%><=&|!]"  //  not operator chars
+                                "*"              //  match 0 or more times
+                                ")"              //  $3 <--
+                                "(.*)$"          //  everything else till end of expression: $4
+                                options:0
+                                error:&error];
+  
+  return [VMArray arrayWithObject:[regex arrayOfCaptureComponentsMatchIn:expression]];
+/*
+  NSTextCheckingResult *match = [regex firstMatchInString:expression options:0 range:NSMakeRange(0, expression.length)];
+  NSMutableArray *result = [NSMutableArray array];
+  for (int i = 0; i < match.numberOfRanges; ++i){
+    [result addObject:[expression substringWithRange:[match rangeAtIndex:i]]];
+  }
+  
+  return [VMArray arrayWithObject:result];
+ */
+  
+  /*
 	return [VMArray arrayWithArray:
 			[expression arrayOfCaptureComponentsMatchedByRegex:
 			 @""
@@ -185,9 +217,32 @@ shouldLog=shouldLog_,shouldNotify=shouldNotify_;
 			 ")"							//	$3 <--
 			 "(.*)$"						//	everything else till end of expression: $4
 			 ]];
+   */
 }
 	
 - (VMArray*)parseFunction:(VMString*)expression {
+  NSError *error = nil;
+  
+  NSRegularExpression *regex = [NSRegularExpression
+                                regularExpressionWithPattern:@""
+                                "^@"            //  begin of function
+                                "("            //  $1 -->
+                                "[A-Za-z0-9]"      //  function name
+                                "+"            //  match 1 or more times
+                                ")"            //  $1 <--
+                                "\\{?"            //  { may appear
+                                "("            //  $2 -->
+                                "[^}]"        //  until }
+                                "*"            //  match 0 or more times
+                                ")"            //  $2 <--
+                                "\\}?"            //  } may appear
+                                "$"            //  end
+                                options:0
+                                error:&error];
+  
+  return [VMArray arrayWithObject:[regex arrayOfCaptureComponentsMatchIn:expression]];
+
+  /*
 	return [VMArray arrayWithArray:
 			[expression arrayOfCaptureComponentsMatchedByRegex:
 			 @""
@@ -204,6 +259,7 @@ shouldLog=shouldLog_,shouldNotify=shouldNotify_;
 			 "\\}?"						//	} may appear
 			 "$"						//	end
 			 ]];
+   */
 }
 	
 #pragma mark -
@@ -357,16 +413,40 @@ shouldLog=shouldLog_,shouldNotify=shouldNotify_;
 }
 	
 - (VMFloat)evaluate:(NSString*)expression {
+  NSError *error = nil;
+  
 	//strip space & tab first
-	expression = [expression stringByReplacingOccurrencesOfRegex:@"\\s|\\t" withString:@""];
-	
+    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"\\s|\\t" options:0 error:&error];
+    expression = [regex stringByReplacingMatchesInString:expression options:0 range:NSMakeRange(0, expression.length) withTemplate:@""];
+	              
 	//	replace @func() -> @func{()}	so that we can evaluate the function later
 	//	*unimplemented
 	
 	
 	//	eval inside () first
+  
+    __block NSMutableString *exp = [NSMutableString stringWithString:expression];
+  
 	doForever {
 		__block BOOL matched = NO;
+    regex = [NSRegularExpression regularExpressionWithPattern:@"(\\([^(]*?\\))" options:0 error:&error];
+    [regex enumerateMatchesInString:exp options:0 range:NSMakeRange(0, exp.length) usingBlock:^(NSTextCheckingResult * _Nullable result, NSMatchingFlags flags, BOOL * _Nonnull stop) {
+      if (!result || result.range.location == NSNotFound) {
+        *stop = YES;
+      } else {
+        matched = YES;
+        NSRange range = [result rangeAtIndex:0];
+        NSLog(@"[%@] range: %d, %d = %@,%@,%@", exp, range.location, range.length, [exp substringToIndex:range.location], [exp substringWithRange:NSMakeRange(range.location+1, range.length-2)], [exp substringFromIndex:range.location + range.length]);
+        [exp setString:[NSString stringWithFormat:@"%@%2.2f%@",
+                        [exp substringToIndex:range.location],
+                        [self evaluate:[exp substringWithRange:NSMakeRange(range.location+1, range.length-2)]],
+                        [exp substringFromIndex:range.location + range.length]
+                        ]];
+      }
+      *stop = YES;  // always eval only the first match
+    }];
+    
+    /*
 		expression = [expression stringByReplacingOccurrencesOfRegex:@"(\\([^(]*?\\))"
 														  usingBlock:
 					  ^NSString *(NSInteger capCount, NSString *const VMUnsafe *capStrings, const NSRange *capRanges, volatile BOOL *const stop) {
@@ -375,8 +455,11 @@ shouldLog=shouldLog_,shouldNotify=shouldNotify_;
 									 [self evaluate:[capStrings[1] substringWithRange: NSMakeRange(1, [capStrings[1] length]-2)]]
 									 ];
 					  }];
-		if ( !matched ) break;
+     */
+    if ( !matched ) break;
 	}
+  
+  expression = exp; // copy it back
 	
 	VMFloat lValf,rValf,result;
 	NSString *lval, *op, *rval, *relict;

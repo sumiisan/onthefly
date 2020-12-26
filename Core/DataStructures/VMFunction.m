@@ -85,7 +85,7 @@ static VMArray 	*fragOrderChangingFunctions_static_ = nil;
 							 ProcessorEntry(shuffle)			//	fragments collection		vmAction_prepare
 							 ProcessorEntry(reverse)			//	fragments collection		vmAction_prepare
 							 ProcessorEntry(schedule)			//	selector			vmAction_prepare
-							 ProcessorEntry(flattenScore)		//	selector			vmAction_prepare
+//							 ProcessorEntry(flattenScore)		//	selector			vmAction_prepare
 //							 ProcessorEntry(fluctuate)			//	audioInfo			get duration, offset etc
 							 ProcessorEntry(set)				//	meta				vmAction_play
 							 nil] );

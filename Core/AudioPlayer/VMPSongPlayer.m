@@ -6,6 +6,8 @@
 //  Copyright 2010 sumiisan (sumiisan.com). All rights reserved.
 //
 
+
+
 #import "VMPSongPlayer.h"
 #import "VMException.h"
 #import "VMPMacros.h"
@@ -17,8 +19,13 @@
 #endif
 
 #if VMP_IPHONE
-#import "VMVmsarcManager.h"
+	#import "VMVmsarcManager.h"
 #endif
+
+#if USE_AUDIOKIT
+#import "traumbaum_for_iOS-Swift.h"
+#endif
+
 
 //#include <math.h>
 
@@ -289,7 +296,7 @@
 	return fragQueue.count;
 }
 
-- (void)disposeCueHavingPlayer:(VMPAudioPlayer*)player {
+- (void)disposeCueHavingPlayer:(VMPlayerType*)player {
 	VMInt c = [fragQueue count];
 	for ( int i = 0; i < c; ++i ) {
 		VMPQueuedFragment *frag = [fragQueue item:i];
@@ -301,7 +308,7 @@
 	}
 }
 
-- (VMPAudioPlayer*)audioPlayerForFileId:(VMId*)fileId {
+- (VMPlayerType*)audioPlayerForFileId:(VMId*)fileId {
 	for ( VMPQueuedFragment *frag in fragQueue )
 		if ( [frag->audioFragmentPlayer.fileId isEqualToString:fileId] ) return frag->player;
 	return nil;
@@ -327,16 +334,24 @@
 #pragma mark -
 #pragma mark utils and internal funcs
 
--(VMPAudioPlayer*)seekFreePlayer {
-	for ( VMPAudioPlayer *ap in audioPlayerList )
+-(VMPlayerType*)seekFreePlayer {
+#if USE_AUDIOKIT
+	return [multiTrackPlayer requestFreeVM2AudioPlayer];
+#else
+	for ( VMPlayerType *ap in audioPlayerList )
 		if ( ! ap.isBusy )
 			return ap;
 	return nil;
+#endif
 }
 
 -(void) stopAllPlayers {
-	for ( VMPAudioPlayer *ap in audioPlayerList )
+#if USE_AUDIOKIT
+	[multiTrackPlayer stopAllPlayers];
+#else
+	for ( VMPlayerType *ap in audioPlayerList )
 		[ap stop];
+#endif
 }
 
 - (void)adjustCurrentTimeToQueuedFragment {
@@ -364,22 +379,39 @@
 	return kNumberOfAudioPlayers;
 }
 
--(VMPAudioPlayer*)audioPlayer:(int)playeridx {
+#if USE_AUDIOKIT
+
+-(VMPlayerType*)audioPlayer:(int)playeridx {
+	return [multiTrackPlayer audioPlayerWithIndex: playeridx];
+}
+
+-(void)setGlobalVolume:(VMFloat)volume {
+	globalVolume = volume;
+	[multiTrackPlayer setVolume:self.currentVolume];
+}
+
+- (BOOL)isRunning {
+	return [multiTrackPlayer anyPlayerRunning];
+}
+
+#else
+-(VMPlayerType*)audioPlayer:(int)playeridx {
 	return [audioPlayerList item: playeridx];
 }
 
 -(void)setGlobalVolume:(VMFloat)volume {
     globalVolume = volume;
-	for ( VMPAudioPlayer *ap in audioPlayerList )
+	for ( VMPlayerType *ap in audioPlayerList )
 		[ap setVolume:[self currentVolume]];
 }
 
 - (BOOL)isRunning {
 	BOOL running = NO;
-	for ( VMPAudioPlayer *ap in audioPlayerList )
+	for ( VMPlayerType *ap in audioPlayerList )
 		running |= [ap isPlaying];
 	return running;
 }
+#endif
 
 - (VMAudioFragment*)lastFiredFragment {
 	return lastFiredFragment_;
@@ -393,7 +425,7 @@
 //  prepare audioPlayer
 //
 -(void)setFragmentIntoAudioPlayer:(VMPQueuedFragment*)frag {
-	VMPAudioPlayer *player = [self seekFreePlayer];
+	VMPlayerType *player = [self seekFreePlayer];
 	if ( ! player ) {
 		NSLog( @"No Free player! at %.2f", self.currentTime );
 		[self performSelector:@selector(setFragmentIntoAudioPlayer:) withObject:frag afterDelay:1.];
@@ -454,7 +486,7 @@
 //	fire frags when the time has come
 //
 - (void)fireCue:(VMPQueuedFragment*)queuedFragment {	
-	VMPAudioPlayer *player = queuedFragment->player;
+	VMPlayerType *player = queuedFragment->player;
 	assert(player);
 	
 	if ( self.currentTime > queuedFragment->cueTime + LengthOfVMTimeRange( queuedFragment->cuePoints ) ) {
@@ -575,15 +607,22 @@
 	float volume = [self currentVolume];
 	BOOL faderActive = mainFader_.isActive || dimmer_.isActive;
 	VMTime remainTime = 0;
-	for ( VMPAudioPlayer *ap in audioPlayerList ) {
+	
+	for ( VMPlayerType *ap in
+#if USE_AUDIOKIT
+		multiTrackPlayer.players
+#else
+		audioPlayerList
+#endif
+		 ) {
 		if ( ap.isBusy ) {
-	   		if( faderActive )
+			if( faderActive )
 				[ap setVolume:volume];	    //  manage fade out
-
+			
 			numberOfPlayersRunnning++;
 			remainTime = ap.fileDuration - ap.currentTime;
 		}
-    }
+	}
 	
 	BOOL fadeOutFinished = volume == 0 && mainFader_->fadeEndVolume == 0;
 	BOOL timerExecuted = DEFAULTEVALUATOR.timeManager.timerExecuted;
@@ -603,7 +642,6 @@
 		}
 	}
 	if ( fadeOutFinished ) [self stop];
-	
 #else
 	
 	if ( self.simulateIOSAppBackgroundState ) {
@@ -620,15 +658,37 @@
 	}
 #endif
 	
-    //  track view update
+	//  track view update
 	if( trackView_ && ( frameCounter % kTrackViewRedrawInterval ) == 1 ) {
 		int i=0;
-		for ( VMPAudioPlayer *ap in audioPlayerList )
+		for ( VMPlayerType *ap in
+#if USE_AUDIOKIT
+			 multiTrackPlayer.players
+#else
+			 audioPlayerList
+#endif
+			 )
 			[trackView_ redraw:i++ player:ap];
-        
-        VMPSetNeedsDisplay(trackView_);
+		
+		VMPSetNeedsDisplay(trackView_);
 	}
+
 	
+	
+}
+
+- (void)setLimiterState:(BOOL)state {
+#if USE_AUDIOKIT
+	[multiTrackPlayer switchLimiter: state];
+#endif
+}
+
+- (VMPView*)limiterIndicator {
+#if USE_AUDIOKIT
+	return [multiTrackPlayer limiterIndicator];
+#else
+	return nil;
+#endif
 }
 
 - (void)emergencyFire {
@@ -802,12 +862,19 @@
 	}
 	
 	VMPQueuedFragment *frag = [self queue:af at:0];
+	
+#if USE_AUDIOKIT
+	multiTrackPlayer = [[VM2MultiTrackPlayer alloc]
+						initWithNumberOfPlayers:self.numberOfAudioPlayers
+						dummyAudioPath:[self filePathForFileId:@"space"]];	
+#else
 	if( audioPlayerList ) Release(audioPlayerList);
 	audioPlayerList = NewInstance(VMArray);
 	
     for( int i = 0; i < [self numberOfAudioPlayers]; ++i )
-		[audioPlayerList push:AutoRelease([[VMPAudioPlayer alloc] initWithId: i] )];
-    
+		[audioPlayerList push:AutoRelease([[VMPlayerType alloc] initWithId: i] )];
+#endif
+	
 	[self startTimer:@selector(timerCall:)];
     
 	frameCounter = 0;
@@ -817,7 +884,7 @@
     //  dummy cue to warm up audio engine
     //
     [self setFragmentIntoAudioPlayer:frag];
-	VMPAudioPlayer *firstAP = [self audioPlayer:0];
+	VMPlayerType *firstAP = [self audioPlayer:0];
 	[firstAP setVolume:0.0];
 	NSLog(@"warming up...");
     [firstAP play];
@@ -836,7 +903,9 @@
 - (void)coolDown {
 	[self stopAllPlayers];
 	[self stopTimer];
-	for( VMPAudioPlayer *ap in audioPlayerList ) [ap stopTimer];
+#if ! VMP_IPHONE
+	for( VMPlayerType *ap in audioPlayerList ) [ap stopTimer];
+#endif
 	engineIsWarm_ = NO;
 }
 
@@ -864,7 +933,9 @@
 
 - (void)dealloc {
 	VMNullify(playTimeAccumulator);
+#if ! VMP_IPHONE
 	Release(audioPlayerList);
+#endif
 	Release(fragQueue);
 	Release(lastFiredFragment_);
 	VMNullify(mainFader);

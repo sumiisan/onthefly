@@ -616,7 +616,7 @@ BOOL verbose = NO;
 	if( string )
 		self.vmsData = string;
 	[self.songData clear];
-	self.showReport.current = NO;
+	self.showReport.current = @NO;
 	
 	DEFAULTPREPROCESSOR.song = self;
 	BOOL success = [DEFAULTPREPROCESSOR preprocess:self.vmsData error:outError];
@@ -806,7 +806,7 @@ BOOL verbose = NO;
 	self.versionString		=	HashItem(version);
 	self.websiteURL			=	HashItem(websiteURL);
 	self.supportsTimer		=	[HashItem(supportsTimer) boolValue];
-	self.defaultFragmentId	=	HashItem(defaultFragmentId);
+    self.defaultFragmentId	=	HashItem(defaultFragmentId) ?: HashItem(defaultCueId);  // may be renamed
     self.audioFileExtension =   HashItem(audioFileExtension);
     self.audioFileDirectory =   HashItem(audioFileDirectory);
 	
