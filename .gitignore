@@ -9,3 +9,7 @@ build/
 profile
 xcuserdata
 Pods
+*.m4a
+DerivedData
+IDEWorkspaceChecks.plist
+default.vms.bak.txt

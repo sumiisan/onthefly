@@ -7,19 +7,17 @@ target 'traumbaum iOS' do
 print("IOS")
     platform :ios, '11.0'
     pod 'SSZipArchive'
-#    pod 'RegexKitLite'
 end
 
 target 'traumbaum mac' do
 print("OSX")
     platform :osx
 #   pod 'SSZipArchive'
-#    pod 'RegexKitLite'
 end
 
 target 'OnTheFly Editor OSX' do
 print("OTF")
-    platform :osx
+    platform :osx, '10.13'
+    pod 'sndfile-Framework'
     pod 'SSZipArchive'
-#    pod 'RegexKitLite'
 end

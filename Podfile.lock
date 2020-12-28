@@ -1,16 +1,20 @@
 PODS:
-  - SSZipArchive (2.0.7)
+  - sndfile-Framework (1.0.25)
+  - SSZipArchive (2.2.3)
 
 DEPENDENCIES:
+  - sndfile-Framework
   - SSZipArchive
 
 SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
+    - sndfile-Framework
     - SSZipArchive
 
 SPEC CHECKSUMS:
-  SSZipArchive: 8c197761d66bd33e7f8b5b51ee57dff303971150
+  sndfile-Framework: ca874c56a788e7d7c8613b92dbf61f0a5d0f7c95
+  SSZipArchive: 62d4947b08730e4cda640473b0066d209ff033c9
 
-PODFILE CHECKSUM: 1584081e33889727728d1d4bca1715b576c43cfb
+PODFILE CHECKSUM: b1c3a8fdd0c89a69594b8903eda365b3ba9d1f8d
 
-COCOAPODS: 1.9.3
+COCOAPODS: 1.10.0

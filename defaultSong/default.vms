@@ -1,0 +1,1413 @@
+/*
+ traumbaum vms variable music structure 
+ 2013 sumiisan@gmail.com
+ */
+{
+songName:				"Traumbaum endless ambient piano",
+artist:					"Afra Masuda",
+copyright:				"creative commons (CC-BY)",
+description:			"endless ambient piano music piece",
+version:				"1.0",
+	
+	//	
+vmsVersion:				"1.0",
+songId:					"TraumbaumEAP",
+dataId:					"original1.0",
+requireDataId:			[],
+allowModify:			"YES",
+overwriteOrder:			0,
+	
+audioFileDirectory:		"./",
+audioFileExtension:		"m4a",
+defaultCueId:			"reset",
+    
+data:
+	[
+	 //--------------------------
+	 //	x3; 2013
+	 //--------------------------
+	 
+	 {	id:"reset",			sel:"a_intro",	/*a_intro in release version*/		comment:"this is the default cue."	},		//	the reset destination
+	 {	id:"unimplemented",	sel:"a_sel",	comment:"this is cue for unimplemented cues."	},
+	 
+	 //
+	 //	begin
+	 //
+	 
+	 
+	 {	id:"x3_begin",		dur:4.777,				alt:["##octave","##arpe","##dense"],						next:"x3_theme_sel",
+	 instruction:"fluct dur=0.3"	},
+	 {	id:"x3_begin_4times",						seq:["##|cue","##octave|cue","##arpe|cue","##dense|cue"],	next:"x3_theme",	
+	 instruction:"random"	},
+	 {	id:"x3_begin_arpe",	dur:5.400	/*OW*/	},
+	 
+	 //
+	 //	theme (symbolic)
+	 //
+	 
+	 {	id:"x3_theme_sel",							sel:["x3_theme=7","x3_theme_pu1=3","x3_t001_sel=8"] },
+	 {	id:"x3_theme_pu1",	dur:1.024,	ofs:1.024,	alt:["##pu2","##pu3"],						next:"x3_theme"	},
+	 {	id:"x3_theme",		dur:6.741,				alt:["##=4","##var1","##var2","##var3"],	next:"x3_begin"	},
+	 {	id:"x3_theme_var2",	dur:7.412	/*OW*/	},
+	 
+	 //
+	 //	theme (theme-phrase)
+	 //
+	 
+	 {	//	t001 + t002
+	 id:"x3_t001_sel",
+	 sel:[
+		  {	id:"##low1",		score:1,	dur:7.0,	alt:["##low1=2","##low2"],				next:"#t002_high1"	},
+		  {	id:"#t002_high1",	score:2,	dur:6.019,	alt:["##high1=2","##high2",
+															 {id:"##low1",	dur:6.644	}],		next:"#t003_sel" }	]	 },	 
+	 
+	 {	//	t003 + t004
+	 id:"x3_t003_sel",	
+	 sel:[
+		  { id:"##high_seq", 	score:3,	next:"#t005_sel1",
+		  seq:[
+			   [	//	t003 high
+				{ id:"##high1",		score:2,	dur:2.196	},
+				{ id:"##high2",		score:1,	dur:2.282	} ],
+			   [	//	t004 high
+				{ id:"#t004_high1",	score:2,	dur:2.908	},
+				{ id:"#t004_high2",	score:1,	dur:2.908	},
+				{ id:"#t004_high3",	score:1,	dur:2.725	}]
+			   ] },
+		  
+		  {	id:"##uh_seq",		score:2,	next:"#t005_sel2",
+		  sel:[
+			   { id:"##uh", 	 dur:5.243 },
+			   { id:"##uh_arpe", dur:5.508 }
+			   ]
+		  }
+		  ] 
+	 },
+	 
+	 {	//	t005
+	 id:"x3_t005_sel1",						next:"#t006_sel",		instruction:"fluct dur=0.3,modify dur=1.5",
+	 sel:[	
+		  {	id:"##sad",			dur:3.958	},
+		  {	id:"##sprout",		dur:4.708,	next:"##episode" },
+		  {	id:"##kenage",		dur:4.045	},
+		  {	id:"##openend",		dur:4.696,	next:"##episode" },
+		  {	id:"##end",			dur:8.473	}	]	 },
+	 {
+	 id:"x3_t005_sel2",						next:"x3_t006_sel",		instruction:"fluct dur=0.3,modify dur=1.5",
+	 sel:[
+		  { id: "##uh_sad",		score:2,	dur:3.964	},
+		  {	id: "##uh_bridge",				dur:4.109,	next:"##episode=2" }	]	 },
+	 {	id: "x3_t005_uh_bridge;caesura",		dur:4.979,	next:"##episode" },
+	 
+	 {	//	t005 episode (from openend, sprout and uh_bridge)
+	 id:"x3_t005_episode",
+	 sel:[
+		  {	/*base-branch*/	score:4,	next:"*",	id:"##epi_base_branch",
+		  seq:[
+			   [
+				{ next:"*",	id:"##epi_base_seq",
+				seq:[	//	base seq -->
+					   { id:"##epi1_base",	dur:2.589	},
+					   { id:"##epi2_base",	dur:3.000	},
+					   { id:"##epi3_base",	dur:3.905	},
+					   [ 
+						{ id:"##epi4_base",	dur:4.027	},
+						{ id:"##epi4_alt",	dur:4.770	},
+						{ next:"reset",	/*- branch here -*/
+						seq:[
+							 { id:"##epi4_alt2",		dur:3.864 },
+							 { id:"##epi4_alt2cont",	dur:9.314 }
+							 ]
+						}
+						],
+					   { id:"##epi5_base",	dur:2.359	},
+					   [ 
+						{ id:"##epi6_base;end",		dur:18.556,		next:"reset"	/*- branch here -*/	},
+						{ id:"##epi6_bridge",		dur:15.602,		next:"#t003_high_seq"	}
+						]
+					   ]
+				}, 		//	base seq <--
+				{	next:"#e001_base",	id:"##epi_~e001", /*- branch here -*/
+				seq:[	//	bridge to e001 -->
+					 "##epi1_base",
+					 { id:"##epi1_rep",	dur:2.753	},
+					 "##epi2_base",
+					 { id:"##epi2_rep",	dur:4.130, ofs:0.18, instruction:"fluct dur=0.15,modify dur=0.5"	}
+					 ] 
+				} 		//	bridge to e001 <--
+				
+				]
+			   ]
+		  },//	base-branch <--
+		  
+		  {	next:"#t006_sel",	id:"##epi_alt_branch",	//	alt-branch -->
+		  seq:[
+			   [
+				{ seq:[	// slow
+					   { id:"##epi1_alt;slow",	dur:2.918	},
+					   { id:"##epi2_alt;slow",	dur:3.156	}	],	id:"##epi_alt_slow" },
+				{ seq:[	// fast
+					   { id:"##epi1_alt;fast",	dur:2.400	},
+					   { id:"##epi2_alt;fast",	dur:2.340	}	],	id:"##epi_alt_fast" }
+				],
+			   { id:"##epi3_alt", 	dur:6.125	}	
+			   ]	
+		  }					//	alt-branch <--
+		  
+		  ]	//	end sel
+	 },	//	end t005 episode
+	 
+	 {	//	t006 (theme-phrase')
+	 id:"x3_t006_sel",						next:"#t007_sel",		dur:5.291,
+	 sel:[
+		  { id:"##base",		dur:5.291	},
+		  {	id:"##alt",			dur:5.670	}	]	 },
+	 
+	 {	//	t007
+	 id:"x3_t007_sel",						next:"#t008_sel",		dur:5.291,
+	 sel:[
+		  { id:"##base",		dur:5.206	},
+		  {	id:"##alt",			dur:5.037	}	]	 },
+	 
+	 {	//	t008 + t009 + t010
+	 id:"x3_t008_sel",
+	 sel:[
+		  {	id:"##theme_r",	score:4,
+		  sel:[
+		  {	id:"##base_r",		score:4,		next: "#t010_base",
+		  cues:[
+				{id:"##base",		dur:1.816 },
+				{id:"#t009_base",	dur:2.358,
+				alt:[
+					 {id:"##slow",	dur:2.913, instruction:"fluct dur=0.15,modify dur=0.5"}
+					 ] }
+				] },	//	##base_r <--
+		  {	id:"##inv_r",		score:1,
+		  next:[
+				{ id:"#t010_base",		dur:6.631,		instruction:"fluct dur=0.3,modify dur=1",	
+				next:["reset"/*- continue or branch here -*/]	},
+				{ id:"#t009_inv_cont", 	dur:7.354,		ofs:0.231,	next:["#t010_base"/*-branch here-*/]	}
+				],
+		  cues:[ 
+				{id:"##inverse",		dur:1.816},
+				{id:"#t009_inverse",	dur:2.358} 
+				] },	//	##inv_r <--
+		  { id:"##mix_r1",		score:1,	cues:[ "##inverse",	"#t009_base" ],		next: "#t010_base" },
+		  { id:"##mix_r2",		score:1,	cues:[ "##base",	"#t009_inverse" ],	next:["#t010_base", "#t009_inv_cont"] }
+		   ]
+		  },
+		  { id:"##end", score:1,	dur:6.171,	ofs:0.3,	next: "reset",	/*-branch here -*/	}
+		  ]//	sel <--
+	 },
+	 
+	 {	//	e001	(provisory)
+	 id:"x3_e001_base",			dur:23.314,		next: "reset"	/*- branch here -*/	},
+	 
+	 //	 {	ignore:[
+	 
+	 //--------------------------
+	 //	traumbaum; 2010
+	 //--------------------------
+	 
+	 //  -- A -- (midgar)	originally composed in 2010, completely overhauled 2013		key:F	tempo:medium-slow
+	 {	id:"a_sel",				ref:"#10;sel-"	},
+	 
+	 //	theme (call and response)
+	 {	id:"a_10;sel",			next:"#11;sel",		sel:[{	id:"##base",	score:1,				ofs:-1.0,	dur:1.861			},
+														 {	id:"##slow",	score:1,				ofs:-1.0,	dur:2.384			},
+														 {	id:"##pure",	score:1,				ofs:-1.0,	dur:2.217			},
+														 {	id:"##pure;im",	score:0,				ofs:-1.0,	dur:2.217			},	//	just define audio/cue
+														 {	id:"##flow",	score:1,				ofs:-0.8,	dur:2.808			},
+														 {	id:"##gap",		score:"(@C>0)",			ofs:-1.0,	dur:1.884			},
+														 {	id:"##melt",	score:"(@C>0)",			ofs:-1.0,	dur:1.832			},
+														 {	id:"##slip",	score:"(@C>1)",			ofs:0,		dur:0.001/*bug dur must be ! 0 */,fileId:"space"},
+														 "a_10_bounce;seq=(@C>2)",
+														 "a_drip_intro;seq=(a_drip=1)"																]	},
+	 {	id:"a_10;sel-",			next:"#11;sel",		sel:["##base=1",													//	reduced #10;sel
+														 "##slow=(1+(@C=0))*0.5",
+														 "##pure=(@C>0)",
+														 "##flow=(@C>0)"																			]	},
+	 {	id:"a_11;sel",								sel:[{	id:"##base",	score:"((7*(@C%2=0))+(3*@F{base})) *(1-@F{slip})",	dur:4.851,	next:"#12;sel"		},
+														 {	id:"##alt",		score:"((7*(@C%2=1))+(3*@F{base})) *(1-@F{slip})",	dur:4.851,	next:"#12;sel"		},
+														 {	id:"##slow",	score:"( 1			+(9*@F{slow})) *(1-@F{slip})",	dur:6.455,	next:"#12;sel"		},
+														 {	id:"##pure",	score:"((7*(@C>0))	+(3*@F{pure})) *(1-@F{slip})",	dur:4.526,	next:"#12;sel"		},
+														 {	id:"##flow",	score:"((7*(@C>0))	+(3*@F{flow})) *(1-@F{slip})",	dur:5.495,	next:"#12;sel"		},
+														 {	id:"##gap",		score:"((7*(@C>1))	+(3*@F{gap })) *(1-@F{slip})",	dur:5.442,	next:"#12;sel"		},
+														 {	id:"##melt",	score:"((7*(@C>1))	+(3*@F{melt})) *(1-@F{slip})",	dur:5.942,	next:"#12_melt;sel"	},
+														 {	id:"##slip",	score:"@F{slip}",									dur:6.592,	next:"#12_slip;sel"	}	]	},
+	 {	id:"a_12;sel",								sel:[{	id:"##base",	score:" 7			+(3*@F{base}) -(@F{gap}*3)",	dur:6.831,	next:"#13;sel"		},
+														 {	id:"##slow",	score:" 3			+(7*@F{slow})",				dur:8.026,	next:"#13;sel"		},
+														 {	id:"##pure",	score:"(7*(@C>0))	+(3*@F{pure})",				dur:5.459,	next:"a_13_p&f;sel"	},
+														 {	id:"##flow",	score:"(7*(@C>0))	+(3*@F{flow})",				dur:6.268,	next:"a_13_p&f;sel"	},
+														 {	id:"##gap~E",	score:"(3*(@C>1))	+(7*@F{gap })",				dur:9.898,	next:"e_sel"		}	]	},	//-> E
+	 {	id:"a_14_~F;sel",							sel:[{	id:"#14_melt~F",									dur:6.283						},
+														 {	id:"#14_slip~F",									dur:7.927						}	]	},
+	 {	id:"a_12_melt;sel",							sel:[{	id:"###base;seq",	score:3,							next:["#10-20-30-40;sel","f_sel"],	//	-> d.c or F
+															seq:[{	id:"#12_melt_base",							dur:2.678						},
+																 [{	id:"#13_melt_opt",							dur:4.170					},
+																  {	id:"#13_melt_optout",			fileId:"*",	dur:0.01/*bug dur must be ! 0 */		}	],
+																 "#14_~F;sel"												 						]	},
+														 {	id:"###alt;seq",	score:1,									next:"a_10_bounce;seq",		//	quasi -> d.c
+									   						seq:[{	id:"#12_melt_alt",							dur:5.760				}	]	}	]	},
+	 {	id:"a_12_slip;sel",							sel:[{	id:"###;seq",	score:3,							next:"*",	
+									   						seq:[{ id:"###",									dur:4.247						},
+																 { id:"#11_slip_rep",							dur:6.762						},
+																 [{id:"#14~F;sel",									next:["#10-20-30-40;sel","f_sel"]	},	//	-> d.c or F
+																  "g_sel"																	] 	]	},
+														 "g_sel=2" 																					]	},
+	 {	id:"a_13;sel",		next:["#10-20-30-40;sel=4","om_grow;sel"],
+													sel:[{	id:"##base;seq",score:" 2			+(18*@F{base})",										//	-> 10,20,30,40, om
+														seq:[[{id:"##base",										dur:1.891			},
+															  {id:"##alt",										dur:1.891			}	],
+															 [{id:"#14_base",									dur:3.637			},
+															  {id:"#14_alt",									dur:4.187			}	]	] 	},
+														 {	id:"##slow",	score:" 1			+(9*@F{slow})",	dur:6.024,						}	]	},
+	 {	id:"a_13_p&f;sel",	next:["#10-20-30-40;sel=4","a_21_episode1;seq=LC","om_grow;sel"],
+	 												sel:[{	id:"##pure",	score:" 1  			+(1*@F{pure})",	dur:4.325,						},		//	-> 10,20,30,40, om
+														 {	id:"##flow",	score:" 1  			+(1*@F{flow})",	dur:5.955,						}	]	},
+	 
+	 //	theme follower
+	 {	id:"a_20;sel",	next:"#21;sel",				sel:[{	id:"##base",										dur:1.695						},
+														 {	id:"##pure",										dur:1.773						},
+														 {	id:"##flow",										dur:2.049						},
+														 {	id:"##short",							ofs:-0.7,	dur:0.541						}	]	},
+	 {	id:"a_21;sel",								sel:[{	id:"##base",	score:" 1  			+(1*@F{base})",	dur:8.255,	next:"#22;sel"		},
+														 {	id:"##pure",	score:" 1  			+(1*@F{pure})",	dur:4.870,	next:"#22;sel"		},
+														 {	id:"##flow",	score:" 1  			+(1*@F{flow})",	dur:3.977,	next:"#22;sel"		},
+												{	ref:"##episode1;seq",	score:" 1  			+(1*@F{short})"								}	]	},
+	 {	id:"a_21_episode1;seq",																								next:"#10-30-40;sel",		//	-> 10,30,40
+													seq:[{	id:"###",											dur:14.148						},
+														 [{	id:"###+",								ofs:0.340,	dur:4.196					},
+														  {	id:"###none",							fileId:"*",	dur:0.01/*bug dur must be ! 0 */	}	] 	]	},
+	 {	id:"a_22;sel",								sel:[{	id:"##base~B",	score:" 0  			+(12*@F{base})",	dur:5.145,	next:"b_sel"		},		//	-> B
+														 {	id:"##pure",	score:" 2  			+( 8*@F{pure})",	dur:4.311,	next:"#10-30-40;sel"},		//	-> 10,30,40
+														 {	id:"##flow",	score:" 1  			+( 8*@F{flow})",	dur:4.375,	next:"#23_flow;seq"	},
+														 {	id:"##flow~C",	score:" 1  			+( 8*@F{flow})",	dur:4.166,	next:"c_sel"		}	]	},
+	 {	id:"a_23_flow;seq",																									next:"#10-30-40;sel",		//	-> 10,30,40
+	 												seq:[[{	id:"###",											dur:1.322					},
+														  { id:"###alt",										dur:1.322					}	],
+														 {	id:"#24_flow",										dur:7.810						}	]	},
+	 //	new in 2013 version: -->
+	 
+	 //	intro
+	 {	id:"a_intro",			next:"a_sel",		dur:22.222	},
+	 {	id:"a_10_bounce;seq",	next:"#12;sel",		seq:[[{	id:"###long",										dur:4.125					},
+														  {	id:"###short",										dur:1.313					}	],
+														 {	id:"###~",											dur:3.134					},
+														 [{	id:"#11_base"																	},
+														  {	id:"#11_alt"																	},
+														  {	id:"#11_slow"																	}	]	]	},
+	 //	sub-sequences
+	 {	id:"a_10-20-30-40;sel",						sel:["#10;sel=0.5","#20;sel=8","#30;sel=6","#40;sel=6"]												},
+	 {	id:"a_10-30-40;sel",						sel:["#10;sel=5","#30;sel=5","#40;sel=5"]												},
+	 {	id:"a_30&40;sel",							sel:["#30;sel","#40;sel"]																			},	 
+
+	 {	id:"a_30;sel",			next:"#31;sel",		sel:[{	id:"##base",										dur:1.538						},
+														 {	id:"##alt",											dur:1.538						},
+	 													 {	id:"##fast",							ofs:-1.000,	dur:1.199						}	]	},
+	 {	id:"a_31;sel",			next:"#32;sel",		sel:[{	id:"##base",										dur:5.190						},
+														 {	id:"##alt",											dur:5.190						},
+														 {	id:"##fast+",	score:"@F{fast}",					dur:4.560						}	]	},
+	 {	id:"a_32;sel",			next:"#33;sel",		sel:[{	id:"##base",										dur:5.614						},
+														 {	id:"##alt",											dur:5.614						},
+														 {	id:"##alt2",										dur:5.614						}]	},	 
+	 {	id:"a_33;sel",								sel:[{	id:"##base;seq",score:"1-@F{alt2}",								next:"#sel",			//	-> d.c
+														 	seq:[{	id:"#33_base",								dur:3.953				},
+																 {	id:"#34_base",								dur:9.729				}	]	},
+														 {	id:"##union",	score:1,							dur:9.083,	next:"j_sel"		}	]	},	//	-> j
+	 {	id:"a_40;sel",			next:"#41;sel",		sel:[{	id:"##base",										dur:1.626						},
+														 {	id:"##alt",											dur:1.514						}	]	},
+	 {	id:"a_41;sel",			next:"#42;sel",		sel:[{	id:"##base",										dur:3.888						},
+														 {	id:"##alt",											dur:3.888						}	]	},
+	 {	id:"a_42;sel",			next:"#43;sel",		sel:[{	id:"##base",										dur:3.140						},
+														 {	id:"##alt",											dur:3.140						}	]	},
+	 {	id:"a_43;sel",			next:"#45;sel",		sel:[{	id:"##base",										dur:8.575						},
+														 {	id:"##alt",											dur:8.575						}	]	},
+	 {	id:"a_45;sel",								sel:[	   "o_sel",																					//	-> o
+														 {	id:"##base",										dur:5.301,	next:"#46;sel"		},
+														 {	id:"##~10",			seq:["#10_pure;im","#11_base"],				next:"#12;sel"		},
+														 {	id:"#acid",			score:"@LS>4",					dur:145.133,next:"#30&40;sel"	}	]	},
+	 {	id:"a_46;sel",			next:"#47;sel",		sel:[{	id:"##base",										dur:5.073						},
+														 {	id:"##alt",											dur:5.073						}	]	},
+	 {	id:"a_47;sel",								sel:[{	id:"##base",		score:2,						dur:10.106,	next:"#48;sel"		},
+														 {	id:"##response",	score:1,						dur:12.059,	next:"#20;sel"		},
+														 {	id:"##masquarade",	score:"@C>2",		ofs:1.625,	dur:37.730,	next:"o_sel"}	]	},		//	-> o
+	 {	id:"a_48;sel",			next:"#49;sel",		sel:[{	id:"##base",										dur:7.552						},
+														 {	id:"##drip",		seq:{id:"##drip;auc",	instruction:"set a_drip=1",		dur:7.537}
+														 /*workaround: instruction 'set' must be placed inside of audio cue*/,	}	]	},
+	 {	id:"a_49;sel",			next:"#sel",		sel:[{	id:"##base",										dur:10.992						},		//	-> d.c
+														 {	id:"##alt",											dur:8.376						}	]	},
+	 
+	 //	dew drops
+	 {	id:"a_drip_intro;seq",	next:"a_drip;sel",	seq:[["#10_base","#10_pure"],
+														 {	id:"#11_base_drip",									dur:4.851						},
+														 ["#10_gap","#10_melt"],
+														 {	id:"#11_pure_drip",									dur:4.526						}	]	},
+	 {	id:"a_drip_block1;seq",						seq:[{	id:"##base_1",	alt:"##alt_1",	instruction:"fluct ofs=0.04",	dur:1.156			},
+														 {	id:"##base_2",	alt:"##alt_2",	instruction:"fluct ofs=0.02",	dur:0.760			},
+														 {	id:"##base_3",	alt:"##alt_3",	instruction:"fluct ofs=0.02",	dur:0.781			},
+														 {	id:"##base_4",	alt:"##alt_4",	instruction:"fluct ofs=0.04",	dur:1.114			}	]	},
+	 {	id:"a_drip_block2;seq",						seq:[{	id:"##base_5",	alt:"##alt_5",	instruction:"fluct ofs=0.01",	dur:0.656			},
+														 {	id:"##base_6",	alt:"##alt_6",	instruction:"fluct ofs=0.04",	dur:1.161			},
+														 {	id:"##base_7",	alt:"##alt_7",	instruction:"fluct ofs=0.03",	dur:0.994			}	]	},
+	 {	id:"a_drip_block3;seq",						seq:[{	id:"##base_8",	alt:"##alt_8",	instruction:"fluct ofs=0.03",	dur:0.770			},
+														 {	id:"##base_9",	alt:"##alt_9",	instruction:"fluct ofs=0.03",	dur:0.708			},
+														 {	id:"##base_10",	alt:"##alt_10",	instruction:"fluct ofs=0.03",	dur:0.708			},
+														 {	id:"##base_11",	alt:"##alt_11",	instruction:"fluct ofs=0.03",	dur:0.757			},
+														 {	id:"##base_12",	alt:"##alt_12",	instruction:"fluct ofs=0.02",	dur:0.533			}	]	},
+	 {	id:"a_drip_block4;seq",						seq:[{	id:"##base_13",	alt:"##alt_13",	instruction:"fluct ofs=0.05",	dur:1.210			},
+														 {	id:"##base_14",	alt:"##alt_14",	instruction:"fluct ofs=0.01",	dur:0.247			},
+														 {	id:"##base_15",	alt:"##alt_15",	instruction:"fluct ofs=0.03",	dur:0.791			},
+														 {	id:"##base_16",	alt:"##alt_16",	instruction:"fluct ofs=0.04",	dur:1.187			},
+														 {	id:"##base_17",	alt:"##alt_17",	instruction:"fluct ofs=0.05",	dur:1.073			},
+														 {	id:"##base_18",	alt:"##alt_18",	instruction:"fluct ofs=0.05",	dur:1.092			},
+														 {	id:"##base_19",	alt:"##alt_19",	instruction:"fluct ofs=0.06",	dur:1.229			},
+														 {	id:"##base_20",	alt:"##alt_20",	instruction:"fluct ofs=0.02",	dur:0.479			},
+														 {	id:"##base_21",	alt:"##alt_21",	instruction:"fluct ofs=0.03",	dur:0.781			},
+														 {	id:"##base_22",	alt:"##alt_22",	instruction:"fluct ofs=0.03",	dur:0.888			},
+														 {	id:"##base_23",	alt:"##alt_23",	instruction:"fluct ofs=0.03",	dur:0.872			}	]	},
+	 {	id:"a_drip_block4;random",	clone:"###;seq",	instruction:"random"																			},
+	 {	id:"a_drip_spc1",							instruction:"fluct dur=0.8",						fileId:"space",		dur:2.000					},
+	 {	id:"a_drip_spc2",							instruction:"fluct dur=0.5",						fileId:"space",		dur:1.000					},
+	 {	id:"a_drip_3blocks;seq",																							next:"##end;sel",
+	 												seq:["##spc1",
+														 [{	seq:["##block1;seq","##spc2","##block2;seq","##spc2","##block3;seq"],	score:6	},
+														  {	seq:["##block1;seq","##spc2","##block3;seq","##spc2","##block2;seq"],	score:2	},
+														  {	seq:["##block3;seq","##spc2","##block1;seq","##spc2","##block2;seq"],	score:2	},
+														  {	seq:["##block2;seq","##spc2","##block1;seq","##spc2","##block3;seq"],	score:1	},
+														  {	seq:["##block3;seq","##spc2","##block1;seq","##spc2","##block2;seq"],	score:1	}	]	]	},
+	 {	id:"a_drip_3blocks&ext;seq",				seq:["##3blocks;seq","##block4;seq","##spc1"],							next:"##end;sel"			},
+	 {	id:"a_drip_3blocks&random;seq",				seq:["##3blocks;seq","##block4;random","##spc1"],						next:"##end;sel"			},
+	 {	id:"a_drip;sel",							sel:["##3blocks;seq", "##3blocks&ext;seq", "##3blocks&random;seq"]									},
+	 {	id:"a_drip_end;sel",	next:"##end+;sel",	sel:[{	id:"###a1",														dur:3.163			},
+														 {	id:"###b1",														dur:3.158			},
+														 {	id:"###c1",														dur:2.271			},
+														 {	id:"###d1",														dur:2.044			}	]	},
+	 {	id:"a_drip_end+;sel",	next:"#sel",		sel:[{	id:"##end_a2",	score:3,										dur:3.748			},		//	-> d.c
+														 {	id:"##end_b2",	score:3,										dur:3.846			},
+														 {	id:"##end_c2",	score:3,										dur:3.458			},
+														 {	id:"##end_d2",	score:"1+(@F{a4}*2)",							dur:3.645			}	]	},
+	 
+	 
+
+	 /*	LEGACY
+	 //	structured version of 2010		/ *@* / = preferred subsequent
+	 {	id:"a_pickup_1;sel",	instruction:"schedule",	
+	 sel:[
+		  { id:"##1_seq1",					seq:"#001",		alt:"#002=@C>0",	next: "#call_1;sel"		},
+		  { id:"##1_seq2",	score:"@C>0",	seq:"#011",		alt:"#030",			next:["#call_1;sel=4","#call_alt;sel=@C>2"]	},
+		  {	id:"##1_seq3",	score:"@C>0",	seq:"#018",							next:["#call_1;sel=4","#call_alt;sel=@C>2",/ *@* /"#call_1_seq3"] },
+		  { id:"##1_seq4",	score:"@C>1",	seq:"#026",							next:["#call_1;sel=4",/ *@* /"#call_alt;sel=2*(@C>2)"] }
+		  ]
+	 },
+	 {	id:"a_call_1;sel",		instruction:"schedule",
+	 sel:[
+		  { id:"##1_seq1",	score:1,		seq:"#007=@C%2=0",	alt:"#008=@C%2=1",	next:[/ *@* /"#resp_1_seq1=2", "#resp_1_seq2",  "#resp_1_seq3"] },
+		  {	id:"##1_seq2",	score:"@C>1",	seq:"#012",	next:["#a_resp_1;sel=5", / *@* /"#resp_1_seq2"] },
+		  {	id:"##1_seq3",	score:"@C>1",	seq:"#019",	next:["#a_resp_1;sel=5", / *@* /"#resp_1_seq3"] },
+		  "#episode2_seq=@C>2"  ]	},
+	 {	id:"a_call_alt;sel",	sel:["#027"],			next:["#resp_1_seq2","#resp_1_seq3",/ *@* /"#resp_1_seq4=2","#resp_1_seq5"] },
+	 {	id:"a_call_1_noPu",		seq:"#034",				next:["#pickup_2;sel","#episode1_seq","#resp_1_seq5=3",/ * g * /"g_sel=2"]	},
+	 {	id:"a_resp_1;sel",
+	 sel:[
+		  { id:"##1_seq1",  	seq:["#003", ["#004=2","#005"]],	next:["#pickup_2;sel=3",/ *D.C* /"#sel"]	},
+		  { id:"##1_seq2",  	seq:["#013", ["#014=2","#021"]],	next:["#pickup_2;sel=3",/ *D.C* /"#sel","#episode1_seq"]	},
+		  { id:"##1_seq3",  	seq:["#020", ["#014","#021=2"]],	next:["#pickup_2;sel=3",/ *D.C* /"#sel","#episode1_seq",/ *@* /"#pickup_2_seq3"] },
+		  { id:"##1_seq4",  	seq:["#028"],						next:[/ * e * /"e_sel",/ *D.C* /"#sel"]	},
+		  { id:"##1_seq5",  	seq:["#035","#036",[
+													{ seq:"#033",	alt:"#037",	next:[/ *D.C* /"#sel", / * f * /"f_sel"]},
+													{ seq:"#034",	next:["#pickup_2;sel","#episode1_seq",/ * g * /"g_sel=2"] }
+													]],	next:"*" }	]	 },
+	 {	id:"a_pickup_2;sel",		
+	 sel:[
+		  { id:"##2_seq1",		seq:["#006"],	next:["#call_2;sel"] },
+		  { id:"##2_seq2",		seq:["#015"],	next:["#call_2;sel=3",/ *@* /"##call_2_seq2" ] },
+		  { id:"##2_seq3",		seq:["#022"],	next:["#call_2;sel=3",/ *@* /"##call_2_seq3" ] },
+		  ]
+	 },
+	 {	id:"a_call_2;sel",		
+	 sel:[
+		  { id:"##2_seq1",		seq:["#009","#010"],		next:[/ * b * /"b_sel"] },
+		  { id:"##2_seq2",		seq:["#016"],				next:["#~c1","#end_1"] },
+		  { id:"##2_seq3",		seq:["#023"],				next:["#~c1","#end_1=2"] }
+		  ]	
+	 },
+	 {	id:"a_~c1",		seq:["#017"],				next:[/ * c * /"c_sel"] },
+	 {	id:"a_end_1",			seq:["#024","#025"],		next:[/ *- branch here -* /"reset"] },
+	 {	id:"a_episode1_seq",	seq:["#029"],				next:[/ *D.C* /"#sel"] },
+	 {	id:"a_episode2_seq",	seq:["#031",[{	score:2, seq:["#032","#033"]}, 
+											 "#033", 
+											 "#037" ]], 	next:[/ *D.C* /"#sel", / * f * /"f_sel"]},
+
+	 //	entry
+	 {	id:"a_sel",				sel:["#pickup_1;sel=6","#call_1_noPu=@C>2"] },
+	 {	id:"a_sel_2",			sel:["a_001","a_002","a_011","a_018"] },
+	 
+	 {	id:"a_audioCues", 	//	put the cues into sel to make them audioCues (instead of audioInfo).
+	 						//	this is a work-around. actually, the preprocessor should convert them automatically into audioCues.
+	 sel:[
+		  {  id:"#001",	dur:2.026 },{  id:"#002",dur:2.109 }, {  id:"#003",dur:8.148 }, {  id:"#004",dur:6.022 },{  id:"#005",	dur:7.453 },
+		  {  id:"#006",	dur:1.858 },{  id:"#007",dur:4.567 }, {  id:"#008",dur:4.543 }, {  id:"#009",dur:9.118 },{  id:"#010",	dur:4.895 },
+		  {  id:"#011",	dur:1.986 },{  id:"#012",dur:5.031 }, {  id:"#013",dur:4.870 }, {  id:"#014",dur:4.862 },{  id:"#015",	dur:1.881 },
+		  {  id:"#016",	dur:4.589 },{  id:"#017",dur:5.472 }, {  id:"#018",dur:1.901 }, {  id:"#019",dur:4.748 },{  id:"#020",	dur:6.357 },
+		  {  id:"#021",	dur:6.878 },{  id:"#022",dur:1.875 }, {  id:"#023",dur:4.164 }, {  id:"#024",dur:4.145 },{  id:"#025",	dur:11.866 },
+		  {  id:"#026",	dur:1.850 },{  id:"#027",dur:4.753 }, {  id:"#028",dur:11.078 }, { id:"#029",dur:13.717 },{  id:"#030",	dur:2.251 },
+		  {  id:"#031",	dur:9.393 },{  id:"#032",dur:4.612 }, {  id:"#033",dur:6.812 }, {  id:"#034",dur:6.025 },{  id:"#035",	dur:3.695 },
+		  {  id:"#036",	dur:6.975 },{  id:"#037",dur:8.382 }
+		  ]	},
+*/
+/*
+ historical:	the very first version of part A:	(2010)
+ //	fileId	duration    offset  nextPart
+	 { "a_001",	2.026,		0,		{"a_007","a_007","a_008","a_008","a_012","a_019","a_031","_"} },
+	 { "a_002",	2.109,		0,		{"a_007","a_008","a_012","a_019","a_027","a_031","_"} },
+	 { "a_003",	8.148,		0,		{"a_004","a_004","a_005","_"} },
+	 { "a_004",	6.022,		0,		{"a_006","a_015","a_022","a_001","a_002","a_011","a_018","a_026","a_030","a_034","_"} },
+	 { "a_005",	7.453,		0,		{"a_006","a_015","a_022","a_001","a_002","a_011","a_018","a_026","a_030","a_034","_"} },
+	 { "a_006",	1.878,		0,		{"a_009","a_016","a_023","_"} },
+	 { "a_007",	4.567,		0,		{"a_003","a_003","a_013","a_020","_"} },
+	 { "a_008",	4.543,		0,		{"a_003","a_003","a_013","a_020","_"} },
+	 { "a_009",	8.851,		0,		{"a_010","_"} },
+	 { "a_010",	5.232,		0,		{"b_001","b_001","b_001","b_008","b_014","_"} },
+	 { "a_011",	1.986,		0,		{"a_007","a_008","a_012","a_012","a_019","a_027","a_031","_"} },
+	 { "a_012",	5.031,		0,		{"a_003","a_013","a_013","a_020","a_028","a_035","_"} },
+	 { "a_013",	4.970,		0,		{"a_014","a_014","a_021","_"} },
+	 { "a_014",	4.862,		0,		{"a_006","a_015","a_015","a_022","a_029","a_001","a_002","a_011","a_018","a_026","a_030","a_034","_"} },
+	 { "a_015",	1.881,		0,		{"a_009","a_016","a_016","a_023","_"} },
+	 { "a_016",	4.589,		0,		{"a_017","a_024","_"} },
+	 { "a_017",	5.472,		0,		{"c_001","c_003","c_009","c_009","_"} },
+	 { "a_018",	1.901,		0,		{"a_007","a_008","a_012","a_019","a_019","a_027","a_031","_"} },
+	 { "a_019",	4.748,		0,		{"a_003","a_013","a_020","a_020","a_028","a_035","_"} },
+	 { "a_020",	6.357,		0,		{"a_014","a_021","a_021","_"} },
+	 { "a_021",	6.878,		0,		{"a_006","a_015","a_022","a_022","a_029","a_001","a_002","a_011","a_018","a_026","a_030","a_034","_"} },
+	 { "a_022",	1.875,		0,		{"a_009","a_016","a_023","a_023","_"} },
+	 { "a_023",	4.164,		0,		{"a_017","a_024","a_024","_"} },
+	 { "a_024",	4.145,		0,		{"a_025","_"} },
+	 { "a_025",	11.866,		0,		{"_"} },
+	 { "a_026",	2.001,		0,		{"a_007","a_008","a_012","a_019","a_027","a_027","a_031","_"} },
+	 { "a_027",	4.753,		0,		{"a_013","a_020","a_028","a_028","a_035","_"} },
+	 { "a_028",	11.078,		0,		{"e_001","e_006","e_014","e_018","e_023","a_001","_"} },
+	 { "a_029",	17.365,		0,		{"a_001","a_002","a_011","a_018","a_026","a_030","a_034","_"} },
+	 { "a_030",	2.251,		0,		{"a_007","a_008","a_012","a_019","a_027","a_031","_"} },
+	 { "a_031",	9.393,		0,		{"a_032","a_032","a_033","a_037","_"} },
+	 { "a_032",	4.612,		0,		{"a_033","a_033","a_037","_"} },
+	 { "a_033",	6.812,		0,		{"a_001","a_002","a_011","a_018","a_026","a_030","a_034","a_034","f_001","f_001","f_001","f_010","f_016","f_024","f_032","f_045","_"} },
+	 { "a_034",	6.025,		0,		{"a_035","a_006","a_015","a_022","a_029","_"} },
+	 { "a_035",	3.695,		0,		{"a_036","_"} },
+	 { "a_036",	6.975,		0,		{"a_033","a_034","a_037","_"} },
+	 { "a_037",	8.382,		0,		{"a_001","a_002","a_011","a_018","a_026","a_030","a_034","f_001","f_001","f_001","f_010","f_016","f_024","f_032","f_045","_"} },
+*/
+	 
+	 
+	 //	-- B -- (boyhood)
+	 {	id:"b_sel",									sel: ["b_001=2","b_008=@C>0","b_014=@C>0"] },
+	 {	id:"b_sel_2",								sel: ["b_020","b_021","b_022"] },
+	 {	id:"b_sel_3",								sel: ["b_001","b_008","b_014","b_017"]	},
+	 {	id:"b_sel_sub1",							sel: ["b_006","b_012","b_019","b_016"]	},
+	 
+	 {	id:"b_001_m17~",	dur:3.195,				next:["b_002","b_009","b_018=@LC"] },
+	 {  id:"b_001",			dur:3.876,				next:["b_002","b_009","b_018=@LC"] },
+	 {  id:"b_002",			dur:5.182,				next:["b_003","b_010"] },
+	 {  id:"b_003",			dur:4.235,	ofs:0.29,	next:["b_004","b_005","b_011"] },
+	 {  id:"b_004",			dur:4.166,				next:["b_sel_sub1"] },
+	 {  id:"b_005",			dur:4.166,				next:["b_sel_sub1"] },
+	 {  id:"b_006",			dur:7.458,				next:["b_007","b_013"] },
+	 {  id:"b_007",			dur:5.541,				next:[/*b2*/"b_sel_2"] },
+	 {  id:"b_008",			dur:3.650,				next:["b_002","b_009","b_018=@LC"] },
+	 {  id:"b_009",			dur:4.461,				next:["b_003","b_010","b_015"] },
+	 {  id:"b_010",			dur:3.563,				next:["b_004","b_005","b_011"] },
+	 {  id:"b_011",			dur:4.510,				next:["b_sel_sub1"] },
+	 {  id:"b_012",			dur:7.861,				next:["b_007","b_013"] },
+	 {  id:"b_013",			dur:5.650,	ofs:0.109,	next:[/*b2*/"b_sel_2"] },
+	 {  id:"b_014",			dur:8.121,				next:["b_010","b_015"] },
+	 {  id:"b_015",			dur:7.871,				next:["b_016"] },
+	 {  id:"b_016",			dur:17.592,	ofs:0.075,	next:[/*b3*/"b_sel_3",/*d1*/"d_sel"] },
+	 {  id:"b_017",			dur:4.126,				next:["b_002","b_009","b_018=@LC"] },
+	 {  id:"b_018",			dur:12.443,				next:["b_016","b_019"] },
+	 {  id:"b_019",			dur:18.954,				next:[/*c*/"c_sel",/*d1*/"d_sel"] },
+	 {  id:"b_020",			dur:4.129,				next:[/*i*/"i_sel"] },
+	 {  id:"b_021",			dur:6.684,				next:["b_022"] },
+	 {  id:"b_022",			dur:21.048,				next:[/*d1*/"d_sel",/*k*/"k_sel"] },
+	 
+	 //	C (puberty)
+	 {  id:"c_sel",									sel: ["#001","#003","#009=2"] },
+	 {	id:"c_sel;+caesura",						fileId:"space",	dur:2.136,	next:"#sel" },	//	from p_81
+	 {	id:"c_sel_1",								sel: ["#007","#011","#015"]	},
+	 {	id:"c_sel_2",								sel: ["#011","#015","#013","#017"]	},
+	 {  id:"c_001",			dur:11.592,				next:["c_002","c_004"] },
+	 {  id:"c_001_m~",		dur:22.750,	ofs:-1.500,	next:["c_sel_1"] },
+	 {  id:"c_002",			dur: 4.750,				next:["c_005=6",/*d1*/"d_sel"] },
+	 {  id:"c_003",			dur:11.401,				next:["c_002","c_004"] },
+	 {  id:"c_004",			dur: 4.544,				next:["c_006=6",/*d1*/"d_sel"] },
+	 {  id:"c_005",			dur: 8.656,				next:["c_sel_1"] },
+	 {  id:"c_006",			dur: 7.729,				next:["c_sel_1"] },
+	 {  id:"c_007",			dur:10.440,				next:["#008","#008_~Bb&Bbm"] },
+	 {  id:"c_008",			dur: 9.070,				next:[/*l*/"l_sel"] },
+	 {	id:"c_008_~Bb&Bbm",	dur:18.570,				next:["d_sel"]	},
+	 {  id:"c_009",			dur:10.389,				next:["c_010","c_012","c_016"] },
+	 {  id:"c_010",			dur: 9.939,				next:["c_sel_2"] },
+	 {  id:"c_011",			dur: 5.498,				next:/*b1*/"b_sel" },
+	 {  id:"c_012",			dur: 9.676,				next:["c_sel_2"] },
+	 {  id:"c_013",			dur: 4.632,				next:/*b1*/"b_sel" },
+	 {  id:"c_014",			dur: 8.529,				next:["c_018","c_019"] },
+	 {  id:"c_015",			dur:12.069,				next:[/*B*/"b_sel_3"] },
+	 {  id:"c_016",			dur: 8.767,				next:["#sel_2","#12=2"] },
+	 {  id:"c_017",			dur: 4.610,				next:["c_014"] },
+	 {  id:"c_018",			dur: 3.937,				next:["c_020"] },
+	 {  id:"c_019",			dur: 3.937,				next:["c_020"] },
+	 {  id:"c_020",			dur:13.090,				next:[/*c1*/"c_sel",/*n*/"n_sel"] },
+	 
+	 //	-- D -- ( love )
+	 {	id:"d_sel",			sel: ["#001;seq=4","#024","#045"] },	 	 
+	 {	id:"d_001;seq",		seq:[{ sel:["#001","#010=(@F{d_018}=0)*(@C>0)","#021=(@F{d_018}=0)*(@C>0)","#023=(@F{d_018}=0)*(@C>0)"] }],
+	 next:["#002;seq","#020;sel"]	},
+	 {	id:"d_002;seq",		seq:["#002","#003","#004"],					next:["#005;seq","#030;seq=2"]	},
+	 {	id:"d_020;sel",		sel:["#011;sel","#022"]	},
+	 {	id:"d_005;seq",		seq:["#005","#006"],						next:["#007;seq=2","#011;seq"] },
+	 {	id:"d_014;seq",		seq:[{ sel:["#013","#015"]},
+								 "#014"		],							next:["#016","#017","#019"] },
+	 {	id:"d_006;sel",		sel:[{ seq:"#006",							next:["#007;seq=2","#011;seq"]	},
+								 { seq:"#031",							next:["#007;seq=2"]			}]	},
+	 {	id:"d_007;seq",		seq:[{ sel:["#007","#043"]	}],				next:["#008","#009;seq"] },	 
+	 {  id:"d_008",			dur:8.007,									next:["#sel","k_sel"] },									//	-> D/C, k
+	 {	id:"d_009;seq",		seq:[{ sel:["#009","#044"]}	],				next:["#018","l_sel","m_sel"] },							//	-> l,m
+	 {	id:"d_011;seq",		seq:["#011",
+								 { sel:["#012","#042"]}	],				next:["#014;seq"] },
+	 {	id:"d_030;seq",		seq:[{ sel:["#030","#032"]	}],				next:"#006;sel"	},
+	 {  id:"d_016",			dur:26.177,									next:"#006;sel"	},
+	 {  id:"d_017",			dur:24.790,	ofs:0.15,						next:["#018","#040"] },
+	 {  id:"d_018",			dur:8.775,									next:["i_sel=2","#001;seq","#024"] },						//	-> D/C, i
+	 {  id:"d_019",			dur:38.973,									next:["e_sel","g_sel","j_sel"] },							//	-> e,g,j
+	 {  id:"d_020",			dur:1.469,									next:["#011;seq","#022"] },
+	 {  id:"d_022",			dur:24.784,									next:["#sel","l_sel"] },									//	-> D/C, l
+	 {	id:"d_025;sel",		sel:["#025","#033"]	},
+	 {  id:"d_025",			dur:9.894,									next:"#026;sel" },
+	 {  id:"d_033",			dur:9.654,									next:"#026;sel" },
+	 {	id:"d_026;sel",		sel:["d_024","d_026=2","#034;seq=2"]	},
+	 {  id:"d_026",			dur:8.799,									next:"#027;seq" },
+	 {  id:"d_024",			dur:4.309,									next:"#025;sel" },
+	 {  id:"d_045",			dur:4.630,									next:"#025;sel" },
+	 {	id:"d_027;seq",		seq:[{sel:["#027","#047"]}	],				next:"#028;sel" },
+	 {	id:"d_028;sel",		sel:["d_028","d_036"] },
+	 {  id:"d_028",			dur:4.916,									next:"#029;sel" },
+	 {  id:"d_036",			dur:4.776,									next:"#029;sel" },
+	 {	id:"d_029;sel",		sel:["d_029","d_037"] },
+	 {  id:"d_029",			dur:8.634,									next: "#sel" },												//	->	D/C
+	 {  id:"d_037",			dur:7.685,									next:["#sel","m_sel"] },									//	->	D/C, m
+	 {  id:"d_031",			dur:3.303,									next:"#007;seq" },
+	 {	id:"d_034;seq",		seq:[{sel:["#034","#046"]}	],				next:"#035;sel" },
+	 {	id:"d_035;sel",		sel:["#035","#038"] },	 
+	 {  id:"d_035",			dur:12.716,									next:["#036","#039"] },	 
+	 {  id:"d_038",			dur:3.910,									next:"#027;seq" },
+	 {  id:"d_039",			dur:19.336,	ofs:0.067,						next:["e_sel","g_sel","j_sel"] },							//	->	e,g,j
+	 {  id:"d_040",			dur:8.844,									next:["k_sel","k_30_Bbm=2"] },								//	->	k
+	 {  id:"d_041",			dur:9.858,									next:["l_sel"] },											//	->	l
+	 
+	 {	id:"d_audioCues",
+	 sel:  [{ id:"#001", dur:2.694 },	{ id:"#002", dur:4.801 },	{ id:"#003", dur:3.789 },	{ id:"#004", dur:3.579 },	{ id:"#005", dur:5.159	},
+			{ id:"#006", dur:3.409 },	{ id:"d_007", dur:14.457 },	{ id:"#009", dur:6.810 },	{ id:"#010", dur:3.442 },	{  id:"d_011",	dur:3.507 },
+			{ id:"#012", dur:12.394, ofs:0.529 }, 
+			{ id:"#013", dur:2.938 },	{ id:"#014", dur:12.630 },	{ id:"#015", dur:3.113 },	{ id:"#021", dur:3.929 },	{ id:"#023", dur:3.442 },
+			{ id:"#027", dur:4.856 },	{ id:"#030", dur:5.947 },	{ id:"#032", dur:6.700 },	{ id:"#034", dur:8.050 },	{ id:"d_042", dur:11.936 },
+			{ id:"#043", dur:14.628 },	{ id:"#044", dur:7.408 },	{ id:"#046", dur:7.984 },	{ id:"d_047", dur:4.331 }	]	},
+	 
+	 
+	 //	-- E --
+	 
+	 
+	 {	id:"e_sel",						sel: ["e_001","e_006","e_014","e_018","e_023"] },
+	 {	id:"e_sel;+caesura",	fileId:"space",	dur:1.2,	next:"e_sel"			},
+	 {  id:"e_001",	dur:1.793,				next:["e_002","e_007","e_015","e_019","e_024"] },
+	 {  id:"e_002",	dur:7.980,				next:["e_003","e_009"] },
+	 {  id:"e_003",	dur:1.496,				next:["e_004","e_010"] },
+	 {  id:"e_004",	dur:2.031,				next:["e_005=@LC","e_011=@LC","e_017=@LC"] },
+	 {  id:"e_005",	dur:16.607,				next:[/*e1*/"e_sel","t_sel_C"] },
+	 {  id:"e_006",	dur:1.812,				next:["e_002","e_007","e_015","e_019","e_024"] },
+	 {  id:"e_007",	dur:3.521,				next:["e_008","e_016"] },
+	 {  id:"e_008",	dur:4.489,				next:["e_003","e_009"] },
+	 {  id:"e_009",	dur:1.604,				next:["e_004","e_010"] },
+	 {  id:"e_010",	dur:2.390,				next:["e_005=@LC","e_011=@LC","e_017=@LC"] },
+	 {  id:"e_011",	dur:11.520,				next:["e_012","e_013"] },
+	 {  id:"e_012",	dur:2.687,				next:["e_sel"] },
+	 {  id:"e_013",	dur:6.144,				next: /*c1*/"c_sel" },
+	 {  id:"e_014",	dur:2.138,				next:["e_002","e_007","e_015","e_019","e_024"] },
+	 {  id:"e_015",	dur:3.421,				next:["e_008","e_016"] },
+	 {  id:"e_016",	dur:4.722,				next:["e_003","e_009"] },
+	 {  id:"e_017",	dur:14.815,				next:[/*B*/"b_001","b_008","b_014","b_017"/*B*/] },
+	 {  id:"e_018",	dur:1.623,				next:["e_002","e_007","e_015","e_019","e_024"] },
+	 {  id:"e_019",	dur:6.363,				next:["e_020","e_025","e_028"] },
+	 {  id:"e_020",	dur:6.550,	ofs:0.166,	next: ["e_021","e_026","e_029"] },
+	 {  id:"e_021",	dur:6.870,				next:["e_022","e_027"] },
+	 {  id:"e_022",	dur:8.975,				next:[/*g1*/"g_sel", /*j1*/"j_sel"] },
+	 {  id:"e_023",	dur:2.049,				next:["e_002","e_007","e_015","e_019","e_024"] },
+	 {  id:"e_024",	dur:6.242,				next:["e_020","e_025","e_028"] },
+	 {  id:"e_025",	dur:6.000,				next:["e_021","e_026","e_029"] },
+	 {  id:"e_026",	dur:6.349,				next:["e_022","e_027"] },
+	 {  id:"e_027",	dur:8.337,	ofs:0.10,	next:["h_sel+"] },
+	 {  id:"e_028",	dur:5.772,				next:["e_021","e_026","e_029"] },
+	 {  id:"e_029",	dur:6.333,				next:["e_022","e_027"] },
+	 
+	 //	-- F --
+	 
+	 {	id:"f_sel",							sel: ["f_001=3","f_010","f_016","f_024","f_032","f_045"] },
+	 {	id:"f_sel_2",						sel: ["f_001","f_010","f_016","f_024","f_032","f_045"] },
+	 {	id:"f_sel+",						sel: ["f_002","f_011","f_017","f_025","f_033","f_046"]	},
+	 
+	 {	id:"f_(bridge)_p31~",	dur: 4.980,	next:["f_sel+"]	},	//	intro
+	 {	id:"f_(bridge)_p54~",	dur:24.625,	next:["f_sel+"]	},	//	intro
+	 
+	 {  id:"f_001",	dur:1.392,				next:["f_002","f_sel+=6"] },
+	 {  id:"f_002",	dur:4.485,				next:["f_004","f_047"] },
+	 {  id:"f_003",	dur:5.302,				next:["f_014"] },
+	 {  id:"f_004",	dur:4.796,				next:["f_005","f_019"] },
+	 {  id:"f_005",	dur:6.404,				next:["f_007","f_006","f_020","f_049"] },
+	 {  id:"f_006",	dur:4.309,				next:["f_008","f_014","f_021","f_029","f_037"] },
+	 {  id:"f_007",	dur:4.309,				next:["f_008","f_021","f_029","f_037"] },
+	 {  id:"f_008",	dur:10.279,				next:["f_009","f_030"] },
+	 {  id:"f_009",	dur:16.428,				next:[/*f1*/"f_sel"] },
+	 {  id:"f_010",	dur:1.958,				next:["f_sel+"] },
+	 {  id:"f_011",	dur:4.833,				next:["f_012","f_018","f_026","f_034"] },
+	 {  id:"f_012",	dur:4.828,				next:["f_013","f_027","f_035"] },
+	 {  id:"f_013",	dur:5.598,				next:["f_003","f_006","f_040"] },
+	 {  id:"f_014",	dur:14.989,				next:["f_015","f_023"] },
+	 {  id:"f_015",	dur:9.706,				next:[/*e1*/"e_sel",/*h1*/"h_sel",/*g1*/"g_sel"] },
+	 {  id:"f_016",	dur:2.642,				next:["f_sel+"] },
+	 {  id:"f_017",	dur:4.468,				next:["f_018","f_026"] },
+	 {  id:"f_018",	dur:5.000,				next:["f_019","f_027"] },
+	 {  id:"f_019",	dur:5.494,				next:["f_020"] },
+	 {  id:"f_020",	dur:3.817,				next:["f_008","f_014","f_021","f_029","f_037"] },
+	 {  id:"f_021",	dur:9.395,				next:["f_022","f_030","f_038","f_043"] },
+	 {  id:"f_022",	dur:5.697,				next:["f_023","f_015","f_031"] },
+	 {  id:"f_023",	dur:8.421,				next:[/*f1*/"f_sel_2",/*e1*/"e_sel",/*O*/"o_sel"] },
+	 {  id:"f_024",	dur:1.958,				next:["f_sel+"] },
+	 {  id:"f_025",	dur:4.151,				next:["f_018","f_026"] },
+	 {  id:"f_026",	dur:4.996,				next:["f_019","f_027"] },
+	 {  id:"f_027",	dur:4.380,				next:["f_028","f_036"] },
+	 {  id:"f_028",	dur:6.701,				next:["f_021","f_029","f_037"] },
+	 {  id:"f_029",	dur:9.510,				next:["f_030","f_038","f_043"] },
+	 {  id:"f_030",	dur:6.161,				next:["f_015","f_023","f_031","f_039","f_044"] },
+	 {  id:"f_031",	dur:8.757,				next:[/*h1*/"h_sel",/*G*/"g_sel"] },
+	 {  id:"f_032",	dur:1.369,				next:["f_sel+"] },
+	 {  id:"f_033",	dur:4.697,				next:["f_012","f_018","f_026","f_034"] },
+	 {  id:"f_034",	dur:4.197,				next:["f_035","f_041"] },
+	 {  id:"f_035",	dur:9.202,				next:["f_014","f_021","f_029","f_037"] },
+	 {  id:"f_036",	dur:6.122,				next:["f_008","f_021","f_029","f_037"] },
+	 {  id:"f_037",	dur:8.546,				next:["f_030","f_038","f_043"] },
+	 {  id:"f_038",	dur:5.515,				next:["f_031","f_039","f_044"] },
+	 {  id:"f_039",	dur:10.145,				next:[/*a*/"a_10;sel-", /*j1*/"j_sel"] },
+	 {  id:"f_040",	dur:4.531,				next:["f_042"] },
+	 {  id:"f_041",	dur:9.546,				next:["f_042"] },
+	 {  id:"f_042",	dur:8.656,				next:["f_022","f_030","f_043"] },
+	 {  id:"f_043",	dur:5.697,				next:["f_031","f_039","f_044"] },
+	 {  id:"f_044",	dur:8.428,				next:[/*h1*/"h_sel",/*O*/"o_sel"] },
+	 {  id:"f_045",	dur:1.203,				next:["f_011","f_017","f_025","f_033","f_046"] },
+	 {  id:"f_046",	dur:4.718,				next:["f_004","f_047"] },
+	 {  id:"f_047",	dur:5.276,				next:["f_048","f_019"] },
+	 {  id:"f_048",	dur:6.161,				next:["f_006","f_007","f_049"] },
+	 {  id:"f_049",	dur:5.250,				next:["f_008","f_021","f_029","f_037"] },
+	 
+	 //	-- G --
+	 
+	 {	id:"g_sel",							sel: ["g_001","g_006","g_010","g_016","g_020"] },
+	 
+	 {  id:"g_001",	dur:2.666,				next:["g_002","g_011","g_021"] },
+	 {  id:"g_002",	dur:4.510,				next:["g_003","g_008","g_012","g_022","g_008","g_012","g_015"] },
+	 {  id:"g_003",	dur:8.671,				next:["g_004","g_005","g_025"] },
+	 {  id:"g_004",	dur:5.906,				next:[/*f1*/"f_sel_2", /*g1*/"g_sel"] },
+	 {  id:"g_005",	dur:7.010,				next:[/*P*/"p_sel"] },
+	 {  id:"g_006",	dur:1.944,				next:["g_007","g_017"] },
+	 {  id:"g_007",	dur:4.101,				next:["g_003","g_008","g_012","g_022","g_008","g_012","g_015"] },
+	 {  id:"g_008",	dur:7.401,				next:["g_009","g_009","g_013"] },
+	 {  id:"g_009",	dur:6.732,				next:["g_024","g_024","g_024","g_024","g_024","g_024",/*j1*/"j_sel"] },
+	 {  id:"g_010",	dur:2.208,				next:["g_002","g_011","g_021"] },
+	 {  id:"g_011",	dur:4.281,				next:["g_003","g_008","g_012","g_022","g_008","g_012","g_015"] },
+	 {  id:"g_012",	dur:7.817,				next:["g_013=2","g_005"] },
+	 {  id:"g_013",	dur:5.848,				next:["g_014","g_015"] },
+	 {  id:"g_014",	dur:22.729,				next:[/*g1*/"g_sel", /*d1*/"d_sel", /*e1*/"e_sel"] },
+	 {  id:"g_015",	dur:24.207,				next:[/*f1*/"f_sel_2"] },
+	 {  id:"g_016",	dur:2.562,				next:["g_007","g_017"] },
+	 {  id:"g_017",	dur:5.130,				next:["g_008","g_018"] },
+	 {  id:"g_018",	dur:11.468,				next:["g_002","g_007","g_011","g_017","g_021"] },
+	 {  id:"g_020",	dur:2.666,				next:["g_002","g_011","g_021"] },
+	 {  id:"g_021",	dur:4.510,				next:["g_003","g_008","g_012","g_022","g_008","g_012","g_015"] },
+	 {  id:"g_022",	dur:8.671,				next:["g_004","g_005","g_025"] },
+	 {  id:"g_025",	dur:7.166,				next:[/*Q*/"q_sel"] },									///!!!///
+	 
+	 //	-- h --
+	 
+	 {	id:"h_sel",							sel: ["h_001","h_009","h_017","h_026","h_034","h_040"] },
+	 {	id:"h_sel+",						sel: ["h_002","h_010","h_019","h_027","h_035","h_047"] },
+	 
+	 {  id:"h_001",	dur:2.390,				next:["h_002","h_010","h_019","h_027","h_035","h_041"] },
+	 {  id:"h_002",	dur:2.859,				next:["h_003","h_011","h_020","h_028","h_036"] },
+	 {  id:"h_003",	dur:2.606,				next:["h_004","h_012"] },
+	 {  id:"h_004",	dur:3.277,				next:["h_005","h_013"] },
+	 {  id:"h_005",	dur:2.249,				next:["h_006","h_014","h_023","h_031","h_039"] },
+	 {  id:"h_006",	dur:2.575,				next:["h_007","h_015","h_024"] },
+	 {  id:"h_007",	dur:2.537,				next:["h_008","h_016"] },
+	 {  id:"h_008",	dur:8.134,	ofs:0.156,	next:[/*j1*/"j_sel"] },
+	 {  id:"h_009",	dur:2.402,				next:["h_002","h_010","h_019","h_027","h_035","h_041"] },
+	 {  id:"h_010",	dur:2.845,				next:["h_003","h_011","h_020","h_028","h_036"] },
+	 {  id:"h_011",	dur:2.532,				next:["h_004","h_012"] },
+	 {  id:"h_012",	dur:2.978,				next:["h_005","h_013"] },
+	 {  id:"h_013",	dur:2.239,				next:["h_006","h_014","h_023","h_031","h_039"] },
+	 {  id:"h_014",	dur:2.429,				next:["h_007","h_015","h_024"] },
+	 {  id:"h_015",	dur:2.509,				next:["h_008","h_016"] },
+	 {  id:"h_016",	dur:7.736,	ofs:0.131,	next:["a_10;sel-"] },											//	-> a
+	 {  id:"h_017",	dur:2.406,				next:["h_002","h_010","h_019","h_027","h_035","h_041"] },
+	 {  id:"h_019",	dur:2.942,				next:["h_003","h_011","h_020","h_028","h_036"] },
+	 {  id:"h_020",	dur:7.782,				next:["h_006","h_014","h_023","h_031","h_039"] },
+	 {  id:"h_023",	dur:2.453,				next:["h_007","h_015","h_024"] },
+	 {  id:"h_024",	dur:2.522,				next:["h_025"] },
+	 {  id:"h_025",	dur:8.470,	ofs:0.114,	next:[/*f1*/"f_sel_2"] },
+	 {  id:"h_026",	dur:2.400,				next:["h_002","h_010","h_019","h_027","h_035","h_041"] },
+	 {  id:"h_027",	dur:2.946,				next:["h_003","h_011","h_020","h_028","h_036"] },
+	 {  id:"h_028",	dur:8.275,				next:["h_006","h_014","h_023","h_031","h_039"] },
+	 {  id:"h_031",	dur:5.400,				next:["h_025","h_033"] },
+	 {  id:"h_033",	dur:9.921,				next:[/*c1*/"c_sel"] },
+	 {  id:"h_034",	dur:2.410,				next:["h_002","h_010","h_019","h_027","h_035","h_041"] },
+	 {  id:"h_035",	dur:2.916,				next:["h_003","h_011","h_020","h_028","h_036"] },
+	 {  id:"h_036",	dur:8.459,	ofs:0.055,	next:["h_006","h_014","h_023","h_031","h_039"] },
+	 {  id:"h_039",	dur:12.402,				next:[/*n*/"n_sel"] },
+	 {  id:"h_040",	dur:2.414,				next:["h_002","h_010","h_019","h_027","h_035","h_041"] },
+	 {  id:"h_041",	dur:2.865,				next:["h_003","h_011","h_020","h_028","h_036"] },
+	 
+	 //	-- I -- ( strain )
+	 {	id:"i_sel",					ref;"i_1;sel"		},
+	 {	id:"i_1;sel",				sel:[{ seq: "#001",	next:"#2_a;sel" },
+										 { seq: "#006",	next:"#2_a;sel" },
+										 { seq: "#013",	next:"#3;sel" },
+										 { seq: "#020",	next:"#2_b;sel" }	]	},
+	 {	id:"i_2_a;sel",				sel:[{seq:"#002"}, {seq:"#007"}],	next:"#3;sel"	 },
+	 {	id:"i_2_b;sel",				sel:[{ seq: "#021",	next:"#3;sel" },
+										 { seq: "#026",	next:"#028" }	]	 },
+	 {	id:"i_3;sel",				sel:[{seq:"#003"}, {seq:"#008"}, {seq:"#014"}, {seq:"#022"}],	next:"#4;sel" },
+	 {	id:"i_4;sel",				sel:[{ seq: "#004",					score:2,	next:["#~m&k_1","#020;seq"] },
+										 { seq: "#009",					score:2,	next:"#5;sel" },
+										 { seq: "#015",					score:2,	next:"#5;sel" },
+										 { seq:["#023","#010","#011;a"],	score:1,	next:"#024" }	]	 },
+	 {	id:"i_5;sel",				sel:[{seq:"#010"},{seq:"#016"}],	next:"#6;sel" },
+	 {	id:"i_6;sel",				sel:[{ seq: "#011",	next:["i_~m&k_2=2","#018","#019"]  },
+										 { seq: "#017",	next:["#018","#019"] },	]	},
+	 {	id:"i_~m&k_1",	seq: "#005",	next:["m_sel","k_sel"]	},
+	 {	id:"i_~m&k_2",	seq: "#012",	next:["m_sel","k_sel"]	},
+	 {	id:"i_020;seq",	seq: "#020",	next:"#2_b;sel"		},
+	
+	 //	bare 
+	 {  id:"i_018",	dur:7.952,			next:["i_019","i_025","i_027"] },
+	 {  id:"i_019",	dur:6.875,			next:[/*b3x2*/"b_sel_3=2", /*d1*/"d_sel"] },						//	--> B & D
+	 {  id:"i_024",	dur:7.016,			next:[/*?*/"unimplemented"] },										///!!!///
+	 {  id:"i_025",	dur:9.290,			next:["i_027"] },
+	 {  id:"i_027",	dur:8.476,			next:[/*P*/"p_sel"] },
+	 {  id:"i_028",	dur:7.970,			next:["i_027"] },
+	 //
+	 {	id:"i_audioCues",
+	 sel:[{ id:"#001", dur:3.293 },	{ id:"#002", dur:3.278 },	{ id:"#003", dur:5.346 },	{ id:"#004", dur:18.631 },	{ id:"#005", dur:7.916 },
+		  { id:"#006", dur:5.005 }, { id:"#007", dur:3.935 },	{ id:"#008", dur:6.275 },	{ id:"#009", dur:7.958 },	{ id:"#010", dur:3.910 },		  
+		  { id:"#011", dur:4.060 }, { id:"#011;a", dur:3.910 },	{ id:"#012", dur:7.378 },	{ id:"#013", dur:7.776 },	{ id:"#014", dur:5.186 },
+		  { id:"#015", dur:7.720 }, { id:"#016", dur:3.578 },	{ id:"#017", dur:3.741 },	{ id:"#020", dur:3.653 },	{ id:"#021", dur:3.222 },
+		  { id:"#022", dur:6.519 },	{ id:"#023", dur:8.196 },	{ id:"#026", dur:3.222 }	]	 },
+	 
+	 //	-- J --
+	 
+	 {	id:"j_sel",						sel: ["j_001","j_011","j_020","j_030","j_047","j_057"] },
+	 {	id:"j_sel_2",						sel: ["j_001","j_011","j_020","j_030"] },
+	 {	id:"j_sel_sub1",					sel: ["j_006=2","j_015=2","j_024=2"] },
+	 
+	 {  id:"j_001",	dur:3.100,				next:["j_002","j_012","j_021","j_031"] },
+	 {  id:"j_002",	dur:3.092,				next:["j_003","j_013","j_022","j_032"] },
+	 {  id:"j_003",	dur:3.088,				next:["j_004","j_005","j_014","j_023"] },
+	 {  id:"j_004",	dur:3.109,				next:["j_sel_sub1","j_034","j_035", /*j2*/"j_sel_2"] },
+	 {  id:"j_005",	dur:3.622,				next:["j_sel_sub1","j_034","j_035", /*j2*/"j_sel_2"] },
+	 {  id:"j_006",	dur:9.247,				next:["j_009","j_010","j_018"] },
+	 {  id:"j_007",	dur:3.253,				next:["j_053","j_063"] },
+	 {  id:"j_009",	dur:3.071,				next:[/*j1*/"j_sel"] },
+	 {  id:"j_010",	dur:3.337,				next:["j_067","j_069"] },
+	 {  id:"j_011",	dur:3.096,				next:["j_002","j_012","j_021","j_031"] },
+	 {  id:"j_012",	dur:3.129,				next:["j_003","j_013","j_022","j_032"] },
+	 {  id:"j_013",	dur:3.263,				next:["j_004","j_005","j_014","j_023"] },
+	 {  id:"j_014",	dur:3.459,				next:["j_sel_sub1","j_034","j_035", /*j1*/"j_sel"] },
+	 {  id:"j_015",	dur:9.811,				next:["j_018","j_019"] },
+	 {  id:"j_018",	dur:3.430,				next:[/*j1*/"j_sel"] },
+	 {  id:"j_019",	dur:3.509,				next:["j_067","j_069"] },
+	 {  id:"j_020",	dur:3.184,				next:["j_002","j_012","j_021","j_031"] },
+	 {  id:"j_021",	dur:3.263,				next:["j_003","j_013","j_022","j_032"] },
+	 {  id:"j_022",	dur:3.346,				next:["j_004","j_005","j_023","j_033"] },
+	 {  id:"j_023",	dur:3.367,				next:[/*j2*/"j_sel_2"] },
+	 {  id:"j_024",	dur:3.005,				next:["j_025","j_026"] },
+	 {  id:"j_025",	dur:3.228,				next:["j_027","j_028"] },
+	 {  id:"j_026",	dur:3.228,				next:["j_027","j_028"] },
+	 {  id:"j_027",	dur:3.209,				next:["j_029"] },
+	 {  id:"j_028",	dur:3.209,				next:["j_029"] },
+	 {  id:"j_029",	dur:3.394,				next:[/*j1*/"j_sel","j_067","j_069","j_067","j_069"] },
+	 {  id:"j_030",	dur:3.023,				next:["j_002","j_012","j_021","j_031"] },
+	 {  id:"j_031",	dur:3.231,				next:["j_003","j_013","j_022","j_032"] },
+	 {  id:"j_032",	dur:3.179,				next:["j_023","j_033"] },
+	 {  id:"j_033",	dur:3.257,				next:["j_sel_sub1","j_034","j_035", /*j2*/"j_sel_2"] },
+	 {  id:"j_034",	dur:3.290,				next:["j_036","j_037"] },
+	 {  id:"j_035",	dur:3.290,				next:["j_036","j_037"] },
+	 {  id:"j_036",	dur:3.459,				next:["j_038","j_039"] },
+	 {  id:"j_037",	dur:3.459,				next:["j_038","j_039"] },
+	 {  id:"j_038",	dur:3.234,				next:["j_040","j_041"] },
+	 {  id:"j_039",	dur:3.234,				next:["j_040","j_041"] },
+	 {  id:"j_040",	dur:3.641,				next:["j_042","j_043"] },
+	 {  id:"j_041",	dur:3.641,				next:["j_042","j_043"] },
+	 {  id:"j_042",	dur:6.681,				next:["j_044"] },
+	 {  id:"j_043",	dur:6.681,				next:["j_044"] },
+	 {  id:"j_044",	dur:3.635,				next:["j_045","j_046"] },
+	 {  id:"j_045",	dur:4.041,				next: /*c1*/"c_sel" },
+	 {  id:"j_046",	dur:4.861,				next:[/*c1*/"c_sel"/*O*/] },
+	 {  id:"j_047",	dur:3.078,				next:["j_048","j_058"] },
+	 {  id:"j_048",	dur:3.046,				next:["j_049","j_059"] },
+	 {  id:"j_049",	dur:3.222,				next:["j_050","j_060"] },
+	 {  id:"j_050",	dur:3.234,				next:["j_051","j_061"] },
+	 {  id:"j_051",	dur:3.247,				next:["j_052","j_062","j_007"] },
+	 {  id:"j_052",	dur:3.922,				next:["j_053","j_063"] },
+	 {  id:"j_053",	dur:3.284,				next:["j_054"] },
+	 {  id:"j_054",	dur:3.453,				next:["j_055"] },
+	 {  id:"j_055",	dur:5.217,				next:["j_056","j_056","j_056","j_056","j_056",/*e v1*/"e_sel"] },
+	 {  id:"j_056",	dur:6.222,				next:[/*d v1*/"d_sel"] },
+	 {  id:"j_057",	dur:2.953,				next:["j_048","j_058"] },
+	 {  id:"j_058",	dur:4.148,				next:["j_049","j_059"] },
+	 {  id:"j_059",	dur:3.016,				next:["j_050","j_060"] },
+	 {  id:"j_060",	dur:3.328,				next:["j_051","j_061"] },
+	 {  id:"j_061",	dur:3.265,				next:["j_052","j_062","j_007"] },
+	 {  id:"j_062",	dur:3.384,				next:["j_053","j_063"] },
+	 {  id:"j_063",	dur:3.228,				next:["j_054","j_064"] },
+	 {  id:"j_064",	dur:3.403,				next:["j_055","j_065"] },
+	 {  id:"j_065",	dur:9.647,				next:[/*b3*/"b_sel_3"] },
+	 {  id:"j_067",	dur:9.290,				next:["j_067a","j_068"] },
+	 {  id:"j_067a",dur:9.290,				next:["j_068"] },
+	 {  id:"j_068",	dur:24.745,				next:[/*I v1*/"unimplemented"] },							///!!!///
+	 {  id:"j_069",	dur:9.743,				next:["j_068","j_070"] },
+	 {  id:"j_070",	dur:22.149,				next:[/*e1*/"e_sel"] },
+	 
+	 
+	 //--------------------------
+	 //	traumbaum; 2013
+	 //--------------------------
+	 
+	 //	K ( memento )
+	 {	id:"k_sel",		sel:["#01;sel=3","#30;sel=2","#40;sel=2"]	},
+	 {	id:"k_01;sel",	next:"#02;sel",	 		sel:[{	id:"##base",		dur:5.790	},
+													 {	id:"##alt",			dur:5.709	},
+													 {	id:"##legacy",		dur:6.334	}	]	},
+	 {	id:"k_02;sel",							sel:[{	id:"##base",		dur:2.561,	next:"#03;sel"	},
+													 {	id:"##alt",			dur:2.561,	next:"#03;sel"	},
+													 {	id:"##legacy",		dur:2.584,	next:"#03;sel"	},
+													 {	id:"##~10",			dur:3.880,	next:"#10;sel"	}	]	},
+	 {	id:"k_03;sel",					 		sel:[{	id:"##base",		dur:3.054,	next:"#04;sel"	},
+													 {	id:"##alt",			dur:3.054,	next:"#04;sel"	},
+													 {	id:"#03&04_legacy",	dur:5.600,	next:"#05;sel"	}	]	},
+	 {	id:"k_04;sel",					 		sel:[{	id:"##~05",			dur:2.256,	next:"#05;sel"	},
+													 {	id:"##~20",			dur:2.256,	next:"#20;sel"	}	]	},
+	 {	id:"k_05;sel",	next:"#06;sel",	 		sel:[{	id:"##base",		dur:3.179	},
+													 {	id:"##legacy",		dur:3.287	}	]	},
+	 {	id:"k_06;sel",					 		sel:[{	id:"##fast",		dur:3.729,	next:"#07;sel"	},
+													 {	id:"##slow",		dur:4.596,	next:"#07;sel" /*-branch here-*/	},
+													 {	id:"##legacy",		dur:4.339,	next:"#07;sel"	}	]	},
+	 {	id:"k_07;sel",	next:["d_sel=2","m_sel"],sel:[{	id:"##base",		dur:4.423	},				/*b-h!!*/	//	provisory
+													 {	id:"##legacy",		dur:3.964	}	]	},
+	 {	id:"k_10;sel",							sel:[{	id:"##~11",			dur:5.048,	next:"#11;sel"	},
+													 {	id:"##end",			dur:4.575,	next:"#12(provisory);sel"	}	]	},
+	 {	id:"k_11;sel",							sel:[{	id:"##long",		dur:10.687,	next:"#12(provisory);sel"	},
+													 {	id:"##short",		dur:5.008,	next:"#12(provisory);sel"	}	]	},
+	 {	id:"k_12(provisory);sel",				sel:["d_sel=2","m_sel"]	},								/*b-h!!*/	//	provisory
+	 {	id:"k_20;sel",	next:"#21;sel",			sel:[{	id:"##base",		dur:1.880	}	]	},
+	 {	id:"k_21;sel",	next:"#22;sel",			sel:[{	id:"##short",		dur:4.708	},
+													 {	id:"##long",		dur:9.345	}	]	},
+	 {	id:"k_22;sel",	next:"#23;sel",			sel:[{	id:"##short",		dur:5.993	},
+													 {	id:"##long",		dur:10.355	},
+													 {	id:"##extra",		dur:10.355	}	]	},
+	 {	id:"k_23;sel",	next:["j_sel","o_(bridge)_~k"],sel:[{	id:"##base",		dur:6.224,	instruction:"modify dur=0.8"	},				///!!!///	-> Gm
+													 {	id:"##low",			dur:6.849	}	]	},
+	 {	id:"k_30;sel",	next:"#31;sel",			sel:[{	id:"##base",		dur:8.104	},
+													 {	id:"##flat",		dur:8.100	}	]	},
+	 {	id:"k_31;sel",	next:"#32;sel",			sel:[{	id:"##base",		dur:3.970	},
+													 {	id:"##flat",		dur:3.970	}	]	},
+	 {	id:"k_32;sel",	next:"#33;sel",			sel:[{	id:"##base",		dur:3.850	},
+													 {	id:"##flat",		dur:3.850	}	]	},
+	 {	id:"k_33;sel",	next:"#34;sel",			sel:[{	id:"##base",		dur:9.683	},
+													 {	id:"##deco",		dur:9.683	}	]	},
+	 {	id:"k_34;sel",	next:"r_sel_A",			sel:[{	id:"##base",		dur:4.465	},
+													 {	id:"##deco",		dur:4.465	}	]	},
+	 {	id:"k_description",	
+	 comment:"this piece is quasi a memento, what should remain after the end of my life. dedicated to fumi and sui, and all lovely people accompanied me once. "	},
+	 {	id:"k_40;sel",	next:"#41;sel",			sel:[{	id:"##base",		dur:1.508	},
+													 {	id:"##alt1",		dur:1.833	},
+													 {	id:"##alt2",		dur:1.508	}	]	},
+	 {	id:"k_41;sel",	next:"#42;sel",			sel:[{	id:"##base",		dur:1.161	},
+													 {	id:"##alt1",		dur:1.161	},
+													 {	id:"##alt2",		dur:1.161	}	]	},
+	 {	id:"k_42;sel",	next:"#43;sel",			sel:[{	id:"##base",		dur:1.913	},
+													 {	id:"##alt1",		dur:1.913	},
+													 {	id:"##alt2",		dur:1.913	}	]	},
+	 {	id:"k_43;sel",	next:"#44;sel",			sel:[{	id:"##base",		dur:2.357	},
+													 {	id:"##alt1",		dur:2.357	},
+													 {	id:"##alt2",		dur:2.357	}	]	},
+	 {	id:"k_44;sel",							sel:[{	id:"##base",		dur:4.427,	next:["#45;sel=3","#50;sel=2"] },
+													 {	id:"##alt1",		dur:4.427,	next:["#45;sel=3","#50;sel=2"] },
+													 {	id:"##alt2",		dur:4.427,	next:["#45;sel=3","#50;sel=2"] },
+													 {	id:"##alt3",		dur:4.427,	next:["#45;sel=3","#50;sel=2"] },
+													 {	id:"##rit~m",		dur:6.806,	next:"m_sel"	}]	},
+	 {	id:"k_45;sel",							sel:[{	id:"##base",		dur:2.866,	next:"k_46;sel"	},
+													 {	id:"##alt",			dur:2.866,	next:"k_46;sel"	},
+													 {	id:"##lite",		dur:12.482,	next:"m_sel"/*b-h!!*/	}	]	},
+	 {	id:"k_46;sel",	next:"#47;sel",			sel:[{	id:"##base",		dur:3.037	},
+													 {	id:"##alt",			dur:3.037	}	]	},
+	 {	id:"k_47;sel",	next:"m_sel",			sel:[{	id:"##SD7",			dur:7.103	},
+													 {	id:"##Tm",			dur:7.306	}	]	},
+	 {	id:"k_50;sel",	next:"#51;sel",			sel:[{	id:"##base",		dur:2.983	},
+													 {	id:"##alt",			dur:2.983	}	]	},
+	 {	id:"k_51;sel",	next:"#52;sel",			sel:[{	id:"##base",		dur:2.973	},
+													 {	id:"##alt",			dur:2.973	}	]	},
+	 {	id:"k_52;sel",	next:"#53;sel",			sel:[{	id:"##base",		dur:3.413	},
+													 {	id:"##alt",			dur:3.413	}	]	},
+	 {	id:"k_53;sel",	next:"m_sel",			sel:[{	id:"##base",		dur:4.560	},
+													 {	id:"##alt",			dur:4.560	}	]	},
+	 {	id:"k_30_Bbm",														dur:15.850,	next:"#31;sel"	},
+	 
+	 //	L ( passage )
+	 
+	 {	id:"l_sel",								sel:[	"#01;sel=(@F{F-Ab}=0)",
+													 {	score:"@F{d_041}*3",	id:"#01_Fm",					dur:10.159,	next:"#02;sel"	},		//	from d_041
+													 {	score:"@F{F-Ab}",		id:"#02_base_om15~",ofs:0.729,	dur: 6.308,	next:"#03;sel"	} ]	},	//	from om_15
+	 {	id:"l_01;sel",	next:"#02;sel",			sel:[{	id:"##base",		dur:0.202						},
+													 {	id:"##rubato",		dur:1.000						}	]	},
+	 {	id:"l_02;sel",	next:"#03;sel",			sel:[{	id:"##base",		dur:5.333	},
+													 {	id:"##high",		dur:5.333	}	]	},
+	 {	id:"l_03;sel",	next:"#04;sel",			sel:[{	id:"##base",		dur:5.080	},
+													 {	id:"##high",		dur:5.163	}	]	},
+	 {	id:"l_04;sel",	next:"#05;sel",			sel:[{	id:"##base",		dur:10.586	},
+													 {	id:"##alt",			dur:10.834	},
+													 {	id:"##twinkle",		dur:10.586	}]	},
+	 {	id:"l_05;sel",	next:"#06;sel",			sel:[{	id:"##base",		score:"1+((@F{twinkle}=0)*2)",	dur:5.373	},
+													 {	id:"##+melody",		score:"1+((@F{twinkle}=0)*2)",	dur:5.123	},
+													 {	id:"##twinkle",		score:"1+((@F{twinkle}=1)*2)", 	dur:5.373	}]	},
+	 {	id:"l_06;sel",	next:"#07;sel",			sel:[{	id:"##base",		dur:6.068	},
+													 {	id:"##alt",			dur:6.068	},
+													 {	id:"##ex",			dur:6.068	},
+													 {	id:"##twinkle",		score:"@F{twinkle}*3",	dur:7.876	}]	},
+	 {	id:"l_07;sel",	sel:["b_sel_3","m_sel"] },	
+	 
+	 //	M ( entrance to archylte )
+	 {	id:"m_sel",	sel:"#10;sel",	instruction:"set m_loop=0"	},
+	 {	id:"m_10;sel",	instruction:"set m_loop=m_loop+1",
+													sel:[      "#40;sel=(m_loop>1)*10000",
+														 {	id:"##base",	score:"(@C%2=0)*(@F{m_18}=0)",		dur:3.721,	next:"#11;sel"	},
+														 {	id:"##alt",		score:"(@C%2=1)*(@F{m_18}=0)",		dur:3.721,	next:"#11;sel"	},
+														 {	id:"##dolm",	score:"@F{m_}",			ofs:0.503,	dur:4.224,	next:"#11;sel"	},
+														 {	id:"##~21",		score:"2*(1-@F{m_18})",							next:"#22;sel",
+								   							seq:["#11_base",{ id:"#21_base",					dur:3.787 }	]				}	]	},
+	 {	id:"m_11;sel",	next:"#12;sel",				sel:[{	id:"##base",	score:"@F{dolm}!1",					dur:3.553					},
+														 {	id:"##alt",		score:"@F{dolm}!1",					dur:3.553					},
+														 {	id:"##dolm",	score:"@F{dolm}=1",		ofs:0.482,	dur:4.035					}	]	},
+	 {	id:"m_12;sel",	next:"#13;sel",				sel:[{	id:"##base",	score:"@F{dolm}!1",					dur:3.574					},
+														 {	id:"##alt",		score:"@F{dolm}!1",					dur:3.574					},
+														 {	id:"##alt2",	score:"@F{dolm}!1",					dur:3.574					},
+														 {	id:"##dolm",	score:"@F{dolm}=1",		ofs:0.439,	dur:4.013					}	]	},
+	 {	id:"m_13;sel",	next:["#14;sel","#30;sel"],	sel:[{	id:"##base",	score:"@F{dolm}!1",		ofs:1.275,	dur:4.963					},
+														 {	id:"##alt",		score:"@F{dolm}!1",		ofs:0.499,	dur:4.187					},
+														 {	id:"##alt2",	score:"@F{dolm}!1",		ofs:1.357,	dur:5.045					},
+														 {	id:"##dolm",	score:"@F{dolm}=1",		ofs:1.275,	dur:4.963					}	]	},
+	 {	id:"m_14;sel",	next:"#15;sel",				sel:[{	id:"##base",							ofs:1.400,	dur:5.076					},
+														 {	id:"##alt",								ofs:1.400,	dur:5.076					}	]	},
+	 {	id:"m_15;sel",	next:"#16;sel",				sel:[{	id:"##base",							ofs:1.396,	dur:3.683					},
+														 {	id:"##alt",								ofs:1.396,	dur:3.683					}	]	},
+	 {	id:"m_16;sel",	next:"#17;sel",				sel:[{	id:"##base",										dur:5.307					},
+														 {	id:"##alt",											dur:5.307					}	]	},
+	 {	id:"m_17;sel",	next:["#18;sel","#10;sel"],
+	 												sel:[{	id:"##base",										dur:4.050					},
+														 {	id:"##alt",											dur:4.050					}	]	},
+	 {	id:"m_18;sel",	next:["#19;sel","#10;sel"],	sel:[{	id:"##base",	score:3,							dur:14.322					},
+														 {	id:"##alt",		score:3,							dur:14.322					},
+														 {	id:"##flocken",	score:2,							dur:32.380					}	]	},
+	 {	id:"m_19;sel",								sel:[{	id:"##dolmen",	score:2,							dur:33.552,	next:"#90;sel"	},
+														 {	id:"##theme",	score:1,				ofs:-1.0,	dur:35.830,	next:"#90;sel"	}	]	},
+	 {	id:"m_90;sel",								sel:[{	id:"##bridge",	score:3,							dur:28.781,	next:["e_sel=2","b_sel"	/*provisory*/]},///!!!///
+														 {	id:"##paradiso",score:1,							dur:84.145,	next:["#10;sel",/*ay*/"unimplemented"]},///!!!///
+														 {	id:"##curtain",	score:2,							dur:82.645,	next:["#10;sel",/*k*/"k_sel"]},/*- branch here -*/
+														 /*k*/"k_sel=3",
+														 "#10;sel=2"																			]	},
+	 {	id:"m_22;sel",	next:"#23;sel",				sel:[{	id:"##base",	score:2,							dur:3.714					},
+														 {	id:"##alt",		score:1,							dur:3.714					}	]	},
+	 {	id:"m_23;sel",	next:"#24;sel",				sel:[{	id:"##base",	score:2,							dur:3.934					},
+														 {	id:"#13_alt;23",score:2,
+															seq:[{	id:"#13_alt;23ac",	ofs:0.497,	dur:4.187				},
+																 {	id:"#13~24",		ofs:1.876,	dur:1.876				}	]			}	]	},
+	 {	id:"m_24;sel",	next:"#25;sel",				sel:[{	id:"##base",	score:2,							dur:1.871					},
+														 {	id:"##alt",		score:1,							dur:1.871					}	]	},
+	 {	id:"m_25;sel",	next:"#26;sel",				sel:[{	id:"##base",	score:4,							dur:2.254					},
+														 {	id:"##alt",		score:3,							dur:2.254					}	]	},
+	 {	id:"m_26;sel",	next:"#27;sel",				sel:[{	id:"##base",	score:2,							dur:3.061					},
+														 {	id:"##alt",		score:1,							dur:3.061					}	]	},
+	 {	id:"m_27;sel",	next:"#28;sel",				sel:[{	id:"##base",	score:3,							dur:3.729					},
+														 {	id:"##alt",		score:2,							dur:3.729					}	]	},
+	 {	id:"m_28;sel",	next:["#18;sel","#10;sel"],	sel:[{	id:"##base",	score:2,							dur:4.226					},
+														 {	id:"##alt",		score:1,							dur:4.226					}	]	},
+	 {	id:"m_30;sel",	next:"#31;sel",				sel:[{	id:"##base",	score:3,				ofs:1.413,	dur:4.843					},
+														 {	id:"##alt",		score:2,				ofs:1.413,	dur:4.843					}	]	},
+	 {	id:"m_31;sel",	next:"#32;sel",				sel:[{	id:"##base",	score:3,							dur:2.143					},
+														 {	id:"##alt",		score:2,							dur:2.143					}	]	},
+	 {	id:"m_32;sel",	next:"#33;sel",				sel:[{	id:"##base",	score:"3+@F{base}",					dur:4.322					},
+														 {	id:"##alt",		score:"2+@F{alt}",					dur:4.322					}	]	},
+	 {	id:"m_33;sel",	next:"#34;sel",				sel:[{	id:"##base",	score:"3+@F{base}",					dur:3.909					},
+														 {	id:"##alt",		score:"2+@F{alt}",					dur:3.909					}	]	},
+	 {	id:"m_34;sel",	next:"#35;sel",				sel:[{	id:"##base",	score:3,							dur:2.459					},
+														 {	id:"##alt",		score:2,							dur:2.459					}	]	},
+	 {	id:"m_35;sel",	next:"#36;sel",				sel:[{	id:"##base",	score:3,							dur:3.664					},
+														 {	id:"##alt",		score:2,							dur:3.664					}	]	},
+	 {	id:"m_36;sel",	next:"#37;sel",				sel:[{	id:"##base",	score:3,							dur:3.647					},
+														 {	id:"##alt",		score:2,							dur:3.647					}	]	},
+	 {	id:"m_37;sel",	next:["#18;sel","#19;sel"],	sel:[{	id:"##base",	score:3,							dur:4.861					},
+														 {	id:"##alt",		score:2,							dur:4.861					}	]	},
+	 //	exit
+	 {	id:"m_40;sel",								sel:["b_001_m17~","c_001_m~"],	instruction:"set m_loop=0"	},
+	 //	N
+	 
+	 {	id:"n_sel",		sel:"#10;sel"	},
+	 {	id:"n_arp_exp;seq_10",	next:"#14;sel",	seq:[[{	id:"##10_exp_a",	score:"@C%2=0",						dur:2.635			},
+													  {	id:"##10_exp_b",	score:"@C%2=1",						dur:2.635			}	],
+													 [{	id:"##11_exp_a",							ofs:0.173,	dur:2.637			},
+													  {	id:"##11_exp_b",							ofs:0.173,	dur:2.637			}	],
+													 [{	id:"##12_exp_a",							ofs:0.268,	dur:2.692			},
+													  {	id:"##12_exp_b",							ofs:0.268,	dur:2.692			}	],
+													 [{	id:"##13_exp_a",							ofs:0.187,	dur:2.984			},
+													  {	id:"##13_exp_b",							ofs:0.187,	dur:2.984			}	]		]	},	
+	 {	id:"n_arp_exp;seq_14",	next:"*",		seq:[[{	id:"##14_exp_a",							ofs:0.305,	dur:2.623			},
+													  {	id:"##14_exp_b",							ofs:0.351,	dur:2.623			}	],
+													 [{	id:"##15_exp_a",							ofs:0.051,	dur:2.186			},
+													  {	id:"##15_exp_b",							ofs:0.051,	dur:2.186			}	],
+													 [{	id:"##16_exp_(aa-ab-ba)",	score:3,					dur:1.177			},
+													  {	id:"##16_exp_(bb)",			score:1,					dur:1.177			},
+													  {	id:"##16_exp_(ac)",			score:1,					dur:1.177			},
+													  {	id:"##16_exp_(bc)",			score:1,					dur:1.177			}	],
+													 [{	id:"##17_exp_a",	score:"@F{aa,ba}",	ofs:0.115,	dur:8.151			},
+													  {	id:"##17_exp_b",	score:"@F{ab,bb}",	ofs:0.023,	dur:8.059			},
+													  {	id:"##17_exp_c",	score:"@F{ac,bc}",	ofs:0.0,	dur:2.869			}	],
+													 [{	id:"##18_exp_ab",	score:"@F{exp_a,exp_b}",
+																								fileId:"space",	dur:0.001,	next:"#10;sel"	},
+													  {	id:"##18_exp_c_end",score:"@F{exp_c}",		ofs:0.02,	dur:3.786,	next:["e_sel","b_sel"]/*provisory*/	},
+													  {	id:"##18_exp_c~bss11",score:"@F{_c}",		ofs:0.0,	dur:3.048,	next:"#11_bss;sel"	}	]		]	},
+	 {	id:"n_bss;seq_12",	next:"c_sel"/*provisory*/,seq:[[{id:"##12_base",		score:5,							dur:4.489			},		///!!! Cm !!!///
+													  {	id:"##12_rare",		score:2,							dur:4.489			}	],
+													 [{	id:"##13_base",		score:5,							dur:3.438			},
+													  {	id:"##13_rare",		score:2,							dur:3.438			}	],
+													 [{	id:"##14_base",		score:5,							dur:3.408			},
+													  {	id:"##14_rare",		score:2,							dur:3.408			}	],
+													 [{	id:"##15_base",		score:5,							dur:3.618			},
+													  {	id:"##15_rare",		score:2,							dur:3.618			}	],
+													 [{	id:"##16_base",		score:5,							dur:2.888			},
+													  {	id:"##16_rare",		score:2,							dur:2.888			}	],
+													 [{	id:"##17_base",		score:5,							dur:5.041			},
+													  {	id:"##17_rare",		score:2,							dur:5.041			}	],
+													 [{	id:"##18_base",		score:5,							dur:4.479			},
+													  {	id:"##18_long",		score:2,							dur:8.062			}	]			]	},
+	 {	id:"n_bss;seq",			next:"*",		seq:[{	id:"#10_bss;sel",	sel:[{	id:"#bss_10_base",			dur:0.991,	ofs:0.991	},
+																				 {	id:"#bss_10_rubato",		dur:1.155,	ofs:1.155	}]		},
+													 {	id:"#11_bss;sel",	sel:[{	id:"#bss_11_base",			dur:18.670	},
+																				 {	id:"#bss_11_nm",			dur:18.506	}]		},
+													 {	id:"#12_bss;sel",	sel:[{	id:"#bss_12_nm",			dur:22.994,		next:["#10;sel","c_sel"/*provisory*/]	},
+																				 "#bss;seq_12"														]	}	]	},
+	 {	id:"n_10;sel",							sel:[{	id:"#arp_10_base",		score:"2-(@F{base}*2)",			dur:10.492,	next:"#14;sel"	},
+													 {	id:"#arp_10_nm_low",	score:"2-(@F{nm}*2)",			dur:10.346,	next:"#14;sel"	},
+													 {	id:"#arp_10_nm_high",	score:"2-(@F{nm}*2)",			dur:10.244,	next:"#14;sel"	},
+													 {	id:"#mel_10",			score:"(@F{exp,n_sel})*(1-@F{mel})*(1-@F{h_})",	dur:12.020,	next:"#14;sel"	},
+													 "#bss;seq=2*(1-@F{bss})",
+													 "#arp_exp;seq_10=1-@F{exp}"																			]	},
+	 {	id:"n_14;sel",							sel:[{	id:"#arp_14_base",		score:"@C%2=0",		ofs:0.375,	dur:11.142,	next:"#10;sel"	},
+													 {	id:"#arp_14_base+",		score:"@C%2=1",		ofs:0.375,	dur:11.142,	next:"#10;sel"	},
+													 {	id:"#arp_14_nm_high+",	score:"@F{nm}",		ofs:0.020,	dur:10.735,	next:"#10;sel"	},
+													 {	id:"#arp_14_nm_low+",	score:"@F{nm}",		ofs:0.093,	dur:11.511,	next:"#10;sel"	},
+													 {	id:"#mel_14+",			score:"@F{mel}",				dur:12.114,	next:"#10;sel"	},
+													 "#arp_exp;seq_14"																			 ]	},
+	 
+	 //	O
+	 {	id:"o_sel",																		sel:["#(3-4)_09","#(4-4)_10","#(lone)_10"]	},
+	 {	id:"o_(bridge)_~k",								ofs:-0.551,	dur:10.168,			next:"o_sel"	},
+	 {	id:"o_(3-4)_09",		sel:[{	id:"###soprano",			dur:11.245	},
+									 {	id:"###alto",				dur:12.632	}	],	next:"##10"	},
+	 {	id:"o_(3-4)_10",		sel:[{	id:"###base",	ofs:1.000,	dur: 9.154	},
+									 {	id:"###alt",	ofs:0.375,	dur: 9.132	},
+									 {	id:"###alt2",	ofs:0.985,	dur: 9.227	}	],	next:"##11"	},
+	 {	id:"o_(3-4)_11",		sel:[{	id:"###base",				dur: 5.222	},
+									 {	id:"###pause",				dur: 4.929	},
+									 {	id:"###flow",				dur: 4.560	},
+									 {	id:"###descend",			dur: 4.147	}	],	next:"##12"	},	 
+	 {	id:"o_(3-4)_12",		sel:[{	id:"###clear",				dur: 8.991,			next:"##14"	},
+									 {	id:"###dull",				dur: 8.991,			next:"##14"	},
+									 {	id:"#(arp)_12",				dur: 5.999,			next:"##13"	},
+									 {	id:"#(exp)_12",				dur:22.414,			next:"##16"	}	]	},
+	 {	id:"o_(arp)_13",		seq:[{	id:"###base",				dur: 5.062,		alt:["##13_alt","##13_alt2"]	},
+									 [{	fileId:"space",				dur: 0.001		},
+									  {	id:"##13_^ext",				dur: 6.022	}	]],	next:"##14"	},
+	 {	id:"o_(3-4)_14",		sel:[{	id:"###odd",				dur: 3.274	},
+									 {	id:"###even",				dur: 4.274	}	],	next:"#(3-4&arp)_15"	},
+	 {	id:"o_(arp)_14",		sel:[{	id:"###up",					dur: 4.461,			next:["##15_up=2","#(3-4&arp)_15"]	},
+									 {	id:"###dn",					dur: 4.461,			next:["##15_dn=2","#(3-4&arp)_15"]	}	]},
+	 {	id:"o_(3-4&arp)_15",	sel:[{	id:"###~Am",				dur: 8.257,			next:["unimplemented"	/*b-h!!*/	]	},	///!!!///
+									 {	id:"###~Am;+",
+										seq:["##15_~Am",
+											 {	id:"##16_~Gm",		dur: 8.111	}	],	next:["unimplemented"	/*b-h!!*/	]	},	///!!!///
+									 {	id:"###~Dm",				dur: 7.960,			next:["h_sel","c_sel","f_sel"	/*b-h!!*/	]	},
+									 {	id:"###~C&Cm",				dur: 7.550,			next:["c_sel","e_sel"/*b-h!!*/	]	}]	},
+	 {	id:"o_(arp)_15_dn",		sel:[{	id:"###dn~Dm",				dur:12.830,			next:["f_sel"		/*b-h!!*/	]	},
+									 {	id:"###_altered",			dur:12.759,			next:["##16_altered~Dm","#(~om)_17=3","j_sel"/*b-h!!*/]	}	]	},
+	 {	id:"o_(arp)_15_up",		sel:[{	id:"###up~Dm",				dur:12.830,			next:["j_sel"		/*b-h!!*/	]	},
+									 {	id:"###_altered",			dur:12.759,			next:["##16_altered~Dm","#(~om)_17=3","f_sel"/*b-h!!*/]	}	]	},
+	 {	id:"o_(exp)_16",		sel:[{	id:"###~Gm",				dur: 8.416,			next:["#(~om)_17","unimplemented"/*b-h!!*/	]	},				///!!!///
+									 {	id:"###~CMaj",				dur: 7.336,			next:["#(~om)_17","e_sel"/*b-h!!*/	]	}	]	},
+	 {	id:"o_(~om)_17",		seq:[{	fileId:"space",				dur: 2.500,		instruction:"fluct dur=0.5"	},
+									 [{	id:"##17_base",				dur: 5.755	},
+									  {	id:"##17_alt",				dur: 5.755	}	]],	next:"##18"	},
+	 {	id:"o_(~om)_18",		sel:[{	id:"###base",				dur: 7.297,		instruction:"fluct ofs=0.1"	},
+									 {	id:"###alt",				dur: 7.294,		instruction:"fluct ofs=0.1"	}	],	next:"##19"	},
+	 {	id:"o_(~om)_19",		sel:[{	id:"###base",				dur: 8.058	},
+									 {	id:"###alt",	ofs:0.602,	dur: 9.921	}	],	next:"om_sel"	},
+	 {	id:"o_(4-4)_09",		sel:[{	id:"###A7_intro",			dur:16.454	}	],	next"##10"	},
+	 {	id:"o_(4-4)_10",		sel:[{	id:"###base",				dur: 8.164	},
+									 {	id:"###alt",				dur: 8.164	}	],	next:"##11"	},
+	 {	id:"o_(4-4)_11",		sel:[{	id:"###base",				dur: 7.868	},
+									 {	id:"###alt",				dur: 7.868	}	],	next:"##12"	},
+	 {	id:"o_(4-4)_12",		sel:[{	seq:[{	id:"##12_base",		dur:10.842	},
+											 [{	id:"##13_~Bm",		dur: 7.719,			next:["unimplemented"/*b-h!!*/	]	},					///!!!///
+											  {	id:"##13_~Em",		dur: 8.638,			next:["unimplemented"/*b-h!!*/	]	} ]],	next:"*" },	///!!!///
+									 {	id:"###dramatico_~Em",		dur:19.481,			next:["unimplemented"/*b-h!!*/	]	},					///!!!///
+									 {	id:"###dolores_~E&Em",		dur:27.351,			next:["unimplemented"/*b-h!!*/	]	},					///!!!///
+									 {	id:"###regret_~Dm",			dur:19.426,			next:["#sel","h_sel"/*b-h!!*/	]	}]	},
+	 {	id:"o_(lone)_10",		sel:[{	id:"###base",				dur:14.868,			next:"##11"					},
+									 {	id:"#(solitude)_10",		dur:18.423,			next:"##11"					}	]	},
+	 {	id:"o_(lone)_11",		sel:[{	id:"###base",				dur: 2.938,			next:"##12"					},
+									 {	id:"###poly",				dur: 7.798,			next:["##13=2","##12;ext"]	}	]	},
+	 {	id:"o_(lone)_12",		sel:[{	id:"###base",				dur: 4.677,			next:["##13=2","##12;ext"]	},
+									 {	id:"###solitude",			dur:14.125,			next:"##13"					}	]	},
+	 {	id:"o_(lone)_12;ext",	sel:[{	id:"###poly^ext",			dur: 7.798,			next:"##13"					}	]	},
+	 {	id:"o_(lone)_13",		sel:[{	id:"###base",				dur:13.193,			next:["##14","#(grave)_14"]	},
+									 {	id:"###alt",				dur:14.125,			next:["##14","#(grave)_14"]	},
+									 {	id:"###~om43",				dur: 9.837,			next:"om_43;o~"				}	]	},
+	 {	id:"o_(lone)_14",		seq:[[{	id:"##14_1~om",				dur:14.339		},
+									  {	id:"##14_2~om",				dur: 8.805		}],
+									 [{	fileId:"om_10_intro",		dur: 4.911,		},
+									  {	fileId:"space",				dur: 0.001		}]],next:"om_sel"						},
+	 {	id:"o_(solitude)_11",	sel:[{	id:"###base",				dur: 6.983,			next:"##12"					},
+									 {	id:"###alt",				dur: 6.983,			next:["##12","###alt^ext"]	}	]	},
+	 {	id:"o_(solitude)_12",	sel:[{	id:"###base",				dur:13.548,			next:"##13"					}	]	},
+	 {	id:"o_(solitude)_13",	sel:[{	id:"###~Dm",				dur:12.875,			next:["j_sel"]	/*b-h!!*/	},							///!!!///
+									 {	seq:["##13~Dm",{id:"##13~Dm^ext",dur:9.190}],	next:["j_sel"]	/*b-h!!*/	},							///!!!///
+									 {	id:"###~Gm",	score:2,	dur:17.506,			next:["a_sel"]	/*b-h!!*/	}	]	},					///!!!///
+	 {	id:"o_(grave)_14",		sel:[{	id:"###base",				dur:18.650,			next:"##15"				}	]	},
+	 {	id:"o_(grave)_15",		seq:[{	id:"###base",				dur:16.669		},
+									 [{	id:"##15_^ext",				dur:16.669	},
+									  {	fileId:"space",				dur: 0.001	}	]],	next:["#(lone)_14","g_sel"]			},
+	 
+	 //	OM
+	 {	id:"om_sel",																	sel:["#mel;sel=2","#grow;sel=1"]	},
+	 {	id:"om_10_adapter",	seq:[{id:"##mel_adapter",	ofs:1.208,	dur:1.208	},
+								 "#11"								],					next:["#grow;sel"]		},
+	 {	id:"om_11",		seq:[[{	id:"#11-1_mel",			score:"@F{om_}-(@F{om_14})",					dur:12.018	},
+							  {	id:"#11-1_mel_slow",	score:"1-(@F{om_})+(@F{om_14,om_36,om_39})",	dur:12.388	}	],
+							 {	id:"#11-2",																dur:12.030	}	]	},
+	 {	id:"om_13",	seq:[{	id:"#13-1_mel",									dur: 4.429	},
+						 {	id:"#13-2_base",alt:"##alt",					dur: 2.641	},
+						 {	id:"#13-3",										dur: 2.226	},
+						 {	id:"#13-4_base",alt:"##alt",					dur: 1.479	},
+						 {	id:"#13-5",										dur:12.948	}	]	},
+	 {	id:"om_15",		seq:{	id:"##seq(F-Ab)",				ofs:0.754,	dur:24.002	},	next:["#16=3","#41=0.5","l_sel=2"/*b-h*/]	},
+	 {	id:"om_16",		sel:[{	seq:[{	id:"#16-1_seq(Ab-Gm)",			ofs:0.787,	dur:9.716										},
+									 [{	id:"#16-2",				score:2,			dur:2.440,	next:["#17"/*b-h*/]				},
+									  {	id:"#16-2_~18",			score:1,			dur:2.710,	next:"#18"						},
+									  {	id:"#16-2_~20&29a&30a",	score:2,			dur:2.710,	next:["#20=0.5","#29a","#30a"]	}	]],	next:"*",	score:5	},
+							 {	id:"#16_~h",					score:1,ofs:0.787,	dur:12.829,	next:"h_sel+"												}]	},
+	 {	id:"om_17",		seq:[[{	score:"@F{33a,41}=0",	id:"#17-1_seq(Gm-Gm&G)",		ofs:0.688,	dur:6.669	},
+							  {	score:"@F{41 }=1",		id:"#17-1_seq(Gm-Gm&G);41~",	ofs:0.768,	dur:6.669	},
+							  {	score:"@F{33a}=1",		id:"#17-1_seq(Gm-Gm&G);33a~",	ofs:0.868,	dur:6.669	}	],
+							 [{	score:2,				id:"#17-2",									dur:5.394,	next:"#18"	},
+							  {	score:0.7,				id:"#17-2_~33a",							dur:5.009,	next:"#33a"	},
+							  {	score:1,				id:"#17-2_~28",								dur:5.576,	next:"#28"	}	]	],	next:"*"	},
+	 {	id:"om_18",		seq:{	sel:[{	score:"@F{33a}=0",		id:"##seq(G-D&Dm)",				ofs:0.792,	dur:12.115	},
+									 {	score:"@F{33a}=1",		id:"##seq(G-D&Dm);earlier",		ofs:0.892,	dur:12.115	}]	},	next:["#17=1","#19=3","#20=1","29a=2"]	},
+	 {	id:"om_19",		seq:{	id:"##seq(Dm-Bb)",										ofs:0.730,	dur:11.973	},	next:["#20"/*b-h*/]			},
+	 {	id:"om_20",		seq:[[{	id:"##seq(Bb-F)",		dur:5.546	},
+							  {	id:"##seq_alt",			dur:5.546	}]],	next:["#17","#19=0.5","#20+=4","#21=8","#31a","#33a=0.5","#41","#mel;sel"]			},
+	 {	id:"om_20+",	seq:{	id:"#20_seq(Bb-F)+",	dur:5.331	},		next:["#17","#19=0.5",         "#21=8","#31a","#33a=0.5","#41","#mel;sel"]			},
+	 {	id:"om_23",		seq:[[{	id:"#23-1",				score:"(@F{14,21,33,22})!1",	ofs:0.990,	dur:0.990				},
+							  {	fileId:"space",			score:"(@F{14,21,33})=1",					dur:0.001				},
+							  {	id:"#23-1;22~",			score:"(@F{22})=1",				ofs:0.635,	dur:0.990				} 	],
+							 {	id:"#23-2_seq(F-C&Cm)",												dur:6.169					},
+							 [{	id:"#23-3",				score:1,									dur:5.289,	next:"#24"	},
+							  {	id:"#23-3_~30",			score:1,									dur:5.989,	next:"#30"	}	]	],	next:"*"	},
+	 {	id:"om_24",		seq:{	id:"##bump(C)",														dur:12.008	},	next:["#25"/*b-h*/]			},
+	 {	id:"om_25",		seq:[[{	fileId:"space",			score:"@F{terz-mel}=0",						dur: 0.001	},
+							  {	fileId:"space",			score:"@F{terz-mel}=1",						dur: 1.000,	instruction:"fluct dur=0.5"	}],	//	insert caesura
+							 [{	id:"#25-1_theme(C)",												dur: 3.817	},
+							  {	id:"#25-1_theme_alt",												dur: 3.817	}],
+							 [{	id:"#25-2_base",													dur: 5.907	},
+							  {	id:"#25-2_alt",														dur: 5.907	}],
+							 [{	id:"#25-3_base",													dur: 6.304	},
+							  {	id:"#25-3_alt",														dur: 6.304	}]],next:["#26=3","#27","#32"/*b-h*/]			},
+	 {	id:"om_26",		seq:{	id:"##resp(C)",											ofs:0.924,	dur:18.602	},	next:["#27=4","#32=0.5","e_sel=2"/*b-h*/]			},
+	 {	id:"om_27",		next:"*", 
+	 					seq:[{	sel:[{	score:"@F{25}!1",		id:"#27-1",							dur:4.231	},
+									 {	score:"@F{25}=1",		id:"#27-1_25~",						dur:3.803	}	]	},
+							 {	id:"#27-2_grow(C-F)",												dur:9.457	},
+							 {	sel:[{	score:6,	id:"#27-3_~28",						ofs:0.797,	dur:0.797,	next:["#28"]	},
+									 {	score:8,	fileId:"space",									dur:0.001,	
+									   next:["#10_adapter=2","#14=0.7","#19=0.5","#29a","#41=2","#42=2"]	}	]	}	]	},		
+	 {	id:"om_28",		sel:[{	id:"##grow(G-C)",								dur:11.835	},
+							 {	id:"##grow_alt",								dur:11.835	}],	next:["#15","#24","#25=@D>30","#30","#30a","#31a"]	},
+	 {	id:"om_29a",	seq:[{	id:"#29a-1_seq(D-Dm)",							dur:10.537																},
+							 [{	score:8,	id:"#29a-2",						dur: 1.162,	next:["#19=1","#21=2","#22=2","#31a","#32a=2"/*,"#35=0.5"*/]	},
+							  {	score:4,	id:"#29a-2_~30a",					dur: 1.287,	next:["#30a=4"]												}	]	]	},
+	 {	id:"om_30a",	sel:[{	score:4,	seq:[{	id:"#30a-1_seq(D-G)",		dur:10.766	},
+												 {	id:"#30a-2",				dur: 1.312	}	],	next:["#29a","#31a=2","#32a"]	},
+							 {	score:1,	seq:[	   "#30a-1_seq(D-G)",
+												 {	id:"#30a-2_~17",			dur: 1.132	}	],	next:"#17"						}	],	next:"*"	},
+	 {	id:"om_30",			seq:{	id:"##grow(C7-Dm7)",						dur:10.591	},		next:["#31"]			},
+	 {	id:"om_31a",		seq:[[{	id:"#31a-1_seq(Dm-D&Dm)",					dur: 5.977	},
+								  {	id:"#31a-1_seq_alt",						dur: 5.977	}],
+								 [{	id:"#31a-2_base",							dur: 5.718	},
+								  {	id:"#31a-2_alt",							dur: 5.718	}]	],	next:["#32a"/*b-h*/]	},
+	 {	id:"om_31",			seq:{	id:"##paradiso(C)",							dur:27.502	},		next:["#32"]			},
+	 {	id:"om_32a",	seq:[[{	id:"#32a-1",		score:"@F{29a,31a}=1",		dur: 0.700	},
+							  {	id:"#32a-1_short",	score:"@F{29a,31a}!1",		dur: 0.400	}	],
+							 [{	id:"#32a-2_seq(D-G)",							dur: 5.474	},
+							  {	id:"#32a-2_seq_alt",							dur: 5.474	}	],
+							 [{	id:"#32a-3_base",								dur: 5.037	},
+							  {	id:"#32a-3_alt",								dur: 5.037	}	]	],	next:["#33a"/*b-h*/]	},
+	 {	id:"om_32",		sel:[{	score:"(@F{25,26})!1",	seq:[{	id:"#32-1",		ofs:1.070,	dur: 1.696	},
+															 {	id:"#32-2_resp(C)",			dur:27.091	}	]	},
+							 {	score:"@F{25}=1",		seq:[{	id:"#32-1_25~",	ofs:0.916,	dur: 1.416	},
+															 "#32-2_resp(C)"								]	},
+							 {	score:"@F{26}=1",		seq:[{	id:"#32-1;26~",	ofs:0.990,	dur: 1.696	},
+															 	   "#32-2_resp(C)"									]	}],	next:["#25=@D>30","#31=@LS{om_31}>1","#27"]	},
+	 {	id:"om_33a",	seq:[[{	id:"#33a-1_seq(G)",								dur: 6.283	},
+							  {	id:"#33a-1_seq_alt",							dur: 6.283	}],
+							 [{	id:"#33a-2_base",								dur: 5.422	},
+							  {	id:"#33a-2_alt",								dur: 5.422	}]	],			next:["#17=2","#19=0.7","#28=1"/*b-h*/]			},
+	 {	id:"om_33",		seq:[{	id:"#33-1_mel(simple)",				ofs:-0.904,	dur:22.642	},
+							 [{	id:"#33-2_~!34",								dur: 2.702	},
+							  {	id:"#33-2_~34",									dur: 1.904	}	]	]	},
+	 {	id:"om_36",		seq:[[{	id:"#36-1",		score:"@F{42}=0",	ofs: 0.790,	dur: 0.790	},
+							  {	id:"#36-1_42~",	score:"@F{42}=1",	ofs: 1.377,	dur: 1.377	}	],
+							 {	id:"#36-2_bump",								dur:14.901	}	],		next:["#37=2","#grow;sel","#mel;sel","a_sel"]	},	//	-> A
+	 {	id:"om_37",		seq:{	id:"##theme(F)",					ofs: 0.825,	dur:13.825		},		next:"#grow;sel"						},
+	 {	id:"om_39",		seq:{	id:"##resp~misc",					ofs:-0.360,	dur:32.625		},		next:"#mel;sel"							},
+	 {	id:"om_41",		sel:[{	score:"@{15}!1",	seq:[[{	id:"#41-1",		score:"@F{20}!1",	ofs:0.745,	dur:0.745	},
+														  {	id:"#41-1_20~",	score:"@F{20}=1",	ofs:0.673,	dur:0.673	}],
+														 {	id:"#41-2_seq(F-Bb)",							dur:11.131	}],	next:["#42=2","#17","#20=0.5"/*b-h*/] },
+							 {	score:"@{15}=1",	id:"##seq(Ab-Bb)",							ofs: 0.745,	dur:10.495,		next:["#20=0.5","#42=2"/*b-h*/]	}]		},
+	 {	id:"om_42",		seq:{	id:"##seq(F)",													ofs: 0.774,	dur:13.645	},	next:["#43=2","#36","#grow;sel"]	},
+	 {	id:"om_43;o~",	seq:{	id:"##grave;o~",												ofs: 0,		dur:36.601	},	next:["#mel;sel","#37"]	},
+	 {	id:"om_43;om~",	seq:{	id:"##grave;om~",												ofs:-0.625,	dur:36.601	},	next:["g_sel","o_sel=2"]	},
+
+	 
+	 {	id:"om_mel;sel",	sel:[{	seq:"#11",			score:"@LC*((@F{20,21})!1)+(@F{om_}=0|@F{43})",			next:["#grow;sel"]							},
+								 {	seq:"#13",			score:"@LC*((@F{20,21,36})!1)-(@F{om_}=0|@F{43})",		next:["#grow;sel=3","#36"]					},
+								 {	id:"#22_mel(light)",score:"@LC",								dur:22.495,	next:["#grow;sel=3","#23=2"]			},
+								 {	seq:"#33",			score:"@LC*((@F{20,21,38,42})!1)+(@F{om_}=0|@F{43})",	next:["#grow;sel=3","#23=@F{~!34}","#36=@F{~!34}"]	},
+								 {	id:"#40_mel(joy)",	score:"@LC*((@F{20,21,38,42})!1)",	ofs:-0.683,	dur:47.387,	next:["#grow;sel","#41=2","#42"]			}	]	},
+	 {	id:"om_grow;sel",	sel:[{	id:"#12_grow",		score:"@LC*((@F{~34,22,36,37,40,42})!1)",	dur:23.819,	next:["#mel;sel=4","#15","#19=0.5"]		},
+								 {	id:"#14_grow",		score:"@LC*((@F{~34,22,36,37,40,42})!1)",	dur:24.579,	next:["#mel;sel=4","#15=2","#19=0.5","#23",]	},
+								 {	id:"#21_grow",		score:"@LC*(@F{20,22,40})",					dur:11.164,	next:["#mel;sel=4","#19=0.5","#23","#31a","#41"]},
+								 {	id:"#34_grow",		score:"@LC*((@F{~!34,36,37,42})!1)",		dur:25.047,	next:["#mel;sel=2","##;sel"]				},
+								 {	id:"#35_grow",		score:"@LC*(((@F{~!34,36})!1)+@F{34})",		dur:24.175,	next:["#mel;sel=2","#15","#19=0.5","#36"]		},
+								 {	id:"#38_grow",		score:"@LC*(((@F{~!34})!1)+@F{37})",		dur:24.084,	next:["#mel;sel=2","#36","#39","#41"]		}	]	},
+	 
+	 
+	 //	P (spring)	 
+	 {	id:"p_sel",																					sel:["#10=(@D>4)*4","#11=(@D>4)*1","#30=(@D>4)*2"]	},
+	 {	id:"p_sel;+caesura",	seq:{			fileId:"space",						dur:1.200	},	next:"#sel"		},
+	 {	id:"p_10",	sel:[{	score:4,			seq:[{	id:"#(terz)_10_base",		dur:12.517	},
+													 {	id:"#(terz)_10_+rep",		dur:13.233	}]	},
+						 {	score:"@C>0",		seq:["#(terz)_10_+rep","#(terz)_10_base"]			}],	
+					next:["#11=8","#12","#14=2","#20=2","#30=4","#40=3","#50=2","#80","#82","##83=3"]	},
+	 {	id:"p_11",	sel:{						id:"#(odor)_11_base",				dur:12.337,		next:["#12"]	}	},
+	 {	id:"p_12",	sel:[{						id:"#(odor)_12_base",				dur: 1.969	},
+						 {						id:"#(odor)_12_alt",				dur: 1.969	}],	next:["#13"]	},
+	 {	id:"p_13",	sel:[{						id:"#(odor)_13_base",				dur: 4.717	},
+						 {						id:"#(odor)_13_alt",				dur: 4.717	}],	next:["#14=6","#52=2","#80=0.7","#82=0.7","#83=0.5"]	},
+	 {	id:"p_14",								id:"#(odor)_14_base",				dur:14.909,		next:["#15"]					},
+	 {	id:"p_15",	sel:[{						id:"#(odor)_15_~A&Am",				dur:17.612,		next:["#50","s_sel"]			},
+						 {						id:"#(odor)_15_~E&Em",				dur:16.966,		next:["#52","#82","t_sel_Am"]		},
+						 {						id:"#(odor)_15_~Bm&Dm",				dur: 9.034,		next:["#20=3","o_(4-4)_09"]		}	]	}, 
+	 {	id:"p_20",	sel:[{	score:"@F{_83_}=0",	id:"#(swell)_20_base",				dur:14.727	},
+						 {	score:"@F{_83_}=1",	seq:[{	id:"p_(swell)_20_83~",		dur: 8.182,	ofs:0.953	},
+													 "#(swell)_20_base"						]	}],	next:["#21"]	},
+	 {	id:"p_21",	sel:[{						id:"#(swell)_21_base",				dur:15.740,	ofs:1.319	},
+						 {						id:"#(swell)_21_alt",				dur:14.648,	ofs:0.340	}],	next:["#22"]	},
+	 {	id:"p_22",	sel:[{						fileId:"space",						dur: 1.100	},
+						 {						id:"#(swell)_22_nap",				dur:30.114,	ofs:0.524	}],	next:["#10","#11","#14=0.5","#30=8","#40","#83"]	},	 
+	 {	id:"p_30",	sel:[{	id:"#(terz-mel)_30",									dur:16.668	}],	next:["#31"]					},
+	 {	id:"p_31",	sel:[{	id:"#(terz-mel)_31_Aend",								dur: 5.569,		next:["#50=3","#10","o_(3-4)_09","f_(bridge)_p31~"]	},
+						 {	id:"#(terz-mel)_31",									dur:14.620,		next:["#40","t_sel_C=2","om_25=@D>30","om_27","e_sel;+caesura=2"]	}	]	},
+	 {	id:"p_40",	seq:[[{id:"#(wish)_40",		score:"@F{_52_|_31_}=0",			dur: 6.737	},
+						  {id:"#(wish)_40_52~",	score:"@F{_52_}=1",					dur: 7.987	},
+						  {						score:"@F{_31_}=1",	seq:[ {	fileId:"space",	dur: 1.500	}, "#(wish)_40"	]	}	],
+						 {	id:"#(wish)_41",	alt:"#(wish)_41_alt",				dur: 5.193	},				/*make variations*/
+						 {	id:"#(wish)_42",										dur:12.097	},
+						 {	id:"#(wish)_43",										dur: 6.618,	ofs:0.894 },
+						 {	id:"#(wish)_44",										dur: 6.591	},
+						 {	id:"#(wish)_45",										dur:12.847,	ofs:0.740 }],	next:["#50=2","#52=2","#53","#82","#60=2"]	,
+	 comment:"my wish is to make everyone happy, but even making people next to you happy is not easy. sometimes we have to give it up, or maybe not. i'm not good in reacting against concrete problems, i believe that i can help the people on another way, on a way which only i can do."	},
+	 {	id:"p_50",	seq:[{	id:"#(leaf)_50_A-Am",									dur:18.975	},
+						 [{	score:"@D{p_51}>4",			id:"#(leaf)_50_~51",		dur: 0.663,		next:"#51"	},
+						  { 							fileId:"space",				dur: 0.001,	 	next:["#52=@D>4","#53=@D>4","#80=@D>6","#82=@D>6","#83=@D>6","#84=@D>6"]	}	]	]	},
+	 {	id:"p_51",	sel:[{						id:"#(leaf)_51_B7",					dur: 7.530	}],	next:["#52","r_sel_F#m"]	},
+	 {	id:"p_52",	sel:[{	score:"@F{13|15}=0",		id:"#(leaf)_52_Bm-Em",		dur:16.455	},
+						 {	score:"@F{13|15|40}=1",		id:"#(leaf)_52_Bm-Em_weak",	dur:16.455	}],	next:["#53=3","#sel;+caesura","#60","#40"]	},
+	 {	id:"p_53",	sel:[{								id:"#(leaf)_53_F#7",		dur:23.724	}],	next:["#54"/*b-h!!*/] },
+	 {	id:"p_54",	sel:[{								id:"#(leaf)_54_~D&Dm",		dur:26.657	}],	next:["f_(bridge)_p54~=2","j_sel=3","#84=1"/*b-h!!*/]	},
+	 {	id:"p_60",	sel:[{						id:"#(float)_60",					dur:38.140	}],	next:["#10"]	},
+	 {	id:"p_80",	sel:[{						id:"#(play)_80_G-C",				dur:12.331	}],	next:["#81=(@D>4)*3","#82=(@D>4)"]	},
+	 {	id:"p_81",	seq:[[{	score:1,			id:"#(play)_81_G-C",				dur:12.306	},
+						  {	score:1,			id:"#(play)_81_G-C_+",				dur:12.213	},
+						  {	score:3,	seq:[	"#(play)_81_G-C",	"#(play)_81_G-C_+"	]		},
+						  {	score:2,	seq:[	"#(play)_81_G-C_+",	"#(play)_81_G-C"	]		}],
+						 {						id:"#(play)_81_G-C_end",			dur: 0.828	}],	
+	 								next:["#80=(@D>4)","#82=(@D>2)*3","#84=(@D>4)","c_sel;+caesura","t_sel_C","e_sel;+caesura"]	},
+	 {	id:"p_82",	seq:[[{	score:"@F{80}=1",	fileId:"space",						dur: 1.125	},
+						  {	score:"@F{80}=0",	fileId:"space",						dur: 0.001	}],
+						 [{	score:"1+(@F{13}=0)",id:"#(play)_82_single",			dur: 8.751	},
+						  {	score:"1+(@F{81}=0)",id:"#(play)_82_twice",				dur:14.116	}]],next:["#83=(@D>3)*4","#84=(@D>4)","t_sel_Am=@LC","s_sel=@LC","g_sel=@LC"]},/*provisory*//*b-h!!*/
+	 {	id:"p_83",	sel:[{						id:"#(play)_83_arpe",				dur:21.921	}],	next:["#84=(@D>3)*3","#82=(@D>6)","#20=(@D>4)"]	},	 
+	 {	id:"p_84",	seq:[[{	score:"@F{81}=1",	fileId:"space",						dur: 0.500	},
+						  {	score:"@F{81}=0",	fileId:"space",						dur: 0.001	}],
+						 {						id:"#(play)_84_story",				dur: 9.944	 }],next:["#85"]	},
+	 {	id:"p_85",	sel:[{						id:"#(play)_85_~h",					dur: 9.229,		next:"h_sel+"	},
+						 {						id:"#(play)_85_~A&Am",				dur:12.000,		next:["#50=@LC","s_sel=@LC","t_sel_Am=@LC"]		}	]	},
+	 
+						 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 //	Q
+	 
+	 {	id:"q_sel",	ref:"unimplemented"	},		///!!!///
+	 
+	 //	R
+	 {	id:"r_sel_A",	ref:"unimplemented"	},		///!!!///
+	 {	id:"r_sel_F#m",	ref:"unimplemented"	},		///!!!///
+	 
+	 //	S
+	 {	id:"s_sel",	ref:"unimplemented"	},		///!!!///
+	 
+	 //	T
+	 {	id:"t_sel_C",	ref:"unimplemented"	},		///!!!///
+	 {	id:"t_sel_Am",	ref:"unimplemented"	},		///!!!///
+	 
+	 
+	 //  dummy cue
+	 {   id:"end" }
+	 //	 ]}	//	end ignore
+	 
+	 ]   //  end of cueData
+	
+	//	let the music never end!
+	
+}
