@@ -789,7 +789,9 @@ BOOL verbose = NO;
 	NSMutableData* data = [NSMutableData dataWithContentsOfURL:url];
 	if (data.length == 0) return nil;
 	
-	NSKeyedUnarchiver *decoder = [[[NSKeyedUnarchiver alloc] initForReadingWithData:data] autorelease];
+    NSError *error = nil;
+    NSKeyedUnarchiver *decoder = [[[NSKeyedUnarchiver alloc] initForReadingFromData:data error:&error] autorelease];
+    
 	VMSong *song = AutoRelease([[VMSong alloc] initWithCoder:decoder]);
 	if ( ! song ) return nil;
 	DEFAULTPREPROCESSOR.song = song;
