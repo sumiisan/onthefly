@@ -1160,8 +1160,12 @@ forDoubleClickOnDividerAtIndex:(NSInteger)dividerIndex  {
 }
 
 - (BOOL)outlineView:(NSOutlineView *)outlineView shouldTypeSelectForEvent:(NSEvent *)event withCurrentSearchString:(NSString *)searchString {
-	if ( event.type == NSKeyDown && event.keyCode == kVK_Space ) {
-		[self songPlay:self];
+    if ( event.type == NSEventTypeKeyDown && event.keyCode == kVK_Space ) {
+        if (DEFAULTSONGPLAYER.isRunning) {
+            [DEFAULTSONGPLAYER stop];
+        } else {
+            [self songPlay:self];
+        }
 		return NO;
 	}
 	

@@ -9,12 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "VMSong.h"
 
-#if USE_AUDIOKIT
-@class VM2AudioPlayer;
-@class VM2MultiTrackPlayer;
-#else
 #import "VMPAudioPlayer.h"
-#endif 
 
 #import "VMPTrackView.h"
 #import "VMPlayerBase.h"
@@ -87,11 +82,7 @@
 
 @interface VMPSongPlayer : VMPlayerBase {	
 	//	audio players
-#if USE_AUDIOKIT
-	VM2MultiTrackPlayer		*multiTrackPlayer;
-#else
 	VMArray					*audioPlayerList;
-#endif
 	//	cue queueing
 	VMArray					*fragQueue;
 	VMAudioFragmentPlayer	*lastFiredFragment_;
@@ -137,6 +128,7 @@
 
 //	displaying
 @property (VMWeak)							VMPTrackView 		*trackView;			//	tracks view
+@property (nonatomic, readonly)             BOOL isRunning;
 
 + (VMPSongPlayer*)defaultPlayer;
 
@@ -172,8 +164,6 @@
 - (VMInt)numberOfUnfiredFragments;
 
 - (void)update;	//	force call runloop
-- (BOOL)isRunning;
-
 
 //	util
 - (VMString*)filePathForFileId:(VMString*)fileId;

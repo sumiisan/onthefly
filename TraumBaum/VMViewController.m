@@ -60,21 +60,6 @@
 	limiterSwitch = YES;
 	[self attachConfigButton];
 
-#if USE_AUDIOKIT
-	UILabel *limiterLabel = [[[UILabel alloc] init] autorelease];
-	limiterLabel.text = @"Limiter";
-	limiterLabel.frame = CGRectMake(20, 20, 200, 50);
-	limiterLabel.backgroundColor = [UIColor yellowColor];
-	[self.view addSubview: limiterLabel];
-	UITapGestureRecognizer *tgr = [[[UITapGestureRecognizer alloc] init] autorelease];
-	[tgr addTarget:self action:@selector(switchLimiter)];
-	[limiterLabel addGestureRecognizer:tgr];
-	limiterLabel.tag = 'limt';
-	limiterLabel.userInteractionEnabled = YES;
-	
-	[self.view addSubview: DEFAULTSONGPLAYER.limiterIndicator];
-#endif
-	
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(dayPhaseChanged:) name:DAYPHASE_CHANGED_NOTIFICATION object:nil];
 	
 	//	test code:

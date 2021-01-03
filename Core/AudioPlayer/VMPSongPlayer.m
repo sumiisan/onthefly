@@ -22,10 +22,6 @@
 	#import "VMVmsarcManager.h"
 #endif
 
-#if USE_AUDIOKIT
-#import "traumbaum_for_iOS-Swift.h"
-#endif
-
 
 //#include <math.h>
 
@@ -335,23 +331,15 @@
 #pragma mark utils and internal funcs
 
 -(VMPlayerType*)seekFreePlayer {
-#if USE_AUDIOKIT
-	return [multiTrackPlayer requestFreeVM2AudioPlayer];
-#else
 	for ( VMPlayerType *ap in audioPlayerList )
 		if ( ! ap.isBusy )
 			return ap;
 	return nil;
-#endif
 }
 
 -(void) stopAllPlayers {
-#if USE_AUDIOKIT
-	[multiTrackPlayer stopAllPlayers];
-#else
 	for ( VMPlayerType *ap in audioPlayerList )
 		[ap stop];
-#endif
 }
 
 - (void)adjustCurrentTimeToQueuedFragment {
@@ -379,22 +367,6 @@
 	return kNumberOfAudioPlayers;
 }
 
-#if USE_AUDIOKIT
-
--(VMPlayerType*)audioPlayer:(int)playeridx {
-	return [multiTrackPlayer audioPlayerWithIndex: playeridx];
-}
-
--(void)setGlobalVolume:(VMFloat)volume {
-	globalVolume = volume;
-	[multiTrackPlayer setVolume:self.currentVolume];
-}
-
-- (BOOL)isRunning {
-	return [multiTrackPlayer anyPlayerRunning];
-}
-
-#else
 -(VMPlayerType*)audioPlayer:(int)playeridx {
 	return [audioPlayerList item: playeridx];
 }
@@ -411,7 +383,6 @@
 		running |= [ap isPlaying];
 	return running;
 }
-#endif
 
 - (VMAudioFragment*)lastFiredFragment {
 	return lastFiredFragment_;
@@ -608,13 +579,7 @@
 	BOOL faderActive = mainFader_.isActive || dimmer_.isActive;
 	VMTime remainTime = 0;
 	
-	for ( VMPlayerType *ap in
-#if USE_AUDIOKIT
-		multiTrackPlayer.players
-#else
-		audioPlayerList
-#endif
-		 ) {
+	for ( VMPlayerType *ap in audioPlayerList ) {
 		if ( ap.isBusy ) {
 			if( faderActive )
 				[ap setVolume:volume];	    //  manage fade out
@@ -661,34 +626,19 @@
 	//  track view update
 	if( trackView_ && ( frameCounter % kTrackViewRedrawInterval ) == 1 ) {
 		int i=0;
-		for ( VMPlayerType *ap in
-#if USE_AUDIOKIT
-			 multiTrackPlayer.players
-#else
-			 audioPlayerList
-#endif
-			 )
+		for ( VMPlayerType *ap in audioPlayerList )
 			[trackView_ redraw:i++ player:ap];
 		
 		VMPSetNeedsDisplay(trackView_);
 	}
-
-	
-	
 }
 
 - (void)setLimiterState:(BOOL)state {
-#if USE_AUDIOKIT
-	[multiTrackPlayer switchLimiter: state];
-#endif
+    // not implemented
 }
 
 - (VMPView*)limiterIndicator {
-#if USE_AUDIOKIT
-	return [multiTrackPlayer limiterIndicator];
-#else
 	return nil;
-#endif
 }
 
 - (void)emergencyFire {
@@ -863,17 +813,11 @@
 	
 	VMPQueuedFragment *frag = [self queue:af at:0];
 	
-#if USE_AUDIOKIT
-	multiTrackPlayer = [[VM2MultiTrackPlayer alloc]
-						initWithNumberOfPlayers:self.numberOfAudioPlayers
-						dummyAudioPath:[self filePathForFileId:@"space"]];	
-#else
 	if( audioPlayerList ) Release(audioPlayerList);
 	audioPlayerList = NewInstance(VMArray);
 	
     for( int i = 0; i < [self numberOfAudioPlayers]; ++i )
 		[audioPlayerList push:AutoRelease([[VMPlayerType alloc] initWithId: i] )];
-#endif
 	
 	[self startTimer:@selector(timerCall:)];
     
