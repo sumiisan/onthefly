@@ -94,6 +94,7 @@ typedef enum {
 	VMFloat		maxPartPercent,maxPartDuration;
 	VMFloat		maxFragmentPercent,maxFragmentDuration;
 	VMFloat		maxVariety;
+    VMInt       totalSteps;
 }
 
 + (VMPAnalyzer*)defaultAnalyzer;

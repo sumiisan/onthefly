@@ -1336,6 +1336,9 @@
 				LastTestingUpgradeCheck = 0700;
 				LastUpgradeCheck = 1200;
 				TargetAttributes = {
+					162F7B1716A0341900420443 = {
+						DevelopmentTeam = 8476FPU6X3;
+					};
 					16A27F0616FBB1A70081C1E8 = {
 						DevelopmentTeam = 8476FPU6X3;
 						LastSwiftMigration = 0800;
@@ -1872,6 +1875,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = 8476FPU6X3;
 				ENABLE_HARDENED_RUNTIME = YES;
 				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -1903,6 +1907,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 8476FPU6X3;
 				ENABLE_HARDENED_RUNTIME = YES;
 				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;

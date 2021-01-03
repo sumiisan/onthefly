@@ -1370,7 +1370,8 @@ static VMHash *scoreForFragment_static_ = nil;
 #endif
 	}
 #if prepareSelection_verbose
-	NSLog(@"*prepare selection(%@):[ %@ ] sum:%.2f",self.id,[log join:@", "],sumOfInnerScores_cache_);
+    VMId *lastFragmentId = [DEFAULTEVALUATOR valueForVariable:@"@A"];
+	NSLog(@"*prepare selection(%@) from(%@):[\n   %@\n] sum:%.2f",self.id, lastFragmentId, [log join:@"\n   "], sumOfInnerScores_cache_);
 	Release(log);
 #endif
 }
@@ -1549,14 +1550,14 @@ static VMHash *scoreForFragment_static_ = nil;
 						[DEFAULTANALYZER addUnresolveable:c.targetId];
 #endif
 					
-					if (verbose) NSLog(@"    SEL: unresolveable, retry. %@", c.targetId );
+					if (verbose) NSLog(@"    SEL: unresolveable, retry. target id: %@", c.targetId );
 				}
 			}
 		}
 	}
 	
 	if (frag==nil) {
-		NSLog(@"empty frag");
+		NSLog(@"empty frag found @ selectOneTemporaryUsingScores");
 		//[self selectOneTemporaryUsingScores:scoreForFragments sumOfScores:sum];
 	}
 	

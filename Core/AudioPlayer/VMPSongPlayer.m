@@ -47,13 +47,13 @@
 	self.currentPartId = partId;
 }
 
-- (void)addAudioFragment:(VMAudioFragment*)audioFragent {
-	VMId *partId = audioFragent.partId;
+- (void)addAudioFragment:(VMAudioFragment*)audioFramgent {
+	VMId *partId = audioFramgent.partId;
 	
 	if ( ! [self.currentPartId isEqualToString:partId] )
 		[self startNewPart:partId];
-	self.playingTimeOfCurrentPart += audioFragent.duration;
-	[self add:audioFragent.duration ontoItem:partId];
+	self.playingTimeOfCurrentPart += audioFramgent.duration;
+	[self add:audioFramgent.duration ontoItem:partId];
 }
 
 - (void)clear { // override	

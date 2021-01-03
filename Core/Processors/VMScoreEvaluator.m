@@ -275,7 +275,9 @@ shouldLog=shouldLog_,shouldNotify=shouldNotify_;
 	SEFunctionDefinition( D ) {
 		vmObjectType type = [self.variables itemAsFloat:@"@TYPE"];
 		if ( type != vmObjectType_selector ) return nil;
-		return VMIntObj( [DEFAULTSONG distanceToLastRecordOf:( parameter ? parameter : [self.variables item:@"@T"] )] );
+        VMId *target = parameter ? parameter : [self.variables item:@"@T"];
+        VMInt distance = [DEFAULTSONG distanceToLastRecordOf:target];
+		return VMIntObj( distance );
 	}
 	
 	SEFunctionDefinition( F ) {
@@ -290,6 +292,8 @@ shouldLog=shouldLog_,shouldNotify=shouldNotify_;
 			BOOL match = (	[lastFragmentId rangeOfString:comparator].location != NSNotFound );
 			t |= match;
 		}
+        /*
+        NSLog(@"@F{%@} (lastFragId:%@) = %@", parameter, lastFragmentId, t ? @"YES" : @"NO");*/
 		return VMIntObj( t ? 1. : 0. );
 	}
 	
@@ -436,7 +440,9 @@ shouldLog=shouldLog_,shouldNotify=shouldNotify_;
       } else {
         matched = YES;
         NSRange range = [result rangeAtIndex:0];
+          /*
         NSLog(@"[%@] range: %d, %d = %@,%@,%@", exp, range.location, range.length, [exp substringToIndex:range.location], [exp substringWithRange:NSMakeRange(range.location+1, range.length-2)], [exp substringFromIndex:range.location + range.length]);
+           */
         [exp setString:[NSString stringWithFormat:@"%@%2.2f%@",
                         [exp substringToIndex:range.location],
                         [self evaluate:[exp substringWithRange:NSMakeRange(range.location+1, range.length-2)]],
@@ -469,6 +475,12 @@ shouldLog=shouldLog_,shouldNotify=shouldNotify_;
 		VMInt	opType;
 		
 		NSArray *fm = [arr item:0];
+        if (fm.count == 0) {
+            // no need to dissolute:
+            result = expression.floatValue;
+            break;
+        }
+        
 		lval = [fm objectAtIndex:1];
 		op   = [fm objectAtIndex:2];
 		rval = [fm objectAtIndex:3];

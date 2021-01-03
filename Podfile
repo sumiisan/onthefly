@@ -18,6 +18,5 @@ end
 target 'OnTheFly Editor OSX' do
 print("OTF")
     platform :osx, '10.13'
-    pod 'sndfile-Framework'
     pod 'SSZipArchive'
 end

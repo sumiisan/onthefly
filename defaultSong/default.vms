@@ -1316,7 +1316,7 @@ data:
 						 {								id:"#(leaf)_54_~D&Dm_alt",	dur:24.873	}],	next:["f_(bridge)_p54~=2","j_sel=3","#84=1"/*b-h!!*/]},//	-> f, j
 	 {	id:"p_54a",	sel:[{								id:"#(leaf)_54_~a",			dur:36.168	}],	next: "a_sel"	},
 	 {	id:"p_60",	sel:[{						id:"#(float)_60",					dur:38.140	}],	next:["#10"]	},
-	 {	id:"p_80",	sel:[{						id:"#(play)_80_G-C",				dur:12.331	}],	next:["#81=(@D>4)*3","#82=(@D>4)"]	},
+	 {	id:"p_80",	sel:[{						id:"#(play)_80_G-C",				dur:12.331	}],	next:["#81=(@D>4)*3","#82"]	},
 	 {	id:"p_81",	seq:[[{	score:1,			id:"#(play)_81_G-C",				dur:12.306	},
 						  {	score:1,			id:"#(play)_81_G-C_+",				dur:12.213	},
 						  {	score:3,	seq:[	"#(play)_81_G-C",	"#(play)_81_G-C_+"	]		},
@@ -2160,7 +2160,7 @@ data:
 								  	{	id:"##barroso_b_6",								dur:15.730	}]],	next:["d_sel","k_sel","#71_end=@TS*INF"]	},
 	{	id:"ss_71_end",											dur:21.838,	next:"end"	},
 	{	id:"ss_78_~Dm",											dur:18.743,	next:["e_Dm","o_ascens_10=0.5"]	},
-	{	id:"ss_80_emotion",	seq:[ [	{	id:"#80_arp_coldStart",	dur: 5.530,	score:"@F{forever,neapoli}=0"	},
+	{	id:"ss_80_emotion",	seq:[ [	{	id:"#80_arp_coldStart",	dur: 5.530,	score:"(@F{forever,neapoli}=0)+0.1"	},
 									{	id:"#80_arp_str8_in",	dur: 2.000,	score:"@F{forever}=1"	},
 									{	id:"#80_arp_ease_in",	dur: 2.164,	score:"@F{neapoli_11_c}=1"	}	],
 									{	id:"#81_arp_a_1", alt:"#81_arp_b_1=0.5",	dur: 4.905	},

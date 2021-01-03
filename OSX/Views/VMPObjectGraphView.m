@@ -216,7 +216,7 @@
 	Release(branchGraphColumnList);
 	Release(lastFrameBranchGraphColumnList);
 	Release(line);
-	Dealloc( super );;
+	Dealloc( super );
 }
 
 - (void)setGraphType:(VMPSelectorGraphType)graphType {
@@ -915,7 +915,7 @@
 			//
 		case vmObjectType_sequence: {
 			CGFloat referrerGraphWidth = vmpCellWidth*2;
-			CGFloat sequenceGraphWidth = self.width = referrerGraphWidth;
+			CGFloat sequenceGraphWidth = self.width - referrerGraphWidth;
 			//
 			//	referrer graph
 			//

@@ -15,6 +15,7 @@
 #import "VMPNotification.h"
 #import "VMPProgressWindowController.h"
 #import "VMAudioObject.h"
+#import "VMScoreEvaluator.h"
 
 
 /*---------------------------------------------------------------------------------
@@ -185,9 +186,9 @@
 static VMPAnalyzer		*analyzer_singleton_static_		= nil;
 static VMPRecordCell	*recordCell_defaultCell_static_	= nil;
 
-//	150000 times
-static const int	kNumberOfIterationsOfGlobalTraceRoute   =  1500;
-static const int	kLengthOfGlobalTraceRoute				=   100;
+//
+static const int	kNumberOfIterationsOfGlobalTraceRoute   =   800;
+static const int	kLengthOfGlobalTraceRoute				=   600;
 
 //	300 entries
 static const int	kNumberOfIterationsOfPartTraceRoute		=	300;
@@ -211,7 +212,6 @@ static const int	kLengthOfPartTraceRoute					= 10000;	//	gives up after 10000 ti
 	if (self) {
 		analyzer_singleton_static_ = self;
 		self.progressWC = AutoRelease([[VMPProgressWindowController alloc] initWithWindow:nil] );
-//		[NSBundle loadNibNamed: @"VMPProgressWindow" owner: self.progressWC]; --depreciated
 		[[NSBundle mainBundle] loadNibNamed:@"VMPProgressWindow" owner:self.progressWC topLevelObjects:nil];
 		
 		self.progressWC.delegate = self;
@@ -381,7 +381,9 @@ static const int	kLengthOfPartTraceRoute					= 10000;	//	gives up after 10000 ti
 	numberOfIterations:(const long)inNumberOfIterations
 				 until:(VMString*)exitCondition {
 	if ( self.isBusy ) return NO;
-	
+
+    totalSteps = 0;
+
     _busy = YES;
 	VMNullify(report);
 	self.entryPoint = inEntryPoint;
@@ -439,12 +441,12 @@ static const int	kLengthOfPartTraceRoute					= 10000;	//	gives up after 10000 ti
 #define incrementRouteForId(hashStorage,dataId,fromId,toId) \
 {\
 	VMHash *d = [hashStorage item:dataId];\
-	if ( ! d ) {\
+	if ( d == nil ) {\
 		d = [VMHash hashWith:@{ @"from":ARInstance(VMHash), @"to":ARInstance(VMHash) }];\
 		[hashStorage setItem:d for:dataId];\
 	}\
-	if ( fromId ) [[d item:@"from"] add:1. ontoItem:fromId];\
-	if ( toId   ) [[d item:@"to"]   add:1. ontoItem:toId];\
+	if ( fromId != nil ) [[d item:@"from"] add:1. ontoItem:fromId];\
+	if ( toId   != nil ) [[d item:@"to"]   add:1. ontoItem:toId];\
 }
 
 /*---------------------------------------------------------------------------------
@@ -456,13 +458,18 @@ static const int	kLengthOfPartTraceRoute					= 10000;	//	gives up after 10000 ti
  ----------------------------------------------------------------------------------*/
 - (BOOL)analyze_step {
 	@autoreleasepool {
+        totalSteps++;
 		VMAudioFragment *af = [DEFAULTSONG nextAudioFragment];
 		if( ! af ) {
-			[_countForFragmentId add:1. ontoItem:@"unresolved"];
-			incrementRouteForId( _routesForFragmentId, @"unresolved,", _lastFragmentId, nil );
-			incrementRouteForId( _routesForFragmentId, _lastFragmentId, nil, @"unresolved");
-			[self reset_proc];
-			return exitWhenPartChanged;
+            /*  don't add unresolved frags after "end" into statistic (may destroy statistic balance) */
+            if (![_lastFragmentId isEqualToString:@"end"]) {
+                [_countForFragmentId add:1. ontoItem:@"unresolved"];
+                incrementRouteForId( _routesForFragmentId, @"unresolved,", _lastFragmentId, nil );
+                incrementRouteForId( _routesForFragmentId, _lastFragmentId, nil, @"unresolved");
+            }
+
+            [self reset_proc];
+			return YES;     // end iteration if unresolved
 		}
 		
 		++sojourn;
@@ -503,6 +510,8 @@ static const int	kLengthOfPartTraceRoute					= 10000;	//	gives up after 10000 ti
 		
 		//	simulate fire
 		[af interpreteInstructionsWithAction:vmAction_play];
+        DEFAULTSONGPLAYER.playTimeAccumulator.playingTimeOfCurrentPart += af.duration;  // increment part playing time
+
 		++totalAudioFragmentCount;
 		self.lastFragmentId = af.fragId;
 	}
@@ -547,7 +556,10 @@ static const int	kLengthOfPartTraceRoute					= 10000;	//	gives up after 10000 ti
 
 - (void)analyze_proc {
 	//	collect route data
-    for ( long j  = ( exitWhenPartChanged ? kLengthOfPartTraceRoute : kLengthOfGlobalTraceRoute ); j; --j) {
+    for ( long j  = ( exitWhenPartChanged ? kLengthOfPartTraceRoute : (kLengthOfGlobalTraceRoute * 2) ); j; --j) {
+        if (j < kLengthOfGlobalTraceRoute) {
+            DEFAULTEVALUATOR.timeManager.remainTimeUntilShutdown = 0;
+        }
 		if ( [self analyze_step] ) break;
     }
 	
@@ -558,7 +570,9 @@ static const int	kLengthOfPartTraceRoute					= 10000;	//	gives up after 10000 ti
 						 ofTotal:(double)numberOfIterations message:@"Analyzing:"
 						  window:[VMPlayerOSXDelegate singleton].editorWindowController.window];
 	if ( --iterationsLeft > 0 ) {
-		[self performSelector:@selector(analyze_proc) withObject:nil afterDelay:0.005];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.0001 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [self analyze_proc];
+        });
 	} else {
 		[self finishAnalysis];
 	}
@@ -710,26 +724,27 @@ static const int	kLengthOfPartTraceRoute					= 10000;	//	gives up after 10000 ti
 
 	//
 	// make report
-	//
-	self.report = [VMHash hashWithDictionary:
-				   @{
-				   @"frags":fragArray,
-				   @"parts":partsArray,
-				   @"totalDuration":VMFloatObj(totalDuration),
-				   @"unreachableAudioFragments":unreacheableAC,
-				   @"unresolveables":self.unresolveables,
-				   @"fragmax":[VMHash hashWithDictionary:
-							  @{@"count":@(maxFragmentCount), @"percent":@(maxFragmentPercent), @"duration":@(maxFragmentDuration)}],
-				   @"partmax":[VMHash hashWithDictionary:
-							   @{@"count":@(maxPartCount), @"percent":@(maxPartPercent), @"duration":@(maxPartDuration)}]
-				   }];
-	
-		
-	if( unreacheableAC.count > 0 ) {
+    //
+    self.report = [VMHash hashWithDictionary:
+                   @{
+                       @"steps":@(totalSteps),
+                       @"frags":fragArray,
+                       @"parts":partsArray,
+                       @"totalDuration":VMFloatObj(totalDuration),
+                       @"unreachableAudioFragments":unreacheableAC,
+                       @"unresolveables":self.unresolveables,
+                       @"fragmax":[VMHash hashWithDictionary:
+                                   @{@"count":@(maxFragmentCount), @"percent":@(maxFragmentPercent), @"duration":@(maxFragmentDuration)}],
+                       @"partmax":[VMHash hashWithDictionary:
+                                   @{@"count":@(maxPartCount), @"percent":@(maxPartPercent), @"duration":@(maxPartDuration)}]
+                   }];
+    
+    
+    if( unreacheableAC.count > 0 ) {
 		[APPDELEGATE.systemLog logWarning: [NSString stringWithFormat:
-											@"%ld unreacheable audio frags (within %d steps)",
+                                            @"%ld unreacheable audio frags (within %ld steps)",
 											unreacheableAC.count,
-											kNumberOfIterationsOfGlobalTraceRoute * kLengthOfGlobalTraceRoute]
+                                            totalSteps]
 								 withData: nil];
 		[APPDELEGATE.systemLog record:unreacheableAC filter:NO];
 	}
@@ -743,6 +758,8 @@ static const int	kLengthOfPartTraceRoute					= 10000;	//	gives up after 10000 ti
 	if ( self.unresolveables == 0 && unreacheableAC.count == 0 ) {
 		[APPDELEGATE.systemLog addTextLog:@"Route Stats" message:@"no issue."];
 	}
+    
+    
 	
 	[APPDELEGATE showLogPanelIfNewSystemLogsAreAdded];
 

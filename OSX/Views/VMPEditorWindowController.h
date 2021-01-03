@@ -55,7 +55,7 @@
 	BOOL					performingSearchFilter;
 	BOOL					performingHistoryMove;
 	BOOL					handlingCommand;
-	__unsafe_unretained		VMHash	*_songData;
+	__weak          		VMHash	*_songData;
 }
 
 //	accessor

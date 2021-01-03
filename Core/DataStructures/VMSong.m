@@ -125,9 +125,14 @@ BOOL verbose = NO;
 	VMInt p = c;
 	for ( int i = 0; i < c; ++i ) {
 		VMArray *arr = [self.history item: --p ];
-		if ( [arr position:fragId] >= 0 ) return i;
+        if ( [arr position:fragId] >= 0 ) {
+            if (i==0) {
+                NSLog(@"zero distance repeat: %@", fragId);
+            }
+            return i;
+        }
 	}
-	return 1e30f;	//	don't use INFINITY
+    return (LONG_MAX - 1);
 }
 
 + (VMSong*)defaultSong {
@@ -261,9 +266,11 @@ BOOL verbose = NO;
 	//		a)	pop player if this is a sub-player
 	//		b)	create player from subsequent
 	//
-	VerboseLog(@" CPE : check if player has reached end");
+    
+    BOOL finished = [self.player finished];
+    VerboseLog(@" CPE : check if player has reached end: %@", finished ? @"YES" : @"NO");
 	
-	if ( [self.player finished] ) {
+	if ( finished ) {
 		VMFragment *c = self.player.nextPlayer;
 		
 		if ( c.type == vmObjectType_player ) {
@@ -342,7 +349,7 @@ BOOL verbose = NO;
 			}
 			cc = self.player.currentFragment;
 			if(!cc && verbose)
-				NSLog(@"empty frag!");
+				NSLog(@"empty frag found @ nextAudioFragment");
 		} else
 			break;
 		
@@ -445,7 +452,7 @@ BOOL verbose = NO;
 	}
 	
 	if ( ClassMatch(someObj, VMSelector)) {
-		VerboseLog(@" PF 1b : select frag");
+		VerboseLog(@" PF 1b : select frag from sel: %@", ((VMSelector*)someObj).id);
 
 	//	TEST:	we want track seqence of subseq as well.
 		fragObj = [DEFAULTEVALUATOR resolveDataWithTracking:(VMSelector*)someObj toType:vmObjectCategory_fragment];		
