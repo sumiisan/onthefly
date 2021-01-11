@@ -9,7 +9,7 @@
 #define TEST 0
 
 
-#import "VMPlayerOSXDelegate.h"
+#import "VMOnTheFlyEditorAppDelegate.h"
 #import "VMPAudioPlayer.h"
 #import "VMPAnalyzer.h"
 #import "VMPNotification.h"
@@ -26,9 +26,9 @@
 #pragma mark VMPlayer OSX Delegate
 
 
-@implementation VMPlayerOSXDelegate
+@implementation VMOnTheFlyEditorAppDelegate
 
-VMPlayerOSXDelegate *OnTheFly_singleton_static_ = nil;
+VMOnTheFlyEditorAppDelegate *OnTheFly_singleton_static_ = nil;
 NSDictionary		*windowNames_static_ = nil;
 
 /*
@@ -46,7 +46,7 @@ NSDictionary		*windowNames_static_ = nil;
  applicationDidUpdate
  */
 
-+ (VMPlayerOSXDelegate*)singleton {
++ (VMOnTheFlyEditorAppDelegate*)singleton {
 	return OnTheFly_singleton_static_;
 }
 
@@ -149,7 +149,7 @@ NSDictionary		*windowNames_static_ = nil;
 - (IBAction)songReset:(id)sender {
 //	DEFAULTEVALUATOR.timeManager.shutdownTime = nil;
 	[DEFAULTSONGPLAYER stopAndDisposeQueue];
-	[DEFAULTSONG reset];
+	[CURRENTSONG reset];
 	[DEFAULTEVALUATOR reset];
 //	[self deleteUserSavedSong];
 //	[self loadSongFromVMS];
@@ -284,10 +284,33 @@ NSDictionary		*windowNames_static_ = nil;
 
 #pragma mark action - load, reload(from editor), revert and save vms
 
+
+- (IBAction)newDocument:(id)sender {
+    // TODO: check if current song has unsaved changes
+    NSSavePanel *savePanel = [NSSavePanel savePanel];
+    [savePanel beginWithCompletionHandler:^(NSModalResponse result) {
+        if (result == NSModalResponseOK) {
+            VMSong *newSong = [VMSong new];
+            newSong.vmsTextData = [NSString stringWithFormat: @"{\nsongName: \"%@\",\ndata: \n[\n\n]\n}", savePanel.URL.URLByDeletingPathExtension.lastPathComponent];
+            NSError *error = nil;
+            if (![newSong saveToURL:savePanel.URL error:&error]) {
+                [VMException alert:@"failed to create new song"];
+            } else {
+                if (![self loadFromURL: savePanel.URL error: &error]) {
+                    [VMException alert:@"failed to load new created song"];
+                } else {
+                    [self.editorWindowController reloadData: sender];
+                }
+            }
+        }
+    }];
+}
+
 - (IBAction)revertDocument:(id)sender {
 	[DEFAULTSONGPLAYER stopAndDisposeQueue];
-    [self openVMSDocumentFromURL:self.currentDocumentURL];
-    DEFAULTSONGPLAYER.song = DEFAULTSONG;
+    NSError *error = nil;
+    [self loadFromURL:self.currentDocumentURL error:&error];
+    DEFAULTSONGPLAYER.song = CURRENTSONG;
 
 	[self resetEverythingAfterDataIsLoaded];
 }
@@ -295,22 +318,33 @@ NSDictionary		*windowNames_static_ = nil;
 - (IBAction)reloadDataFromEditor:(id)sender {
 	[DEFAULTSONGPLAYER stopAndDisposeQueue];
 	NSError *error = nil;
-	if ( ![DEFAULTSONG readFromString:self.editorWindowController.codeEditorView.textView.string error:&error] )
+	if ( ![CURRENTSONG readFromString:self.editorWindowController.codeEditorView.textView.string error:&error] )
 		[self showLogPanelIfNewSystemLogsAreAdded];
 	
 	[self resetEverythingAfterDataIsLoaded];
 }
 
+- (BOOL)loadFromURL:(NSURL*)url error:(NSError**)errorPtr {
+    [self openVMSDocumentFromURL:url error:errorPtr];
+    if( !(*errorPtr) ) {
+        [self resetEverythingAfterDataIsLoaded];
+        self.currentDocumentURL = url;
+        [[NSUserDefaults standardUserDefaults] setValue:[url path] forKey:VMPUserDefaultsKey_LastDocumentURL];
+        return NO;
+    }
+    return YES;
+}
+
 - (IBAction)saveDocument:(id)sender {
 	NSError *error = nil;
 	NSString *vmsData = self.editorWindowController.codeEditorView.textView.string;
-	DEFAULTSONG.vmsData = vmsData;
-	[self saveVMSDocumentToURL:self.currentDocumentURL];	//	FIRST! save anyway.
+	CURRENTSONG.vmsTextData = vmsData;
+    [self saveVMSDocumentToURL:self.currentDocumentURL error:&error];
 	[DEFAULTSONGPLAYER stopAndDisposeQueue];				//	NEXT:  stopping audio can cause error, hang of device, etc.
 															//	LAST:  validate vms, it can produce bunch of errors.
 	//	set editor's songData to nil, because it attempts to display deallocated frags on json parse error.
 	[self.editorWindowController clearSongData];
-	if( [DEFAULTSONG readFromString:vmsData error:&error] )
+	if( [CURRENTSONG readFromString:vmsData error:&error] )
 		[self showLogPanelIfNewSystemLogsAreAdded];
 	
 	self.documentModified = NO;
@@ -325,18 +359,18 @@ NSDictionary		*windowNames_static_ = nil;
 
 - (IBAction)closeDocument:(id)sender {
 	if ( self.isDocumentModified ) {
-		if ( [VMException ensure:@"%@ has unsaved changes. Close anyway ?", DEFAULTSONG.songName] == 1 ) return;
+		if ( [VMException ensure:@"%@ has unsaved changes. Close anyway ?", CURRENTSONG.songName] == 1 ) return;
 	}
 	
 	[DEFAULTSONGPLAYER stopAndDisposeQueue];
-	[DEFAULTSONG clear];
+	[CURRENTSONG clear];
 }
 
 - (IBAction)openDocument:(id)sender {
 	[self closeDocument:self];
 	
 	if ( self.isDocumentModified ) {
-		if ( [VMException ensure:@"%@ has unsaved changes. Close anyway ?", DEFAULTSONG.songName] == 1 ) return;
+		if ( [VMException ensure:@"%@ has unsaved changes. Close anyway ?", CURRENTSONG.songName] == 1 ) return;
 	}
 	//	TODO: we might use a document controller to populate 'recent files' menu.
 //	NSDocumentController *dc = [NSDocumentController sharedDocumentController];
@@ -348,20 +382,15 @@ NSDictionary		*windowNames_static_ = nil;
 	op.allowsMultipleSelection = NO;
 	op.allowedFileTypes = @[@"vms"];
 	
-	if( [op runModal] == NSOKButton ) {
+    if( [op runModal] == NSModalResponseOK ) {
 		NSURL *url = (op.URLs)[0];
-		
-		NSError *err = [self openVMSDocumentFromURL:url];
-		if( !err ) {
-			[self resetEverythingAfterDataIsLoaded];			
-			self.currentDocumentURL = url;
-			[[NSUserDefaults standardUserDefaults] setValue:[url path] forKey:VMPUserDefaultsKey_LastDocumentURL];
-		}
+        NSError *error = nil;
+        [self loadFromURL:url error:&error];
 	}
 }
 
 - (void)resetEverythingAfterDataIsLoaded {
-	DEFAULTSONGPLAYER.song = DEFAULTSONG;
+	DEFAULTSONGPLAYER.song = CURRENTSONG;
 	[VMPNotificationCenter postNotificationName:VMPNotificationVMSDataLoaded object:self userInfo:nil];
 }
 
@@ -369,30 +398,26 @@ NSDictionary		*windowNames_static_ = nil;
 #pragma mark method - load and save VMSong
 //	TODO: handle error
 
-- (NSError*)openVMSDocumentFromURL:(NSURL *)documentURL {
-	NSError	*error = nil;
-	if( [DEFAULTSONG readFromURL:documentURL error:&error] ) {
-		[VMPNotificationCenter postNotificationName:VMPNotificationVMSDataLoaded object:self userInfo:nil];
-	} else {
-		//	handle error
+- (BOOL)openVMSDocumentFromURL:(NSURL *)documentURL error:(NSError**)errorPtr {
+	if( ![CURRENTSONG readFromURL:documentURL error:errorPtr] ) {
 		[VMException logError:@"Failed to load VMS" format:@"URL:%@ Error:%@ Reason:%@",
-		 [documentURL absoluteString], error.localizedDescription, error.localizedFailureReason
+		 [documentURL absoluteString], (*errorPtr).localizedDescription, (*errorPtr).localizedFailureReason
 		 ];
+        return NO;
 	}
-	return error;
+	return YES;
 }
 
-- (NSError*)saveVMSDocumentToURL:(NSURL *)documentURL {
-	NSError	*error = nil;
-	if ( [DEFAULTSONG saveToURL:documentURL error:&error] ) {
+- (BOOL)saveVMSDocumentToURL:(NSURL *)documentURL error:(NSError**)errorPtr {
+	if ( [CURRENTSONG saveToURL:documentURL error:errorPtr] ) {
 		[VMPNotificationCenter postNotificationName:VMPNotificationVMSDataLoaded object:self userInfo:nil];
 	} else {
-		//	handle error
 		[VMException logError:@"Failed to save VMS" format:@"URL:%@ Error:%@ Reason:%@",
-		 [documentURL absoluteString], error.localizedDescription, error.localizedFailureReason
+		 [documentURL absoluteString], (*errorPtr).localizedDescription, (*errorPtr).localizedFailureReason
 		 ];
+        return NO;
 	}
-	return error;
+	return YES;
 }
 
 
@@ -409,12 +434,12 @@ NSDictionary		*windowNames_static_ = nil;
 	[VMPTest test];
 #endif
     // Startup!
+    [_editorWindowController applicationDidLaunch];
 	if ( self.currentDocumentURL )
 		[self revertDocument:self];	//	load
 	//
 	[DEFAULTSONGPLAYER warmUp];
-	[_editorWindowController applicationDidLaunch];
-	DEFAULTSONG.showReport.current = @YES;
+	CURRENTSONG.showReport.current = @YES;
 	[self performSelector:@selector(mainRunLoop) withObject:nil afterDelay:0.5];
 	
 	[self showLogPanelIfNewSystemLogsAreAdded];
@@ -436,7 +461,7 @@ NSDictionary		*windowNames_static_ = nil;
 - (NSApplicationTerminateReply)applicationShouldTerminate:(NSApplication *)sender {
 	
 	if ( self.isDocumentModified ) {
-		if ( [VMException ensure:@"%@ has unsaved changes. Quit anyway ?", DEFAULTSONG.songName] == 1 ) return NO;
+		if ( [VMException ensure:@"%@ has unsaved changes. Quit anyway ?", CURRENTSONG.songName] == 1 ) return NO;
 	}
 	
 	

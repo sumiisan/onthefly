@@ -15,7 +15,7 @@
 
 #define kDefaultVMSFileName @"default.vms"
 
-@interface VMPlayerOSXDelegate : NSObject
+@interface VMOnTheFlyEditorAppDelegate : NSObject
 	<NSApplicationDelegate, NSWindowDelegate> {
 @private
     NSPersistentStoreCoordinator	*__persistentStoreCoordinator;
@@ -64,8 +64,8 @@
  
  ----------------------------------------------------------------------------------*/
 
-+ (VMPlayerOSXDelegate*)singleton;
-- (NSError*)openVMSDocumentFromURL:(NSURL *)documentURL;
++ (VMOnTheFlyEditorAppDelegate*)singleton;
+- (BOOL)openVMSDocumentFromURL:(NSURL *)documentURL error:(NSError **)errPtr;
 
 - (BOOL)showLogPanelIfNewSystemLogsAreAdded;
 

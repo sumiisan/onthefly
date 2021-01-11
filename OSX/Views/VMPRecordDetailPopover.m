@@ -8,7 +8,7 @@
 
 #import "VMPRecordDetailPopover.h"
 #import "VMPMacros.h"
-#import "VMPlayerOSXDelegate.h"
+#import "VMOnTheFlyEditorAppDelegate.h"
 
 static VMPRecordCell *recordCell_defaultCell__ = nil;
 
@@ -200,7 +200,7 @@ static VMArray *indicatorForCategory = nil;
 			maxIndex = [h itemAsInt:@"position"];
 		}
 	}
-	[[VMPlayerOSXDelegate singleton].logView locateLogWithIndex:maxIndex ofSource:VMLogOwner_Statistics];
+	[[VMOnTheFlyEditorAppDelegate singleton].logView locateLogWithIndex:maxIndex ofSource:VMLogOwner_Statistics];
 }
 
 - (void)filterSelected:(id)sender {

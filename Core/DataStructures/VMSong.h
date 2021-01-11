@@ -12,7 +12,7 @@
 #import "MultiPlatform.h"
 
 
-#define DEFAULTSONG [VMSong defaultSong]
+#define CURRENTSONG [VMSong currentSong]
 #define ENDOFSEQUENCE_NOTIFICATION @"vmendofsequence"
 
 @interface VMSongStatistics : NSObject <NSCoding> {
@@ -57,7 +57,7 @@
 
 //	song data structure
 @property (nonatomic, VMStrong)		VMHash	 *songData;
-@property (nonatomic, VMStrong)		VMString *vmsData;
+@property (nonatomic, VMStrong)		VMString *vmsTextData;
 @property (nonatomic, VMStrong)		NSDate	 *fileTimeStamp;
 
 //	static song properties
@@ -86,7 +86,7 @@
 
 
 //	singleton
-+ (VMSong*)defaultSong;
++ (VMSong*)currentSong;
 
 //	save and load
 + (VMSong*)songWithDataFromUrl:(NSURL*)url;

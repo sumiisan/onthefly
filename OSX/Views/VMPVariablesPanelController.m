@@ -106,7 +106,7 @@
 	}
 	
 	if ( [self.typeSelector isSelectedForSegment:2] ) {
-		VMData *d = [DEFAULTSONG data:self.selectedFragmentId];
+		VMData *d = [CURRENTSONG data:self.selectedFragmentId];
 		if ( d.type == vmObjectType_selector || d.type == vmObjectType_sequence ) {
 			if (d.type == vmObjectType_sequence ) d = ((VMSequence*)d).subsequent;
 			VMArray *history = ((VMSelector*)d).liveData.history;

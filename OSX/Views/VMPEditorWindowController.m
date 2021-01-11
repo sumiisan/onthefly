@@ -17,6 +17,7 @@
 #import "VMPCodeEditorView.h"
 #import "VMPObjectGraphView.h"
 #import "VMScoreEvaluator.h"
+#import "VMException.h"
 
 #define FormString NSString stringWithFormat:
 
@@ -289,8 +290,8 @@ static VMPObjectCell		*typeColumnCell = nil;
 }
 
 - (void)reloadData:(id)sender {
-	_songData = DEFAULTSONG.songData;
-	self.editorWindow.title = DEFAULTSONG.songName ? DEFAULTSONG.songName : @"Untitled";
+	_songData = CURRENTSONG.songData;
+	self.editorWindow.title = CURRENTSONG.songName ? CURRENTSONG.songName : @"Untitled";
 	
 	VMArray *ids = [_songData sortedKeys];
 	VMHash *parts = ARInstance(VMHash);
@@ -818,7 +819,7 @@ forDoubleClickOnDividerAtIndex:(NSInteger)dividerIndex  {
 	
 	if ( sender == self.scoreToggleButton ) {
 		self.useStatisticScores = ( self.scoreToggleButton.state == 1 );
-		vmObjectType type = ((VMData*)[DEFAULTSONG data:self.currentDisplayingDataId]).type;
+		vmObjectType type = ((VMData*)[CURRENTSONG data:self.currentDisplayingDataId]).type;
 		if ( type == vmObjectType_selector || type == vmObjectType_sequence ) {
 			self.graphView.selectorDataSource =
 				( self.useStatisticScores ? VMPSelectorDataSource_Statistics : VMPSelectorDataSource_StaticVMS );
@@ -963,7 +964,7 @@ forDoubleClickOnDividerAtIndex:(NSInteger)dividerIndex  {
 	SEL action = menuItem.action;
 	
 	if ( action == @selector(zoomIn:) || action == @selector(zoomOut:) ) {
-		VMData *selectedFrag = [DEFAULTSONG data:[self.history currentItem]];
+		VMData *selectedFrag = [CURRENTSONG data:[self.history currentItem]];
 		if ( !selectedFrag ) return NO;
 		if (   selectedFrag.type != vmObjectType_audioFragment
 			&& selectedFrag.type != vmObjectType_audioFragmentPlayer
@@ -1019,7 +1020,7 @@ forDoubleClickOnDividerAtIndex:(NSInteger)dividerIndex  {
 		signed char direction = action & 0xff;
 		[_graphView drawGraphWith:((d.type != vmObjectType_chance)
 								   ? d
-								   : [DEFAULTSONG data:((VMChance*)d).targetId] )
+								   : [CURRENTSONG data:((VMChance*)d).targetId] )
 			   animationDirection:direction
 		 ];
 		[_infoView drawInfoWith:d];
@@ -1116,9 +1117,15 @@ forDoubleClickOnDividerAtIndex:(NSInteger)dividerIndex  {
 - (IBAction)zoomIn:(id)sender {}
 - (IBAction)zoomOut:(id)sender {}
 
-
 //	insert fragment
-- (IBAction)insertFragment:(id)sender {}
+- (IBAction)insertFragment:(id)sender {
+    
+}
+
+//  import audio file
+- (IBAction)importAudioFile:(id)sender {
+    
+}
 
 //	toggle iOSAppState
 - (IBAction)toggleIOSAppState:(id)sender {
@@ -1148,7 +1155,7 @@ forDoubleClickOnDividerAtIndex:(NSInteger)dividerIndex  {
 	if ( [dataId rangeOfString:@"_"].length == 0 )
 		dataId = [dataId stringByAppendingString:@"_sel"];	//	assume part id.
 
-	VMData *d = [DEFAULTSONG data:dataId];
+	VMData *d = [CURRENTSONG data:dataId];
 	if (d.type == vmObjectType_sequence ||
 		d.type == vmObjectType_selector ||
 		d.type == vmObjectType_audioFragment ||

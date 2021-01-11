@@ -8,7 +8,7 @@
 
 #import "VMPCodeEditorView.h"
 #import "VMPNotification.h"
-#import "VMPlayerOSXDelegate.h"
+#import "VMOnTheFlyEditorAppDelegate.h"
 #import "VMPMacros.h"
 #import "VMPreprocessor.h"
 
@@ -198,7 +198,7 @@
 }
 
 - (void)reloadData:(NSNotification*)notification {
-	[self setSourceCode:DEFAULTSONG.vmsData];
+	[self setSourceCode:CURRENTSONG.vmsTextData];
 }
    
 #pragma mark -
@@ -209,7 +209,7 @@
 	if ( notification.object != APPDELEGATE.editorWindowController ) return;
 	//	actually, we added a observer with this object..
 	if ( self.sourceCode.length == 0 )
-		[self setSourceCode:DEFAULTSONG.vmsData];
+		[self setSourceCode:CURRENTSONG.vmsTextData];
 	VMId *fragId = (notification.userInfo)[@"id"];
 	if(fragId);
 		[self selectBlockWithId:fragId scrollVisible:YES];
@@ -447,7 +447,7 @@
 	VMId *fragId = [self idOfBlock:block inString:before];
 	NSLog(@"fragId:%@",fragId);
 	if (self.sourceCode.length == 0)
-		[self setSourceCode:DEFAULTSONG.vmsData];
+		[self setSourceCode:CURRENTSONG.vmsTextData];
 
 	[self selectBlockWithId:fragId scrollVisible:YES];
 }

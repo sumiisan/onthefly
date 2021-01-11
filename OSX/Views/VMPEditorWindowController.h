@@ -65,7 +65,7 @@
 //	public methods
 - (BOOL)findObjectById:(VMId*)dataId action:(vmp_action)action;	//	display object if found. does not make editor window key.
 - (VMArray*)referrerListForId:(VMId*)dataId;
-
+- (void)reloadData:(id)sender;
 
 //
 - (IBAction)buttonClicked:(id)sender;

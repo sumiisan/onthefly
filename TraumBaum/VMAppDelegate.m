@@ -160,7 +160,7 @@ static VMAppDelegate *appDelegate_singleton_;
 }
 
 - (void)savePlayerState {
-	NSData *playerData = [NSKeyedArchiver archivedDataWithRootObject:DEFAULTSONG.player];
+	NSData *playerData = [NSKeyedArchiver archivedDataWithRootObject:CURRENTSONG.player];
 	[VMTraumbaumUserDefaults savePlayer:playerData];
 	NSLog(@"Saving player state");
 }
@@ -198,7 +198,7 @@ static VMAppDelegate *appDelegate_singleton_;
 - (void)reset {
 	DEFAULTEVALUATOR.timeManager.shutdownTime = nil;
 	[DEFAULTSONGPLAYER stopAndDisposeQueue];
-	[DEFAULTSONG reset];
+	[CURRENTSONG reset];
 	[DEFAULTEVALUATOR reset];	
 	[self deleteUserSavedSong];
 	if( [self loadSong] ) {
@@ -209,7 +209,7 @@ static VMAppDelegate *appDelegate_singleton_;
 
 - (void)endOfSequence:(NSNotification*)notification {
 	//	we should clear players and save datas to disable resuming from old saved state.
-	DEFAULTSONG.player = nil;
+	CURRENTSONG.player = nil;
 	[self savePlayerState];	
 }
 
@@ -261,9 +261,9 @@ static VMAppDelegate *appDelegate_singleton_;
 		return;
 	}
 	
-	if ( DEFAULTSONG.player ) {
+	if ( CURRENTSONG.player ) {
 		if ( songplayer.isPaused ) [songplayer resume];
-		NSLog( @"Startup: player data is still on memory. let's fill the queue with them.\n%@", DEFAULTSONG.player.description );
+		NSLog( @"Startup: player data is still on memory. let's fill the queue with them.\n%@", CURRENTSONG.player.description );
 		[[NSNotificationCenter defaultCenter] postNotificationName:PLAYERSTARTED_NOTIFICATION object:self];
 		[songplayer setFadeFrom:-1 to:1 length:2.];
 		return;
@@ -276,7 +276,7 @@ static VMAppDelegate *appDelegate_singleton_;
 		VMPlayer *player = [NSKeyedUnarchiver unarchiveObjectWithData:playerData];
 		if ( player.fragments.count > 0 ) {
 			NSLog(@"Startup: trying to recover from saved state:%@",player.description);
-			DEFAULTSONG.player = player;
+			CURRENTSONG.player = player;
 			[songplayer setFadeFrom:0.01 to:1 length:3.];
 			[songplayer startWithFragmentId:nil];
 			[[NSNotificationCenter defaultCenter] postNotificationName:PLAYERSTARTED_NOTIFICATION object:self];
@@ -321,7 +321,7 @@ static VMAppDelegate *appDelegate_singleton_;
 		//	test : loading sequence moved from -init
 		[self loadSong];
 		[DEFAULTSONGPLAYER warmUp];
-		DEFAULTSONG.showReport.current = @NO;
+		CURRENTSONG.showReport.current = @NO;
 	}
 	return YES;
 }
@@ -429,7 +429,7 @@ static VMAppDelegate *appDelegate_singleton_;
 	loadingExternalVMS = false;
 	if( [self loadSong] ) {
 		[DEFAULTSONGPLAYER warmUp];
-		DEFAULTSONG.showReport.current = @YES;
+		CURRENTSONG.showReport.current = @YES;
 		[self startup];
 	}
 }

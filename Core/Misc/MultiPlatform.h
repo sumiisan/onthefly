@@ -99,7 +99,7 @@ static const BOOL kUseCoreAnimationLayerForEditor = YES;	//TESTING
 
 static const BOOL kUseNotification = YES;
 
-#define APPDELEGATE	[VMPlayerOSXDelegate singleton]
+#define APPDELEGATE	[VMOnTheFlyEditorAppDelegate singleton]
 
 //  aliases
 

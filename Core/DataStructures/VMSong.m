@@ -45,9 +45,9 @@
 	self.numberOfAudioFragments = 0;
 	
 	//	count number of audio frags.
-	VMArray *fragIds = [DEFAULTSONG.songData keys];
+	VMArray *fragIds = [CURRENTSONG.songData keys];
 	for (VMId *fragId in fragIds) {
-		VMData *d = [DEFAULTSONG.songData item:fragId];
+		VMData *d = [CURRENTSONG.songData item:fragId];
 		if ( d.type == vmObjectType_audioFragment )
 			++numberOfAudioFragments_;
 	}
@@ -100,7 +100,7 @@
 @synthesize songData=songData_, history=history_, songStatistics=songStatistics_;
 @synthesize player=player_;
 @synthesize showReport=showReport_;
-@synthesize vmsData=vmsData_, fileURL=fileURL_;
+@synthesize vmsTextData=vmsData_, fileURL=fileURL_;
 
 static VMSong *vmsong_singleton_static_;
 //static BOOL reportNotRegisteredObjects = NO;
@@ -135,7 +135,7 @@ BOOL verbose = NO;
     return (LONG_MAX - 1);
 }
 
-+ (VMSong*)defaultSong {
++ (VMSong*)currentSong {
 	if( ! vmsong_singleton_static_ ) vmsong_singleton_static_ = NewInstance(VMSong);
 	return vmsong_singleton_static_;
 }
@@ -621,12 +621,12 @@ BOOL verbose = NO;
 //	returns YES on success, NO if failed.
 - (BOOL)readFromString:(VMString *)string error:(NSError **)outError {
 	if( string )
-		self.vmsData = string;
+		self.vmsTextData = string;
 	[self.songData clear];
 	self.showReport.current = @NO;
 	
 	DEFAULTPREPROCESSOR.song = self;
-	BOOL success = [DEFAULTPREPROCESSOR preprocess:self.vmsData error:outError];
+	BOOL success = [DEFAULTPREPROCESSOR preprocess:self.vmsTextData error:outError];
 	
 #if VMP_EDITOR
 	if (!success) {
@@ -644,11 +644,11 @@ BOOL verbose = NO;
 }
 
 - (BOOL)saveToURL:(NSURL *)url error:(NSError **)outError {		//	note: outError is never set
-	if( self.vmsData.length == 0 ) {
+	if( self.vmsTextData.length == 0 ) {
 		[VMException alert:@"Can not save empty structure!"];
 		return NO;
 	}
-	NSData *data = [self.vmsData dataUsingEncoding:vmFileEncoding];
+	NSData *data = [self.vmsTextData dataUsingEncoding:vmFileEncoding];
 	if ( [data writeToURL:url options:NSDataWritingAtomic error:outError] ) {//[data writeToURL:url atomically:YES] ) {
 		self.fileURL = url;
 		return YES;
@@ -700,7 +700,7 @@ BOOL verbose = NO;
 	VMNullify(showReport);
 	VMNullify(audioFileDirectory);
 	VMNullify(audioFileExtension);
-	VMNullify(vmsData);
+	VMNullify(vmsTextData);
 	VMNullify(fileTimeStamp);
 
 #if VMP_LOGGING

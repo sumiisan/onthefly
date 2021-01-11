@@ -280,7 +280,7 @@ VMOBLIGATORY_init(vmObjectType_data,NO,)
 
 VMObligatory_containsId(
 	if( [referenceId_ isEqualToString:dataId ] ) return YES;
-	return [[DEFAULTSONG data:referenceId_] containsId:dataId];
+	return [[CURRENTSONG data:referenceId_] containsId:dataId];
 )
 
 
@@ -1050,7 +1050,7 @@ VMObligatory_encodeWithCoder
 
 #pragma mark obligatory
 VMObligatory_resolveUntilType(
-	return [[DEFAULTSONG data:self.targetId] resolveUntilType:mask];	
+	return [[CURRENTSONG data:self.targetId] resolveUntilType:mask];	
 )
 VMOBLIGATORY_init(vmObjectType_chance, NO, cachedScore_ = NAN;)
 VMOBLIGATORY_setWithProto(
@@ -1144,7 +1144,7 @@ if ( ClassMatch(data, NSString)) {
 
 - (VMFragment*)fragmentAtIndex:(VMInt)pos {
 	id c = [frags_ item:pos];
-	if ( ClassMatch(c, VMId)) c = [DEFAULTSONG data: c];
+	if ( ClassMatch(c, VMId)) c = [CURRENTSONG data: c];
 	return c;
 }
 
@@ -1231,7 +1231,7 @@ VMObligatory_containsId(
 		VMData *vmdata = nil;
 		if ( ClassMatch(data, VMId )) {
 			if ( [((VMId*)data) isEqualToString:dataId] ) return YES;
-			vmdata = [DEFAULTSONG data:data];
+			vmdata = [CURRENTSONG data:data];
 		}
 		if ( ClassMatch(data, VMData ))
 			vmdata = data;
@@ -1408,7 +1408,7 @@ static VMHash *scoreForFragment_static_ = nil;
 		
 		if ( isnan(score) ) [VMException raise:@"Could not evaluate score." format:@"score of %@ in %@", chance.targetId, self.id];
 		if (score == 0 ) continue;
-		VMFragment *frag = [DEFAULTSONG data:chance.targetId];
+		VMFragment *frag = [CURRENTSONG data:chance.targetId];
 		
 		if( frag.type == vmObjectType_sequence ) {
 			//	if encoutered a seq, just choose the first frag in sequence.
@@ -1487,7 +1487,7 @@ static VMHash *scoreForFragment_static_ = nil;
 
 - (VMFragment*)selectOneTemporaryUsingScores:(VMHash*)scoreForFragments sumOfScores:(VMFloat)sum {
 	if( [self.fragments count] <= 0 ) return nil;
-	BOOL verbose = DEFAULTSONG.isVerbose;
+	BOOL verbose = CURRENTSONG.isVerbose;
 
 	VMFragment *frag = nil;
 	int retryLeft = 10;	
@@ -1512,7 +1512,7 @@ static VMHash *scoreForFragment_static_ = nil;
 			for ( VMId *fragId in fragIds ) {
 				s += [scoreForFragments itemAsFloat:fragId];
 				if ( s > xi ) {
-					VMFragment *c = [DEFAULTSONG data:fragId];
+					VMFragment *c = [CURRENTSONG data:fragId];
 					//NSLog(@"- selected using ext data: %@", c.id);
 					frag = [DEFAULTEVALUATOR resolveDataWithTracking:c toType:vmObjectCategory_fragment];
 					if( frag )
@@ -1619,7 +1619,7 @@ static VMHash *scoreForFragment_static_ = nil;
 	VMInt c = self.length;
 	for( VMInt i = 0; i < c; ++i ) {
 		VMChance *ch = [self chanceAtIndex:i];
-		VMFragment *data = [DEFAULTSONG data:ch.targetId];
+		VMFragment *data = [CURRENTSONG data:ch.targetId];
 		if ( ! data ) continue;
 		if ( data.type == vmObjectType_sequence ) return NO;	//	assume sequence has valid subseqs.
 		
@@ -1650,12 +1650,12 @@ static VMHash *scoreForFragment_static_ = nil;
 		//	use extern supplied data
 		VMArray *fragIds = [scoreForFragments keys];
 		for ( VMId *fragId in fragIds ) {
-			if ( [DEFAULTSONG isFragmentDeadEnd:fragId] ) deadEndScore += [scoreForFragments itemAsFloat:fragId];
+			if ( [CURRENTSONG isFragmentDeadEnd:fragId] ) deadEndScore += [scoreForFragments itemAsFloat:fragId];
 		}
 	} else {
 		//	use default internal frags and cached score
 		for ( VMChance *c in self.fragments ) {
-			if ( [DEFAULTSONG isFragmentDeadEnd:c.targetId] ) deadEndScore += c.cachedScore;
+			if ( [CURRENTSONG isFragmentDeadEnd:c.targetId] ) deadEndScore += c.cachedScore;
 		}
 	}
 	

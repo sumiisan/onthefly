@@ -13,7 +13,7 @@
 #import "VMPAnalyzer.h"
 #import "VMPSongPlayer.h"
 #import "VMPreprocessor.h"
-#import "VMPlayerOSXDelegate.h"
+#import "VMOnTheFlyEditorAppDelegate.h"
 #import "VMPNotification.h"
 
 static const VMFloat kDefaultLogItemViewHeight = 14.0;
@@ -257,7 +257,7 @@ static const VMFloat kDefaultLogItemViewHeight = 14.0;
 	_updateScheduled = NO;
 	switch ( self.currentSource ) {
 		case VMLogOwner_MediaPlayer:
-			self.log = DEFAULTSONG.log;
+			self.log = CURRENTSONG.log;
 			[self makeFilteredLog];
 			break;
 			
@@ -485,7 +485,7 @@ static const VMFloat kDefaultLogItemViewHeight = 14.0;
 							VMFloat sw = score * pixPerScore;							
 							VMPFragmentCell *fc = [[VMPFragmentCell alloc] initWithFrame:NSMakeRect(x, 0, sw -1, 29)];
 							x += sw;
-							VMData *d = [DEFAULTSONG data:key];
+							VMData *d = [CURRENTSONG data:key];
 							[fc setData:d];
 							if ( [key isEqualToString:selectedFragment] ) fc.selected = YES;
 							[expansionView addSubview:fc];

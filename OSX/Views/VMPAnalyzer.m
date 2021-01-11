@@ -9,7 +9,7 @@
 #import "VMPAnalyzer.h"
 #import "VMSong.h"
 #import "VMPMacros.h"
-#import "VMPlayerOSXDelegate.h"
+#import "VMOnTheFlyEditorAppDelegate.h"
 #import "VMPSongPlayer.h"
 #include "KeyCodes.h"
 #import "VMPNotification.h"
@@ -286,7 +286,7 @@ static const int	kLengthOfPartTraceRoute					= 10000;	//	gives up after 10000 ti
 			// global route statistic
 			//
 			[DEFAULTSONGPLAYER fadeoutAndStop:5.];
-			[self routeStatistic:[DEFAULTSONG data:DEFAULTSONG.defaultFragmentId]
+			[self routeStatistic:[CURRENTSONG data:CURRENTSONG.defaultFragmentId]
 			  numberOfIterations:kNumberOfIterationsOfGlobalTraceRoute
 						   until:nil];
 			break;
@@ -297,7 +297,7 @@ static const int	kLengthOfPartTraceRoute					= 10000;	//	gives up after 10000 ti
 			//
 			VMId *partId = [[VMArray arrayWithString:APPDELEGATE.editorWindowController.currentDisplayingDataId
 											 splitBy:@"_"] item:0];
-			VMFragment *entrySelector = [DEFAULTSONG data:[partId stringByAppendingString:@"_sel"]];
+			VMFragment *entrySelector = [CURRENTSONG data:[partId stringByAppendingString:@"_sel"]];
 			if (entrySelector) {
 				[self routeStatistic:entrySelector numberOfIterations:kNumberOfIterationsOfPartTraceRoute until:@"exit-part"];
 			}
@@ -316,7 +316,7 @@ static const int	kLengthOfPartTraceRoute					= 10000;	//	gives up after 10000 ti
 			//
 			totalDuration = 0;
 			totalFileDuration = 0;
-			self.dataIdToProcess = [DEFAULTSONG.songData sortedKeys];
+			self.dataIdToProcess = [CURRENTSONG.songData sortedKeys];
 			self.unresolveables = ARInstance(VMArray);
 			self.currentPositionInDataIdList = 0;
 			self.fileWarnings = ARInstance(VMArray);
@@ -389,11 +389,11 @@ static const int	kLengthOfPartTraceRoute					= 10000;	//	gives up after 10000 ti
 	self.entryPoint = inEntryPoint;
 	self.log = AutoRelease([[VMLog alloc] initWithOwner:VMLogOwner_Statistics
 						managedObjectContext:nil] );
-	[DEFAULTSONG.log save];
-	DEFAULTSONG.log = self.log;
+	[CURRENTSONG.log save];
+	CURRENTSONG.log = self.log;
 	
-	DEFAULTSONG.showReport.current = @NO;
-	[DEFAULTSONG setFragmentId:self.entryPoint.id];
+	CURRENTSONG.showReport.current = @NO;
+	[CURRENTSONG setFragmentId:self.entryPoint.id];
 	
     exitWhenPartChanged = ( [exitCondition isEqualToString:@"exit-part" ]);
 	self.currentPartId	= inEntryPoint.partId;
@@ -459,7 +459,7 @@ static const int	kLengthOfPartTraceRoute					= 10000;	//	gives up after 10000 ti
 - (BOOL)analyze_step {
 	@autoreleasepool {
         totalSteps++;
-		VMAudioFragment *af = [DEFAULTSONG nextAudioFragment];
+		VMAudioFragment *af = [CURRENTSONG nextAudioFragment];
 		if( ! af ) {
             /*  don't add unresolved frags after "end" into statistic (may destroy statistic balance) */
             if (![_lastFragmentId isEqualToString:@"end"]) {
@@ -519,7 +519,7 @@ static const int	kLengthOfPartTraceRoute					= 10000;	//	gives up after 10000 ti
 }
 
 - (void)reset_proc {
-	[DEFAULTSONG setFragmentId:self.entryPoint.id];
+	[CURRENTSONG setFragmentId:self.entryPoint.id];
 	VMNullify(lastFragmentId);
 }
 
@@ -568,7 +568,7 @@ static const int	kLengthOfPartTraceRoute					= 10000;	//	gives up after 10000 ti
 	
 	[self.progressWC setProgress:(double)(numberOfIterations - iterationsLeft)
 						 ofTotal:(double)numberOfIterations message:@"Analyzing:"
-						  window:[VMPlayerOSXDelegate singleton].editorWindowController.window];
+						  window:[VMOnTheFlyEditorAppDelegate singleton].editorWindowController.window];
 	if ( --iterationsLeft > 0 ) {
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.0001 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             [self analyze_proc];
@@ -596,7 +596,7 @@ static const int	kLengthOfPartTraceRoute					= 10000;	//	gives up after 10000 ti
 	for ( VMString *dataId in _dataIdToProcess ) {
 		VMFloat		count		= [_countForFragmentId itemAsFloat:dataId];
 		VMFloat		percent		= (count*100./(double)totalAudioFragmentCount);
-		VMAudioFragment	*af		= ClassCastIfMatch( [DEFAULTSONG data:dataId], VMAudioFragment );
+		VMAudioFragment	*af		= ClassCastIfMatch( [CURRENTSONG data:dataId], VMAudioFragment );
 		VMTime		duration	= ( af ? af.duration * count : 0 );
 		
 		maxFragmentCount	= MAX( count,		maxFragmentCount );
@@ -689,7 +689,7 @@ static const int	kLengthOfPartTraceRoute					= 10000;	//	gives up after 10000 ti
 - (void)finishAnalysis {
 	VMHash *durationForPart = ARInstance(VMHash);
 	VMHash *numberOfFragmentsForPart = ARInstance(VMHash);
-	[self.progressWC setProgress:0 ofTotal:0 message:nil window:[VMPlayerOSXDelegate singleton].editorWindowController.window];
+	[self.progressWC setProgress:0 ofTotal:0 message:nil window:[VMOnTheFlyEditorAppDelegate singleton].editorWindowController.window];
 
 	totalDuration=maxPartCount=maxPartPercent=maxPartDuration=maxFragmentCount=maxFragmentPercent=maxFragmentDuration=maxVariety=0;
 	
@@ -699,7 +699,7 @@ static const int	kLengthOfPartTraceRoute					= 10000;	//	gives up after 10000 ti
 											  numberOfFragmentsForPart:numberOfFragmentsForPart];
 	VMArray *partsArray = [self partReportWithDurationForPart:durationForPart
 									 numberOfFragmentsForPart:numberOfFragmentsForPart];
-	[DEFAULTSONG.showReport restore];
+	[CURRENTSONG.showReport restore];
 	
 	//
 	// histograms
@@ -712,9 +712,9 @@ static const int	kLengthOfPartTraceRoute					= 10000;	//	gives up after 10000 ti
 	VMArray *unreacheableAC = ARInstance(VMArray);
 	int totalAcCount=0;
 	
-	VMArray *allIdArray = [DEFAULTSONG.songData sortedKeys];
+	VMArray *allIdArray = [CURRENTSONG.songData sortedKeys];
 	for( VMId *dataId in allIdArray ) {
-		VMData *d = [DEFAULTSONG.songData item:dataId];
+		VMData *d = [CURRENTSONG.songData item:dataId];
 		if ( d.type == vmObjectType_audioFragment ) {
 			id c = [_countForFragmentId item:dataId];
 			++totalAcCount;
@@ -774,7 +774,7 @@ static const int	kLengthOfPartTraceRoute					= 10000;	//	gives up after 10000 ti
 	
 	//	log
 	[self.log save];
-	DEFAULTSONG.log = AutoRelease([[VMLog alloc] initWithOwner:VMLogOwner_MediaPlayer managedObjectContext:nil] );
+	CURRENTSONG.log = AutoRelease([[VMLog alloc] initWithOwner:VMLogOwner_MediaPlayer managedObjectContext:nil] );
 
 	//
 	// statistics view
@@ -808,7 +808,7 @@ static const int	kLengthOfPartTraceRoute					= 10000;	//	gives up after 10000 ti
 	VMTime standardReleaseTime = 5.0;	//	assume 5 secs of release time
 	VMInt dataCount = self.dataIdToProcess.count;
 	for( int i = 0; i < 100; ++i ) {
-		VMData *d = [DEFAULTSONG.songData item:[self.dataIdToProcess item:self.currentPositionInDataIdList]];
+		VMData *d = [CURRENTSONG.songData item:[self.dataIdToProcess item:self.currentPositionInDataIdList]];
 		if ( d.type == vmObjectType_audioInfo ) {
 			VMAudioInfo *ai = (VMAudioInfo*)d;
 			NSString *fileId = ((VMAudioInfo*)d).fileId;
@@ -887,7 +887,7 @@ static const int	kLengthOfPartTraceRoute					= 10000;	//	gives up after 10000 ti
 			 ,[self.hist_duration median]
 			 ,[self.hist_numberOfBranches mean]
 			 );
-		[self.progressWC setProgress:0 ofTotal:0 message:nil window:[VMPlayerOSXDelegate singleton].editorWindowController.window];
+		[self.progressWC setProgress:0 ofTotal:0 message:nil window:[VMOnTheFlyEditorAppDelegate singleton].editorWindowController.window];
 		[APPDELEGATE showLogPanelIfNewSystemLogsAreAdded];
 		VMNullify(dataIdToProcess);
 		_busy =NO;
@@ -906,14 +906,14 @@ if ( ! referrerOfData ) {\
 VMId *tid = targetId; \
 if ( ![tid isEqualToString:@"*"] ) {\
 	addReferrerForId(tid); \
-	unresolved = ! [DEFAULTSONG data:tid];\
+	unresolved = ! [CURRENTSONG data:tid];\
 }
 
 #define addRefererAndAddUnresolved(targetId) {\
 	VMId *tid2 = targetId; \
 	if ( ![tid2 isEqualToString:@"*"] ) {\
 		addReferrerForId(tid2); \
-		if ( ! [DEFAULTSONG data:tid2] ) [self addUnresolveable:tid2]; \
+		if ( ! [CURRENTSONG data:tid2] ) [self addUnresolveable:tid2]; \
 	}\
 }
 
@@ -931,11 +931,11 @@ else if( ClassMatch(subData, VMChance )) \
  
  ----------------------------------------------------------------------------------*/
 - (VMHash*)collectReferrer {
-	self.dataIdToProcess	= [DEFAULTSONG.songData sortedKeys];
+	self.dataIdToProcess	= [CURRENTSONG.songData sortedKeys];
 	self.unresolveables		= ARInstance(VMArray);
 	VMHash *referrer		= ARInstance(VMHash);		// this is for collecting referrer info. not used to find unresolveables.
 	for( VMId* dataId in self.dataIdToProcess ) {
-		VMData *data = [DEFAULTSONG.songData item:dataId];
+		VMData *data = [CURRENTSONG.songData item:dataId];
 		
 		BOOL unresolved = NO;
 		switch ( (int)data.type) {

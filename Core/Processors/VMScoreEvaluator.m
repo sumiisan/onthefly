@@ -276,7 +276,7 @@ shouldLog=shouldLog_,shouldNotify=shouldNotify_;
 		vmObjectType type = [self.variables itemAsFloat:@"@TYPE"];
 		if ( type != vmObjectType_selector ) return nil;
         VMId *target = parameter ? parameter : [self.variables item:@"@T"];
-        VMInt distance = [DEFAULTSONG distanceToLastRecordOf:target];
+        VMInt distance = [CURRENTSONG distanceToLastRecordOf:target];
 		return VMIntObj( distance );
 	}
 	
@@ -664,13 +664,13 @@ shouldLog=shouldLog_,shouldNotify=shouldNotify_;
 		}
 		if (verbose) NSLog(@"     RPT : record:%@",[objectIds description]);
 		if ( objectIds.count > 0 )
-		[DEFAULTSONG record:objectIds];
+		[CURRENTSONG record:objectIds];
 		else
 		NSLog(@"empty");
 		
 #if VMP_LOGGING
 		if ( shouldLog_ )
-		[DEFAULTSONG.log record:objectsWaitingToBeLogged_ filter:YES];
+		[CURRENTSONG.log record:objectsWaitingToBeLogged_ filter:YES];
 #endif
 		VMNullify(objectsWaitingToBeLogged);
 	}
@@ -702,11 +702,11 @@ addReferrer( ((VMChance*)subData).targetId ) \
 	//
 	
 	- (VMHash*)collectReferrer {
-		VMArray *idList	= [DEFAULTSONG.songData keys];
+		VMArray *idList	= [CURRENTSONG.songData keys];
 		VMHash *referrer = ARInstance(VMHash);
 		
 		for( VMId* dataId in idList ) {
-			VMData *data = [DEFAULTSONG.songData item:dataId];
+			VMData *data = [CURRENTSONG.songData item:dataId];
 			
 			switch ( (int)data.type) {
 				case vmObjectType_audioFragment: {

@@ -9,7 +9,7 @@
 #import "VMException.h"
 #import "MultiPlatform.h"
 #if VMP_EDITOR
-#import "VMPlayerOSXDelegate.h"
+#import "VMOnTheFlyEditorAppDelegate.h"
 #import "VMPNotification.h"
 #endif
 #import "VMPMacros.h"

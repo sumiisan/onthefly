@@ -14,7 +14,7 @@
 #import "VMScoreEvaluator.h"
 #import "VMPMacros.h"
 #import "VMPreprocessor.h"
-#import "VMPlayerOSXDelegate.h"
+#import "VMOnTheFlyEditorAppDelegate.h"
 
 #define kAnimationDuration 0.5	//5.0	//	this is for shooting videos
 
@@ -290,7 +290,7 @@
 		
 		for( VMChance *ch in sel.fragments ) {
 			if ( ch.cachedScore == 0 ) continue;
-			VMFragment *c = [DEFAULTSONG data:ch.targetId];
+			VMFragment *c = [CURRENTSONG data:ch.targetId];
 			if ( !c ) {
 				//	placeholder for undefined frag:
 				c = ARInstance(VMFragment);
@@ -379,7 +379,7 @@
 		
 		for( VMChance *ch in sel.fragments ) {
 			int	nextIndex = index;
-			VMFragment *childFragment = [DEFAULTSONG data:ch.targetId];
+			VMFragment *childFragment = [CURRENTSONG data:ch.targetId];
 			if ( !childFragment ) {
 				if ( [ch.targetId isEqualToString:@"*"] ) continue;	//	undefined sequel
 				//	placeholder for undefined frag:
@@ -420,7 +420,7 @@
 	//LLog(@"collect subseqs from %@ active:%.3f", frag.id, *activeRatioP );
 	VMSelector *subseq = nil;
 	if ( frag.type == vmObjectType_reference )
-		frag = [DEFAULTSONG data:((VMReference*)frag).referenceId];
+		frag = [CURRENTSONG data:((VMReference*)frag).referenceId];
 	if ( frag.type == vmObjectType_sequence ) {
 		subseq = ((VMSequence*)frag).subsequent;
 		if ( ((VMSelector*)subseq).isDeadEnd ) {
@@ -428,7 +428,7 @@
 			subseq = ARInstance(VMSelector);
 			subseq.id = [NSString stringWithFormat:@"%@|tempSelector", frag.id];
 			for( VMId *fragId in ((VMSequence*)frag).fragments ) {
-				[subseq addFragmentsWithData:[self collectSubsequentFragmentsFrom:[DEFAULTSONG data:fragId]
+				[subseq addFragmentsWithData:[self collectSubsequentFragmentsFrom:[CURRENTSONG data:fragId]
 																	  activeRatio:activeRatioP].fragments ];
 			}
 		}
@@ -443,7 +443,7 @@
 		[sel prepareSelection];
 		VMFloat subActiveRatio = 1;
 		for( VMChance *ch in sel.fragments ) {
-			if ( ! [DEFAULTSONG isFragmentDeadEnd:ch.targetId] ) {
+			if ( ! [CURRENTSONG isFragmentDeadEnd:ch.targetId] ) {
 				VMFloat normalizedScore = ch.cachedScore / sel.sumOfInnerScores;
 				subActiveRatio -= normalizedScore;
 				VMChance *tempChance = [ch copy];
@@ -526,7 +526,7 @@
                                          currentY,
                                          rect.size.width,
                                          height);
-		VMFragment *frag = [DEFAULTSONG data:fragId];
+		VMFragment *frag = [CURRENTSONG data:fragId];
 		if ( ! frag ) {	//	placeHolder for undefined fragments
 			frag = ARInstance(VMFragment);
 			frag.id = fragId;
@@ -995,7 +995,7 @@
 
 //	TODO:	animated transition
 - (void)chaseSequence:(VMAudioFragmentPlayer*)audioFragmentPlayer {
-	VMLog *log = DEFAULTSONG.log;
+	VMLog *log = CURRENTSONG.log;
 	VMInt p = log.count -1;
 	VMLogRecord *lr = nil;
 	VMData *d = nil;

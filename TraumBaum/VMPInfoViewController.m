@@ -62,7 +62,7 @@
 						   [VMPMultiLanguage language]]]];
 			} else {
 				[[UIApplication sharedApplication]
-				 openURL:[NSURL URLWithString:DEFAULTSONG.websiteURL]];
+				 openURL:[NSURL URLWithString:CURRENTSONG.websiteURL]];
 			}
 			closeDialog = NO;
 			break;
@@ -187,10 +187,10 @@
 		UILabel		*versionLabel	= (UILabel*)[self.view viewWithTag:602];
 		UILabel		*creditsLabel	= (UILabel*)[self.view viewWithTag:603];
 		
-		subtitleLabel.text = DEFAULTSONG.songDescription;
-		titleLabel.text = DEFAULTSONG.songName;
-		versionLabel.text = DEFAULTSONG.versionString;
-		creditsLabel.text = [NSString stringWithFormat:@"%@\n%@", DEFAULTSONG.artist, DEFAULTSONG.copyright];
+		subtitleLabel.text = CURRENTSONG.songDescription;
+		titleLabel.text = CURRENTSONG.songName;
+		versionLabel.text = CURRENTSONG.versionString;
+		creditsLabel.text = [NSString stringWithFormat:@"%@\n%@", CURRENTSONG.artist, CURRENTSONG.copyright];
 	}
 		
 //	CGPoint center = [VMAppDelegate defaultAppDelegate].viewController.frontView.holeCenter;
@@ -234,8 +234,8 @@
 	backButton.backgroundColor = panelColor;
 	bgSwitchBG.backgroundColor = panelColor;
 	
-	if( DEFAULTSONG.websiteURL.length > 0 ) {
-		NSURL *url = [NSURL URLWithString:DEFAULTSONG.websiteURL];
+	if( CURRENTSONG.websiteURL.length > 0 ) {
+		NSURL *url = [NSURL URLWithString:CURRENTSONG.websiteURL];
 		websiteButton.titleLabel.text = [url.host stringByAppendingPathComponent:url.path];
 		websiteButton.hidden = NO;
 	} else {
@@ -320,8 +320,8 @@
 }
 
 - (void)updateStats:(id)sender {
-	VMInt minutes = DEFAULTSONG.songStatistics.secondsPlayed / 60;
-	VMFloat percent = DEFAULTSONG.songStatistics.percentsPlayed;
+	VMInt minutes = CURRENTSONG.songStatistics.secondsPlayed / 60;
+	VMFloat percent = CURRENTSONG.songStatistics.percentsPlayed;
 	
 	
 	if( minutes > 1440 ) {

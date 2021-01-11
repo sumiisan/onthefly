@@ -67,7 +67,7 @@ darkBackgroundMenuItem=darkBackgroundMenuItem_, backgroundImage=backgroundImage_
 - (void)applicationWillTerminate:(NSNotification *)notification {
 	//	save current song position
 	NSLog(@"app will terminate");
-	NSData *playerData = [NSKeyedArchiver archivedDataWithRootObject:DEFAULTSONG.player];
+	NSData *playerData = [NSKeyedArchiver archivedDataWithRootObject:CURRENTSONG.player];
 	[VMTraumbaumUserDefaults savePlayer:playerData];
 }
 
@@ -124,7 +124,7 @@ darkBackgroundMenuItem=darkBackgroundMenuItem_, backgroundImage=backgroundImage_
 
 - (void)endOfSequence:(NSNotification*)notification {
 	//	we should clear players and save datas to disable resuming from old saved state.
-	DEFAULTSONG.player = nil;
+	CURRENTSONG.player = nil;
 	[self savePlayerState];
 }
 
@@ -185,9 +185,9 @@ darkBackgroundMenuItem=darkBackgroundMenuItem_, backgroundImage=backgroundImage_
 		return;
 	}
 	
-	if ( DEFAULTSONG.player ) {
+	if ( CURRENTSONG.player ) {
 		if ( songplayer.isPaused ) [songplayer resume];
-		NSLog( @"Startup: player data is still on memory. let's fill the queue with them.\n%@", DEFAULTSONG.player.description );
+		NSLog( @"Startup: player data is still on memory. let's fill the queue with them.\n%@", CURRENTSONG.player.description );
 		[VMTraumbaumUserDefaults setPlaying:YES];
 		[[NSNotificationCenter defaultCenter] postNotificationName:PLAYERSTARTED_NOTIFICATION object:self];
 		[songplayer setFadeFrom:-1 to:1 length:2.];
@@ -201,7 +201,7 @@ darkBackgroundMenuItem=darkBackgroundMenuItem_, backgroundImage=backgroundImage_
 		VMPlayer *player = [NSKeyedUnarchiver unarchiveObjectWithData:playerData];
 		if ( player.fragments.count > 0 ) {
 			NSLog(@"Startup: trying to recover from saved state:%@",player.description);
-			DEFAULTSONG.player = player;
+			CURRENTSONG.player = player;
 			[VMTraumbaumUserDefaults setPlaying:YES];
 			[[NSNotificationCenter defaultCenter] postNotificationName:PLAYERSTARTED_NOTIFICATION object:self];
 			[songplayer setFadeFrom:0.01 to:1 length:3.];
@@ -222,7 +222,7 @@ darkBackgroundMenuItem=darkBackgroundMenuItem_, backgroundImage=backgroundImage_
 }
 
 - (void)savePlayerState {
-	NSData *playerData = [NSKeyedArchiver archivedDataWithRootObject:DEFAULTSONG.player];
+	NSData *playerData = [NSKeyedArchiver archivedDataWithRootObject:CURRENTSONG.player];
 	[VMTraumbaumUserDefaults savePlayer:playerData];
 	NSLog(@"Saving player state");
 }
@@ -251,7 +251,7 @@ darkBackgroundMenuItem=darkBackgroundMenuItem_, backgroundImage=backgroundImage_
 - (IBAction)reset:(id)sender {
 	DEFAULTEVALUATOR.timeManager.shutdownTime = nil;
 	[DEFAULTSONGPLAYER stopAndDisposeQueue];
-	[DEFAULTSONG reset];
+	[CURRENTSONG reset];
 	[DEFAULTEVALUATOR reset];
 
 	[self savePlayerState];

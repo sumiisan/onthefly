@@ -11,7 +11,7 @@
 #import "VMException.h"
 #import "VMPreprocessor.h"
 #if VMP_EDITOR
-#import "VMPlayerOSXDelegate.h"
+#import "VMOnTheFlyEditorAppDelegate.h"
 #endif
 /*---------------------------------------------------------------------------------
  *
@@ -178,7 +178,7 @@
 }
 
 - (VMData*)VMData {
-	if ( ClassMatch(self.data, VMId ) ) return [DEFAULTSONG data:self.data];
+	if ( ClassMatch(self.data, VMId ) ) return [CURRENTSONG data:self.data];
 	return self.data;
 }
 
@@ -431,7 +431,7 @@
 		VMHash *subInfo =  nil;
 		
 		if ( ClassMatch( data, VMId )) {		//	try to convert string into object
-			VMData *d = [DEFAULTSONG.songData item:data];
+			VMData *d = [CURRENTSONG.songData item:data];
 			if (d) data = d;
 		}
 		
@@ -502,7 +502,7 @@
 }
 
 - (void)addUserLogWithText:(VMString*)message dataId:(VMId*)dataId {
-	VMData *d = [DEFAULTSONG data:dataId];
+	VMData *d = [CURRENTSONG data:dataId];
 	if (d) {
 		VMLogRecord *hl = [VMLogRecord recordWithAction:@"UserLog"
 													  data:d

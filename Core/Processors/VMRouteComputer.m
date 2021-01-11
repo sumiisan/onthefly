@@ -43,11 +43,11 @@
 	
 			
 	- (void)recollectPrecedents {
-		VMArray *idList	= [DEFAULTSONG.songData keys];
+		VMArray *idList	= [CURRENTSONG.songData keys];
 		self.precedents = ARInstance(VMHash);
 		
 		for( VMId* dataId in idList ) {
-			VMData *data = [DEFAULTSONG.songData item:dataId];
+			VMData *data = [CURRENTSONG.songData item:dataId];
 			VMInt c;
 			switch ( (int)data.type) {
 				case vmObjectType_sequence: {

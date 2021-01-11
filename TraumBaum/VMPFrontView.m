@@ -306,7 +306,7 @@ stemLength=stemLength_,refreshScreenCounter=refreshScreenCounter_,lastDayPhase=l
 	VMPPoint touchPoint = [self convertPoint:[theEvent locationInWindow] fromView:nil];
 #endif
 	
-	if ( ! DEFAULTSONG.supportsTimer ) {
+	if ( ! CURRENTSONG.supportsTimer ) {
 		return;		//	no timer support
 	}
 	

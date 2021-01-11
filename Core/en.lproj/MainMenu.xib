@@ -12,7 +12,7 @@
             </connections>
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
-        <customObject id="-3" userLabel="Application"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <menu title="AMainMenu" systemMenu="main" id="29">
             <items>
                 <menuItem title="OnTheFly Editor" id="56">
@@ -59,11 +59,11 @@
                     </menu>
                 </menuItem>
                 <menuItem title="File" id="83">
-                    <menu key="submenu" title="File" id="81">
+                    <menu key="submenu" title="File" autoenablesItems="NO" id="81">
                         <items>
                             <menuItem title="New" keyEquivalent="n" id="82">
                                 <connections>
-                                    <action selector="newDocument:" target="-1" id="373"/>
+                                    <action selector="newDocument:" target="-1" id="e9W-gB-MXB"/>
                                 </connections>
                             </menuItem>
                             <menuItem title="Open…" keyEquivalent="o" id="72">
@@ -113,6 +113,15 @@
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="74">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="Import Audio..." keyEquivalent="i" id="bjU-4d-ckB" userLabel="Import Audio...">
+                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                <connections>
+                                    <action selector="newDocument:" target="-1" id="9h7-5d-YuI"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="Kbi-xd-NFS">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
                             <menuItem title="Page Setup..." keyEquivalent="P" id="77">
@@ -423,7 +432,7 @@
             </items>
             <point key="canvasLocation" x="139" y="120"/>
         </menu>
-        <customObject id="494" customClass="VMPlayerOSXDelegate">
+        <customObject id="494" customClass="VMOnTheFlyEditorAppDelegate">
             <connections>
                 <outlet property="editorWindowController" destination="1584" id="1666"/>
                 <outlet property="logPanel" destination="1000" id="1054"/>
@@ -498,11 +507,11 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <clipView key="contentView" drawsBackground="NO" copiesOnScroll="NO" id="bHn-2e-E93">
                             <rect key="frame" x="0.0" y="0.0" width="250" height="360"/>
-                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            <autoresizingMask key="autoresizingMask"/>
                             <subviews>
                                 <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="none" columnReordering="NO" columnSelection="YES" columnResizing="NO" multipleSelection="NO" autosaveColumns="NO" rowHeight="14" rowSizeStyle="automatic" viewBased="YES" id="1003">
                                     <rect key="frame" x="0.0" y="0.0" width="282" height="360"/>
-                                    <autoresizingMask key="autoresizingMask"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <size key="intercellSpacing" width="1" height="2"/>
                                     <color key="backgroundColor" name="_sourceListBackgroundColor" catalog="System" colorSpace="catalog"/>
                                     <tableViewGridLines key="gridStyleMask" horizontal="YES"/>
@@ -710,10 +719,10 @@
                         <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fill" style="roundRect" trackingMode="momentary" id="1638">
                             <font key="font" metaFont="cellTitle"/>
                             <segments>
-                                <segment image="NSGoLeftTemplate" catalog="system" width="20" enabled="NO" tag="-100">
+                                <segment image="NSGoLeftTemplate" width="20" enabled="NO" tag="-100">
                                     <nil key="label"/>
                                 </segment>
-                                <segment image="NSGoRightTemplate" catalog="system" width="19" enabled="NO" tag="100">
+                                <segment image="NSGoRightTemplate" width="19" enabled="NO" tag="100">
                                     <nil key="label"/>
                                 </segment>
                             </segments>
@@ -743,11 +752,11 @@
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <clipView key="contentView" id="q8c-NE-7Gw">
                                                     <rect key="frame" x="1" y="1" width="181" height="195"/>
-                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
                                                         <outlineView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" multipleSelection="NO" autosaveName="VMEditorObjectTreeView" rowHeight="14" headerView="621" indentationPerLevel="10" outlineTableColumn="623" id="619" userLabel="Object Tree View" customClass="VMPOutlineView">
                                                             <rect key="frame" x="0.0" y="0.0" width="461" height="167"/>
-                                                            <autoresizingMask key="autoresizingMask"/>
+                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <size key="intercellSpacing" width="3" height="1"/>
                                                             <color key="backgroundColor" white="0.90000000000000002" alpha="1" colorSpace="calibratedWhite"/>
                                                             <tableViewGridLines key="gridStyleMask" vertical="YES" horizontal="YES"/>
@@ -839,7 +848,7 @@
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <clipView key="contentView" id="yAZ-0r-VF6">
                                                     <rect key="frame" x="1" y="1" width="461" height="195"/>
-                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
                                                         <textView importsGraphics="NO" horizontallyResizable="YES" verticallyResizable="YES" findStyle="bar" incrementalSearchingEnabled="YES" allowsUndo="YES" spellingCorrection="YES" id="1536">
                                                             <rect key="frame" x="0.0" y="0.0" width="461" height="195"/>
@@ -1046,11 +1055,11 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <clipView key="contentView" drawsBackground="NO" id="Nez-tG-YzO">
                             <rect key="frame" x="1" y="1" width="598" height="378"/>
-                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            <autoresizingMask key="autoresizingMask"/>
                             <subviews>
                                 <tableView verticalHuggingPriority="750" tag="44613" allowsExpansionToolTips="YES" selectionHighlightStyle="sourceList" multipleSelection="NO" autosaveName="VMStatisticsTableSave" rowHeight="14" headerView="741" id="739">
                                     <rect key="frame" x="0.0" y="0.0" width="598" height="350"/>
-                                    <autoresizingMask key="autoresizingMask"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <size key="intercellSpacing" width="3" height="2"/>
                                     <color key="backgroundColor" name="_sourceListBackgroundColor" catalog="System" colorSpace="catalog"/>
                                     <tableViewGridLines key="gridStyleMask" vertical="YES" horizontal="YES"/>
@@ -1148,7 +1157,7 @@
                             <rect key="frame" x="1" y="363" width="598" height="16"/>
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
-                        <scroller key="verticalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" doubleValue="37" horizontal="NO" id="742">
+                        <scroller key="verticalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="742">
                             <rect key="frame" x="224" y="17" width="15" height="102"/>
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
@@ -1183,10 +1192,10 @@
                         <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fill" style="roundRect" trackingMode="momentary" id="1634">
                             <font key="font" metaFont="cellTitle"/>
                             <segments>
-                                <segment image="NSGoLeftTemplate" catalog="system" width="20" enabled="NO" tag="-100">
+                                <segment image="NSGoLeftTemplate" width="20" enabled="NO" tag="-100">
                                     <nil key="label"/>
                                 </segment>
-                                <segment image="NSGoRightTemplate" catalog="system" width="19" enabled="NO" tag="100">
+                                <segment image="NSGoRightTemplate" width="19" enabled="NO" tag="100">
                                     <nil key="label"/>
                                 </segment>
                             </segments>
@@ -1242,12 +1251,12 @@
                     <rect key="frame" x="0.0" y="120" width="250" height="360"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <clipView key="contentView" id="rit-CS-mFx">
-                        <rect key="frame" x="1" y="29" width="248" height="330"/>
+                        <rect key="frame" x="1" y="1" width="248" height="358"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnReordering="NO" multipleSelection="NO" autosaveColumns="NO" typeSelect="NO" autosaveName="VMPRecordDetailAutosave" rowHeight="14" headerView="787" id="785" userLabel="Detail Table">
                                 <rect key="frame" x="0.0" y="0.0" width="248" height="330"/>
-                                <autoresizingMask key="autoresizingMask"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <size key="intercellSpacing" width="3" height="2"/>
                                 <color key="backgroundColor" white="0.90000000000000002" alpha="1" colorSpace="calibratedWhite"/>
                                 <tableViewGridLines key="gridStyleMask" vertical="YES" horizontal="YES"/>
@@ -1277,7 +1286,7 @@
                                         </textFieldCell>
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                     </tableColumn>
-                                    <tableColumn identifier="count" editable="NO" width="68" minWidth="40" maxWidth="1000" id="790">
+                                    <tableColumn identifier="count" editable="NO" width="40" minWidth="40" maxWidth="1000" id="790">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Count">
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" white="0.33333298560000002" alpha="1" colorSpace="calibratedWhite"/>
@@ -1302,16 +1311,17 @@
                         <rect key="frame" x="-100" y="-100" width="198" height="16"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </scroller>
-                    <scroller key="verticalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" doubleValue="37" horizontal="NO" id="788">
+                    <scroller key="verticalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="788">
                         <rect key="frame" x="-100" y="-100" width="15" height="102"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </scroller>
-                    <tableHeaderView key="headerView" id="787">
+                    <tableHeaderView key="headerView" wantsLayer="YES" id="787">
                         <rect key="frame" x="0.0" y="0.0" width="248" height="28"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </tableHeaderView>
                 </scrollView>
             </subviews>
+            <point key="canvasLocation" x="221" y="-723"/>
         </customView>
         <window title="Statistics Graph" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" hidesOnDeactivate="YES" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="VMPStatisticsGraphSave" animationBehavior="default" id="892" userLabel="Graph Panel" customClass="NSPanel">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" resizable="YES" utility="YES"/>
@@ -1357,7 +1367,7 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <clipView key="contentView" id="1ha-Oo-49k">
                             <rect key="frame" x="0.0" y="0.0" width="250" height="350"/>
-                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            <autoresizingMask key="autoresizingMask"/>
                             <subviews>
                                 <customView id="535" customClass="VMPTrackView">
                                     <rect key="frame" x="0.0" y="0.0" width="250" height="400"/>
@@ -1483,8 +1493,8 @@
         <numberFormatter formatterBehavior="default10_4" numberStyle="decimal" formatWidth="-1" minimumIntegerDigits="1" maximumIntegerDigits="2000000000" maximumFractionDigits="3" id="1266" userLabel="decimal number formatter"/>
     </objects>
     <resources>
-        <image name="NSGoLeftTemplate" catalog="system" width="10" height="14"/>
-        <image name="NSGoRightTemplate" catalog="system" width="10" height="14"/>
+        <image name="NSGoLeftTemplate" width="10" height="14"/>
+        <image name="NSGoRightTemplate" width="10" height="14"/>
         <image name="play" width="16" height="18"/>
         <image name="stop" width="13" height="13"/>
     </resources>

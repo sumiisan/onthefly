@@ -358,7 +358,7 @@ VMPPoint rotatePointAboutOrigin(VMPPoint point, VMFloat degree) {
 			VMId	*selectedFragId = fragment.id;
 			VMArray *candidateIds = [_scoresOfCandidates keys];
 			for( VMId *candidateId in candidateIds ) {
-				VMFragment *candidateFragment = [DEFAULTSONG data:candidateId];
+				VMFragment *candidateFragment = [CURRENTSONG data:candidateId];
 				
 				while( candidateFragment.type == vmObjectType_sequence ) {
 					//	just select 1st fragment in sequence

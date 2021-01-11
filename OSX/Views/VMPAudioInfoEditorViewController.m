@@ -9,7 +9,7 @@
 #include <AudioToolbox/AudioToolbox.h>
 
 #import "VMPAudioInfoEditorViewController.h"
-#import "VMPlayerOSXDelegate.h"
+#import "VMOnTheFlyEditorAppDelegate.h"
 #import "VMPSongPlayer.h"
 #import "VMPNotification.h"
 #import "VMPSongPlayer.h"

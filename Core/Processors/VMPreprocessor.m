@@ -15,7 +15,7 @@
 #include "VMPMacros.h"
 
 #if VMP_EDITOR
-#import "VMPlayerOSXDelegate.h"
+#import "VMOnTheFlyEditorAppDelegate.h"
 #else
 #import "VMPMultiLanguage.h"
 #endif

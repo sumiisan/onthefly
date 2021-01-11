@@ -15,7 +15,7 @@
 #import "VMPNotification.h"
 
 #if VMP_EDITOR
-#import "VMPlayerOSXDelegate.h"
+#import "VMOnTheFlyEditorAppDelegate.h"
 #endif
 
 #if VMP_IPHONE
@@ -242,7 +242,7 @@
 	c->cuePoints.end   = afp.modulatedDuration;
 	
 #if VMP_EDITOR
-	[DEFAULTSONG.log record:[VMArray arrayWithObject:afp] filter:NO];
+	[CURRENTSONG.log record:[VMArray arrayWithObject:afp] filter:NO];
 #endif
 	
 	[fragQueue push:c];
@@ -472,7 +472,7 @@
 	[player setVolume:[self currentVolume]];
 	[player play];
 	
-	[DEFAULTSONG.songStatistics addAudioFrag:af];			//	runtime statistics.
+	[CURRENTSONG.songStatistics addAudioFrag:af];			//	runtime statistics.
 	LLog(@"(%.2f):%@ (%.2f)",self.currentTime, af.id, af.duration);
 	
 	af.firedTimestamp = [NSDate timeIntervalSinceReferenceDate];
@@ -642,7 +642,7 @@
 }
 
 - (void)emergencyFire {
-	VMAudioFragment *ambient = [DEFAULTSONG data:@"ambient"];
+	VMAudioFragment *ambient = [CURRENTSONG data:@"ambient"];
 	VMPQueuedFragment *q = [self queue:ambient at:self.currentTime+0.2];
 	if (q) {
 		[self setFragmentIntoAudioPlayer:q];
