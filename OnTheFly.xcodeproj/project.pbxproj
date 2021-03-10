@@ -315,12 +315,12 @@
 		160ECFAD173B50730009D04B /* VMPreprocessor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = VMPreprocessor.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		160ECFAE173B50730009D04B /* VMScoreEvaluator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = VMScoreEvaluator.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		160ECFAF173B50730009D04B /* VMScoreEvaluator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = VMScoreEvaluator.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		160ECFB7173B50B70009D04B /* boxmuller.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = boxmuller.c; path = Core/Misc/boxmuller.c; sourceTree = SOURCE_ROOT; };
-		160ECFB8173B50B70009D04B /* boxmuller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = boxmuller.h; path = Core/Misc/boxmuller.h; sourceTree = SOURCE_ROOT; };
-		160ECFB9173B50B70009D04B /* VMException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VMException.h; path = Core/Misc/VMException.h; sourceTree = SOURCE_ROOT; };
-		160ECFBA173B50B70009D04B /* VMException.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = VMException.m; path = Core/Misc/VMException.m; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		160ECFBB173B50B70009D04B /* VMTextPreprocessor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VMTextPreprocessor.h; path = Core/Misc/VMTextPreprocessor.h; sourceTree = SOURCE_ROOT; };
-		160ECFBC173B50B70009D04B /* VMTextPreprocessor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = VMTextPreprocessor.m; path = Core/Misc/VMTextPreprocessor.m; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		160ECFB7173B50B70009D04B /* boxmuller.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = boxmuller.c; sourceTree = "<group>"; };
+		160ECFB8173B50B70009D04B /* boxmuller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = boxmuller.h; sourceTree = "<group>"; };
+		160ECFB9173B50B70009D04B /* VMException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VMException.h; sourceTree = "<group>"; };
+		160ECFBA173B50B70009D04B /* VMException.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = VMException.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		160ECFBB173B50B70009D04B /* VMTextPreprocessor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VMTextPreprocessor.h; sourceTree = "<group>"; };
+		160ECFBC173B50B70009D04B /* VMTextPreprocessor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = VMTextPreprocessor.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		160ECFD0173B51160009D04B /* VMPAudioPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = VMPAudioPlayer.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		160ECFD1173B51160009D04B /* VMPAudioPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = VMPAudioPlayer.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		160ECFD2173B51160009D04B /* VMPlayerBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VMPlayerBase.h; sourceTree = "<group>"; };
@@ -364,8 +364,8 @@
 		161329441D82AE030007AA72 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS10.0.sdk/System/Library/Frameworks/AVFoundation.framework; sourceTree = DEVELOPER_DIR; };
 		161329461D82AE0F0007AA72 /* libicucore.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libicucore.tbd; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS10.0.sdk/usr/lib/libicucore.tbd; sourceTree = DEVELOPER_DIR; };
 		16150B0519D6F0AE00FD0DE6 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = "../traumbaum iOS/Images.xcassets"; sourceTree = "<group>"; };
-		161F795A25A19AA60069975C /* VMWavFile.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = VMWavFile.h; path = Core/DataStructures/VMWavFile.h; sourceTree = SOURCE_ROOT; };
-		161F795B25A19AA60069975C /* VMWavFile.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = VMWavFile.c; path = Core/DataStructures/VMWavFile.c; sourceTree = SOURCE_ROOT; };
+		161F795A25A19AA60069975C /* VMWavFile.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VMWavFile.h; sourceTree = "<group>"; };
+		161F795B25A19AA60069975C /* VMWavFile.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = VMWavFile.c; sourceTree = "<group>"; };
 		162135FF2599D27000B9346D /* defaultSong */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = defaultSong; sourceTree = SOURCE_ROOT; };
 		1624A6FB1642B76B004AA351 /* vsDocIcon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = vsDocIcon.icns; sourceTree = "<group>"; };
 		1624A6FE1642B7D0004AA351 /* vsPlayer.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = vsPlayer.icns; sourceTree = "<group>"; };
@@ -409,22 +409,22 @@
 		1662313A173C8A4A00F70FCB /* VMPCodeEditorView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = VMPCodeEditorView.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		1662313B173C8A4A00F70FCB /* VMPCodeEditorView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = VMPCodeEditorView.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		1662313D173C9B3B00F70FCB /* VMPUserDefaults.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VMPUserDefaults.h; sourceTree = "<group>"; };
-		1662313E173C9F1A00F70FCB /* VMDataTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = VMDataTypes.h; path = Core/DataStructures/VMDataTypes.h; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		1662313F173C9F1A00F70FCB /* VMDataTypes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = VMDataTypes.m; path = Core/DataStructures/VMDataTypes.m; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		16623140173C9F1A00F70FCB /* VMDataTypesMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VMDataTypesMacros.h; path = Core/DataStructures/VMDataTypesMacros.h; sourceTree = SOURCE_ROOT; };
-		16623141173C9F1A00F70FCB /* VMFunction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = VMFunction.m; path = Core/DataStructures/VMFunction.m; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		16623142173C9F1A00F70FCB /* VMSong.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = VMSong.h; path = Core/DataStructures/VMSong.h; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		16623143173C9F1A00F70FCB /* VMSong.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = VMSong.m; path = Core/DataStructures/VMSong.m; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		1662314D173C9F6500F70FCB /* KeyCodes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = KeyCodes.h; path = Core/Misc/KeyCodes.h; sourceTree = SOURCE_ROOT; };
-		1662314E173C9F6500F70FCB /* MultiPlatform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = MultiPlatform.h; path = Core/Misc/MultiPlatform.h; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		1662314F173C9F6500F70FCB /* VMPMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = VMPMacros.h; path = Core/Misc/VMPMacros.h; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		16623150173C9F6500F70FCB /* VMPNotification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VMPNotification.h; path = Core/Misc/VMPNotification.h; sourceTree = SOURCE_ROOT; };
-		16623151173C9FA300F70FCB /* VMAudioObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = VMAudioObject.h; path = Core/DataStructures/VMAudioObject.h; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		16623152173C9FA300F70FCB /* VMAudioObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = VMAudioObject.m; path = Core/DataStructures/VMAudioObject.m; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		16623153173C9FA300F70FCB /* VMLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = VMLog.h; path = Core/DataStructures/VMLog.h; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		16623154173C9FA300F70FCB /* VMLog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = VMLog.m; path = Core/DataStructures/VMLog.m; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		16623155173C9FA300F70FCB /* VMPrimitives.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = VMPrimitives.h; path = Core/DataStructures/VMPrimitives.h; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		16623156173C9FA300F70FCB /* VMPrimitives.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VMPrimitives.m; path = Core/DataStructures/VMPrimitives.m; sourceTree = SOURCE_ROOT; };
+		1662313E173C9F1A00F70FCB /* VMDataTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = VMDataTypes.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		1662313F173C9F1A00F70FCB /* VMDataTypes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = VMDataTypes.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		16623140173C9F1A00F70FCB /* VMDataTypesMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VMDataTypesMacros.h; sourceTree = "<group>"; };
+		16623141173C9F1A00F70FCB /* VMFunction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = VMFunction.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		16623142173C9F1A00F70FCB /* VMSong.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = VMSong.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		16623143173C9F1A00F70FCB /* VMSong.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = VMSong.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		1662314D173C9F6500F70FCB /* KeyCodes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyCodes.h; sourceTree = "<group>"; };
+		1662314E173C9F6500F70FCB /* MultiPlatform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = MultiPlatform.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		1662314F173C9F6500F70FCB /* VMPMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = VMPMacros.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		16623150173C9F6500F70FCB /* VMPNotification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VMPNotification.h; sourceTree = "<group>"; };
+		16623151173C9FA300F70FCB /* VMAudioObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = VMAudioObject.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		16623152173C9FA300F70FCB /* VMAudioObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = VMAudioObject.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		16623153173C9FA300F70FCB /* VMLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = VMLog.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		16623154173C9FA300F70FCB /* VMLog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = VMLog.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		16623155173C9FA300F70FCB /* VMPrimitives.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = VMPrimitives.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		16623156173C9FA300F70FCB /* VMPrimitives.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VMPrimitives.m; sourceTree = "<group>"; };
 		16750A23183E27AD0028195B /* NSBezierPath+CGPathConversion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSBezierPath+CGPathConversion.h"; sourceTree = "<group>"; };
 		16750A24183E27AD0028195B /* NSBezierPath+CGPathConversion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSBezierPath+CGPathConversion.m"; sourceTree = "<group>"; };
 		16750A26183F8A280028195B /* VMPColorAnimation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VMPColorAnimation.h; path = "traumbaum mac/VMPColorAnimation.h"; sourceTree = "<group>"; };
@@ -450,7 +450,6 @@
 		168CEBB7163186B400B721E2 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		168CEBBA163186B400B721E2 /* AmbientPianoMacOS-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "AmbientPianoMacOS-Info.plist"; path = "../AmbientPianoMacOS/AmbientPianoMacOS-Info.plist"; sourceTree = "<group>"; };
 		168CEBBC163186B400B721E2 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		168CEBBE163186B400B721E2 /* OnTheFly-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = "OnTheFly-Prefix.pch"; path = "Core/OnTheFly-Prefix.pch"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		168CEBBF163186B400B721E2 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		168CEBC5163186B400B721E2 /* VMOnTheFlyEditorAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = VMOnTheFlyEditorAppDelegate.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		168CEBC8163186B400B721E2 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
@@ -471,7 +470,7 @@
 		1698E49417CA208100D2130A /* VMPInsertFragmentWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VMPInsertFragmentWindowController.h; sourceTree = "<group>"; };
 		1698E49517CA208200D2130A /* VMPInsertFragmentWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VMPInsertFragmentWindowController.m; sourceTree = "<group>"; };
 		169913451818A8A300290B8D /* appicon120.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = appicon120.png; sourceTree = SOURCE_ROOT; };
-		16A2030A174632B700CD2A57 /* VMARC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VMARC.h; path = Core/Misc/VMARC.h; sourceTree = SOURCE_ROOT; };
+		16A2030A174632B700CD2A57 /* VMARC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VMARC.h; sourceTree = "<group>"; };
 		16A2030B17474F4500CD2A57 /* VMPFragmentCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VMPFragmentCell.h; sourceTree = "<group>"; };
 		16A2030C17474F4600CD2A57 /* VMPFragmentCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VMPFragmentCell.m; sourceTree = "<group>"; };
 		16A26C4D18010E4D00A91A46 /* VMPFrontView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VMPFrontView.h; path = ../TraumBaum/VMPFrontView.h; sourceTree = "<group>"; };
@@ -524,6 +523,7 @@
 		16C074E817B3755C00351113 /* skin1_phone.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = skin1_phone.jpg; path = "../TraumBaum/iPhone-UI/skin1_phone.jpg"; sourceTree = "<group>"; };
 		16C217D31845F2DD00C3A995 /* VMPTwitter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VMPTwitter.h; path = ../TraumBaum/VMPTwitter.h; sourceTree = "<group>"; };
 		16C217D41845F2DD00C3A995 /* VMPTwitter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VMPTwitter.m; path = ../TraumBaum/VMPTwitter.m; sourceTree = "<group>"; };
+		16C75A2925F89E6200BA1E70 /* OnTheFly-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OnTheFly-Prefix.pch"; sourceTree = "<group>"; };
 		16C7676D16DC83DE003636C3 /* VMPAnalyzer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = VMPAnalyzer.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		16C7676E16DC83DE003636C3 /* VMPAnalyzer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = VMPAnalyzer.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		16C90C7A1722774800F7E91F /* VMPHistogramView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VMPHistogramView.h; sourceTree = "<group>"; };
@@ -549,10 +549,10 @@
 		16E928B21BB53E4000BA59E1 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/VMPInfoViewController.strings; sourceTree = "<group>"; };
 		16F726F31D813A4B00A0CA69 /* Podfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		16F726F91D8174D600A0CA69 /* traumbaum iOS-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "traumbaum iOS-Bridging-Header.h"; path = "Core/AudioPlayer/traumbaum iOS-Bridging-Header.h"; sourceTree = "<group>"; };
-		16F77CCA1865802400B58BA7 /* VMRoute.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VMRoute.h; path = Core/DataStructures/VMRoute.h; sourceTree = SOURCE_ROOT; };
-		16F77CCB1865802400B58BA7 /* VMRoute.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VMRoute.m; path = Core/DataStructures/VMRoute.m; sourceTree = SOURCE_ROOT; };
-		16F77D22186BC71400B58BA7 /* VMAudioFFT.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = VMAudioFFT.mm; path = Core/DataStructures/VMAudioFFT.mm; sourceTree = SOURCE_ROOT; };
-		16F77D23186BC71400B58BA7 /* VMAudioFFT.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VMAudioFFT.h; path = Core/DataStructures/VMAudioFFT.h; sourceTree = SOURCE_ROOT; };
+		16F77CCA1865802400B58BA7 /* VMRoute.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VMRoute.h; sourceTree = "<group>"; };
+		16F77CCB1865802400B58BA7 /* VMRoute.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VMRoute.m; sourceTree = "<group>"; };
+		16F77D22186BC71400B58BA7 /* VMAudioFFT.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = VMAudioFFT.mm; sourceTree = "<group>"; };
+		16F77D23186BC71400B58BA7 /* VMAudioFFT.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VMAudioFFT.h; sourceTree = "<group>"; };
 		16F77D27186D436700B58BA7 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		228A65B1075E6072E47DC188 /* Pods-traumbaum mac.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-traumbaum mac.debug.xcconfig"; path = "Pods/Target Support Files/Pods-traumbaum mac/Pods-traumbaum mac.debug.xcconfig"; sourceTree = "<group>"; };
 		41A4BE05DF1935E6A2C64C27 /* Pods-traumbaum iOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-traumbaum iOS.release.xcconfig"; path = "Pods/Target Support Files/Pods-traumbaum iOS/Pods-traumbaum iOS.release.xcconfig"; sourceTree = "<group>"; };
@@ -561,8 +561,8 @@
 		88756FF3ED6A2FF75CC77C94 /* libPods-traumbaum iOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-traumbaum iOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8A9E8453CD3EC30E98E99116 /* Pods-OnTheFly Editor OSX.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OnTheFly Editor OSX.release.xcconfig"; path = "Pods/Target Support Files/Pods-OnTheFly Editor OSX/Pods-OnTheFly Editor OSX.release.xcconfig"; sourceTree = "<group>"; };
 		996FBEB1001091257B125BDE /* Pods-OnTheFly Editor OSX.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OnTheFly Editor OSX.debug.xcconfig"; path = "Pods/Target Support Files/Pods-OnTheFly Editor OSX/Pods-OnTheFly Editor OSX.debug.xcconfig"; sourceTree = "<group>"; };
-		C7C84938255AB8CE00E5C326 /* NSRegularExpression+String.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "NSRegularExpression+String.h"; path = "Core/Misc/NSRegularExpression+String.h"; sourceTree = SOURCE_ROOT; };
-		C7C84939255AB8CE00E5C326 /* NSRegularExpression+String.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "NSRegularExpression+String.m"; path = "Core/Misc/NSRegularExpression+String.m"; sourceTree = SOURCE_ROOT; };
+		C7C84938255AB8CE00E5C326 /* NSRegularExpression+String.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSRegularExpression+String.h"; sourceTree = "<group>"; };
+		C7C84939255AB8CE00E5C326 /* NSRegularExpression+String.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSRegularExpression+String.m"; sourceTree = "<group>"; };
 		FA690EF394C060C9FFBC9A9F /* libPods-OnTheFly Editor OSX.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OnTheFly Editor OSX.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -639,9 +639,8 @@
 				16D7EB291861AB2800D0BCEB /* VMRouteComputer.h */,
 				16D7EB2A1861AB2800D0BCEB /* VMRouteComputer.m */,
 			);
-			name = Processors;
-			path = Core/Processors;
-			sourceTree = SOURCE_ROOT;
+			path = Processors;
+			sourceTree = "<group>";
 		};
 		160ECFCF173B51160009D04B /* MediaPlayer */ = {
 			isa = PBXGroup;
@@ -649,8 +648,8 @@
 				16F726F81D81746500A0CA69 /* VMP */,
 			);
 			name = MediaPlayer;
-			path = Core/AudioPlayer;
-			sourceTree = SOURCE_ROOT;
+			path = AudioPlayer;
+			sourceTree = "<group>";
 		};
 		160ECFFC173B517A0009D04B /* TouchJSON-master */ = {
 			isa = PBXGroup;
@@ -854,8 +853,7 @@
 				160ECFBB173B50B70009D04B /* VMTextPreprocessor.h */,
 				160ECFBC173B50B70009D04B /* VMTextPreprocessor.m */,
 			);
-			name = Misc;
-			path = Core/Misc;
+			path = Misc;
 			sourceTree = "<group>";
 		};
 		16623161173CA05C00F70FCB /* VMS Models */ = {
@@ -871,7 +869,7 @@
 				16623143173C9F1A00F70FCB /* VMSong.m */,
 			);
 			name = "VMS Models";
-			path = Core/DataStructures;
+			path = DataStructures;
 			sourceTree = "<group>";
 		};
 		16623162173CA08E00F70FCB /* Models */ = {
@@ -889,7 +887,7 @@
 				16623156173C9FA300F70FCB /* VMPrimitives.m */,
 			);
 			name = Models;
-			path = Core/DataStructures;
+			path = DataStructures;
 			sourceTree = "<group>";
 		};
 		1677780916C0D6A0007206CF /* Views and Controllers */ = {
@@ -913,7 +911,7 @@
 				16623150173C9F6500F70FCB /* VMPNotification.h */,
 			);
 			name = Headers;
-			path = Core/Misc;
+			path = Misc;
 			sourceTree = "<group>";
 		};
 		168CEBA3163186B300B721E2 = {
@@ -978,18 +976,16 @@
 				168CEBB9163186B400B721E2 /* Supporting Files */,
 				162FBB93173CA1C40060E003 /* Libs */,
 			);
-			name = Core;
-			path = AmbientPianoMacOS;
-			sourceTree = "<group>";
+			path = Core;
+			sourceTree = SOURCE_ROOT;
 		};
 		168CEBB9163186B400B721E2 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				16C75A2925F89E6200BA1E70 /* OnTheFly-Prefix.pch */,
 				168CEBBB163186B400B721E2 /* InfoPlist.strings */,
-				168CEBBE163186B400B721E2 /* OnTheFly-Prefix.pch */,
 			);
 			name = "Supporting Files";
-			path = "OnTheFly Core";
 			sourceTree = "<group>";
 		};
 		1696ADCC172E67FD008362E5 /* Editor */ = {
@@ -1824,7 +1820,6 @@
 				168CEBBC163186B400B721E2 /* en */,
 			);
 			name = InfoPlist.strings;
-			path = Core;
 			sourceTree = "<group>";
 		};
 		168CEBC7163186B400B721E2 /* MainMenu.xib */ = {
