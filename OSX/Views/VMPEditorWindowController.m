@@ -1119,13 +1119,14 @@ forDoubleClickOnDividerAtIndex:(NSInteger)dividerIndex  {
 
 //	insert fragment
 - (IBAction)insertFragment:(id)sender {
-    
+    NSLog(@"insert fragment");
 }
-
+/*
 //  import audio file
 - (IBAction)importAudioFile:(id)sender {
-    
+    NSLog(@"import audio file");
 }
+*/
 
 //	toggle iOSAppState
 - (IBAction)toggleIOSAppState:(id)sender {

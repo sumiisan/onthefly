@@ -19,7 +19,7 @@ static void setCueSize(WaveFile *wf, uint32_t numberOfCuePoints) {
     uint32ToLittleEndianBytes(dataSize, wf->cueChunk.chunkDataSize);
 }
     
-WaveFile newWaveFile(char *filePath) {
+WaveFile newWaveFile(const char *filePath) {
     WaveFile wf;
     wf.filePath = filePath;
     wf.header = NULL;
@@ -85,7 +85,7 @@ int readWavfile(WaveFile *wf) {
             abortOnError(wf->formatChunk == NULL, "Could not allocate memory for File Format Chunk\n");
 
             fseek(wf->file, -4, SEEK_CUR);
-            fread(wf->formatChunk, sizeof(wf->formatChunk), 1, wf->file);
+            fread(wf->formatChunk, sizeof(FormatChunk), 1, wf->file);
             abortOnError(ferror(wf->file) != 0, "Error reading file\n");
             abortOnError(littleEndianBytesToUInt16(wf->formatChunk->compressionCode) != (uint16_t)1,
                          "Compressed audio formats are not supported\n");

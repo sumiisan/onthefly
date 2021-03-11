@@ -11,7 +11,9 @@
 // jim@malkinware.com
 // For a full description see http://bleepsandpops.com/post/37792760450/adding-cue-points-to-wav-files-in-c
 
-#pragma once
+#ifndef __VMWavFile_h_
+#define __VMWavFile_h_
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
@@ -79,7 +81,7 @@ enum CuePointMergingOption {
     ReplaceAnyExistingCuePoints
 };
 
-const int kMaxNumOfOtherChunks        = 256;   // How many other chunks can we expect to find?  Who knows! So lets pull 256 out of the air.  That's a nice computery number.
+static const int kMaxNumOfOtherChunks        = 256;   // How many other chunks can we expect to find?  Who knows! So lets pull 256 out of the air.  That's a nice computery number.
 
 typedef struct {
     // Prepare some variables to hold data read from the input file
@@ -106,9 +108,10 @@ void uint32ToLittleEndianBytes(uint32_t uInt32Value, char out_LittleEndianBytes[
 uint16_t littleEndianBytesToUInt16(char littleEndianBytes[2]);
 void uint16ToLittleEndianBytes(uint16_t uInt16Value, char out_LittleEndianBytes[2]);
 
-WaveFile newWaveFile(char *filePath);
+WaveFile newWaveFile(const char *filePath);
 int readWavfile(WaveFile *wf);
 int writeWavFile(WaveFile *wf);
 int addCue(WaveFile *wf, uint32_t location);
 int deleteCue(WaveFile *wf, uint32_t cueId);
 
+#endif //__VMWavFile_h_

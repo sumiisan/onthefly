@@ -187,7 +187,7 @@
 
 /*
  
-	depreciated
+	deprecated
  
 //
 //	note: this method draws the entire wave-form at once. use VMPWaveView to draw only the visible rect

@@ -18,6 +18,7 @@
 #import "VMPCodeEditorView.h"
 #import "VMScoreEvaluator.h"
 #import "VMPMacros.h"
+#import "VMWavFileLoader.h"
 #if TEST
 #import "VMPTest.h"
 #endif
@@ -366,6 +367,20 @@ NSDictionary		*windowNames_static_ = nil;
 	[CURRENTSONG clear];
 }
 
+- (void)openFileChooserWithTypes:(NSArray<NSString *>*)types callback:(void (^)(NSURL *url, NSError *error))callback {
+    NSOpenPanel *op = [NSOpenPanel openPanel];
+    op.canChooseFiles = YES;
+    op.canCreateDirectories = NO;
+    op.canChooseDirectories = YES;
+    op.allowsMultipleSelection = NO;
+    op.allowedFileTypes = types;
+    
+    if( [op runModal] == NSModalResponseOK ) {
+        callback((op.URLs)[0], nil);
+    }
+    callback(nil, nil);
+}
+
 - (IBAction)openDocument:(id)sender {
 	[self closeDocument:self];
 	
@@ -374,19 +389,30 @@ NSDictionary		*windowNames_static_ = nil;
 	}
 	//	TODO: we might use a document controller to populate 'recent files' menu.
 //	NSDocumentController *dc = [NSDocumentController sharedDocumentController];
-	
-	NSOpenPanel *op = [NSOpenPanel openPanel];
-	op.canChooseFiles = YES;
-	op.canCreateDirectories = NO;
-	op.canChooseDirectories = YES;
-	op.allowsMultipleSelection = NO;
-	op.allowedFileTypes = @[@"vms"];
-	
-    if( [op runModal] == NSModalResponseOK ) {
-		NSURL *url = (op.URLs)[0];
-        NSError *error = nil;
-        [self loadFromURL:url error:&error];
-	}
+    
+    [self openFileChooserWithTypes:@[@"vms"] callback:^(NSURL *url, NSError *error) {
+        if (error) {
+            // do error handling
+        }
+        if (url) {
+            NSError *error2 = nil;
+            [self loadFromURL:url error:&error2];
+        }
+    }];
+}
+
+- (IBAction)importAudioFile:(id)sender {
+    [self openFileChooserWithTypes:@[@"wav"] callback:^(NSURL *url, NSError *error) {
+        if (error) {
+            // do error handling
+        }
+        if (url) {
+            VMWavFileLoader *loader = [VMWavFileLoader new];
+            [loader open:url];
+            
+            // load!
+        }
+    }];
 }
 
 - (void)resetEverythingAfterDataIsLoaded {

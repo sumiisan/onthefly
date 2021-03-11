@@ -81,7 +81,7 @@
 - (IBAction)revertDocument:(id)sender;
 - (IBAction)reloadDataFromEditor:(id)sender;
 - (IBAction)openDocument:(id)sender;
-
+- (IBAction)importAudioFile:(id)sender;
 
 //	player control		defaults firstResponder
 - (IBAction)songPlay:(id)sender;

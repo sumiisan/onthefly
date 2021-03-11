@@ -75,8 +75,6 @@
 		161C9A9E16A585F2001E7B46 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 168CEBC7163186B400B721E2 /* MainMenu.xib */; };
 		161CC69A17E51F97001C869D /* TraumBaum.entitlements in Resources */ = {isa = PBXBuildFile; fileRef = 160E51AB1738AF2800C3D9BB /* TraumBaum.entitlements */; };
 		161F795C25A19AA60069975C /* VMWavFile.c in Sources */ = {isa = PBXBuildFile; fileRef = 161F795B25A19AA60069975C /* VMWavFile.c */; };
-		161F795D25A19AA60069975C /* VMWavFile.c in Sources */ = {isa = PBXBuildFile; fileRef = 161F795B25A19AA60069975C /* VMWavFile.c */; };
-		161F795E25A19AA60069975C /* VMWavFile.c in Sources */ = {isa = PBXBuildFile; fileRef = 161F795B25A19AA60069975C /* VMWavFile.c */; };
 		162136002599D27000B9346D /* defaultSong in Resources */ = {isa = PBXBuildFile; fileRef = 162135FF2599D27000B9346D /* defaultSong */; };
 		162136012599D27000B9346D /* defaultSong in Resources */ = {isa = PBXBuildFile; fileRef = 162135FF2599D27000B9346D /* defaultSong */; };
 		162136022599D27000B9346D /* defaultSong in Resources */ = {isa = PBXBuildFile; fileRef = 162135FF2599D27000B9346D /* defaultSong */; };
@@ -218,6 +216,7 @@
 		16C074DB17B2AFD500351113 /* VMPrimitives.m in Sources */ = {isa = PBXBuildFile; fileRef = 16623156173C9FA300F70FCB /* VMPrimitives.m */; };
 		16C074E417B2C0DF00351113 /* VMPRainyView.m in Sources */ = {isa = PBXBuildFile; fileRef = 16C074A117B2750900351113 /* VMPRainyView.m */; };
 		16C074E517B2C3DC00351113 /* VMPCanvas.m in Sources */ = {isa = PBXBuildFile; fileRef = 1677781516C0D6A0007206CF /* VMPCanvas.m */; };
+		16C75A3225F96F6E00BA1E70 /* VMWavFileLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 16C75A3125F96F6E00BA1E70 /* VMWavFileLoader.m */; };
 		16C7677116DC83DE003636C3 /* VMPAnalyzer.m in Sources */ = {isa = PBXBuildFile; fileRef = 16C7676E16DC83DE003636C3 /* VMPAnalyzer.m */; };
 		16C7677216DC83DE003636C3 /* VMPAnalyzer.m in Sources */ = {isa = PBXBuildFile; fileRef = 16C7676E16DC83DE003636C3 /* VMPAnalyzer.m */; };
 		16C90C7E1722774800F7E91F /* VMPHistogramView.m in Sources */ = {isa = PBXBuildFile; fileRef = 16C90C7B1722774800F7E91F /* VMPHistogramView.m */; };
@@ -524,6 +523,8 @@
 		16C217D31845F2DD00C3A995 /* VMPTwitter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VMPTwitter.h; path = ../TraumBaum/VMPTwitter.h; sourceTree = "<group>"; };
 		16C217D41845F2DD00C3A995 /* VMPTwitter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VMPTwitter.m; path = ../TraumBaum/VMPTwitter.m; sourceTree = "<group>"; };
 		16C75A2925F89E6200BA1E70 /* OnTheFly-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OnTheFly-Prefix.pch"; sourceTree = "<group>"; };
+		16C75A3025F96F6E00BA1E70 /* VMWavFileLoader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VMWavFileLoader.h; sourceTree = "<group>"; };
+		16C75A3125F96F6E00BA1E70 /* VMWavFileLoader.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VMWavFileLoader.m; sourceTree = "<group>"; };
 		16C7676D16DC83DE003636C3 /* VMPAnalyzer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = VMPAnalyzer.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		16C7676E16DC83DE003636C3 /* VMPAnalyzer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = VMPAnalyzer.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		16C90C7A1722774800F7E91F /* VMPHistogramView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VMPHistogramView.h; sourceTree = "<group>"; };
@@ -632,6 +633,8 @@
 			children = (
 				160ECFAC173B50730009D04B /* VMPreprocessor.h */,
 				160ECFAD173B50730009D04B /* VMPreprocessor.m */,
+				16C75A3025F96F6E00BA1E70 /* VMWavFileLoader.h */,
+				16C75A3125F96F6E00BA1E70 /* VMWavFileLoader.m */,
 				1695A50A1805390800EEC1F5 /* VMPTimeManager.h */,
 				1695A50B1805390800EEC1F5 /* VMPTimeManager.m */,
 				160ECFAE173B50730009D04B /* VMScoreEvaluator.h */,
@@ -875,9 +878,9 @@
 		16623162173CA08E00F70FCB /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				16623151173C9FA300F70FCB /* VMAudioObject.h */,
 				161F795A25A19AA60069975C /* VMWavFile.h */,
 				161F795B25A19AA60069975C /* VMWavFile.c */,
+				16623151173C9FA300F70FCB /* VMAudioObject.h */,
 				16623152173C9FA300F70FCB /* VMAudioObject.m */,
 				16F77D23186BC71400B58BA7 /* VMAudioFFT.h */,
 				16F77D22186BC71400B58BA7 /* VMAudioFFT.mm */,
@@ -1605,6 +1608,7 @@
 				160ED044173B517A0009D04B /* CDataScanner.m in Sources */,
 				160ED047173B517A0009D04B /* CFilteringJSONSerializer.m in Sources */,
 				160ED04A173B517A0009D04B /* CJSONDeserializer_BlocksExtensions.m in Sources */,
+				16C75A3225F96F6E00BA1E70 /* VMWavFileLoader.m in Sources */,
 				160ED04D173B517A0009D04B /* CJSONSerialization.m in Sources */,
 				160ED050173B517A0009D04B /* CJSONSerializedData.m in Sources */,
 				160ED053173B517A0009D04B /* CDataScanner_Extensions.m in Sources */,
@@ -1698,7 +1702,6 @@
 				168A6350171902B700B08329 /* VMPScrollViewClipper.m in Sources */,
 				160ECFB2173B50730009D04B /* VMPreprocessor.m in Sources */,
 				16D7EB2D1861AB2800D0BCEB /* VMRouteComputer.m in Sources */,
-				161F795D25A19AA60069975C /* VMWavFile.c in Sources */,
 				160ECFB5173B50730009D04B /* VMScoreEvaluator.m in Sources */,
 				16F77CCE1865802400B58BA7 /* VMRoute.m in Sources */,
 				160ECFD8173B51160009D04B /* VMPAudioPlayer.m in Sources */,
@@ -1765,7 +1768,6 @@
 				16C074D317B2AF4500351113 /* VMTextPreprocessor.m in Sources */,
 				16C074D417B2AF4800351113 /* VMException.m in Sources */,
 				16C074D517B2AF4E00351113 /* boxmuller.c in Sources */,
-				161F795E25A19AA60069975C /* VMWavFile.c in Sources */,
 				16C074D617B2AF5600351113 /* VMPreprocessor.m in Sources */,
 				16C074D717B2AF5A00351113 /* VMScoreEvaluator.m in Sources */,
 				16C074DB17B2AFD500351113 /* VMPrimitives.m in Sources */,
@@ -1876,6 +1878,7 @@
 			baseConfigurationReference = 996FBEB1001091257B125BDE /* Pods-OnTheFly Editor OSX.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				COMBINE_HIDPI_IMAGES = YES;
@@ -1907,6 +1910,7 @@
 			baseConfigurationReference = 8A9E8453CD3EC30E98E99116 /* Pods-OnTheFly Editor OSX.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				COMBINE_HIDPI_IMAGES = YES;

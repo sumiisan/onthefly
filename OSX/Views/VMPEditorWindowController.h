@@ -85,8 +85,9 @@
 - (IBAction)zoomOut:(id)sender;
 
 
-//	insert fragment
+//	insert, import fragment
 - (IBAction)insertFragment:(id)sender;
+//- (IBAction)importAudioFile:(id)sender;
 
 //	simulate iOS app state
 - (IBAction)toggleIOSAppState:(id)sender;
