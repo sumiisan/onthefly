@@ -22,14 +22,13 @@ static void setCueSize(WaveFile *wf, uint32_t numberOfCuePoints) {
 WaveFile newWaveFile(const char *filePath) {
     WaveFile wf;
     wf.filePath = filePath;
-    wf.header = NULL;
-    wf.formatChunk = NULL;
+    wf.header = (const WaveHeader){{0}};
+    wf.formatChunk = (const FormatChunk){{0}};
     wf.formatChunkExtraBytes = (const ChunkLocation){0, 0};
     wf.cueChunk = (const CueChunk){{0}};
     wf.cueChunk.cuePoints = NULL;
     wf.dataChunkLocation = (const ChunkLocation){0, 0};
     wf.otherChunksCount = 0;
-    wf.cuePoints = NULL;
     wf.cueChunk = (const CueChunk){{0}};
     wf.numberOfCuePoints = 0;
     
@@ -38,10 +37,24 @@ WaveFile newWaveFile(const char *filePath) {
 }
 
 static void freeUp(WaveFile *wf) {
+    int i;
+    
     if (wf->file != NULL) fclose(wf->file);
-    if (wf->header != NULL) free(wf->header);
-    if (wf->formatChunk != NULL) free(wf->formatChunk);
     if (wf->cueChunk.cuePoints != NULL) free(wf->cueChunk.cuePoints);
+    if (wf->listChunk.labelsPtr != NULL) {
+        for (i = 0; i < wf->numberOfCuePoints; ++i) {
+            free(wf->listChunk.labelsPtr[i]->data);
+            free(wf->listChunk.labelsPtr[i]);
+        }
+        free(wf->listChunk.labelsPtr);
+    }
+    if (wf->listChunk.labeledTextsPtr != NULL) {
+        for (i = 0; i < wf->numberOfCuePoints; ++i) {
+            free(wf->listChunk.labeledTextsPtr[i]->data);
+            free(wf->listChunk.labeledTextsPtr[i]);
+        }
+        free(wf->listChunk.labeledTextsPtr);
+    }
 }
 
 #define abortOnError(CONDITION, MESSAGE) if (CONDITION) {\
@@ -56,15 +69,12 @@ int readWavfile(WaveFile *wf) {
     // Get & check the input file header
     fprintf(stdout, "Reading wave file.\n");
     
-    wf->header = (WaveHeader *)malloc(sizeof(WaveHeader));
-    abortOnError(wf->header == NULL, "Could not allocate memory for Wave File Header\n");
-    
-    fread(wf->header, sizeof(WaveHeader), 1, wf->file);
+    fread(&(wf->header), sizeof(WaveHeader), 1, wf->file);
     abortOnError(ferror(wf->file) != 0, "Error reading file\n");
-    abortOnError(strncmp(&(wf->header->chunkID[0]), "RIFF", 4) != 0, "File is not a RIFF file\n");
-    abortOnError(strncmp(&(wf->header->riffType[0]), "WAVE", 4) != 0, "File is not a WAVE file\n");
+    abortOnError(strncmp(&(wf->header.chunkID[0]), "RIFF", 4) != 0, "File is not a RIFF file\n");
+    abortOnError(strncmp(&(wf->header.riffType[0]), "WAVE", 4) != 0, "File is not a WAVE fi.\n");
     
-    uint32_t remainingFileSize = littleEndianBytesToUInt32(wf->header->dataSize) - sizeof(wf->header->riffType); // dataSize does not counf the chunkID or the dataSize, so remove the riffType size to get the length of the rest of the file.
+    uint32_t remainingFileSize = littleEndianBytesToUInt32(wf->header.dataSize) - sizeof(wf->header.riffType); // dataSize does not counf the chunkID or the dataSize, so remove the riffType size to get the length of the rest of the file.
     abortOnError(remainingFileSize <= 0, "File is an empty WAVE file\n");
     
     // Start reading in the rest of the wave file
@@ -81,13 +91,11 @@ int readWavfile(WaveFile *wf) {
         // See which kind of chunk we have
         if (strncmp(&nextChunkID[0], "fmt ", 4) == 0) {
             // We found the format chunk
-            wf->formatChunk = (FormatChunk *)malloc(sizeof(FormatChunk));
-            abortOnError(wf->formatChunk == NULL, "Could not allocate memory for File Format Chunk\n");
 
             fseek(wf->file, -4, SEEK_CUR);
-            fread(wf->formatChunk, sizeof(FormatChunk), 1, wf->file);
+            fread(&(wf->formatChunk), sizeof(FormatChunk), 1, wf->file);
             abortOnError(ferror(wf->file) != 0, "Error reading file\n");
-            abortOnError(littleEndianBytesToUInt16(wf->formatChunk->compressionCode) != (uint16_t)1,
+            abortOnError(littleEndianBytesToUInt16(wf->formatChunk.compressionCode) != (uint16_t)1,
                          "Compressed audio formats are not supported\n");
             
             // Note: For compressed audio data there may be extra bytes appended to the format chunk,
@@ -95,7 +103,7 @@ int readWavfile(WaveFile *wf) {
             
             // There may or may not be extra data at the end of the fomat chunk.  For uncompressed audio there should be no need, but some files may still have it.
             // if formatChunk.chunkDataSize > 16 (16 = the number of bytes for the format chunk, not counting the 4 byte ID and the chunkDataSize itself) there is extra data
-            uint32_t extraFormatBytesCount = littleEndianBytesToUInt32(wf->formatChunk->chunkDataSize) - 16;
+            uint32_t extraFormatBytesCount = littleEndianBytesToUInt32(wf->formatChunk.chunkDataSize) - 16;
             if (extraFormatBytesCount > 0) {
                 wf->formatChunkExtraBytes.startOffset = ftell(wf->file);
                 wf->formatChunkExtraBytes.size = extraFormatBytesCount;
@@ -158,6 +166,84 @@ int readWavfile(WaveFile *wf) {
             printf("Got Cue Chunk\n");
         }
         
+        else if (strncmp(&nextChunkID[0], "LIST", 4) == 0) {
+            // our target: regions
+            fread(&(wf->listChunk.listChunkDataSize), sizeof(char), 4, wf->file);
+            abortOnError(ferror(wf->file) != 0, "Error reading file\n");
+            uint32_t listChunkSize = littleEndianBytesToUInt16(wf->listChunk.listChunkDataSize);
+
+            fread(&(wf->listChunk.listTypeID), sizeof(char), 4, wf->file);
+            abortOnError(ferror(wf->file) != 0, "Error reading file\n");
+            abortOnError(strncmp(wf->listChunk.listTypeID, "adtl", 4) != 0, "LIST type should be 'adtl'\n");
+
+            printf("Read LIST chunk with size:%d type:%c%c%c%c\n",
+                   listChunkSize, wf->listChunk.listTypeID[0], wf->listChunk.listTypeID[1], wf->listChunk.listTypeID[2], wf->listChunk.listTypeID[3]);
+
+            int dataSize = listChunkSize - 12;  // chunkID, chunkSize, listTypeID = 12bytes
+            int bytesLeft = dataSize;
+            
+            wf->listChunk.labelsPtr = calloc(wf->numberOfCuePoints, sizeof(ListLabelNote *));
+            wf->listChunk.labeledTextsPtr = calloc(wf->numberOfCuePoints, sizeof(ListLabeledText *));
+
+            int labelIdx = 0, labeledTextIdx = 0;
+            
+            while(bytesLeft > 0) {
+                char subChunkID[4];
+                char subChunkSizeBytes[4];
+
+                fread(subChunkID, sizeof(char), 4, wf->file);
+                fread(subChunkSizeBytes, sizeof(char), 4, wf->file);
+                uint32_t subChunkSize = littleEndianBytesToUInt16(subChunkSizeBytes);
+                uint32_t cuePointIdNum;
+
+                if (strncmp(subChunkID, "labl", 4) == 0 || strncmp(subChunkID, "note", 4) == 0) {
+                    // labl or note
+                    ListLabelNote *label = malloc(sizeof(ListLabelNote));
+                    wf->listChunk.labelsPtr[labelIdx++] = label;
+                    
+                    fread(label, 4 /*size of cuePointID*/, 1, wf->file);
+                    uint32_t lablDataSize = subChunkSize - 4 /*size of cuePointID*/;
+                    label->data = malloc(lablDataSize+1);
+                    fread(label->data, lablDataSize, 1, wf->file);
+                    label->data[lablDataSize] = 0; //terminate
+
+                    cuePointIdNum = littleEndianBytesToUInt16(label->cuePointID);
+
+                    printf("SubChunk[%c%c%c%c] size:%d cuePointId:%d\ndata(%dbytes):%s\n\n",
+                           subChunkID[0], subChunkID[1], subChunkID[2], subChunkID[3],
+                           subChunkSize, cuePointIdNum,
+                           lablDataSize, label->data
+                           );
+                    
+                } else if (strncmp(subChunkID, "ltxt", 4) == 0) {
+                    // ltxt
+                    ListLabeledText *ltext = malloc(sizeof(ListLabeledText));
+                    wf->listChunk.labeledTextsPtr[labeledTextIdx++] = ltext;
+
+                    fread(ltext, 20 /*size of ListLabeledText minus dataPtr*/, 1, wf->file);
+                    uint32_t ltxtDataSize = subChunkSize - 20 /*size of ListLabeledText minus size of cuePointID*/;
+                    ltext->data = malloc(ltxtDataSize+1);
+                    fread(ltext->data, ltxtDataSize, 1, wf->file);
+                    ltext->data[ltxtDataSize] = 0; //terminate
+                    
+                    cuePointIdNum = littleEndianBytesToUInt16(ltext->cuePointID);
+                    uint32_t sampleLength = littleEndianBytesToUInt16(ltext->sampleLengthBytes);
+                    
+                    printf(" SubChunk[%c%c%c%c] size:%d cuePointId:%d\n"
+                           " samplelen:%d purpose:%c%c%c%c\n data(%dbytes):%s\n\n",
+                           subChunkID[0], subChunkID[1], subChunkID[2], subChunkID[3],
+                           subChunkSize, cuePointIdNum,
+                           sampleLength,
+                           ltext->purposeIDBytes[0], ltext->purposeIDBytes[1], ltext->purposeIDBytes[2], ltext->purposeIDBytes[3],
+                           ltxtDataSize,
+                           ltext->data
+                           );
+                }
+                
+                bytesLeft -= (subChunkSize + 8);
+            }
+        }
+        
         else {
             // We have found a chunk type that we are not going to work with.
             // Just note the location so we can copy it to the output file later
@@ -188,7 +274,7 @@ int readWavfile(WaveFile *wf) {
     
     // Did we get enough data from the input file to proceed?
     
-    abortOnError((wf->formatChunk == NULL) || (wf->dataChunkLocation.size == 0),
+    abortOnError(wf->dataChunkLocation.size == 0,
                  "Input file did not contain any format data or did not contain any sample data\n");
     
     return 0;      // successful read completion
@@ -271,14 +357,14 @@ int writeWavFile(WaveFile *wf) {
     fileDataSize += 4; // UInt32 for CueChunk.cuePointsCount
     fileDataSize += (sizeof(CuePoint) * wf->numberOfCuePoints);
     
-    uint32ToLittleEndianBytes(fileDataSize, wf->header->dataSize);
+    uint32ToLittleEndianBytes(fileDataSize, wf->header.dataSize);
     
     // Write out the header to the new file
-    abortOnError(fwrite(wf->header, sizeof(*(wf->header)), 1, wf->file) < 1,
+    abortOnError(fwrite(&(wf->header), sizeof(WaveHeader), 1, wf->file) < 1,
                  "Error writing header to output file.\n");
     
     // Write out the format chunk
-    abortOnError(fwrite(wf->formatChunk, sizeof(FormatChunk), 1, wf->file) < 1,
+    abortOnError(fwrite(&(wf->formatChunk), sizeof(FormatChunk), 1, wf->file) < 1,
                  "Error writing format chunk to output file.\n");
 
     if (wf->formatChunkExtraBytes.size > 0) {
@@ -295,7 +381,7 @@ int writeWavFile(WaveFile *wf) {
     
     // Write out the Cue Points
     for (uint32_t i = 0; i < littleEndianBytesToUInt32(wf->cueChunk.numberOfCuePoints); i++) {
-        abortOnError((fwrite(&(wf->cuePoints[i]), sizeof(CuePoint), 1, wf->file) < 1), "Error writing cue point to output");
+        abortOnError((fwrite(&(wf->cueChunk.cuePoints[i]), sizeof(CuePoint), 1, wf->file) < 1), "Error writing cue point to output");
     }
         
     // Write out the other chunks from the input file

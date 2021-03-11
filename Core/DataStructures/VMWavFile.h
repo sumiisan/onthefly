@@ -64,6 +64,35 @@ typedef struct {
     long size;        // in bytes
 } ChunkLocation;
 
+// labl and note
+typedef struct {
+    char subChunkID[4];
+    char subChunkSizeBytes[4];
+    char cuePointID[4];
+    char *data;             // label text
+} ListLabelNote;
+
+// ltxt
+typedef struct {
+    char subChunkID[4];
+    char subChunkSizeBytes[4];
+    char cuePointID[4];
+    char sampleLengthBytes[4];
+    char purposeIDBytes[4];
+    char countryBytes[2];
+    char languageBytes[2];
+    char dialectBytes[2];
+    char codePageBytes[2];  // fixed props size = 20bytes
+    char *data;             // label text
+} ListLabeledText;
+
+typedef struct {
+    char listChunkDataSize[4];
+    char listTypeID[4];     // 'adtl'
+    ListLabelNote **labelsPtr;
+    ListLabeledText **labeledTextsPtr;
+} ListChunk;
+
 // For such chunks that we will copy over from input to output, this function does that in 1MB pieces
 int writeChunkLocationFromInputFileToOutputFile(ChunkLocation chunk, FILE *inputFile, FILE *outputFile);
 
@@ -81,21 +110,20 @@ enum CuePointMergingOption {
     ReplaceAnyExistingCuePoints
 };
 
-static const int kMaxNumOfOtherChunks        = 256;   // How many other chunks can we expect to find?  Who knows! So lets pull 256 out of the air.  That's a nice computery number.
+static const int kMaxNumOfOtherChunks        = 1024;   // How many other chunks can we expect to find?  Who knows! So lets pull 256 out of the air.  That's a nice computery number.
 
 typedef struct {
     // Prepare some variables to hold data read from the input file
     FILE            *file;
     char            *filePath;
-    WaveHeader      *header;
-    FormatChunk     *formatChunk;
+    WaveHeader      header;
+    FormatChunk     formatChunk;
     ChunkLocation   formatChunkExtraBytes;
     CueChunk        cueChunk;
     ChunkLocation   dataChunkLocation;
     int             otherChunksCount;
     ChunkLocation   otherChunkLocations[kMaxNumOfOtherChunks];
-    
-    CuePoint        *cuePoints;
+    ListChunk       listChunk;
     uint32_t        numberOfCuePoints;
 } WaveFile;
 
