@@ -597,7 +597,7 @@ VMObligatory_encodeWithCoder(
 #pragma mark *** VMAudioInfo ***
 
 @implementation VMAudioInfo
-@synthesize cuePoints=cuePoints_, regionRange=regionRange_, volume=volume_;
+@synthesize cuePoints=cuePoints_, regionRange=regionRange_, volume=volume_, fileId=fileId_;
 
 #pragma mark accessor
 

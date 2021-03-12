@@ -19,12 +19,7 @@ typedef enum {
 	vmdp_unknown
 } VMDayPhase;
 
-@interface VMPTimeManager : NSObject {
-#ifdef SUPPORT_32BIT_MAC
-	NSDate	*shutdownTime_;
-	BOOL	timerExecuted_;
-#endif
-}
+@interface VMPTimeManager : NSObject
 
 @property (nonatomic, retain)	NSDate			*shutdownTime;
 @property (nonatomic)			VMTime			remainTimeUntilShutdown;

@@ -43,22 +43,6 @@ enum  {
 
 @interface VMScoreEvaluator : NSObject {
 	BOOL	trackingPathIsReturning;
-#if SUPPORT_32BIT_MAC
-	NSNumberFormatter	*numberFormatter_;
-	VMHash				*variables_;
-	VMArray				*pathTrackerArray_;
-	
-	VMArray				*objectsWaitingToBeProcessed_;
-	VMArray				*objectsWaitingToBeLogged_;
-	VMPTimeManager		*timeManager_;
-	
-	
-	BOOL	testMode_;
-	BOOL	shouldNotify_;
-	BOOL	shouldLog_;
-#endif
-	
-	
 }
 	
 + (VMScoreEvaluator*)defaultEvaluator;

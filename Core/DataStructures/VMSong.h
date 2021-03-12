@@ -15,14 +15,7 @@
 #define CURRENTSONG [VMSong currentSong]
 #define ENDOFSEQUENCE_NOTIFICATION @"vmendofsequence"
 
-@interface VMSongStatistics : NSObject <NSCoding> {
-#if SUPPORT_32BIT_MAC
-	VMTime		secondsPlayed_;
-	VMHash		*playedFrags_;
-	int			numberOfAudioFragments_;
-#endif
-}
-
+@interface VMSongStatistics : NSObject <NSCoding>
 @property (nonatomic)			VMTime	secondsPlayed;
 @property (nonatomic,retain)	VMHash	*playedFrags;
 @property (nonatomic)			int		numberOfAudioFragments;
@@ -33,26 +26,7 @@
 
 @end
 
-@interface VMSong : NSObject <NSCoding> {
-#if SUPPORT_32BIT_MAC
-	NSURL		*fileURL_;
-	VMHash		*songData_;
-	VMString	*vmsData_;
-	
-	VMString	*songName_;
-	VMString	*audioFileExtension_;
-	VMString	*audioFileDirectory_;
-	VMId		*defaultFragmentId_;
-
-	VMPlayer	*player_;
-	VMArray		*history_;
-	VMStack		*showReport_;
-	
-	VMSongStatistics *songStatistics_;
-#endif
-
-}
-
+@interface VMSong : NSObject <NSCoding>
 @property (nonatomic, VMStrong)	NSURL	*fileURL;
 
 //	song data structure

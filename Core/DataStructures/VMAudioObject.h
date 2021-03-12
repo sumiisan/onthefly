@@ -19,15 +19,6 @@
 	AudioStreamBasicDescription		audioFileFormat;
 	AudioStreamBasicDescription		cachedAudioFormat;
 	AudioBufferList					audioBufferList;
-
-#if SUPPORT_32BIT_MAC
-@protected
-	NSURL							*url_;
-	void							*waveData_;
-	UInt32							framesLoaded_;
-	UInt64							numberOfFrames_;
-	BOOL							streamingMode_;
-#endif
 }
 
 @property (nonatomic)				UInt32 framesLoaded;		//	async load support

@@ -25,12 +25,7 @@
  *
  *
  *---------------------------------------------------------------------------------*/
-@interface VMPPlayTimeAccumulator : VMHash {
-#if SUPPORT_32BIT_MAC
-	VMTime	playingTimeOfCurrentPart_;
-	VMId	*currentPartId_;
-#endif
-}
+@interface VMPPlayTimeAccumulator : VMHash
 @property (nonatomic, assign)			VMTime				playingTimeOfCurrentPart;
 @property (nonatomic, VMStrong)			VMId				*currentPartId;
 
@@ -94,22 +89,7 @@
 
 	//	view
 	UInt64					frameCounter;
-  __weak        VMSong *song_;
-//	__unsafe_unretained		VMSong		*song_;
-	
-	
-#if SUPPORT_32BIT_MAC
-	BOOL					engineIsWarm_;
-	BOOL					dimmed_;
-	VMTime					nextCueTime_;
-	VMPPlayTimeAccumulator	*playTimeAccumulator_;
-	VMPTrackView			*trackView_;
-	VMPAutoFader			*mainFader_;
-	VMPAutoFader			*dimmer_;
-	BOOL					simulateIOSAppBackgroundState_;
-	
-#endif
-
+    __weak                  VMSong *song_;
 }
 
 @property (weak)							VMSong 				*song;				//	the Variable Music Data

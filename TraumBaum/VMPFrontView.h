@@ -29,35 +29,6 @@ UIView
 {
 	VMPSize	screenSize;
 	BOOL	useCALayer;
-	
-#if SUPPORT_32BIT_MAC
-	BOOL	frontViewWasVisibleAtLastCall_;
-	
-	CGPoint		holeCenter_;
-	CGFloat		dragOffsetY_;
-	CGFloat		angle_;
-	CGFloat		standardRadius_;
-	CGFloat		hueOffset_;
-	CGFloat		speed_;
-	CGFloat		velocity_;
-	CGFloat		targetVelocity_;
-	
-	NSMutableArray	*circles_;
-	CGBlendMode		blendMode_;
-	CAShapeLayer	*stem_;
-	VMPLabel		*timeIndicator_;
-	VMPPoint		touchBeginPoint_;
-	CGFloat			stemLength_;
-	
-	VMDayPhase		lastDayPhase_;
-	BOOL			shouldRecognizeTap_;
-	VMInt			refreshScreenCounter_;
-#if VMP_OSX
-	VMPColor	*transitionColor_;
-	VMTime		transitionRemain_;
-#endif
-#endif
-
 }
 
 @property (nonatomic)			CGPoint		holeCenter;

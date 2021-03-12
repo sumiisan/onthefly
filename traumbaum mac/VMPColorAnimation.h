@@ -8,14 +8,7 @@
 
 #import <Cocoa/Cocoa.h>
 #import "MultiPlatform.h"
-@interface VMPColorAnimation : NSAnimation {
-#if SUPPORT_32BIT_MAC
-	id target_;
-	SEL method_;
-	NSColor *color1_;
-	NSColor *color2_;
-#endif
-}
+@interface VMPColorAnimation : NSAnimation
 
 @property (nonatomic, retain)	id  target;
 @property (nonatomic)			SEL method;

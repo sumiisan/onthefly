@@ -6,8 +6,13 @@
 //
 
 @import Foundation;
+#import "VMDataTypes.h"
 
 NS_ASSUME_NONNULL_BEGIN
+
+@interface VMAudioFileCue: VMData
+
+@end
 
 @interface VMWavFileLoader : NSObject
 
