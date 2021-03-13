@@ -128,8 +128,6 @@
 	[self updateTimeFields];
 }
 
-
-
 #pragma mark -
 #pragma mark action
 
@@ -148,7 +146,6 @@
 	self.time2Label.stringValue = caption2;
 }
 
-
 - (BOOL)control:(NSControl *)control didFailToFormatString:(NSString *)string errorDescription:(NSString *)error {
 	NSLog(@"format fail: %@ %@",string,error);
 	return YES;
@@ -156,7 +153,6 @@
 
 - (void)control:(NSControl *)control didFailToValidatePartialString:(NSString *)string errorDescription:(NSString *)error {
 	NSLog(@"validate fail: %@ %@",string,error);
-	
 }
 
 - (void)controlTextDidChange:(NSNotification *)obj {

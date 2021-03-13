@@ -10,15 +10,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface VMAudioFileCue: VMData
-
-@end
-
 @interface VMWavFileLoader : NSObject
-
-
 - (void)open:(NSURL*)url;
-
 @end
 
 NS_ASSUME_NONNULL_END

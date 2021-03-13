@@ -41,7 +41,7 @@
 @property (nonatomic, VMStrong)		VMString *copyright;
 @property (nonatomic, VMStrong)		VMString *versionString;
 @property (nonatomic, VMStrong)		VMString *websiteURL;
-@property (nonatomic, VMWeak)		BOOL	 supportsTimer;
+@property (nonatomic, assign)		BOOL	 supportsTimer;
 @property (nonatomic, VMStrong)		VMString *audioFileExtension;
 @property (nonatomic, VMStrong)		VMString *audioFileDirectory;
 @property (nonatomic, VMStrong)		VMId	 *defaultFragmentId;

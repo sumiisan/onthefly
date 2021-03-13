@@ -36,7 +36,7 @@ WaveFile newWaveFile(const char *filePath) {
     return wf;
 }
 
-static void freeUp(WaveFile *wf) {
+void freeWaveFile(WaveFile *wf) {
     int i;
     
     if (wf->file != NULL) fclose(wf->file);
@@ -196,12 +196,14 @@ int readWavfile(WaveFile *wf) {
                 uint32_t subChunkSize = littleEndianBytesToUInt16(subChunkSizeBytes);
                 uint32_t cuePointIdNum;
 
+                fseek(wf->file, -8, SEEK_CUR);  // rewind fread subChunkID and subChunkSizeBytes
+                
                 if (strncmp(subChunkID, "labl", 4) == 0 || strncmp(subChunkID, "note", 4) == 0) {
                     // labl or note
                     ListLabelNote *label = malloc(sizeof(ListLabelNote));
                     wf->listChunk.labelsPtr[labelIdx++] = label;
                     
-                    fread(label, 4 /*size of cuePointID*/, 1, wf->file);
+                    fread(label, 12 /*sizeof(ListLabelNote) - sizeof(label->data)*/, 1, wf->file);
                     uint32_t lablDataSize = subChunkSize - 4 /*size of cuePointID*/;
                     label->data = malloc(lablDataSize+1);
                     fread(label->data, lablDataSize, 1, wf->file);
@@ -220,7 +222,7 @@ int readWavfile(WaveFile *wf) {
                     ListLabeledText *ltext = malloc(sizeof(ListLabeledText));
                     wf->listChunk.labeledTextsPtr[labeledTextIdx++] = ltext;
 
-                    fread(ltext, 20 /*size of ListLabeledText minus dataPtr*/, 1, wf->file);
+                    fread(ltext, 28/*sizeof(ListLabeledText) - sizeof(ltext->data);*/, 1, wf->file);
                     uint32_t ltxtDataSize = subChunkSize - 20 /*size of ListLabeledText minus size of cuePointID*/;
                     ltext->data = malloc(ltxtDataSize+1);
                     fread(ltext->data, ltxtDataSize, 1, wf->file);
@@ -238,6 +240,9 @@ int readWavfile(WaveFile *wf) {
                            ltxtDataSize,
                            ltext->data
                            );
+                } else {
+                    // fatal
+                    abortOnError(1, "bad sub chunk ID");
                 }
                 
                 bytesLeft -= (subChunkSize + 8);
@@ -280,8 +285,30 @@ int readWavfile(WaveFile *wf) {
     return 0;      // successful read completion
 
 CleanUpAndExit:
-    freeUp(wf);
+    freeWaveFile(wf);
     return -1;
+}
+
+ListLabelNote *findLabelById(WaveFile *wf, char *id) {
+    for(int i = 0; i < wf->numberOfCuePoints; ++i) {
+        ListLabelNote *label = wf->listChunk.labelsPtr[i];
+        if (!label) break;
+        if (memcmp(label->cuePointID, id, 4) == 0) {
+            return label;
+        }
+    }
+    return NULL;
+}
+
+ListLabeledText *findLabeledTextById(WaveFile *wf, char *id) {
+    for(int i = 0; i < wf->numberOfCuePoints; ++i) {
+        ListLabeledText *ltext = wf->listChunk.labeledTextsPtr[i];
+        if (!ltext) break;
+        if (memcmp(ltext->cuePointID, id, 4) == 0) {
+            return ltext;
+        }
+    }
+    return NULL;
 }
 
 int addCue(WaveFile *wf, uint32_t location) {
@@ -413,7 +440,7 @@ int writeWavFile(WaveFile *wf) {
 CleanUpAndExit:
     if (tempFilePath != NULL) free(tempFilePath);
     if (readFile != NULL) fclose(readFile);
-    freeUp(wf);
+    freeWaveFile(wf);
     return -1;
 }
 

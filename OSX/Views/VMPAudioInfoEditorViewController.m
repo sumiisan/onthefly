@@ -130,7 +130,7 @@
 - (void)dealloc {
  	VMNullify(audioFFTWrapper);
 	VMNullify(audioObject);
-	[super dealloc];
+    Dealloc(super);
 }
 
 
@@ -206,7 +206,7 @@ static const CGFloat kWaveDisplayHorizontalMargin = 20;
 #pragma mark -
 #pragma mark ui
 - (void)updateFieldsAndKnobs {
-	[self.cueRangeEditor setTime1:self.audioInfo.cuePoints.locationDescriptor time2:self.audioInfo.cuePoints.lengthDescriptor];
+	[self.cueRangeEditor setTime1:self.audioInfo.offsetAndDuration.locationDescriptor time2:self.audioInfo.offsetAndDuration.lengthDescriptor];
 	[self.regionRangeEditor setTime1:self.audioInfo.regionRange.locationDescriptor time2:self.audioInfo.regionRange.lengthDescriptor];
 	self.volumeIndicator.floatValue = self.audioInfo.volume;
 	self.volumeSlider.floatValue = self.audioInfo.volume;

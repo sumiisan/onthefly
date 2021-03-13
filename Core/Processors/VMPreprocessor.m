@@ -810,7 +810,7 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 	//	GuessTypeFromHash(score, transformer)		does not work properly
 		
 		//	audio
-		GuessTypeFromHash(original, audioModifier)
+		GuessTypeFromHash(frameOffset, audioFileCue)
 		GuessTypeFromHash(dur, audioInfo)
 		GuessTypeFromHash(ofs, audioInfo)
 		GuessTypeFromHash(volume, audioInfo)
@@ -1537,7 +1537,7 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
  *	1/base		2/category		3/meta			4/static media		5/concrete		6/collection	7/dynamic 		8/runtime
  *
  *	[VMData]---- [VMFragment]--------- [VMMetaFragment]----------- [VMAudioFragment] ------------------ [VMAudioFragmentPlayer]
- *			|							|	└---- [VMAudioInfo]	-- [VMAudioModifier]
+ *			|							|	└---- [VMAudioInfo]	-- [VMAudioFileCue]
  *			|							└ [VMCollection]---------- [VMLayerList]
  *			|														└---------------- [VMSelector]
  *			|														└---------------- [VMSequence]
@@ -1571,9 +1571,9 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 	SetClassTable( VMCollection,	collection,		COL,	3.9 )
 	//	static media
 	SetClassTable( VMAudioInfo,		audioInfo,		AI,		4.5 )
+    SetClassTable( VMAudioFileCue,  audioFileCue,   AFC,    4.55 )
 	SetClassTable( VMStimulator,	stimulator,		STM,	4.6 )
 	//	concrete instanization
-	SetClassTable( VMAudioModifier,	audioModifier,	AM,		5.1 )
 	SetClassTable( VMLayerList,		layerList,		LAY,	5.3 )
 	SetClassTable( VMAudioFragment,	audioFragment,	AFG,	5.4 )
 	SetClassTable( VMTransformer,	transformer,	TFM,	5.5 )

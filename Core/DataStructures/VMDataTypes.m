@@ -597,7 +597,8 @@ VMObligatory_encodeWithCoder(
 #pragma mark *** VMAudioInfo ***
 
 @implementation VMAudioInfo
-@synthesize cuePoints=cuePoints_, regionRange=regionRange_, volume=volume_, fileId=fileId_;
+
+@synthesize offsetAndDuration=offsetAndDuration_, regionRange=regionRange_, volume=volume_, fileId=fileId_;
 
 #pragma mark accessor
 
@@ -621,11 +622,11 @@ VMObligatory_encodeWithCoder(
 }
 
 - (VMTime)duration {
-	return self.cuePoints.length;
+	return self.offsetAndDuration.length;
 }
 
 - (VMTime)offset {
-	return self.cuePoints.location;
+	return self.offsetAndDuration.location;
 }
 
 //	with modulator
@@ -665,7 +666,7 @@ VMObligatory_containsId(
 )
 VMObligatory_resolveUntilType()
 VMOBLIGATORY_init(vmObjectType_audioInfo, YES,
-				  self.cuePoints=ARInstance(VMTimeRangeDescriptor);
+				  self.offsetAndDuration=ARInstance(VMTimeRangeDescriptor);
 				  self.regionRange=ARInstance(VMTimeRangeDescriptor);
 				  self.volume=1.;
 				  )
@@ -674,7 +675,7 @@ VMOBLIGATORY_setWithProto(
 	VMAudioInfo *ai = ClassCastIfMatch(proto, VMAudioInfo);
 	if( ai ) fileId_ = ai->fileId_;
 						  
-	CopyPropertyIfExist( cuePoints )
+	CopyPropertyIfExist( offsetAndDuration )
 	CopyPropertyIfExist( regionRange )
 	CopyPropertyIfExist( volume )
 )
@@ -682,8 +683,8 @@ VMOBLIGATORY_setWithProto(
 VMOBLIGATORY_setWithData(
 if ( ClassMatch(data, VMHash)) {
 	MakeHashFromData
-	IfHashItemExist(ofs,			cuePoints_.locationDescriptor = HASHITEM )
-	IfHashItemExist(dur,			cuePoints_.lengthDescriptor = HASHITEM )
+	IfHashItemExist(ofs,			offsetAndDuration_.locationDescriptor = HASHITEM )
+	IfHashItemExist(dur,			offsetAndDuration_.lengthDescriptor = HASHITEM )
 	IfHashItemExist(regionStart,	regionRange_.locationDescriptor = HASHITEM )
 	IfHashItemExist(regionLength,	regionRange_.lengthDescriptor = HASHITEM )
 	SetPropertyIfKeyExist( volume, itemAsFloat )
@@ -694,7 +695,7 @@ if ( ClassMatch(data, VMHash)) {
 #define ArcKeyNoFileId @"*NFID"
 
 VMObligatory_initWithCoder(
- Deserialize(cuePoints, Object )
+ Deserialize(offsetAndDuration, Object )
  Deserialize(regionRange, Object )
  Deserialize(volume, Float)
  VMId *tempId=[decoder decodeObjectForKey:@"fileId"];
@@ -703,7 +704,7 @@ VMObligatory_initWithCoder(
 )
 
 VMObligatory_encodeWithCoder(
- Serialize(cuePoints, Object )
+ Serialize(offsetAndDuration, Object )
  Serialize(regionRange, Object )
  Serialize(volume, Float)
 [encoder encodeObject:fileId_ ? fileId_ : ArcKeyNoFileId forKey:@"fileId"];
@@ -712,7 +713,7 @@ VMObligatory_encodeWithCoder(
 
 - (void)dealloc {
 	VMNullify(fileId);
-	VMNullify(cuePoints);
+	VMNullify(offsetAndDuration);
 	VMNullify(regionRange);
     Dealloc( super );;
 }
@@ -728,26 +729,31 @@ VMObligatory_encodeWithCoder(
 
 @end
 
-//------------------------ AudioModifier -----------------------------
+//------------------------ AudioFileCue -----------------------------
 /*
- information about audio playback
+ cue/region inside an audio file
  */
 #pragma mark -
-#pragma mark *** VMAudioModifier ***
+#pragma mark *** VMAudioFileCue ***
 
-@implementation VMAudioModifier
-@synthesize originalId=originalId_;
-VMObligatory_resolveUntilType(
-if (self.originalId) [[DEFAULTPREPROCESSOR rawData:self.originalId] resolveUntilType:mask];
-)
-VMOBLIGATORY_init(vmObjectType_audioModifier, YES,)
+@implementation VMAudioFileCue
+- (NSString *)description {
+    return [NSString stringWithFormat:@"AudioFileCue[%u]: %@ dataPos: %u len: %u",
+            (unsigned int)self.cuePointId,
+            self.id, self.frameOffset,
+            self.sampleLength];
+}
+
+VMObligatory_resolveUntilType()
+VMOBLIGATORY_init(vmObjectType_audioFileCue, YES,)
 VMOBLIGATORY_setWithProto(
-  CopyPropertyIfExist(originalId)
 )
-VMOBLIGATORY_setWithData( 
+VMOBLIGATORY_setWithData(
 /*not implemented yet*/
 )
+
 @end
+
 
 #if 0	//	TagList become obsolete. use VMTransformer instead
 //------------------------ TagList -----------------------------

@@ -65,7 +65,6 @@ struct VMAudioFFTOpaque {
 - (void)dealloc {
     delete self->cpp;
     self->cpp = NULL;
-    [super dealloc];
 }
 
 - (void)fft:(void *)interleavedFloat32Audio sampleRate:(int)inSampleRate frames:(long)frames offset:(long)offset {

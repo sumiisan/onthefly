@@ -175,7 +175,7 @@ static VMPObjectCell		*typeColumnCell = nil;
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
 	assert(0);		//	designated initializer is init
-	[super initWithCoder:aDecoder];
+	self = [super initWithCoder:aDecoder];
 	return nil;
 }
 
@@ -707,10 +707,10 @@ filterStringNotFound:
 			return [FormString 
 					@"fileId:\"%@\" (dur:%@%@)%@%@",
 					d.fileId,
-					d.cuePoints.lengthDescriptor,
-					(d.cuePoints.locationDescriptor
+					d.offsetAndDuration.lengthDescriptor,
+					(d.offsetAndDuration.locationDescriptor
 					 ? [FormString @" ofs:%@",
-						d.cuePoints.locationDescriptor]
+						d.offsetAndDuration.locationDescriptor]
 					 : @"" ),
 					((d.regionRange.location != 0 || d.regionRange.length != 0 )
 					 ?	[FormString @" playback:(%@ - %@)",

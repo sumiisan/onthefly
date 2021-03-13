@@ -63,7 +63,7 @@
 
 - (void)dealloc {
 	VMNullify(playedFrags);
-	[super dealloc];
+    Dealloc(super);
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
@@ -573,19 +573,18 @@ BOOL verbose = NO;
 //
 - (BOOL)update {
     NSError *outError = nil;
-	VMHash *loadedSong = [self.songData retain];
+	VMHash *loadedSong = Retain(self.songData);
 	self.songData = ARInstance( VMHash );
 	NSLog(@"Update loaded song with vms at %@", self.fileURL.path);
 	BOOL success = [self readFromURL:self.fileURL error:&outError];
 	if ( ! success ) {
 		NSLog(@"VMSong: could not open %@", self.fileURL.path );
-		[loadedSong release];
+        Release(loadedSong);
 		return NO;
 	}
 	
 	[DEFAULTPREPROCESSOR mergeLiveData:loadedSong];
-	
-	[loadedSong release];
+    Release(loadedSong);
 	return success;
 }
 
@@ -780,7 +779,7 @@ BOOL verbose = NO;
 	[self encodeWithCoder:encoder];
 	NSLog(@"SAVE/ finish encode");
 	[encoder finishEncoding];
-	[encoder release];
+    Release(encoder);
 	NSLog(@"SAVE/ write data");
 	BOOL success = [data writeToURL:url atomically:YES];
 	if( !success )
@@ -797,7 +796,7 @@ BOOL verbose = NO;
 	if (data.length == 0) return nil;
 	
     NSError *error = nil;
-    NSKeyedUnarchiver *decoder = [[[NSKeyedUnarchiver alloc] initForReadingFromData:data error:&error] autorelease];
+    NSKeyedUnarchiver *decoder = AutoRelease([[NSKeyedUnarchiver alloc] initForReadingFromData:data error:&error]);
     
 	VMSong *song = AutoRelease([[VMSong alloc] initWithCoder:decoder]);
 	if ( ! song ) return nil;

@@ -93,8 +93,7 @@ shouldLog=shouldLog_,shouldNotify=shouldNotify_;
 		
 		[self reset];
 		
-		self.timeManager = [[[VMPTimeManager alloc] init] autorelease];
-		
+        self.timeManager = AutoRelease([VMPTimeManager new]);
 		self.shouldLog = YES;
 		self.shouldNotify = YES;
 	}
@@ -643,8 +642,8 @@ shouldLog=shouldLog_,shouldNotify=shouldNotify_;
 				
 #endif
 				break;
-				
-			case vmObjectType_audioFragment:
+            }
+            case vmObjectType_audioFragment: {
 #if VMP_VISUALIZER
 				[VMPNotificationCenter postNotificationName:VMPNotificationProcessObject
 													 object:self userInfo:@{@"fragment":d}];

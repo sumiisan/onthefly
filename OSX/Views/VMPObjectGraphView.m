@@ -1180,7 +1180,7 @@
 
 - (void)dealloc {
 	VMNullify(data);
-	[super dealloc];
+    Dealloc(super);
 }
 
 @end

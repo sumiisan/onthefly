@@ -425,7 +425,7 @@ static 	VMHash *bgColorForType_static_ = nil;
 	[anim setDuration:duration];
 	_animating = YES;
     [anim startAnimation];
-    [anim release];
+    Release(anim);
 	
 	[self performSelector:@selector(endAnimation:) withObject:nil afterDelay:duration];
 }

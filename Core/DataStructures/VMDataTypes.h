@@ -59,7 +59,7 @@ typedef enum {
 	
 	//	audio
 	vmObjectType_audioInfo		=	vmObjectCategory_media		|	0x11,
-	vmObjectType_audioModifier	=	vmObjectCategory_media		| 	0x12,
+	vmObjectType_audioFileCue	=	vmObjectCategory_media		| 	0x12,
 	
 	//	static song structure
 	vmObjectType_fragment		=	vmObjectCategory_fragment	|	vmObjectCategory_songStruture	|	0x01	|	vmObjectCategory_unresolveable,
@@ -123,7 +123,7 @@ typedef enum {
  *    1/base        2/category      3/            4/static media     5/concrete      6/collection    7/dynamic       8/runtime
  *
  *    [VMData]┬--- [VMFragment]---- [VMMetaFragment]--------------------- [VMAudioFragment] --------- [VMAudioFragmentPlayer]
- *            |                            |    └---- [VMAudioInfo]------ [VMAudioModifier]
+ *            |                            |    └---- [VMAudioInfo]------ [VMAudioFileCue]
  *            |                            └ [VMCollection]------------┬- [VMLayerList]
  *            |                                                        ├---------------- [VMSelector]
  *            |                                                        ├---------------- [VMSequence]
@@ -201,16 +201,19 @@ typedef enum {
 @interface VMAudioInfo : VMMetaFragment
 @property	(nonatomic, copy)		VMId						*fileId;
 @property	(nonatomic, assign)		VMVolume					volume;
-@property	(nonatomic, VMStrong)	VMTimeRangeDescriptor		*cuePoints;
+@property	(nonatomic, VMStrong)	VMTimeRangeDescriptor		*offsetAndDuration;
 @property	(nonatomic, VMStrong)	VMTimeRangeDescriptor		*regionRange;
 @end
 
-//------------------------ AudioModifier ------------------------
+//------------------------ AudioFileCue -----------------------------
 /*
- information about audio playback, add audio-file modification such as volume, cue-point, EQ, compression, here.
+ cue/region inside an audio file
  */
-@interface VMAudioModifier : VMAudioInfo
-@property	(nonatomic, copy)		VMId				*originalId;
+@interface VMAudioFileCue: VMAudioInfo
+@property   (nonatomic) UInt32 cuePointId;
+@property   (nonatomic) UInt32 frameOffset;         // byte offset from the file's data chunk
+@property   (nonatomic) UInt32 sampleLength;        // length in sample frames
+
 @end
 
 //------------------------ Transformer --------------------------
@@ -221,7 +224,6 @@ typedef enum {
 @property	(nonatomic, copy)		VMString 			*scoreDescriptor;
 @property	(nonatomic, readonly)	VMFloat				currentValue;
 @end
-
 
 //------------------------ Stimulator --------------------------
 /*
@@ -299,7 +301,7 @@ typedef enum {
 @property	(nonatomic, copy)		VMString		*scoreDescriptor;
 @property	(nonatomic, copy)		VMId			*targetId;
 
-@property	(nonatomic, VMWeak)		VMFloat			primaryFactor;
+@property	(nonatomic, assign)		VMFloat			primaryFactor;
 @property	(nonatomic, readonly)	VMFloat			evaluatedScore;
 @property 	(nonatomic, readonly)	VMFloat			cachedScore;
 

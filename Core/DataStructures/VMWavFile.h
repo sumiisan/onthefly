@@ -82,7 +82,7 @@ typedef struct {
     char countryBytes[2];
     char languageBytes[2];
     char dialectBytes[2];
-    char codePageBytes[2];  // fixed props size = 20bytes
+    char codePageBytes[2];  // fixed props size = 28bytes
     char *data;             // label text
 } ListLabeledText;
 
@@ -137,9 +137,13 @@ uint16_t littleEndianBytesToUInt16(char littleEndianBytes[2]);
 void uint16ToLittleEndianBytes(uint16_t uInt16Value, char out_LittleEndianBytes[2]);
 
 WaveFile newWaveFile(const char *filePath);
+void freeWaveFile(WaveFile *wf);
 int readWavfile(WaveFile *wf);
 int writeWavFile(WaveFile *wf);
 int addCue(WaveFile *wf, uint32_t location);
 int deleteCue(WaveFile *wf, uint32_t cueId);
+
+ListLabelNote *findLabelById(WaveFile *wf, char *id);
+ListLabeledText *findLabeledTextById(WaveFile *wf, char *id);
 
 #endif //__VMWavFile_h_
