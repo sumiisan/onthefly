@@ -45,6 +45,20 @@
                 cue.sampleLength = littleEndianBytesToUInt32(ltext->sampleLengthBytes);
             }
         }
+        
+        if (cue.sampleLength == 0) {    // not specified: determine using next cue
+            CuePoint *nextCuePoint;
+            if (i + 1 < waveFile.numberOfCuePoints) {
+                nextCuePoint = waveFile.cueChunk.cuePoints + i + 1;
+                if (nextCuePoint) {
+                    cue.sampleLength = littleEndianBytesToUInt32(nextCuePoint->frameOffset) - cue.frameOffset;     // everyting between frameOffsets
+                } else {
+                    cue.sampleLength = waveFile.fileSize - cue.frameOffset;  // may have reached the end of file
+                }
+            } else if (cue.sampleLength == 0) {  // reached the end of file
+                cue.sampleLength = waveFile.fileSize - cue.frameOffset;
+            }
+        }
 
         NSLog(@"cue read: %@", cue);
     }

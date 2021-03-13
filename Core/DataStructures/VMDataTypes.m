@@ -733,25 +733,54 @@ VMObligatory_encodeWithCoder(
 /*
  cue/region inside an audio file
  */
+
+/*
+ 
+ | <-------- audio file ------------------------------------> |
+ |     | <- frameOffset   frameOffset + sampleLength -> |     |  samples
+ |     |     | <- offset        offset + duration -> |  |     |  descriptor
+ 
+ */
 #pragma mark -
 #pragma mark *** VMAudioFileCue ***
 
 @implementation VMAudioFileCue
 - (NSString *)description {
-    return [NSString stringWithFormat:@"AudioFileCue[%u]: %@ dataPos: %u len: %u",
+    return [NSString stringWithFormat:@"%@ [%u] frameOfs:%u sampleLen:%u\n",
+            super.description,
             (unsigned int)self.cuePointId,
-            self.id, self.frameOffset,
-            self.sampleLength];
+            self.frameOffset,
+            self.sampleLength
+            ];
 }
 
-VMObligatory_resolveUntilType()
 VMOBLIGATORY_init(vmObjectType_audioFileCue, YES,)
 VMOBLIGATORY_setWithProto(
+    CopyPropertyIfExist(cuePointId)
+    CopyPropertyIfExist(frameOffset)
+    CopyPropertyIfExist(sampleLength)
 )
 VMOBLIGATORY_setWithData(
-/*not implemented yet*/
+    if ( ClassMatch(data, VMHash)) {
+        MakeHashFromData
+        IfHashItemExist(cpid, self.cuePointId = [hash itemAsInt:@"cpid"] )
+        IfHashItemExist(fofs, self.frameOffset = [hash itemAsInt:@"fofs"] )
+        IfHashItemExist(slen, self.sampleLength = [hash itemAsInt:@"slen"] )
+    }
 )
 
+VMObligatory_initWithCoder(
+ Deserialize(offsetAndDuration, Object )
+ Deserialize(regionRange, Object )
+ Deserialize(volume, Float)
+)
+
+VMObligatory_encodeWithCoder(
+ Serialize(offsetAndDuration, Object )
+ Serialize(regionRange, Object )
+ Serialize(volume, Float)
+)
+                         
 @end
 
 

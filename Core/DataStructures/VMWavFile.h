@@ -125,6 +125,7 @@ typedef struct {
     ChunkLocation   otherChunkLocations[kMaxNumOfOtherChunks];
     ListChunk       listChunk;
     uint32_t        numberOfCuePoints;
+    uint32_t        fileSize;
 } WaveFile;
 
 

@@ -43,6 +43,7 @@ void freeWaveFile(WaveFile *wf) {
     if (wf->cueChunk.cuePoints != NULL) free(wf->cueChunk.cuePoints);
     if (wf->listChunk.labelsPtr != NULL) {
         for (i = 0; i < wf->numberOfCuePoints; ++i) {
+            if (!wf->listChunk.labelsPtr[i]) break;
             free(wf->listChunk.labelsPtr[i]->data);
             free(wf->listChunk.labelsPtr[i]);
         }
@@ -50,6 +51,7 @@ void freeWaveFile(WaveFile *wf) {
     }
     if (wf->listChunk.labeledTextsPtr != NULL) {
         for (i = 0; i < wf->numberOfCuePoints; ++i) {
+            if (!wf->listChunk.labeledTextsPtr[i]) break;
             free(wf->listChunk.labeledTextsPtr[i]->data);
             free(wf->listChunk.labeledTextsPtr[i]);
         }
@@ -276,6 +278,8 @@ int readWavfile(WaveFile *wf) {
             fprintf(stdout, "Found chunk type \'%c%c%c%c\', size: %d bytes\n", nextChunkID[0], nextChunkID[1], nextChunkID[2], nextChunkID[3], chunkDataSize);
         }
     }
+    
+    wf->fileSize = fseek(wf->file, 0, SEEK_END);
     
     // Did we get enough data from the input file to proceed?
     
