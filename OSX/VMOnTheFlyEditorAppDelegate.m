@@ -407,10 +407,20 @@ NSDictionary		*windowNames_static_ = nil;
             // do error handling
         }
         if (url) {
-            VMWavFileLoader *loader = [VMWavFileLoader new];
-            [loader open:url];
-            
             // load!
+            VMWavFileLoader *loader = [VMWavFileLoader new];
+            VMArray *elements = [loader open:url];
+            CURRENTSONG.fileURL = url;
+            CURRENTSONG.audioFileExtension = @"wav";
+            CURRENTSONG.isWavMarker = YES;
+            CURRENTSONG.songName = url.lastPathComponent.stringByDeletingPathExtension;
+            VMHash *data = [VMHash new];
+            for(VMData *d in elements) {
+                [data setItem:d for:d.id];
+            }
+            CURRENTSONG.songData = data;
+            DEFAULTSONGPLAYER.song = CURRENTSONG;
+            [VMPNotificationCenter postNotificationName:VMPNotificationVMSDataLoaded object:self userInfo:nil];
         }
     }];
 }

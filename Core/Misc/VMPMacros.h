@@ -42,7 +42,7 @@
 
 
 //	alloc instances
-#define NewInstance(cls) [[cls alloc]init]
+#define NewInstance(cls) [cls new]
 #define ARInstance(cls) AutoRelease( NewInstance(cls) )
 #define NewInstanceIfNil(var,cls) if(!var)var=NewInstance(cls)
 #define ReleaseAndNewInstance(var,cls) Release(var);var=NewInstance(cls)

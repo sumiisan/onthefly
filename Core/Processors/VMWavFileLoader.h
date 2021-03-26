@@ -11,7 +11,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface VMWavFileLoader : NSObject
-- (void)open:(NSURL*)url;
+- (VMArray*)open:(NSURL*)url;
 @end
 
 NS_ASSUME_NONNULL_END

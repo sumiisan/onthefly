@@ -1134,7 +1134,7 @@ static	VMPreprocessor	*vmpp__singleton__ = nil;
 //
 //	(3.31)	if a sequence or layer has no Collection, create one from id.
 //
-- (void) createCollectionIfItDoesNotHave:(VMCollection*)collection {
+- (void)createCollectionIfItDoesNotHave:(VMCollection*)collection {
 	if( collection.fragments && [collection.fragments count] > 0 ) return;
 	collection.fragments = ARInstance(VMArray);
 	VMId *fragId 	= [VMPP idWithVMPModifier:collection.id tag:@"frag" info:nil];

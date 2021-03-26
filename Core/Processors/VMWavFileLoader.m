@@ -13,18 +13,20 @@
 }
 
 @property (nonatomic) NSMutableArray<VMAudioFileCue*>* cues;
+@property (nonatomic) NSMutableArray<VMFragment*>* frags;
 
 @end
 
 @implementation VMWavFileLoader
 
 
-- (void)open:(NSURL*)url {
+- (VMArray*)open:(NSURL*)url {
     const char *path = [url.path cStringUsingEncoding:NSUTF8StringEncoding];
     waveFile = newWaveFile(path);
     readWavfile(&waveFile);
     
     self.cues = [NSMutableArray array];
+    self.frags = [NSMutableArray array];
     
     for (int i = 0; i < waveFile.numberOfCuePoints; ++i) {
         VMAudioFileCue *cue = [VMAudioFileCue new];
@@ -61,9 +63,50 @@
         }
 
         NSLog(@"cue read: %@", cue);
+        
+        // create frag:
+        if ([cue.id hasPrefix:@"_"]) {
+            continue; // skip instruction cue
+        }
+        
+        VMAudioFragment *frag = [VMAudioFragment new];
+        NSString *cueInst = cue.id;
+        VMId *seqId = [cue.id componentsSeparatedByString:@"_"][0];
+        frag.id = [NSString stringWithFormat:@"%@;frag", seqId];
+        cue.id = [NSString stringWithFormat:@"%@|cue", seqId];
+        frag.audioInfoId = cue.id;
+        frag.audioInfoRef = cue;
+        VMSequence *seq = [VMSequence new];
+        seq.id = seqId;
+        seq.fragments = [VMArray arrayWithObject: frag];
+        VMSelector *next = [VMSelector new];
+        next.id = [NSString stringWithFormat:@"%@|next", seqId];
+        next.fragments = [VMArray new];
+        seq.subsequent = next;
+        
+        NSArray *insts = [cueInst componentsSeparatedByString:@"_"];
+        for (NSString *inst in insts) {
+            if (![inst hasPrefix:@"~"]) continue;
+            NSArray *qs = [[inst substringFromIndex:1] componentsSeparatedByString:@","];
+            for (NSString *q in qs) {
+                VMChance *ch = [VMChance new];
+                NSArray *cs = [q componentsSeparatedByString:@"="];
+                ch.targetId = [cs[0] componentsSeparatedByString:@"_"][0];
+                ch.scoreDescriptor = cs.count > 1 ? cs[1] : @"1";
+                [next.fragments push:ch];
+            }
+        }
+        
+        [self.frags addObject:cue];
+        [self.frags addObject:seq];
     }
     
     freeWaveFile(&waveFile);
+    
+    VMArray *array;
+    
+    array = [VMArray arrayWithArray:self.frags];
+    return array;
 }
 
 

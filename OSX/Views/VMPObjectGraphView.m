@@ -428,8 +428,11 @@
 			subseq = ARInstance(VMSelector);
 			subseq.id = [NSString stringWithFormat:@"%@|tempSelector", frag.id];
 			for( VMId *fragId in ((VMSequence*)frag).fragments ) {
-				[subseq addFragmentsWithData:[self collectSubsequentFragmentsFrom:[CURRENTSONG data:fragId]
-																	  activeRatio:activeRatioP].fragments ];
+                if (ClassMatch(fragId, VMId)) { // may contain raw frag obj
+                    [subseq addFragmentsWithData:[self collectSubsequentFragmentsFrom:[CURRENTSONG data:fragId]
+                                                                          activeRatio:activeRatioP].fragments ];
+                    
+                }
 			}
 		}
 	}

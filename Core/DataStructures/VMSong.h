@@ -51,7 +51,7 @@
 @property (VMNonatomic VMStrong)	VMArray	 *history;
 @property (nonatomic, VMStrong)		VMStack	 *showReport;
 @property (nonatomic, VMStrong)		VMSongStatistics *songStatistics;
-
+@property (nonatomic)               BOOL    isWavMarker;        // not a .vms file but structure written on wav marker/region
 
 //	log
 #if VMP_LOGGING
