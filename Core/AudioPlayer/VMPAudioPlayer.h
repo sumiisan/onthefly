@@ -75,7 +75,7 @@ typedef enum {
 //	audio buffer
 	AudioQueueBufferRef				buffers[kNumberOfQueueBuffers];
     UInt64                          numTotalPackets;
-	
+    int                             numPacketsPerSec;   // assume CBR
 }
 
 @property (nonatomic,   VMStrong)			NSString		*fragId;
@@ -94,7 +94,7 @@ typedef enum {
 
 
 - (id)initWithId:(int)identifier;
-- (void)preloadAudio:(NSString *)path atTime:(float)inTime;
+- (void)preloadAudio:(NSString *)path atTime:(float)inTime seekPosition:(VMTime)position;
 - (void)setVolume:(Float32)volume;
 - (void)play;
 - (void)pause;

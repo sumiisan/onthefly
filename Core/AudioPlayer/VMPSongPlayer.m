@@ -417,7 +417,7 @@
 		timeOffset			= self.currentTime - frag->cueTime - frag->cuePoints.start;
 	}
 	
-	[player preloadAudio:[self filePathForFileId:fileId] atTime:timeOffset];
+	[player preloadAudio:[self filePathForFileId:fileId] atTime:timeOffset seekPosition:frag->audioFragmentPlayer.audioInfoRef.regionStart];
 }
 
 - (VMString*)filePathForFileId:(VMString*)fileId {

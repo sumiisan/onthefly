@@ -272,7 +272,7 @@ static VMHash *processPhaseNames_static_ = nil;
 	return YES;
 }
 
-- (void)preloadAudio:(NSString *)path atTime:(float)inTime {
+- (void)preloadAudio:(NSString *)path atTime:(float)inTime seekPosition:(VMTime)position {
     assert( path != nil );
 #if ! enableDSP
 	if( queue && audioFile ) [self close];
@@ -283,6 +283,7 @@ static VMHash *processPhaseNames_static_ = nil;
 	packetIndex = 0;
 	trackClosed = NO;
 	self.currentTime = inTime;
+    packetIndex = position * numPacketsPerSec;  // assume CBR
 }
 
 -(void)openAudioAndReadInfo {
@@ -330,17 +331,21 @@ static VMHash *processPhaseNames_static_ = nil;
 		processPhase = pp_idle;
 		return;	//	failed
 	}
-    
+
+    numPacketsPerSec = numTotalPackets/fileDuration;
+
 	// see if file uses a magic cookie (a magic cookie is meta data which some formats use)
-	AudioFileGetPropertyInfo( audioFile, kAudioFilePropertyMagicCookieData, &size, nil );	
+    AudioFileGetPropertyInfo( audioFile, kAudioFilePropertyMagicCookieData, &size, nil );
+    BOOL hasCookie = NO; // only used for DEBUG LOG
 	if (size > 0) {
+        hasCookie = YES;
 		// copy the cookie data from the file into the audio queue
 		cookie = (char*)malloc(sizeof(char) * size);
 		AudioFileGetProperty(audioFile, kAudioFilePropertyMagicCookieData, &size, cookie );
 		AudioQueueSetProperty(queue, kAudioQueueProperty_MagicCookie, cookie, size );
 		free( cookie );
 	}
-    
+
     // see if there is a channel layout (multichannel file) not sure whether we need this ss121021
     channelLayoutSize = sizeof( AudioChannelLayout );
     AudioFileGetPropertyInfo( audioFile, kAudioFilePropertyChannelLayout, &channelLayoutSize, NULL);
@@ -353,6 +358,14 @@ static VMHash *processPhaseNames_static_ = nil;
 #endif
 
 	[self createNewQueue];
+
+    NSLog(@"🎷 packets:%llu fileDuration:%2.2fsec packets/dur:%d "
+          "bytes/packet:%d packetsToRead/callback:%d "
+          "cookie:%@",
+          numTotalPackets, fileDuration, numPacketsPerSec,
+          dataFormat.mBytesPerPacket, numPacketsToRead,
+          hasCookie ? @"YES" : @"NO");
+
     processPhase = pp_fileOpened;
 }
 
