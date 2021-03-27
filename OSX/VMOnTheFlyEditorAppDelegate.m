@@ -414,6 +414,7 @@ NSDictionary		*windowNames_static_ = nil;
             CURRENTSONG.audioFileExtension = @"wav";
             CURRENTSONG.isWavMarker = YES;
             CURRENTSONG.songName = url.lastPathComponent.stringByDeletingPathExtension;
+            CURRENTSONG.defaultFragmentId = ((VMData*)[elements item:0]).id;  // the first element is the default entry point
             VMHash *data = [VMHash new];
             for(VMData *d in elements) {
                 [data setItem:d for:d.id];

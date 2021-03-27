@@ -58,7 +58,7 @@
 	[[NSRunLoop mainRunLoop] addTimer:timer forMode:NSRunLoopCommonModes];
 }
 
-- (void)startTimer:(SEL)callback {
+- (void)startTimer:(void(^)(void))callback {
 	timerCallback = callback;
 	timer = [NSTimer timerWithTimeInterval:kTimerInterval
 									target:self
@@ -69,8 +69,9 @@
 }
 
 - (void)timerReceiver:(NSTimer*)timer {
-	if ( (!self.isPaused) && timerCallback ) 
-		[self performSelector:timerCallback];
+    if ( (!self.isPaused) && timerCallback ) {
+        timerCallback();
+    }
 }
 
 - (void)stopTimer {

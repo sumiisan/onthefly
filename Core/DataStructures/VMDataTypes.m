@@ -629,6 +629,14 @@ VMObligatory_encodeWithCoder(
 	return self.offsetAndDuration.location;
 }
 
+- (VMTime)regionStart {
+    return self.regionRange.location;
+}
+
+- (VMTime)regionLength {
+    return self.regionRange.length;
+}
+
 //	with modulator
 - (VMTime)modulatedDuration {
 	VMFunction *fluctuator 	= [self functionWithName:@"fluct"];

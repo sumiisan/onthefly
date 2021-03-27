@@ -27,7 +27,9 @@
     
     self.cues = [NSMutableArray array];
     self.frags = [NSMutableArray array];
-    
+
+    double SR = waveFile.sampleRate;
+
     for (int i = 0; i < waveFile.numberOfCuePoints; ++i) {
         VMAudioFileCue *cue = [VMAudioFileCue new];
         [self.cues addObject:cue];
@@ -68,17 +70,31 @@
         if ([cue.id hasPrefix:@"_"]) {
             continue; // skip instruction cue
         }
-        
-        VMAudioFragment *frag = [VMAudioFragment new];
+
         NSString *cueInst = cue.id;
-        VMId *seqId = [cue.id componentsSeparatedByString:@"_"][0];
-        frag.id = [NSString stringWithFormat:@"%@;frag", seqId];
+        VMId *seqId = [cueInst componentsSeparatedByString:@"_"][0];
+        
+        // rename audio cue
         cue.id = [NSString stringWithFormat:@"%@|cue", seqId];
+        
+        // convert frame-offset/sampleLength to range
+        cue.regionRange.locationDescriptor = [NSString stringWithFormat:@"%3.3f", cue.frameOffset / SR];
+        cue.regionRange.lengthDescriptor = [NSString stringWithFormat:@"%3.3f", cue.sampleLength / SR];
+        
+        // set cue points to fill region
+        cue.offsetAndDuration.locationDescriptor = @"0";    // no offset
+        cue.offsetAndDuration.lengthDescriptor = [NSString stringWithFormat:@"%3.3f", cue.sampleLength / SR];
+
+        // audio fragment
+        VMAudioFragment *frag = [VMAudioFragment new];
+        frag.id = [NSString stringWithFormat:@"%@|frag", seqId];
         frag.audioInfoId = cue.id;
         frag.audioInfoRef = cue;
+        
+        // sequence
         VMSequence *seq = [VMSequence new];
         seq.id = seqId;
-        seq.fragments = [VMArray arrayWithObject: frag];
+        seq.fragments = [VMArray arrayWithObject: frag.id];
         VMSelector *next = [VMSelector new];
         next.id = [NSString stringWithFormat:@"%@|next", seqId];
         next.fragments = [VMArray new];
@@ -97,8 +113,9 @@
             }
         }
         
+        [self.frags addObject:seq];     // the sequence must be registered at the very begin of frags to indicate the entry point
+        [self.frags addObject:frag];
         [self.frags addObject:cue];
-        [self.frags addObject:seq];
     }
     
     freeWaveFile(&waveFile);

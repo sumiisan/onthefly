@@ -78,7 +78,9 @@ static VMHash *processPhaseNames_static_ = nil;
 								processPhaseEntry( locked )
 								nil] );
 	}
-	[self startTimer:@selector(timerCall:)];	
+    [self startTimer:^{
+        [self timerCall:nil];
+    }];
     shiftTime = 0;
 }
 

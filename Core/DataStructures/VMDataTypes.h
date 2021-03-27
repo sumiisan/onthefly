@@ -438,6 +438,8 @@ typedef enum {
 //	cue points alias
 @property	(nonatomic, readonly)	VMTime			duration;
 @property	(nonatomic, readonly)	VMTime			offset;
+@property   (nonatomic, readonly)   VMTime          regionStart;
+@property   (nonatomic, readonly)   VMTime          regionLength;
 
 - (BOOL)hasExplicitlySpecifiedFileId;
 

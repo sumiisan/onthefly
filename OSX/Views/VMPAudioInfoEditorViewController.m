@@ -288,11 +288,13 @@ static const CGFloat kWaveDisplayHorizontalMargin = 20;
 		//
 		VMFloat pixPerSec =  ( w - 2 * kWaveDisplayHorizontalMargin ) / ( _audioObject.numberOfFrames / (VMFloat)_audioObject.framesPerSecond );
 		[[NSColor colorWithCalibratedRed:.6 green:.2 blue:.2 alpha:1.] setStroke];
-		CGFloat offsetX = (int)(_audioInfo.offset * pixPerSec + kWaveDisplayHorizontalMargin) + 0.5;
+		CGFloat offsetX = (int)((_audioInfo.regionStart + _audioInfo.offset) * pixPerSec + kWaveDisplayHorizontalMargin) + 0.5;
 		[NSBezierPath strokeLineFromPoint:NSMakePoint(offsetX, y) toPoint:NSMakePoint(offsetX, y+h)];
-		CGFloat durationX = (int)(_audioInfo.duration * pixPerSec + offsetX ) + 0.5;
-		[NSBezierPath strokeLineFromPoint:NSMakePoint(durationX, y) toPoint:NSMakePoint(durationX, y+h)];
-		[NSBezierPath strokeLineFromPoint:NSMakePoint(offsetX, (int)(y+h)-15.5) toPoint:NSMakePoint(durationX, (int)(y+h)-15.5)];
+        if (_audioInfo.duration > 0) {
+            CGFloat durationX = (int)(_audioInfo.duration * pixPerSec + offsetX ) + 0.5;
+            [NSBezierPath strokeLineFromPoint:NSMakePoint(durationX, y) toPoint:NSMakePoint(durationX, y+h)];
+            [NSBezierPath strokeLineFromPoint:NSMakePoint(offsetX, (int)(y+h)-15.5) toPoint:NSMakePoint(durationX, (int)(y+h)-15.5)];
+        }
 	}
 }
 

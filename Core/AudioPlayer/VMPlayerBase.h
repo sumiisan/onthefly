@@ -15,7 +15,7 @@
 @protected
 	NSTimer			*timer;
 	NSTimeInterval	timePaused;
-	SEL				timerCallback;
+    void            (^timerCallback)(void);
 @private
     NSTimeInterval  timerOffset;
 }
@@ -27,7 +27,7 @@
 - (void)initTime;
 - (void)pause;
 - (void)resume;
-- (void)startTimer:(SEL)callback;
+- (void)startTimer:(void(^)(void))callback;
 - (void)restartTimer;
 - (void)stopTimer;
 

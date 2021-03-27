@@ -100,6 +100,8 @@ int readWavfile(WaveFile *wf) {
             abortOnError(littleEndianBytesToUInt16(wf->formatChunk.compressionCode) != (uint16_t)1,
                          "Compressed audio formats are not supported\n");
             
+            wf->sampleRate = littleEndianBytesToUInt32(wf->formatChunk.sampleRate);
+            
             // Note: For compressed audio data there may be extra bytes appended to the format chunk,
             // but as we are only handling uncompressed data we shouldn't encounter them
             

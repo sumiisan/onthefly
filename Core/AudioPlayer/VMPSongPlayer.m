@@ -819,7 +819,9 @@
     for( int i = 0; i < [self numberOfAudioPlayers]; ++i )
 		[audioPlayerList push:AutoRelease([[VMPlayerType alloc] initWithId: i] )];
 	
-	[self startTimer:@selector(timerCall:)];
+    [self startTimer:^{
+        [self timerCall:nil];
+    }];
     
 	frameCounter = 0;
 	self.currentTime = 0;

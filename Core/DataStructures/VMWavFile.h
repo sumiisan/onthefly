@@ -124,8 +124,11 @@ typedef struct {
     int             otherChunksCount;
     ChunkLocation   otherChunkLocations[kMaxNumOfOtherChunks];
     ListChunk       listChunk;
+    
+    //  converted props
     uint32_t        numberOfCuePoints;
     uint32_t        fileSize;
+    uint32_t        sampleRate;
 } WaveFile;
 
 

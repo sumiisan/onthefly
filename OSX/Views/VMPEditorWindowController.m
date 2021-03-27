@@ -1165,7 +1165,7 @@ forDoubleClickOnDividerAtIndex:(NSInteger)dividerIndex  {
 
 - (IBAction)songPlay:(id)sender {
 	VMId *dataId = [self.history currentItem];
-	if ( [dataId rangeOfString:@"_"].length == 0 )
+	if ( [dataId rangeOfString:@"_"].length == 0 && !CURRENTSONG.isWavMarker)
 		dataId = [dataId stringByAppendingString:@"_sel"];	//	assume part id.
 
 	VMData *d = [CURRENTSONG data:dataId];
